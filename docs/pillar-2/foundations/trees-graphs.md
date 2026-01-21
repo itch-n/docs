@@ -8,112 +8,156 @@
 ## Tree Fundamentals
 
 ### Binary Tree Traversals
-```python
-class TreeNode:
-    def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
+```java
+public class TreeNode {
+    public int val;
+    public TreeNode left;
+    public TreeNode right;
+    
+    public TreeNode() {}
+    public TreeNode(int val) { this.val = val; }
+    public TreeNode(int val, TreeNode left, TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
+    }
+}
 
-def inorder_traversal(root):
-    """Left -> Root -> Right"""
-    result = []
-    
-    def inorder(node):
-        if node:
-            inorder(node.left)
-            result.append(node.val)
-            inorder(node.right)
-    
-    inorder(root)
-    return result
+public List<Integer> inorderTraversal(TreeNode root) {
+    // Left -> Root -> Right
+    List<Integer> result = new ArrayList<>();
+    inorder(root, result);
+    return result;
+}
 
-def level_order_traversal(root):
-    """BFS traversal"""
-    if not root:
-        return []
+private void inorder(TreeNode node, List<Integer> result) {
+    if (node != null) {
+        inorder(node.left, result);
+        result.add(node.val);
+        inorder(node.right, result);
+    }
+}
+
+public List<List<Integer>> levelOrderTraversal(TreeNode root) {
+    // BFS traversal
+    List<List<Integer>> result = new ArrayList<>();
+    if (root == null) return result;
     
-    result = []
-    queue = [root]
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
     
-    while queue:
-        level_size = len(queue)
-        level_nodes = []
+    while (!queue.isEmpty()) {
+        int levelSize = queue.size();
+        List<Integer> levelNodes = new ArrayList<>();
         
-        for _ in range(level_size):
-            node = queue.pop(0)
-            level_nodes.append(node.val)
+        for (int i = 0; i < levelSize; i++) {
+            TreeNode node = queue.poll();
+            levelNodes.add(node.val);
             
-            if node.left:
-                queue.append(node.left)
-            if node.right:
-                queue.append(node.right)
+            if (node.left != null) {
+                queue.offer(node.left);
+            }
+            if (node.right != null) {
+                queue.offer(node.right);
+            }
+        }
         
-        result.append(level_nodes)
+        result.add(levelNodes);
+    }
     
-    return result
+    return result;
+}
 ```
 
 ## Graph Algorithms
 
 ### Depth-First Search
-```python
-def dfs_recursive(graph, start, visited=None):
-    if visited is None:
-        visited = set()
+```java
+public Set<Integer> dfsRecursive(Map<Integer, List<Integer>> graph, int start, Set<Integer> visited) {
+    if (visited == null) {
+        visited = new HashSet<>();
+    }
     
-    visited.add(start)
-    print(start)  # Process node
+    visited.add(start);
+    System.out.println(start); // Process node
     
-    for neighbor in graph.get(start, []):
-        if neighbor not in visited:
-            dfs_recursive(graph, neighbor, visited)
+    for (int neighbor : graph.getOrDefault(start, new ArrayList<>())) {
+        if (!visited.contains(neighbor)) {
+            dfsRecursive(graph, neighbor, visited);
+        }
+    }
     
-    return visited
+    return visited;
+}
 
-def dfs_iterative(graph, start):
-    visited = set()
-    stack = [start]
+public Set<Integer> dfsIterative(Map<Integer, List<Integer>> graph, int start) {
+    Set<Integer> visited = new HashSet<>();
+    Stack<Integer> stack = new Stack<>();
+    stack.push(start);
     
-    while stack:
-        node = stack.pop()
-        if node not in visited:
-            visited.add(node)
-            print(node)  # Process node
+    while (!stack.isEmpty()) {
+        int node = stack.pop();
+        if (!visited.contains(node)) {
+            visited.add(node);
+            System.out.println(node); // Process node
             
-            # Add neighbors to stack
-            for neighbor in graph.get(node, []):
-                if neighbor not in visited:
-                    stack.append(neighbor)
+            // Add neighbors to stack
+            for (int neighbor : graph.getOrDefault(node, new ArrayList<>())) {
+                if (!visited.contains(neighbor)) {
+                    stack.push(neighbor);
+                }
+            }
+        }
+    }
     
-    return visited
+    return visited;
+}
 ```
 
 ### Shortest Path Algorithms
-```python
-import heapq
-from collections import defaultdict, deque
-
-def dijkstra(graph, start):
-    """Find shortest paths from start to all nodes"""
-    distances = {node: float('inf') for node in graph}
-    distances[start] = 0
-    pq = [(0, start)]
+```java
+public Map<Integer, Integer> dijkstra(Map<Integer, List<Edge>> graph, int start) {
+    // Find shortest paths from start to all nodes
+    Map<Integer, Integer> distances = new HashMap<>();
+    PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> a.dist - b.dist);
     
-    while pq:
-        current_dist, u = heapq.heappop(pq)
+    // Initialize distances
+    for (int node : graph.keySet()) {
+        distances.put(node, Integer.MAX_VALUE);
+    }
+    distances.put(start, 0);
+    pq.offer(new Node(start, 0));
+    
+    while (!pq.isEmpty()) {
+        Node current = pq.poll();
         
-        if current_dist > distances[u]:
-            continue
+        if (current.dist > distances.get(current.id)) {
+            continue;
+        }
+        
+        for (Edge edge : graph.getOrDefault(current.id, new ArrayList<>())) {
+            int distance = current.dist + edge.weight;
             
-        for v, weight in graph[u]:
-            distance = current_dist + weight
-            
-            if distance < distances[v]:
-                distances[v] = distance
-                heapq.heappush(pq, (distance, v))
+            if (distance < distances.get(edge.to)) {
+                distances.put(edge.to, distance);
+                pq.offer(new Node(edge.to, distance));
+            }
+        }
+    }
     
-    return distances
+    return distances;
+}
+
+// Helper classes
+class Node {
+    int id, dist;
+    Node(int id, int dist) { this.id = id; this.dist = dist; }
+}
+
+class Edge {
+    int to, weight;
+    Edge(int to, int weight) { this.to = to; this.weight = weight; }
+}
 ```
 
 ## Advanced Topics

@@ -13,28 +13,64 @@
 3. **Traces**: Request flow through distributed systems
 
 ### Key Metrics
-```python
-import time
-from collections import defaultdict, deque
+```java
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
-class MetricsCollector:
-    def __init__(self):
-        self.counters = defaultdict(int)
-        self.gauges = defaultdict(float)
-        self.histograms = defaultdict(list)
-        self.timers = defaultdict(deque)
+public class MetricsCollector {
+    private final ConcurrentHashMap<String, AtomicLong> counters;
+    private final ConcurrentHashMap<String, AtomicReference<Double>> gauges;
+    private final ConcurrentHashMap<String, ConcurrentLinkedQueue<Double>> timers;
+    private final int maxTimerSamples;
     
-    def increment_counter(self, name, value=1):
-        self.counters[name] += value
+    public MetricsCollector() {
+        this(1000);
+    }
     
-    def set_gauge(self, name, value):
-        self.gauges[name] = value
+    public MetricsCollector(int maxTimerSamples) {
+        this.counters = new ConcurrentHashMap<>();
+        this.gauges = new ConcurrentHashMap<>();
+        this.timers = new ConcurrentHashMap<>();
+        this.maxTimerSamples = maxTimerSamples;
+    }
     
-    def record_timer(self, name, duration):
-        # Keep last 1000 measurements for percentiles
-        if len(self.timers[name]) >= 1000:
-            self.timers[name].popleft()
-        self.timers[name].append(duration)
+    public void incrementCounter(String name, long value) {
+        counters.computeIfAbsent(name, k -> new AtomicLong(0))
+                .addAndGet(value);
+    }
+    
+    public void incrementCounter(String name) {
+        incrementCounter(name, 1);
+    }
+    
+    public void setGauge(String name, double value) {
+        gauges.computeIfAbsent(name, k -> new AtomicReference<>(0.0))
+              .set(value);
+    }
+    
+    public void recordTimer(String name, double duration) {
+        ConcurrentLinkedQueue<Double> timerQueue =
+            timers.computeIfAbsent(name, k -> new ConcurrentLinkedQueue<>());
+        
+        // Keep last maxTimerSamples measurements for percentiles
+        if (timerQueue.size() >= maxTimerSamples) {
+            timerQueue.poll();
+        }
+        timerQueue.offer(duration);
+    }
+    
+    public long getCounterValue(String name) {
+        AtomicLong counter = counters.get(name);
+        return counter != null ? counter.get() : 0;
+    }
+    
+    public double getGaugeValue(String name) {
+        AtomicReference<Double> gauge = gauges.get(name);
+        return gauge != null ? gauge.get() : 0.0;
+    }
+}
 ```
 
 ### RED Method

@@ -8,55 +8,98 @@
 ## Core Concepts
 
 ### Hash Table Implementation
-```python
-class HashTable:
-    def __init__(self, initial_size=16):
-        self.size = initial_size
-        self.count = 0
-        self.buckets = [[] for _ in range(self.size)]  # Chaining for collisions
+```java
+import java.util.*;
+
+public class HashTable<K, V> {
+    private static class Entry<K, V> {
+        K key;
+        V value;
+        Entry<K, V> next;
+        
+        Entry(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
     
-    def _hash(self, key):
-        """Simple hash function"""
-        return hash(key) % self.size
+    private Entry<K, V>[] buckets;
+    private int size;
+    private int count;
     
-    def _resize(self):
-        """Resize when load factor > 0.75"""
-        old_buckets = self.buckets
-        self.size *= 2
-        self.count = 0
-        self.buckets = [[] for _ in range(self.size)]
-        
-        # Rehash all existing items
-        for bucket in old_buckets:
-            for key, value in bucket:
-                self.put(key, value)
+    @SuppressWarnings("unchecked")
+    public HashTable(int initialSize) {
+        this.size = initialSize;
+        this.count = 0;
+        this.buckets = new Entry[size];
+    }
     
-    def put(self, key, value):
-        if self.count >= 0.75 * self.size:
-            self._resize()
-        
-        index = self._hash(key)
-        bucket = self.buckets[index]
-        
-        # Update existing key
-        for i, (k, v) in enumerate(bucket):
-            if k == key:
-                bucket[i] = (key, value)
-                return
-        
-        # Add new key-value pair
-        bucket.append((key, value))
-        self.count += 1
+    public HashTable() {
+        this(16);
+    }
     
-    def get(self, key):
-        index = self._hash(key)
-        bucket = self.buckets[index]
+    private int hash(K key) {
+        return Math.abs(key.hashCode()) % size;
+    }
+    
+    @SuppressWarnings("unchecked")
+    private void resize() {
+        // Resize when load factor > 0.75
+        Entry<K, V>[] oldBuckets = buckets;
+        int oldSize = size;
         
-        for k, v in bucket:
-            if k == key:
-                return v
+        size *= 2;
+        count = 0;
+        buckets = new Entry[size];
         
-        raise KeyError(key)
+        // Rehash all existing items
+        for (int i = 0; i < oldSize; i++) {
+            Entry<K, V> entry = oldBuckets[i];
+            while (entry != null) {
+                put(entry.key, entry.value);
+                entry = entry.next;
+            }
+        }
+    }
+    
+    public void put(K key, V value) {
+        if (count >= 0.75 * size) {
+            resize();
+        }
+        
+        int index = hash(key);
+        Entry<K, V> entry = buckets[index];
+        
+        // Update existing key
+        while (entry != null) {
+            if (entry.key.equals(key)) {
+                entry.value = value;
+                return;
+            }
+            entry = entry.next;
+        }
+        
+        // Add new key-value pair
+        Entry<K, V> newEntry = new Entry<>(key, value);
+        newEntry.next = buckets[index];
+        buckets[index] = newEntry;
+        count++;
+    }
+    
+    public V get(K key) {
+        int index = hash(key);
+        Entry<K, V> entry = buckets[index];
+        
+        while (entry != null) {
+            if (entry.key.equals(key)) {
+                return entry.value;
+            }
+            entry = entry.next;
+        }
+        
+        throw new NoSuchElementException("Key not found: " + key);
+    }
+}
 ```
 
 ## Hash Function Design

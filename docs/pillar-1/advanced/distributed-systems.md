@@ -24,108 +24,149 @@
 ### Distributed System Patterns
 
 #### Leader Election
-```python
-class ConsensusNode:
-    def __init__(self, node_id):
-        self.node_id = node_id
-        self.state = "follower"  # follower, candidate, leader
-        self.term = 0
-        
-    def start_election(self):
-        self.state = "candidate"
-        self.term += 1
-        # Send vote requests to other nodes
-        # Become leader if majority votes received
+```java
+public class ConsensusNode {
+    private String nodeId;
+    private NodeState state; // FOLLOWER, CANDIDATE, LEADER
+    private int term;
+    
+    public ConsensusNode(String nodeId) {
+        this.nodeId = nodeId;
+        this.state = NodeState.FOLLOWER;
+        this.term = 0;
+    }
+    
+    public void startElection() {
+        this.state = NodeState.CANDIDATE;
+        this.term++;
+        // Send vote requests to other nodes
+        // Become leader if majority votes received
+    }
+}
 ```
 
 #### Consistent Hashing
-```python
-import hashlib
+```java
+import java.security.MessageDigest;
+import java.util.*;
 
-class ConsistentHash:
-    def __init__(self, nodes=None, replicas=150):
-        self.replicas = replicas
-        self.ring = {}
-        self.sorted_keys = []
-        
-        if nodes:
-            for node in nodes:
-                self.add_node(node)
+public class ConsistentHash {
+    private final int replicas;
+    private final TreeMap<Integer, String> ring;
     
-    def add_node(self, node):
-        for i in range(self.replicas):
-            key = self.hash(f"{node}:{i}")
-            self.ring[key] = node
-            self.sorted_keys.append(key)
+    public ConsistentHash(List<String> nodes, int replicas) {
+        this.replicas = replicas;
+        this.ring = new TreeMap<>();
         
-        self.sorted_keys.sort()
+        if (nodes != null) {
+            for (String node : nodes) {
+                addNode(node);
+            }
+        }
+    }
     
-    def get_node(self, string_key):
-        if not self.ring:
-            return None
-            
-        key = self.hash(string_key)
+    public void addNode(String node) {
+        for (int i = 0; i < replicas; i++) {
+            int key = hash(node + ":" + i);
+            ring.put(key, node);
+        }
+    }
+    
+    public String getNode(String stringKey) {
+        if (ring.isEmpty()) {
+            return null;
+        }
         
-        # Find the next node in the ring
-        for ring_key in self.sorted_keys:
-            if key <= ring_key:
-                return self.ring[ring_key]
+        int key = hash(stringKey);
         
-        # Wrap around to the first node
-        return self.ring[self.sorted_keys[0]]
+        // Find the next node in the ring
+        Map.Entry<Integer, String> entry = ring.ceilingEntry(key);
+        if (entry != null) {
+            return entry.getValue();
+        }
+        
+        // Wrap around to the first node
+        return ring.firstEntry().getValue();
+    }
+    
+    private int hash(String input) {
+        return input.hashCode();
+    }
+}
 ```
 
 ## Advanced Patterns
 
 ### Saga Pattern (Distributed Transactions)
-```python
-class OrderSaga:
-    def execute(self, order_data):
-        try:
-            # Step 1: Reserve inventory
-            inventory_id = self.inventory_service.reserve(order_data.items)
+```java
+public class OrderSaga {
+    private InventoryService inventoryService;
+    private PaymentService paymentService;
+    private ShippingService shippingService;
+    
+    public SagaResult execute(OrderData orderData) {
+        String inventoryId = null;
+        String paymentId = null;
+        
+        try {
+            // Step 1: Reserve inventory
+            inventoryId = inventoryService.reserve(orderData.getItems());
             
-            # Step 2: Process payment
-            payment_id = self.payment_service.charge(order_data.payment)
+            // Step 2: Process payment
+            paymentId = paymentService.charge(orderData.getPayment());
             
-            # Step 3: Create shipping label
-            shipping_id = self.shipping_service.create_label(order_data.address)
+            // Step 3: Create shipping label
+            String shippingId = shippingService.createLabel(orderData.getAddress());
             
-            return {"status": "success", "order_id": order_id}
+            return new SagaResult("success", orderId);
             
-        except InventoryError:
-            # No compensation needed yet
-            return {"status": "failed", "reason": "insufficient_inventory"}
+        } catch (InventoryException e) {
+            // No compensation needed yet
+            return new SagaResult("failed", "insufficient_inventory");
             
-        except PaymentError:
-            # Compensate: Release inventory
-            self.inventory_service.release(inventory_id)
-            return {"status": "failed", "reason": "payment_failed"}
+        } catch (PaymentException e) {
+            // Compensate: Release inventory
+            if (inventoryId != null) {
+                inventoryService.release(inventoryId);
+            }
+            return new SagaResult("failed", "payment_failed");
             
-        except ShippingError:
-            # Compensate: Refund payment and release inventory
-            self.payment_service.refund(payment_id)
-            self.inventory_service.release(inventory_id)
-            return {"status": "failed", "reason": "shipping_failed"}
+        } catch (ShippingException e) {
+            // Compensate: Refund payment and release inventory
+            if (paymentId != null) {
+                paymentService.refund(paymentId);
+            }
+            if (inventoryId != null) {
+                inventoryService.release(inventoryId);
+            }
+            return new SagaResult("failed", "shipping_failed");
+        }
+    }
+}
 ```
 
 ### Event Sourcing
-```python
-class EventStore:
-    def append_events(self, stream_id, events, expected_version):
-        # Append events atomically with optimistic concurrency control
-        current_version = self.get_stream_version(stream_id)
+```java
+public class EventStore {
+    public void appendEvents(String streamId, List<Event> events, int expectedVersion)
+            throws ConcurrencyException {
+        // Append events atomically with optimistic concurrency control
+        int currentVersion = getStreamVersion(streamId);
         
-        if current_version != expected_version:
-            raise ConcurrencyError("Stream version mismatch")
-            
-        for event in events:
-            self.store_event(stream_id, current_version + 1, event)
-            current_version += 1
+        if (currentVersion != expectedVersion) {
+            throw new ConcurrencyException("Stream version mismatch");
+        }
+        
+        for (Event event : events) {
+            storeEvent(streamId, ++currentVersion, event);
+        }
+    }
     
-    def get_events(self, stream_id, from_version=0):
-        # Retrieve events for rebuilding aggregate state
-        return self.query_events(stream_id, from_version)
+    public List<Event> getEvents(String streamId, int fromVersion) {
+        // Retrieve events for rebuilding aggregate state
+        return queryEvents(streamId, fromVersion);
+    }
+}
 ```
 
 ## Distributed System Challenges

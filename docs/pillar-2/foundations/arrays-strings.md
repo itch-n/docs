@@ -8,157 +8,190 @@
 ## Core Patterns
 
 ### Two Pointer Technique
-```python
-def two_sum_sorted(nums, target):
-    """Find two numbers that sum to target in sorted array."""
-    left, right = 0, len(nums) - 1
+```java
+public int[] twoSumSorted(int[] nums, int target) {
+    // Find two numbers that sum to target in sorted array
+    int left = 0, right = nums.length - 1;
     
-    while left < right:
-        current_sum = nums[left] + nums[right]
-        if current_sum == target:
-            return [left, right]
-        elif current_sum < target:
-            left += 1
-        else:
-            right -= 1
+    while (left < right) {
+        int currentSum = nums[left] + nums[right];
+        if (currentSum == target) {
+            return new int[]{left, right};
+        } else if (currentSum < target) {
+            left++;
+        } else {
+            right--;
+        }
+    }
     
-    return []
+    return new int[]{}; // Empty array
+}
 
-def is_palindrome(s):
-    """Check if string is palindrome (ignoring case/spaces)."""
-    left, right = 0, len(s) - 1
+public boolean isPalindrome(String s) {
+    // Check if string is palindrome (ignoring case/spaces)
+    int left = 0, right = s.length() - 1;
     
-    while left < right:
-        # Skip non-alphanumeric characters
-        while left < right and not s[left].isalnum():
-            left += 1
-        while left < right and not s[right].isalnum():
-            right -= 1
-            
-        if s[left].lower() != s[right].lower():
-            return False
-            
-        left += 1
-        right -= 1
+    while (left < right) {
+        // Skip non-alphanumeric characters
+        while (left < right && !Character.isLetterOrDigit(s.charAt(left))) {
+            left++;
+        }
+        while (left < right && !Character.isLetterOrDigit(s.charAt(right))) {
+            right--;
+        }
+        
+        if (Character.toLowerCase(s.charAt(left)) !=
+            Character.toLowerCase(s.charAt(right))) {
+            return false;
+        }
+        
+        left++;
+        right--;
+    }
     
-    return True
+    return true;
+}
 ```
 
 ### Sliding Window
-```python
-def longest_substring_k_distinct(s, k):
-    """Find longest substring with at most k distinct characters."""
-    if k == 0:
-        return 0
+```java
+public int longestSubstringKDistinct(String s, int k) {
+    // Find longest substring with at most k distinct characters
+    if (k == 0) return 0;
     
-    char_count = {}
-    left = 0
-    max_length = 0
+    Map<Character, Integer> charCount = new HashMap<>();
+    int left = 0, maxLength = 0;
     
-    for right in range(len(s)):
-        # Expand window
-        char_count[s[right]] = char_count.get(s[right], 0) + 1
+    for (int right = 0; right < s.length(); right++) {
+        // Expand window
+        char rightChar = s.charAt(right);
+        charCount.put(rightChar, charCount.getOrDefault(rightChar, 0) + 1);
         
-        # Contract window if needed
-        while len(char_count) > k:
-            char_count[s[left]] -= 1
-            if char_count[s[left]] == 0:
-                del char_count[s[left]]
-            left += 1
+        // Contract window if needed
+        while (charCount.size() > k) {
+            char leftChar = s.charAt(left);
+            charCount.put(leftChar, charCount.get(leftChar) - 1);
+            if (charCount.get(leftChar) == 0) {
+                charCount.remove(leftChar);
+            }
+            left++;
+        }
         
-        max_length = max(max_length, right - left + 1)
+        maxLength = Math.max(maxLength, right - left + 1);
+    }
     
-    return max_length
+    return maxLength;
+}
 
-def min_window_substring(s, t):
-    """Find minimum window substring containing all chars in t."""
-    if not s or not t or len(s) < len(t):
-        return ""
+public String minWindowSubstring(String s, String t) {
+    // Find minimum window substring containing all chars in t
+    if (s == null || t == null || s.length() < t.length()) {
+        return "";
+    }
     
-    # Count characters in t
-    t_count = {}
-    for char in t:
-        t_count[char] = t_count.get(char, 0) + 1
+    // Count characters in t
+    Map<Character, Integer> tCount = new HashMap<>();
+    for (char c : t.toCharArray()) {
+        tCount.put(c, tCount.getOrDefault(c, 0) + 1);
+    }
     
-    required = len(t_count)
-    formed = 0
-    window_counts = {}
+    int required = tCount.size();
+    int formed = 0;
+    Map<Character, Integer> windowCounts = new HashMap<>();
     
-    left = 0
-    min_len = float('inf')
-    min_left = 0
+    int left = 0;
+    int minLen = Integer.MAX_VALUE;
+    int minLeft = 0;
     
-    for right in range(len(s)):
-        char = s[right]
-        window_counts[char] = window_counts.get(char, 0) + 1
+    for (int right = 0; right < s.length(); right++) {
+        char rightChar = s.charAt(right);
+        windowCounts.put(rightChar, windowCounts.getOrDefault(rightChar, 0) + 1);
         
-        if char in t_count and window_counts[char] == t_count[char]:
-            formed += 1
+        if (tCount.containsKey(rightChar) &&
+            windowCounts.get(rightChar).equals(tCount.get(rightChar))) {
+            formed++;
+        }
         
-        # Contract window
-        while formed == required and left <= right:
-            if right - left + 1 < min_len:
-                min_len = right - left + 1
-                min_left = left
+        // Contract window
+        while (formed == required && left <= right) {
+            if (right - left + 1 < minLen) {
+                minLen = right - left + 1;
+                minLeft = left;
+            }
             
-            char = s[left]
-            window_counts[char] -= 1
-            if char in t_count and window_counts[char] < t_count[char]:
-                formed -= 1
+            char leftChar = s.charAt(left);
+            windowCounts.put(leftChar, windowCounts.get(leftChar) - 1);
+            if (tCount.containsKey(leftChar) &&
+                windowCounts.get(leftChar) < tCount.get(leftChar)) {
+                formed--;
+            }
             
-            left += 1
+            left++;
+        }
+    }
     
-    return "" if min_len == float('inf') else s[min_left:min_left + min_len]
+    return minLen == Integer.MAX_VALUE ? "" : s.substring(minLeft, minLeft + minLen);
+}
 ```
 
 ## String Manipulation
 
 ### KMP Algorithm (Pattern Matching)
-```python
-def build_lps(pattern):
-    """Build longest prefix suffix array for KMP."""
-    lps = [0] * len(pattern)
-    length = 0
-    i = 1
+```java
+public int[] buildLPS(String pattern) {
+    // Build longest prefix suffix array for KMP
+    int[] lps = new int[pattern.length()];
+    int length = 0;
+    int i = 1;
     
-    while i < len(pattern):
-        if pattern[i] == pattern[length]:
-            length += 1
-            lps[i] = length
-            i += 1
-        else:
-            if length != 0:
-                length = lps[length - 1]
-            else:
-                lps[i] = 0
-                i += 1
+    while (i < pattern.length()) {
+        if (pattern.charAt(i) == pattern.charAt(length)) {
+            length++;
+            lps[i] = length;
+            i++;
+        } else {
+            if (length != 0) {
+                length = lps[length - 1];
+            } else {
+                lps[i] = 0;
+                i++;
+            }
+        }
+    }
     
-    return lps
+    return lps;
+}
 
-def kmp_search(text, pattern):
-    """Find all occurrences of pattern in text."""
-    if not pattern:
-        return []
+public List<Integer> kmpSearch(String text, String pattern) {
+    // Find all occurrences of pattern in text
+    List<Integer> matches = new ArrayList<>();
+    if (pattern.isEmpty()) {
+        return matches;
+    }
     
-    lps = build_lps(pattern)
-    matches = []
-    i = j = 0
+    int[] lps = buildLPS(pattern);
+    int i = 0, j = 0;
     
-    while i < len(text):
-        if text[i] == pattern[j]:
-            i += 1
-            j += 1
+    while (i < text.length()) {
+        if (text.charAt(i) == pattern.charAt(j)) {
+            i++;
+            j++;
+        }
         
-        if j == len(pattern):
-            matches.append(i - j)
-            j = lps[j - 1]
-        elif i < len(text) and text[i] != pattern[j]:
-            if j != 0:
-                j = lps[j - 1]
-            else:
-                i += 1
+        if (j == pattern.length()) {
+            matches.add(i - j);
+            j = lps[j - 1];
+        } else if (i < text.length() && text.charAt(i) != pattern.charAt(j)) {
+            if (j != 0) {
+                j = lps[j - 1];
+            } else {
+                i++;
+            }
+        }
+    }
     
-    return matches
+    return matches;
+}
 ```
 
 ## Advanced Concepts

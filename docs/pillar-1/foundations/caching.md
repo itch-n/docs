@@ -10,38 +10,42 @@
 ### Cache Patterns
 
 #### Cache-Aside (Lazy Loading)
-```python
-def get_user(user_id):
-    # Check cache first
-    user = cache.get(f"user:{user_id}")
-    if user:
-        return user
+```java
+public User getUser(String userId) {
+    // Check cache first
+    User user = cache.get("user:" + userId);
+    if (user != null) {
+        return user;
+    }
     
-    # Cache miss - fetch from database
-    user = db.get_user(user_id)
-    cache.set(f"user:{user_id}", user, ttl=3600)
-    return user
+    // Cache miss - fetch from database
+    user = db.getUser(userId);
+    cache.set("user:" + userId, user, 3600); // 3600 seconds TTL
+    return user;
+}
 ```
 
 #### Write-Through Cache
-```python
-def update_user(user_id, data):
-    # Update database first
-    user = db.update_user(user_id, data)
+```java
+public User updateUser(String userId, UserData data) {
+    // Update database first
+    User user = db.updateUser(userId, data);
     
-    # Then update cache
-    cache.set(f"user:{user_id}", user, ttl=3600)
-    return user
+    // Then update cache
+    cache.set("user:" + userId, user, 3600);
+    return user;
+}
 ```
 
 #### Write-Behind (Write-Back)
-```python
-def update_user_async(user_id, data):
-    # Update cache immediately
-    cache.set(f"user:{user_id}", data, ttl=3600)
+```java
+public void updateUserAsync(String userId, UserData data) {
+    // Update cache immediately
+    cache.set("user:" + userId, data, 3600);
     
-    # Queue database write for later
-    queue.enqueue('update_user_db', user_id, data)
+    // Queue database write for later
+    queue.enqueue("update_user_db", userId, data);
+}
 ```
 
 ## Cache Layers
@@ -61,25 +65,27 @@ def update_user_async(user_id, data):
 ## Invalidation Strategies
 
 ### Time-Based (TTL)
-```python
-# Set expiration time
-cache.set("user:123", user_data, ttl=3600)  # 1 hour
+```java
+// Set expiration time
+cache.set("user:123", userData, 3600); // 1 hour
 ```
 
 ### Event-Based Invalidation
-```python
-def on_user_update(user_id):
-    # Invalidate related cache keys
-    cache.delete(f"user:{user_id}")
-    cache.delete(f"user_profile:{user_id}")
-    cache.delete(f"user_permissions:{user_id}")
+```java
+public void onUserUpdate(String userId) {
+    // Invalidate related cache keys
+    cache.delete("user:" + userId);
+    cache.delete("user_profile:" + userId);
+    cache.delete("user_permissions:" + userId);
+}
 ```
 
 ### Cache Tags
-```python
-# Tag-based invalidation
-cache.set("user:123", user_data, tags=["user", "profile"])
-cache.invalidate_tags(["user"])  # Clears all user-related cache
+```java
+// Tag-based invalidation
+Set<String> tags = Set.of("user", "profile");
+cache.set("user:123", userData, tags);
+cache.invalidateTags(List.of("user")); // Clears all user-related cache
 ```
 
 ## Cache Performance Patterns

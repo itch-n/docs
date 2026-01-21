@@ -8,56 +8,95 @@
 ## Core Patterns
 
 ### Circuit Breaker
-```python
-import time
-from enum import Enum
+```java
+public enum CircuitState {
+    CLOSED, OPEN, HALF_OPEN
+}
 
-class CircuitState(Enum):
-    CLOSED = "closed"
-    OPEN = "open" 
-    HALF_OPEN = "half_open"
-
-class CircuitBreaker:
-    def __init__(self, failure_threshold=5, timeout=60):
-        self.failure_threshold = failure_threshold
-        self.timeout = timeout
-        self.failure_count = 0
-        self.last_failure_time = None
-        self.state = CircuitState.CLOSED
+public class CircuitBreaker {
+    private final int failureThreshold;
+    private final long timeout;
+    private int failureCount = 0;
+    private long lastFailureTime = 0;
+    private CircuitState state = CircuitState.CLOSED;
     
-    def call(self, func, *args, **kwargs):
-        if self.state == CircuitState.OPEN:
-            if time.time() - self.last_failure_time > self.timeout:
-                self.state = CircuitState.HALF_OPEN
-            else:
-                raise Exception("Circuit breaker is OPEN")
+    public CircuitBreaker(int failureThreshold, long timeout) {
+        this.failureThreshold = failureThreshold;
+        this.timeout = timeout;
+    }
+    
+    public <T> T call(Supplier<T> func) throws Exception {
+        if (state == CircuitState.OPEN) {
+            if (System.currentTimeMillis() - lastFailureTime > timeout) {
+                state = CircuitState.HALF_OPEN;
+            } else {
+                throw new Exception("Circuit breaker is OPEN");
+            }
+        }
         
-        try:
-            result = func(*args, **kwargs)
-            self.on_success()
-            return result
-        except Exception as e:
-            self.on_failure()
-            raise e
+        try {
+            T result = func.get();
+            onSuccess();
+            return result;
+        } catch (Exception e) {
+            onFailure();
+            throw e;
+        }
+    }
+    
+    private void onSuccess() {
+        failureCount = 0;
+        state = CircuitState.CLOSED;
+    }
+    
+    private void onFailure() {
+        failureCount++;
+        lastFailureTime = System.currentTimeMillis();
+        if (failureCount >= failureThreshold) {
+            state = CircuitState.OPEN;
+        }
+    }
+}
 ```
 
 ### Retry with Exponential Backoff
-```python
-import random
-import time
+```java
+import java.util.Random;
+import java.util.function.Supplier;
 
-def retry_with_backoff(func, max_retries=3, base_delay=1, max_delay=60):
-    for attempt in range(max_retries + 1):
-        try:
-            return func()
-        except Exception as e:
-            if attempt == max_retries:
-                raise e
-            
-            # Exponential backoff with jitter
-            delay = min(base_delay * (2 ** attempt), max_delay)
-            jitter = random.uniform(0, delay * 0.1)
-            time.sleep(delay + jitter)
+public class RetryUtils {
+    private static final Random random = new Random();
+    
+    public static <T> T retryWithBackoff(Supplier<T> func, int maxRetries,
+                                        long baseDelay, long maxDelay) throws Exception {
+        Exception lastException = null;
+        
+        for (int attempt = 0; attempt <= maxRetries; attempt++) {
+            try {
+                return func.get();
+            } catch (Exception e) {
+                lastException = e;
+                
+                if (attempt == maxRetries) {
+                    throw e;
+                }
+                
+                // Exponential backoff with jitter
+                long delay = Math.min(baseDelay * (1L << attempt), maxDelay);
+                long jitter = (long) (random.nextDouble() * delay * 0.1);
+                
+                try {
+                    Thread.sleep(delay + jitter);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException(ie);
+                }
+            }
+        }
+        
+        throw lastException;
+    }
+}
 ```
 
 ## Advanced Patterns

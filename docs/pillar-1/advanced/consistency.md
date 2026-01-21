@@ -12,23 +12,27 @@
 - **Sequential Consistency**: Operations appear in program order across all processes
 - **Use Cases**: Financial systems, inventory management
 
-```python
-class StronglyConsistentCounter:
-    def __init__(self):
-        self.value = 0
-        self.version = 0
-        self.lock = threading.Lock()
+```java
+public class StronglyConsistentCounter {
+    private int value = 0;
+    private int version = 0;
+    private final Object lock = new Object();
     
-    def increment(self):
-        with self.lock:
-            # Read-modify-write as atomic operation
-            self.value += 1
-            self.version += 1
-            return self.value, self.version
+    public CounterResult increment() {
+        synchronized (lock) {
+            // Read-modify-write as atomic operation
+            this.value++;
+            this.version++;
+            return new CounterResult(this.value, this.version);
+        }
+    }
     
-    def read(self):
-        with self.lock:
-            return self.value, self.version
+    public CounterResult read() {
+        synchronized (lock) {
+            return new CounterResult(this.value, this.version);
+        }
+    }
+}
 ```
 
 ### Eventual Consistency
@@ -36,66 +40,100 @@ class StronglyConsistentCounter:
 - **Convergence**: All replicas eventually have the same value
 - **Use Cases**: Social media feeds, DNS, web caches
 
-```python
-class EventuallyConsistentStore:
-    def __init__(self, node_id):
-        self.node_id = node_id
-        self.data = {}
-        self.vector_clock = {}
-        self.peers = []
+```java
+public class EventuallyConsistentStore {
+    private final String nodeId;
+    private final Map<String, DataEntry> data;
+    private final Map<String, Integer> vectorClock;
+    private final List<EventuallyConsistentStore> peers;
     
-    def write(self, key, value):
-        # Update local data and vector clock
-        self.vector_clock[self.node_id] = self.vector_clock.get(self.node_id, 0) + 1
-        self.data[key] = {
-            'value': value,
-            'timestamp': self.vector_clock.copy()
-        }
+    public EventuallyConsistentStore(String nodeId) {
+        this.nodeId = nodeId;
+        this.data = new ConcurrentHashMap<>();
+        this.vectorClock = new ConcurrentHashMap<>();
+        this.peers = new ArrayList<>();
+    }
+    
+    public void write(String key, Object value) {
+        // Update local data and vector clock
+        int currentClock = vectorClock.getOrDefault(nodeId, 0) + 1;
+        vectorClock.put(nodeId, currentClock);
         
-        # Asynchronously propagate to peers
-        self.gossip_update(key, value, self.vector_clock.copy())
+        DataEntry entry = new DataEntry(value, new HashMap<>(vectorClock));
+        data.put(key, entry);
+        
+        // Asynchronously propagate to peers
+        gossipUpdate(key, value, new HashMap<>(vectorClock));
+    }
     
-    def read(self, key):
-        return self.data.get(key, {}).get('value')
+    public Object read(String key) {
+        DataEntry entry = data.get(key);
+        return entry != null ? entry.getValue() : null;
+    }
     
-    def gossip_update(self, key, value, timestamp):
-        # Send updates to peer nodes
-        for peer in self.peers:
-            peer.receive_update(key, value, timestamp, self.node_id)
+    private void gossipUpdate(String key, Object value, Map<String, Integer> timestamp) {
+        // Send updates to peer nodes
+        for (EventuallyConsistentStore peer : peers) {
+            peer.receiveUpdate(key, value, timestamp, nodeId);
+        }
+    }
+}
 ```
 
 ## Practical Patterns
 
 ### Read-After-Write Consistency
-```python
-class ReadAfterWriteStore:
-    def __init__(self):
-        self.master = {}  # Write to master
-        self.replicas = [{}, {}]  # Read from replicas
-        self.user_last_write = {}  # Track user's last write timestamp
+```java
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+public class ReadAfterWriteStore {
+    private final Map<String, DataEntry> master = new ConcurrentHashMap<>();
+    private final List<Map<String, DataEntry>> replicas = List.of(
+        new ConcurrentHashMap<>(),
+        new ConcurrentHashMap<>()
+    );
+    private final Map<String, Long> userLastWrite = new ConcurrentHashMap<>();
+    private final Random random = new Random();
     
-    def write(self, user_id, key, value):
-        timestamp = time.time()
+    public void write(String userId, String key, Object value) {
+        long timestamp = System.currentTimeMillis();
         
-        # Write to master
-        self.master[key] = {'value': value, 'timestamp': timestamp}
+        // Write to master
+        DataEntry entry = new DataEntry(value, timestamp);
+        master.put(key, entry);
         
-        # Track user's last write
-        self.user_last_write[user_id] = timestamp
+        // Track user's last write
+        userLastWrite.put(userId, timestamp);
         
-        # Asynchronously replicate
-        self.replicate_to_followers(key, value, timestamp)
+        // Asynchronously replicate
+        replicateToFollowers(key, entry);
+    }
     
-    def read(self, user_id, key):
-        user_last_write = self.user_last_write.get(user_id, 0)
+    public Object read(String userId, String key) {
+        Long lastWrite = userLastWrite.getOrDefault(userId, 0L);
         
-        # If user recently wrote, read from master
-        if time.time() - user_last_write < 1.0:  # 1 second window
-            return self.master.get(key, {}).get('value')
+        // If user recently wrote, read from master
+        if (System.currentTimeMillis() - lastWrite < 1000) { // 1 second window
+            DataEntry entry = master.get(key);
+            return entry != null ? entry.getValue() : null;
+        }
         
-        # Otherwise, read from replica
-        replica = random.choice(self.replicas)
-        return replica.get(key, {}).get('value')
+        // Otherwise, read from replica
+        Map<String, DataEntry> replica = replicas.get(random.nextInt(replicas.size()));
+        DataEntry entry = replica.get(key);
+        return entry != null ? entry.getValue() : null;
+    }
+    
+    private void replicateToFollowers(String key, DataEntry entry) {
+        // Async replication to followers
+        for (Map<String, DataEntry> replica : replicas) {
+            replica.put(key, entry);
+        }
+    }
+}
 ```
 
 ### Session Consistency
@@ -106,38 +144,69 @@ class ReadAfterWriteStore:
 ## Advanced Patterns
 
 ### Conflict Resolution (CRDTs)
-```python
-# G-Counter (Grow-only Counter CRDT)
-class GCounter:
-    def __init__(self, node_id, nodes):
-        self.node_id = node_id
-        self.counts = {node: 0 for node in nodes}
-    
-    def increment(self):
-        self.counts[self.node_id] += 1
-    
-    def value(self):
-        return sum(self.counts.values())
-    
-    def merge(self, other):
-        # Merge two G-Counter states
-        for node in self.counts:
-            self.counts[node] = max(self.counts[node], other.counts.get(node, 0))
+```java
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-# PN-Counter (Positive-Negative Counter)
-class PNCounter:
-    def __init__(self, node_id, nodes):
-        self.positive = GCounter(node_id, nodes)
-        self.negative = GCounter(node_id, nodes)
+// G-Counter (Grow-only Counter CRDT)
+public class GCounter {
+    private final String nodeId;
+    private final Map<String, Integer> counts;
     
-    def increment(self):
-        self.positive.increment()
+    public GCounter(String nodeId, Set<String> nodes) {
+        this.nodeId = nodeId;
+        this.counts = new HashMap<>();
+        for (String node : nodes) {
+            counts.put(node, 0);
+        }
+    }
     
-    def decrement(self):
-        self.negative.increment()
+    public void increment() {
+        counts.put(nodeId, counts.get(nodeId) + 1);
+    }
     
-    def value(self):
-        return self.positive.value() - self.negative.value()
+    public int value() {
+        return counts.values().stream().mapToInt(Integer::intValue).sum();
+    }
+    
+    public void merge(GCounter other) {
+        // Merge two G-Counter states
+        for (String node : counts.keySet()) {
+            int currentCount = counts.get(node);
+            int otherCount = other.counts.getOrDefault(node, 0);
+            counts.put(node, Math.max(currentCount, otherCount));
+        }
+    }
+}
+
+// PN-Counter (Positive-Negative Counter)
+public class PNCounter {
+    private final GCounter positive;
+    private final GCounter negative;
+    
+    public PNCounter(String nodeId, Set<String> nodes) {
+        this.positive = new GCounter(nodeId, nodes);
+        this.negative = new GCounter(nodeId, nodes);
+    }
+    
+    public void increment() {
+        positive.increment();
+    }
+    
+    public void decrement() {
+        negative.increment();
+    }
+    
+    public int value() {
+        return positive.value() - negative.value();
+    }
+    
+    public void merge(PNCounter other) {
+        positive.merge(other.positive);
+        negative.merge(other.negative);
+    }
+}
 ```
 
 ## Consistency Models Comparison

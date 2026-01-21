@@ -8,27 +8,47 @@
 ## Core Concepts
 
 ### Profiling & Measurement
-```python
-import time
-import cProfile
-import pstats
-from functools import wraps
+```java
+import java.util.function.Supplier;
 
-def measure_time(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        start = time.perf_counter()
-        result = func(*args, **kwargs)
-        end = time.perf_counter()
-        print(f"{func.__name__} took {end - start:.4f} seconds")
-        return result
-    return wrapper
+public class PerformanceUtils {
+    
+    public static <T> T measureTime(String operationName, Supplier<T> operation) {
+        long start = System.nanoTime();
+        T result = operation.get();
+        long end = System.nanoTime();
+        double seconds = (end - start) / 1_000_000_000.0;
+        System.out.printf("%s took %.4f seconds%n", operationName, seconds);
+        return result;
+    }
+    
+    public static void measureTime(String operationName, Runnable operation) {
+        long start = System.nanoTime();
+        operation.run();
+        long end = System.nanoTime();
+        double seconds = (end - start) / 1_000_000_000.0;
+        System.out.printf("%s took %.4f seconds%n", operationName, seconds);
+    }
+}
 
-@measure_time
-def expensive_operation():
-    # Simulate work
-    time.sleep(1)
-    return sum(range(1000000))
+// Usage example
+public class ExpensiveOperation {
+    public static long performCalculation() {
+        return PerformanceUtils.measureTime("expensive_operation", () -> {
+            try {
+                Thread.sleep(1000); // Simulate work
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            
+            long sum = 0;
+            for (int i = 0; i < 1_000_000; i++) {
+                sum += i;
+            }
+            return sum;
+        });
+    }
+}
 ```
 
 ### CPU Optimization

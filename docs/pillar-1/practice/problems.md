@@ -20,22 +20,25 @@
 - 5-year data retention
 
 **Key Design Decisions:**
-```python
-# Base62 encoding for short URLs
-import string
-
-class URLEncoder:
-    ALPHABET = string.ascii_letters + string.digits  # 62 characters
+```java
+// Base62 encoding for short URLs
+public class URLEncoder {
+    private static final String ALPHABET =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     
-    def encode(self, number):
-        if number == 0:
-            return self.ALPHABET[0]
+    public String encode(long number) {
+        if (number == 0) {
+            return String.valueOf(ALPHABET.charAt(0));
+        }
         
-        encoded = ""
-        while number:
-            number, remainder = divmod(number, len(self.ALPHABET))
-            encoded = self.ALPHABET[remainder] + encoded
-        return encoded
+        StringBuilder encoded = new StringBuilder();
+        while (number > 0) {
+            encoded.insert(0, ALPHABET.charAt((int)(number % ALPHABET.length())));
+            number = number / ALPHABET.length();
+        }
+        return encoded.toString();
+    }
+}
 ```
 
 **Architecture Components:**
