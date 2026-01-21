@@ -1,6 +1,6 @@
 # Real-World Case Studies
 
-## 🎯 Learning from Production Systems
+## Learning from Production Systems
 
 ### Netflix: Microservices at Scale
 **Challenge**: Migrate from monolith to microservices for global streaming
@@ -30,14 +30,14 @@
 - Latency vs accuracy in location updates
 - Cost vs performance in real-time processing
 
-## 📚 More Case Studies
+## More Case Studies
 - **WhatsApp**: Scaling to 2 billion users with minimal infrastructure
 - **Instagram**: Photo storage and CDN optimization
 - **Spotify**: Music recommendation and data pipelines
 - **Airbnb**: Search and matching algorithms
 - **Dropbox**: File synchronization and conflict resolution
 
-## 🎯 Analysis Framework
+## Analysis Framework
 1. **Context**: Business requirements and constraints
 2. **Challenges**: Technical and organizational hurdles  
 3. **Solutions**: Architecture decisions and trade-offs

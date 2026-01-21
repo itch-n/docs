@@ -1,11 +1,11 @@
 # Concurrency & Threading
 
-## 🎯 Learning Objectives
+## Learning Objectives
 - Understand thread safety and synchronization
 - Implement concurrent data structures
 - Design systems for parallel processing
 
-## 📚 Core Concepts
+## Core Concepts
 
 ### Thread Safety Patterns
 
@@ -108,7 +108,7 @@ with ThreadPoolExecutor(max_workers=4) as executor:
     executor.submit(pc.consumer, 2)
 ```
 
-## 🚀 Advanced Patterns
+## Advanced Patterns
 
 ### Lock-Free Data Structures
 ```python
@@ -190,7 +190,7 @@ class ThreadPool:
             thread.join()
 ```
 
-## 🔍 Concurrency Challenges
+## Concurrency Challenges
 
 ### Race Conditions
 ```python
@@ -240,7 +240,7 @@ def safe_transfer_funds(from_account, to_account, amount):
             pass
 ```
 
-## 📊 Performance Considerations
+## Performance Considerations
 
 | Pattern | Throughput | Latency | Complexity |
 |---------|------------|---------|------------|
@@ -249,13 +249,13 @@ def safe_transfer_funds(from_account, to_account, amount):
 | **Lock-Free** | High | Low | Complex |
 | **Actor Model** | High | Medium | Medium |
 
-## 🎯 Staff-Level Insights
+## Staff-Level Insights
 - **When to use threads**: I/O-bound vs CPU-bound workloads
 - **Alternative models**: Event loops, coroutines, actor systems
 - **System-level concerns**: Context switching overhead, memory barriers
 - **Debugging**: Race condition detection, deadlock analysis
 
-## 📖 Resources
+## Resources
 - **Java Concurrency in Practice**: Fundamental concurrency concepts
 - **The Art of Multiprocessor Programming**: Advanced lock-free algorithms
 - **DDIA Chapter 7**: Transactions and concurrency control

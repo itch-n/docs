@@ -1,6 +1,6 @@
 # System Design Problems
 
-## 🎯 Problem-Solving Framework
+## Problem-Solving Framework
 
 ### The SCALE Method
 1. **S**cope - Clarify requirements and constraints
@@ -9,7 +9,7 @@
 4. **L**ogic - Deep dive into algorithms and data flow
 5. **E**volve - Discuss trade-offs and future scaling
 
-## 📚 Core Problems
+## Core Problems
 
 ### 1. URL Shortener (bit.ly)
 
@@ -93,7 +93,7 @@ CREATE TABLE messages (
 | **Push Model** | Fast read time | Storage intensive | Users with few follows |
 | **Hybrid** | Balanced approach | Complex implementation | Most real systems |
 
-## 🚀 Advanced Scenarios
+## Advanced Scenarios
 
 ### Multi-Region Deployment
 - **Data replication**: Master-slave vs multi-master
@@ -105,12 +105,12 @@ CREATE TABLE messages (
 - **Graceful degradation**: Core features vs nice-to-have
 - **Disaster recovery**: RTO/RPO requirements
 
-## 📊 Success Metrics
+## Success Metrics
 - **Availability**: 99.9% uptime (8.77 hours downtime/year)
 - **Latency**: p99 < 200ms for API calls
 - **Throughput**: Handle peak load with auto-scaling
 
-## 📖 Practice Tips
+## Practice Tips
 1. **Start simple**: Basic functionality first, then scale
 2. **Ask questions**: Clarify ambiguous requirements
 3. **Discuss trade-offs**: No perfect solutions, only trade-offs

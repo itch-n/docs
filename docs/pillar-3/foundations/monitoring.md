@@ -1,11 +1,11 @@
 # Monitoring & Observability Basics
 
-## 🎯 Learning Objectives
+## Learning Objectives
 - Implement effective monitoring strategies
 - Design alerting systems that reduce noise
 - Understand the three pillars of observability
 
-## 📚 Core Concepts
+## Core Concepts
 
 ### The Three Pillars
 1. **Metrics**: Numerical measurements over time
@@ -47,12 +47,12 @@ class MetricsCollector:
 - **Saturation**: Queue depth/wait time
 - **Errors**: Error count/rate
 
-## 🚀 Implementation Patterns
+## Implementation Patterns
 - **Health Checks**: `/health` endpoints for service status
 - **Circuit Breaker Metrics**: Track failures and recovery
 - **SLI/SLO Definition**: Service level indicators and objectives
 
-## 📖 Resources
+## Resources
 - **SRE Handbook**: Google's monitoring practices
 - **Prometheus**: Metrics collection and alerting
 - **Grafana**: Visualization and dashboards

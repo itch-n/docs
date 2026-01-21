@@ -1,11 +1,11 @@
 # Trees & Graphs
 
-## 🎯 Learning Objectives
+## Learning Objectives
 - Master tree traversal algorithms
 - Implement graph algorithms (BFS, DFS, shortest path)
 - Understand tree-based data structures
 
-## 📚 Tree Fundamentals
+## Tree Fundamentals
 
 ### Binary Tree Traversals
 ```python
@@ -54,7 +54,7 @@ def level_order_traversal(root):
     return result
 ```
 
-## 🔧 Graph Algorithms
+## Graph Algorithms
 
 ### Depth-First Search
 ```python
@@ -116,12 +116,12 @@ def dijkstra(graph, start):
     return distances
 ```
 
-## 🚀 Advanced Topics
+## Advanced Topics
 - **Trie**: Prefix trees for string processing
 - **Segment Trees**: Range queries and updates
 - **Union-Find**: Disjoint set operations
 - **Minimum Spanning Tree**: Kruskal's and Prim's algorithms
 
-## 📖 Practice Problems
+## Practice Problems
 - Tree: Validate BST, Lowest Common Ancestor, Serialize/Deserialize
 - Graph: Number of Islands, Course Schedule, Network Delay Time

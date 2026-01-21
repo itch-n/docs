@@ -1,11 +1,11 @@
 # Consistency Models & Trade-offs
 
-## 🎯 Learning Objectives
+## Learning Objectives
 - Understand different consistency models
 - Design systems with appropriate consistency guarantees
 - Navigate CAP theorem trade-offs in practice
 
-## 📚 Consistency Spectrum
+## Consistency Spectrum
 
 ### Strong Consistency
 - **Linearizability**: Operations appear instantaneous at some point between start and end
@@ -64,7 +64,7 @@ class EventuallyConsistentStore:
             peer.receive_update(key, value, timestamp, self.node_id)
 ```
 
-## 🔧 Practical Patterns
+## Practical Patterns
 
 ### Read-After-Write Consistency
 ```python
@@ -103,7 +103,7 @@ class ReadAfterWriteStore:
 - **Implementation**: Sticky sessions or token-based consistency
 - **Use Cases**: Shopping carts, user preferences
 
-## 🚀 Advanced Patterns
+## Advanced Patterns
 
 ### Conflict Resolution (CRDTs)
 ```python
@@ -140,7 +140,7 @@ class PNCounter:
         return self.positive.value() - self.negative.value()
 ```
 
-## 📊 Consistency Models Comparison
+## Consistency Models Comparison
 
 | Model | Guarantees | Performance | Complexity | Use Cases |
 |-------|------------|-------------|------------|-----------|
@@ -149,7 +149,7 @@ class PNCounter:
 | **Session** | Per-session ordering | Medium | Medium | Web applications |
 | **Monotonic Read** | Never read old values | Medium | Medium | Caching systems |
 
-## 🎯 Staff Engineering Decisions
+## Staff Engineering Decisions
 
 ### Choosing Consistency Models
 1. **Business Requirements**: What consistency does the business actually need?
@@ -162,7 +162,7 @@ class PNCounter:
 - **Tiered storage**: Hot data (strong), cold data (eventual)
 - **Geo-distributed**: Regional consistency, global eventual
 
-## 📖 Resources
+## Resources
 - **DDIA Chapter 5**: Replication and consistency
 - **Jepsen Testing**: Real-world consistency violations
 - **Amazon DynamoDB**: Tunable consistency in practice

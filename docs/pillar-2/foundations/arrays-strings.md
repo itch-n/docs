@@ -1,11 +1,11 @@
 # Arrays & Strings
 
-## 🎯 Learning Objectives
+## Learning Objectives
 - Master two-pointer and sliding window techniques
 - Implement efficient string manipulation algorithms
 - Understand time/space complexity trade-offs
 
-## 📚 Core Patterns
+## Core Patterns
 
 ### Two Pointer Technique
 ```python
@@ -111,7 +111,7 @@ def min_window_substring(s, t):
     return "" if min_len == float('inf') else s[min_left:min_left + min_len]
 ```
 
-## 🔧 String Manipulation
+## String Manipulation
 
 ### KMP Algorithm (Pattern Matching)
 ```python
@@ -161,7 +161,7 @@ def kmp_search(text, pattern):
     return matches
 ```
 
-## 🚀 Advanced Concepts
+## Advanced Concepts
 
 ### Rolling Hash (Rabin-Karp)
 - **Use Case**: Fast substring search with multiple patterns
@@ -173,7 +173,7 @@ def kmp_search(text, pattern):
 - **Space Trade-off**: Memory usage vs lookup speed
 - **Compressed Tries**: Radix trees for space optimization
 
-## 📊 Complexity Analysis
+## Complexity Analysis
 
 | Algorithm | Time | Space | Best For |
 |-----------|------|-------|----------|
@@ -182,7 +182,7 @@ def kmp_search(text, pattern):
 | **KMP** | O(n + m) | O(m) | Pattern matching |
 | **Rolling Hash** | O(n) avg | O(1) | Multiple pattern search |
 
-## 📖 Practice Problems
+## Practice Problems
 - **Easy**: Valid Palindrome, Two Sum, Remove Duplicates
 - **Medium**: Longest Substring Without Repeating, Group Anagrams
 - **Hard**: Minimum Window Substring, Text Justification

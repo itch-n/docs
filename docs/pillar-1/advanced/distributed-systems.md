@@ -1,11 +1,11 @@
 # Distributed Systems Fundamentals
 
-## 🎯 Learning Objectives
+## Learning Objectives
 - Understand CAP theorem implications
 - Design systems for partition tolerance
 - Implement consensus algorithms
 
-## 📚 Core Concepts
+## Core Concepts
 
 ### CAP Theorem
 **Cannot simultaneously guarantee all three:**
@@ -75,7 +75,7 @@ class ConsistentHash:
         return self.ring[self.sorted_keys[0]]
 ```
 
-## 🚀 Advanced Patterns
+## Advanced Patterns
 
 ### Saga Pattern (Distributed Transactions)
 ```python
@@ -128,13 +128,13 @@ class EventStore:
         return self.query_events(stream_id, from_version)
 ```
 
-## 🔍 Distributed System Challenges
+## Distributed System Challenges
 - **Split-brain scenarios**: Multiple leaders elected
 - **Clock skew**: Timestamp ordering issues  
 - **Network partitions**: Handling isolated nodes
 - **Cascading failures**: Circuit breaker patterns
 
-## 📖 Resources
+## Resources
 - **DDIA Chapters 5-9**: Distributed system fundamentals
 - **Raft Consensus Algorithm**: Understandable consensus
 - **Amazon DynamoDB Paper**: Highly available key-value store

@@ -37,32 +37,42 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Pillar 1 (System Design):
+  - Pillar 1 (Systems Design):
       - "Overview": pillar-1/index.md
-      - "1.1 Foundations (Senior)":
-          - "Web & API Fundamentals": pillar-1/foundations/web-api.md
-          - "Database Basics": pillar-1/foundations/db-basics.md
-      - "1.2 Distributed Systems (Staff)":
-          - "Consistency & CAP": pillar-1/staff/consistency.md
-          - "Message Queues & Eventual Consistency": pillar-1/staff/messaging.md
-          - "Fault Tolerance Patterns": pillar-1/staff/fault-tolerance.md
-  - Pillar 2 (DSA):
+      - "Foundations":
+          - "API Design & REST": pillar-1/foundations/api-design.md
+          - "Database Design": pillar-1/foundations/database-design.md
+          - "Caching Strategies": pillar-1/foundations/caching.md
+      - "Advanced":
+          - "Distributed Systems": pillar-1/advanced/distributed-systems.md
+          - "Consistency Models": pillar-1/advanced/consistency.md
+          - "Fault Tolerance": pillar-1/advanced/fault-tolerance.md
+      - "Practice":
+          - "System Design Problems": pillar-1/practice/problems.md
+          - "Case Studies": pillar-1/practice/case-studies.md
+  - Pillar 2 (Data Structures & Algorithms):
       - "Overview": pillar-2/index.md
-      - "2.1 Core Structures (Senior)":
-          - "Linear Structures": pillar-2/core/linear.md
-          - "Trees & Graphs": pillar-2/core/trees-graphs.md
-      - "2.2 Algorithmic Patterns":
-          - "Dynamic Programming": pillar-2/patterns/dp.md
-          - "Sliding Window & Pointers": pillar-2/patterns/sliding-window.md
-      - "2.3 System Algorithms (Staff)":
-          - "Bloom Filters & Probabilistic": pillar-2/staff/probabilistic.md
-          - "Search & Indexing (B+ Trees)": pillar-2/staff/indexing.md
-  - Pillar 3 (Infra & Ops):
+      - "Foundations":
+          - "Arrays & Strings": pillar-2/foundations/arrays-strings.md
+          - "Trees & Graphs": pillar-2/foundations/trees-graphs.md
+          - "Hash Tables": pillar-2/foundations/hash-tables.md
+      - "Advanced":
+          - "System Algorithms": pillar-2/advanced/system-algorithms.md
+          - "Probabilistic Structures": pillar-2/advanced/probabilistic.md
+          - "Database Internals": pillar-2/advanced/database-internals.md
+      - "Practice":
+          - "Algorithm Problems": pillar-2/practice/problems.md
+          - "Optimization Challenges": pillar-2/practice/optimization.md
+  - Pillar 3 (Infrastructure & Operations):
       - "Overview": pillar-3/index.md
-      - "3.1 Concurrency (Senior)":
-          - "Threads & Synchronization": pillar-3/concurrency/threads.md
-      - "3.2 Data Internals (Staff)":
-          - "Replication & Sharding": pillar-3/staff/replication.md
-          - "Storage Engines (LSM vs B-Tree)": pillar-3/staff/storage.md
-      - "3.3 Observability":
-          - "Metrics, Logs, & Tracing": pillar-3/staff/observability.md
+      - "Foundations":
+          - "Concurrency & Threading": pillar-3/foundations/concurrency.md
+          - "Performance Optimization": pillar-3/foundations/performance.md
+          - "Monitoring Basics": pillar-3/foundations/monitoring.md
+      - "Advanced":
+          - "Distributed Storage": pillar-3/advanced/storage.md
+          - "Multi-Region Systems": pillar-3/advanced/multi-region.md
+          - "Observability at Scale": pillar-3/advanced/observability.md
+      - "Practice":
+          - "Infrastructure Problems": pillar-3/practice/problems.md
+          - "Production Scenarios": pillar-3/practice/scenarios.md

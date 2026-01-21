@@ -1,11 +1,11 @@
 # Fault Tolerance Patterns
 
-## 🎯 Learning Objectives
+## Learning Objectives
 - Implement resilience patterns for distributed systems
 - Design systems that gracefully handle failures
 - Understand failure modes and recovery strategies
 
-## 📚 Core Patterns
+## Core Patterns
 
 ### Circuit Breaker
 ```python
@@ -60,12 +60,12 @@ def retry_with_backoff(func, max_retries=3, base_delay=1, max_delay=60):
             time.sleep(delay + jitter)
 ```
 
-## 🚀 Advanced Patterns
+## Advanced Patterns
 - **Bulkhead Pattern**: Isolate critical resources
 - **Timeout Pattern**: Prevent resource exhaustion
 - **Graceful Degradation**: Maintain core functionality during failures
 - **Saga Pattern**: Manage distributed transactions
 
-## 📖 Resources
+## Resources
 - **Release It!**: Production-ready software patterns
 - **Chaos Engineering**: Proactive failure testing

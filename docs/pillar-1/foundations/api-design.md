@@ -1,11 +1,11 @@
 # API Design & REST Principles
 
-## 🎯 Learning Objectives
+## Learning Objectives
 - Design RESTful APIs that scale
 - Understand API versioning strategies
 - Apply consistent naming and error handling
 
-## 📚 Core Concepts
+## Core Concepts
 
 ### REST Principles
 - **Resource-oriented design**: URLs represent resources, not actions
@@ -31,7 +31,7 @@ POST /createOrderForUser
 2. **Header versioning**: `Accept: application/vnd.api+json;version=1`
 3. **Query parameter**: `/users?version=1`
 
-## 🔧 Best Practices
+## Best Practices
 
 ### Response Structure
 ```json
@@ -65,12 +65,12 @@ POST /createOrderForUser
 }
 ```
 
-## 🚀 Advanced Topics
+## Advanced Topics
 - **GraphQL vs REST**: When to choose each approach
 - **API Gateway patterns**: Rate limiting, authentication, transformation
 - **Hypermedia (HATEOAS)**: Self-describing APIs
 
-## 📖 Resources
+## Resources
 - [REST API Design Guidelines](https://restfulapi.net/)
 - [HTTP Status Code Guide](https://httpstatuses.com/)
 - **Practice**: Design APIs for common systems (e-commerce, social media)

@@ -1,11 +1,11 @@
 # Database Design & Modeling
 
-## 🎯 Learning Objectives
+## Learning Objectives
 - Design normalized database schemas
 - Understand indexing strategies
 - Choose appropriate data types and constraints
 
-## 📚 Core Concepts
+## Core Concepts
 
 ### Normalization
 - **1NF**: Atomic values, no repeating groups
@@ -48,7 +48,7 @@ CREATE INDEX idx_active_orders ON orders(user_id)
 WHERE status IN ('pending', 'processing');
 ```
 
-## 🔧 Best Practices
+## Best Practices
 
 ### Data Types
 - Use appropriate sizes: `INT` vs `BIGINT`, `VARCHAR(255)` vs `TEXT`
@@ -67,12 +67,12 @@ SELECT * FROM orders WHERE UPPER(status) = 'PENDING';
 SELECT * FROM orders WHERE status = 'pending';
 ```
 
-## 🚀 Advanced Topics
+## Advanced Topics
 - **Database Sharding**: Horizontal partitioning strategies
 - **Read Replicas**: Scaling read workloads
 - **ACID Properties**: Consistency guarantees and trade-offs
 
-## 📊 Common Patterns
+## Common Patterns
 
 | Pattern | Use Case | Example |
 |---------|----------|---------|
@@ -80,7 +80,7 @@ SELECT * FROM orders WHERE status = 'pending';
 | **Many-to-Many** | Users ↔ Roles | Join table `user_roles` |
 | **Polymorphic** | Comments on multiple entities | `commentable_type`, `commentable_id` |
 
-## 📖 Resources
+## Resources
 - **DDIA Chapter 2**: Data Models and Query Languages
 - [Database Design Guidelines](https://www.postgresql.org/docs/current/ddl.html)
 - **Practice**: Model schemas for different domains (social media, e-commerce, SaaS)

@@ -1,11 +1,11 @@
 # Staff Engineer Technical Guide
 
-## 🎯 The Purpose
+## The Purpose
 This guide is a **decision-making framework** designed to bridge the gap between "building things right" (Senior) and "building the right things" (Staff). The focus here is on **trade-offs, constraints, and system-level thinking.**
 
 ---
 
-## 🏗️ The Three Pillars of the Staff Mindset
+## The Three Pillars of the Staff Mindset
 
 ### 1. Systems Design & Architectural Patterns
 Focuses on the long-term evolution of a platform.
@@ -31,7 +31,7 @@ Focuses on how code interacts with the "real world" (hardware and networks).
 
 ---
 
-## 🛠️ How to Use This Guide
+## How to Use This Guide
 
 1.  **Trace the Request:** Follow a piece of data from the User (Pillar 1) through the Logic (Pillar 2) to the Disk (Pillar 3).
 2.  **Focus on the "Kill Switch":** For every technology listed, document why you should **not** use it.
@@ -39,7 +39,7 @@ Focuses on how code interacts with the "real world" (hardware and networks).
 
 ---
 
-## 📚 Essential External Resources
+## Essential External Resources
 
 ### Primary Reading
 * **"Designing Data-Intensive Applications" (DDIA)** – Martin Kleppmann

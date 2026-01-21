@@ -1,11 +1,11 @@
 # Probabilistic Data Structures
 
-## 🎯 Learning Objectives
+## Learning Objectives
 - Understand space-efficient probabilistic algorithms
 - Implement Bloom filters and HyperLogLog
 - Apply probabilistic structures in system design
 
-## 📚 Core Structures
+## Core Structures
 
 ### Bloom Filter
 ```python
@@ -147,7 +147,7 @@ cms.add("user123", 2)  # Total: 7
 print(f"Estimated frequency of user123: {cms.estimate('user123')}")  # Should be >= 7
 ```
 
-## 🚀 System Applications
+## System Applications
 
 ### Distributed Caching
 ```python
@@ -194,7 +194,7 @@ class AnalyticsService:
         return self.page_frequencies.estimate(page)
 ```
 
-## 📊 Trade-offs & Use Cases
+## Trade-offs & Use Cases
 
 | Structure | Space | Accuracy | Use Cases |
 |-----------|-------|----------|-----------|
@@ -202,13 +202,13 @@ class AnalyticsService:
 | **HyperLogLog** | Very Low | ~2% error | Unique visitor counting, cardinality |
 | **Count-Min Sketch** | Low | Overestimates | Heavy hitters, frequency estimation |
 
-## 🎯 Staff Engineering Considerations
+## Staff Engineering Considerations
 - **When to use**: Large-scale systems where exact accuracy isn't critical
 - **Trade-off decisions**: Space savings vs accuracy requirements
 - **Operational concerns**: Monitoring error rates, tuning parameters
 - **Alternative approaches**: When exact counts are required
 
-## 📖 Resources
+## Resources
 - **Original Papers**: Bloom (1970), Flajolet-Martin (1985), Cormode-Muthukrishnan (2005)
 - **Redis Modules**: RedisBloom for production implementations
 - **System Examples**: Google BigTable, Cassandra, Redis

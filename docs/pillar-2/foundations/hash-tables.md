@@ -1,11 +1,11 @@
 # Hash Tables & Hash Functions
 
-## 🎯 Learning Objectives
+## Learning Objectives
 - Implement efficient hash tables with collision resolution
 - Understand hash function properties and selection
 - Apply hash tables in system design
 
-## 📚 Core Concepts
+## Core Concepts
 
 ### Hash Table Implementation
 ```python
@@ -59,16 +59,16 @@ class HashTable:
         raise KeyError(key)
 ```
 
-## 🔧 Hash Function Design
+## Hash Function Design
 - **Uniform Distribution**: Minimize clustering
 - **Deterministic**: Same input → same output
 - **Efficient**: Fast computation
 - **Avalanche Effect**: Small input changes → large hash changes
 
-## 🚀 Advanced Applications
+## Advanced Applications
 - **Consistent Hashing**: Distributed systems
 - **Bloom Filters**: Probabilistic membership testing
 - **Hash-based Sharding**: Database partitioning
 
-## 📖 Practice Problems
+## Practice Problems
 - Design HashMap, Group Anagrams, Two Sum variants

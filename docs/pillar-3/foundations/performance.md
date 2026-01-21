@@ -1,11 +1,11 @@
 # Performance Optimization
 
-## 🎯 Learning Objectives
+## Learning Objectives
 - Profile and identify performance bottlenecks
 - Apply optimization techniques for CPU, memory, and I/O
 - Understand performance trade-offs in system design
 
-## 📚 Core Concepts
+## Core Concepts
 
 ### Profiling & Measurement
 ```python
@@ -47,17 +47,17 @@ def expensive_operation():
 - **Asynchronous I/O**: Non-blocking operations
 - **Connection Pooling**: Reuse database connections
 
-## 🚀 System-Level Performance
+## System-Level Performance
 - **Load Balancing**: Distribute requests across servers
 - **Caching Layers**: Redis, CDN, application cache
 - **Database Optimization**: Indexing, query optimization
 - **Horizontal Scaling**: Add more servers vs bigger servers
 
-## 📊 Performance Metrics
+## Performance Metrics
 - **Throughput**: Requests per second
 - **Latency**: Response time (p50, p95, p99)
 - **Resource Utilization**: CPU, memory, disk, network
 
-## 📖 Resources
+## Resources
 - **Systems Performance**: Brendan Gregg's methodology
 - **High Performance Browser Networking**: Web performance
