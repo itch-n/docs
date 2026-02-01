@@ -59,6 +59,7 @@ markdown_extensions:
   - tables
   - toc:
       permalink: true
+      toc_depth: 2
   - pymdownx.tasklist:
       custom_checkbox: true  # Recommended for better styling
   - pymdownx.details
