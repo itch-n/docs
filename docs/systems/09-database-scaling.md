@@ -6,85 +6,92 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing database scaling strategies, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is database scaling in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **Why do databases need to scale?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy for sharding:**
     - Example: "Sharding is like having multiple filing cabinets where..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **What is sharding in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 5. **How is replication different from sharding?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 6. **Real-world analogy for replication:**
     - Example: "Replication is like photocopying important documents where..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 7. **What is partitioning in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 8. **When would you use horizontal vs vertical scaling?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition about database scaling without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Single database serving reads and writes:**
-    - Bottleneck: _[Your guess: CPU/Memory/Disk/Network?]_
-    - Verified after learning: _[Actual bottleneck]_
+    - Bottleneck: <span class="fill-in">[Your guess: CPU/Memory/Disk/Network?]</span>
+    - Verified after learning: <span class="fill-in">[Actual bottleneck]</span>
 
 2. **Master-slave replication with 3 read replicas:**
-    - Read capacity increase: _[Your guess: 2x/3x/4x?]_
-    - Write capacity increase: _[Your guess: No change/2x/3x?]_
-    - Verified: _[Actual capacity changes]_
+    - Read capacity increase: <span class="fill-in">[Your guess: 2x/3x/4x?]</span>
+    - Write capacity increase: <span class="fill-in">[Your guess: No change/2x/3x?]</span>
+    - Verified: <span class="fill-in">[Actual capacity changes]</span>
 
 3. **Sharding 1TB database across 10 shards:**
-    - Data per shard: _[Calculate: _____ GB]_
-    - If one shard fails, data lost: _[Yes/No/Depends?]_
-    - Speedup for single-key lookups: _[10x/No change/Slower?]_
+    - Data per shard: <span class="fill-in">[Calculate: <span class="fill-in">_____</span> GB]</span>
+    - If one shard fails, data lost: <span class="fill-in">[Yes/No/Depends?]</span>
+    - Speedup for single-key lookups: <span class="fill-in">[10x/No change/Slower?]</span>
 
 ### Scenario Predictions
 
 **Scenario 1:** Social media app with 100M users, 90% reads, 10% writes
 
-- **Best scaling strategy:** _[Sharding/Replication/Both - Why?]_
-- **If using replication, how many read replicas?** _[2/5/10 - Reasoning?]_
-- **Main challenge:** _[Fill in your prediction]_
+- **Best scaling strategy:** <span class="fill-in">[Sharding/Replication/Both - Why?]</span>
+- **If using replication, how many read replicas?** <span class="fill-in">[2/5/10 - Reasoning?]</span>
+- **Main challenge:** <span class="fill-in">[Fill in your prediction]</span>
 
 **Scenario 2:** E-commerce site storing user profiles, each 5KB
 
 - **You need to shard by user_id. What happens to:**
-    - Single user lookups? _[Faster/Same/Slower - Why?]_
-    - Cross-user analytics queries? _[Faster/Same/Slower - Why?]_
-    - Adding new shards? _[Easy/Hard - Why?]_
+    - Single user lookups? <span class="fill-in">[Faster/Same/Slower - Why?]</span>
+    - Cross-user analytics queries? <span class="fill-in">[Faster/Same/Slower - Why?]</span>
+    - Adding new shards? <span class="fill-in">[Easy/Hard - Why?]</span>
 
 **Scenario 3:** Time-series IoT data, queries by timestamp ranges
 
-- **Best sharding strategy:** _[Hash/Range/Consistent - Why?]_
-- **Shard key should be:** _[user_id/timestamp/device_id - Why?]_
-- **What's the risk?** _[Fill in your prediction]_
+- **Best sharding strategy:** <span class="fill-in">[Hash/Range/Consistent - Why?]</span>
+- **Shard key should be:** <span class="fill-in">[user_id/timestamp/device_id - Why?]</span>
+- **What's the risk?** <span class="fill-in">[Fill in your prediction]</span>
 
 ### Trade-off Quiz
 
 **Question:** When would vertical partitioning be BETTER than adding more RAM?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** What's the MAIN downside of sharding vs replication?
 
@@ -93,7 +100,7 @@
 - [ ] Slower single-key lookups
 - [ ] Requires more DBAs
 
-Verify after implementation: _[Which one(s) and why?]_
+Verify after implementation: <span class="fill-in">[Which one(s) and why?]</span>
 
 **Question:** Replication lag is 2 seconds. A user updates their profile, then immediately views it. What do they see?
 
@@ -102,8 +109,11 @@ Verify after implementation: _[Which one(s) and why?]_
 - [ ] Old data if load balancer picks slave
 - [ ] Random
 
-Your answer: _[Fill in]_
-Verified: _[Fill in after understanding replication]_
+Your answer: <span class="fill-in">[Fill in]</span>
+Verified: <span class="fill-in">[Fill in after understanding replication]</span>
+
+
+</div>
 
 ---
 
@@ -228,23 +238,27 @@ Architecture:
 
 ```
 2010: Single PostgreSQL database
+
 - 10K users
 - Single server
 - Cost: $500/month
 
 2011: Master-slave replication
+
 - 1M users
 - 1 master + 3 read replicas
 - Can't scale writes fast enough
 - Cost: $5K/month
 
 2012: Sharded by user_id
+
 - 10M users
 - 100+ shards
 - Custom sharding logic
 - Cost: $50K/month
 
 2015: Cassandra (distributed database)
+
 - 500M users
 - Automatic sharding + replication
 - No single point of failure
@@ -285,9 +299,13 @@ All 1000 requests handled, with 2000 req/sec headroom
 
 **After implementing, explain in your own words:**
 
-- _[Why does replication not help writes?]_
-- _[Why does sharding help both reads and writes?]_
-- _[When would you combine replication + sharding?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does replication not help writes?]</span>
+- <span class="fill-in">[Why does sharding help both reads and writes?]</span>
+- <span class="fill-in">[When would you combine replication + sharding?]</span>
+
+</div>
 
 ---
 
@@ -1136,15 +1154,15 @@ public class BrokenHashSharding {
 
 **Your debugging:**
 
-- **Bug location:** _[Which line?]_
-- **Bug explanation:** _[Why does this cause hotspots?]_
-- **Bug fix:** _[What should the hash function be?]_
+- **Bug location:** <span class="fill-in">[Which line?]</span>
+- **Bug explanation:** <span class="fill-in">[Why does this cause hotspots?]</span>
+- **Bug fix:** <span class="fill-in">[What should the hash function be?]</span>
 
 **Trace through example:**
 
 - Keys: "user1", "user2", "user99" (all length 5)
-- With 3 shards, where do they go? _[All to shard ___]_
-- Expected: _[Should be distributed across all shards]_
+- With 3 shards, where do they go? <span class="fill-in">[All to shard ___]</span>
+- Expected: <span class="fill-in">[Should be distributed across all shards]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1204,10 +1222,10 @@ public class BrokenReplication {
 
 **Your debugging:**
 
-- **Bug location:** _[What's the problem?]_
-- **Bug explanation:** _[Why do users see stale data?]_
-- **Fix option 1:** _[How to guarantee read-after-write consistency?]_
-- **Fix option 2:** _[Alternative approach?]_
+- **Bug location:** <span class="fill-in">[What's the problem?]</span>
+- **Bug explanation:** <span class="fill-in">[Why do users see stale data?]</span>
+- **Fix option 1:** <span class="fill-in">[How to guarantee read-after-write consistency?]</span>
+- **Fix option 2:** <span class="fill-in">[Alternative approach?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1287,14 +1305,14 @@ public class BrokenCrossShardQuery {
 
 **Your debugging:**
 
-- **Bug 1 (Performance):** _[Why is serial query slow?]_
-- **Bug 1 fix:** _[How to parallelize?]_
+- **Bug 1 (Performance):** <span class="fill-in">[Why is serial query slow?]</span>
+- **Bug 1 fix:** <span class="fill-in">[How to parallelize?]</span>
 
-- **Bug 2 (Memory):** _[What happens with millions of results?]_
-- **Bug 2 fix:** _[How to handle large result sets?]_
+- **Bug 2 (Memory):** <span class="fill-in">[What happens with millions of results?]</span>
+- **Bug 2 fix:** <span class="fill-in">[How to handle large result sets?]</span>
 
-- **Bug 3 (Reliability):** _[What if one shard hangs?]_
-- **Bug 3 fix:** _[How to add timeout?]_
+- **Bug 3 (Reliability):** <span class="fill-in">[What if one shard hangs?]</span>
+- **Bug 3 fix:** <span class="fill-in">[How to add timeout?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1384,11 +1402,11 @@ public class BrokenSharding {
 
 **Your debugging:**
 
-- **Design bug:** _[Why does one user cause shard overload?]_
-- **When does this happen?** _[What data pattern causes hotspots?]_
-- **Fix option 1:** _[How to split celebrity data?]_
-- **Fix option 2:** _[How to cache celebrity data?]_
-- **Fix option 3:** _[Different sharding strategy?]_
+- **Design bug:** <span class="fill-in">[Why does one user cause shard overload?]</span>
+- **When does this happen?** <span class="fill-in">[What data pattern causes hotspots?]</span>
+- **Fix option 1:** <span class="fill-in">[How to split celebrity data?]</span>
+- **Fix option 2:** <span class="fill-in">[How to cache celebrity data?]</span>
+- **Fix option 3:** <span class="fill-in">[Different sharding strategy?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1480,11 +1498,11 @@ public class BrokenMasterFailover {
 
 **Your debugging:**
 
-- **Bug:** _[What's the split-brain problem?]_
-- **Why it's catastrophic:** _[What happens to data?]_
-- **Fix option 1:** _[How to prevent old master from accepting writes?]_
-- **Fix option 2:** _[How to detect split brain?]_
-- **Real-world solution:** _[What do production systems do?]_
+- **Bug:** <span class="fill-in">[What's the split-brain problem?]</span>
+- **Why it's catastrophic:** <span class="fill-in">[What happens to data?]</span>
+- **Fix option 1:** <span class="fill-in">[How to prevent old master from accepting writes?]</span>
+- **Fix option 2:** <span class="fill-in">[How to detect split brain?]</span>
+- **Real-world solution:** <span class="fill-in">[What do production systems do?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1570,17 +1588,17 @@ After finding and fixing all bugs:
 
 **Common scaling bugs you discovered:**
 
-1. _[Poor hash functions cause hotspots]_
-2. _[Replication lag causes stale reads]_
-3. _[Cross-shard queries need parallelization and pagination]_
-4. _[Celebrity/popular entity data causes hot shards]_
-5. _[Split-brain in failover causes data conflicts]_
+1. <span class="fill-in">[Poor hash functions cause hotspots]</span>
+2. <span class="fill-in">[Replication lag causes stale reads]</span>
+3. <span class="fill-in">[Cross-shard queries need parallelization and pagination]</span>
+4. <span class="fill-in">[Celebrity/popular entity data causes hot shards]</span>
+5. <span class="fill-in">[Split-brain in failover causes data conflicts]</span>
 
 **Your takeaways:**
 
-- Which bug surprised you most? _[Fill in]_
-- Which bug is hardest to detect in production? _[Fill in]_
-- Which bug has the worst consequences? _[Fill in]_
+- Which bug surprised you most? <span class="fill-in">[Fill in]</span>
+- Which bug is hardest to detect in production? <span class="fill-in">[Fill in]</span>
+- Which bug has the worst consequences? <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1592,50 +1610,50 @@ After finding and fixing all bugs:
 
 **When to use Hash-Based Sharding?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 **When to use Range-Based Sharding?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 **When to use Master-Slave Replication?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 **When to use Vertical Partitioning?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 **When to use Consistent Hash Sharding?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 ### 2. Trade-offs
 
 **Hash-Based Sharding:**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 **Range-Based Sharding:**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 **Master-Slave Replication:**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 **Vertical Partitioning:**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 ### 3. Your Decision Tree
 
@@ -1654,18 +1672,18 @@ What is your bottleneck?
 
 **Sharding:**
 
-1. _[When does sharding fail? Fill in]_
-2. _[Another failure case]_
+1. <span class="fill-in">[When does sharding fail? Fill in]</span>
+2. <span class="fill-in">[Another failure case]</span>
 
 **Replication:**
 
-1. _[When does replication fail? Fill in]_
-2. _[Another failure case]_
+1. <span class="fill-in">[When does replication fail? Fill in]</span>
+2. <span class="fill-in">[Another failure case]</span>
 
 **Partitioning:**
 
-1. _[When does partitioning fail? Fill in]_
-2. _[Another failure case]_
+1. <span class="fill-in">[When does partitioning fail? Fill in]</span>
+2. <span class="fill-in">[Another failure case]</span>
 
 ### 5. Rule of Three - Alternatives
 
@@ -1673,9 +1691,9 @@ For each scenario, identify alternatives and compare:
 
 **Scenario: Social network with 100M users**
 
-1. Option A: _[Fill in]_
-2. Option B: _[Fill in]_
-3. Option C: _[Fill in]_
+1. Option A: <span class="fill-in">[Fill in]</span>
+2. Option B: <span class="fill-in">[Fill in]</span>
+3. Option C: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1692,10 +1710,10 @@ For each scenario, identify alternatives and compare:
 
 **Your design:**
 
-- Which strategy would you choose? _[Fill in]_
-- Why? _[Fill in]_
-- How many replicas? _[Fill in]_
-- Consistency guarantees? _[Fill in]_
+- Which strategy would you choose? <span class="fill-in">[Fill in]</span>
+- Why? <span class="fill-in">[Fill in]</span>
+- How many replicas? <span class="fill-in">[Fill in]</span>
+- Consistency guarantees? <span class="fill-in">[Fill in]</span>
 
 ### Scenario 2: Scale social media platform
 
@@ -1708,10 +1726,10 @@ For each scenario, identify alternatives and compare:
 
 **Your design:**
 
-- Which sharding strategy? _[Fill in]_
-- What's the shard key? _[Fill in]_
-- How to handle hot users (celebrities)? _[Fill in]_
-- Cross-shard queries? _[Fill in]_
+- Which sharding strategy? <span class="fill-in">[Fill in]</span>
+- What's the shard key? <span class="fill-in">[Fill in]</span>
+- How to handle hot users (celebrities)? <span class="fill-in">[Fill in]</span>
+- Cross-shard queries? <span class="fill-in">[Fill in]</span>
 
 ### Scenario 3: Time-series data storage
 
@@ -1724,10 +1742,10 @@ For each scenario, identify alternatives and compare:
 
 **Your design:**
 
-- Which partitioning strategy? _[Fill in]_
-- How to partition? _[Fill in]_
-- Archival strategy? _[Fill in]_
-- Query optimization? _[Fill in]_
+- Which partitioning strategy? <span class="fill-in">[Fill in]</span>
+- How to partition? <span class="fill-in">[Fill in]</span>
+- Archival strategy? <span class="fill-in">[Fill in]</span>
+- Query optimization? <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1757,13 +1775,13 @@ For each scenario, identify alternatives and compare:
 
 > "Database scaling is necessary because..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation convince a non-technical stakeholder? _[Yes/No]_
-- Did you mention business impact (cost, performance, reliability)? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation convince a non-technical stakeholder? <span class="fill-in">[Yes/No]</span>
+- Did you mention business impact (cost, performance, reliability)? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -1812,12 +1830,12 @@ _________________________________________________________________
 
 | Scenario | Best Strategy | Why? | Trade-off? |
 |----------|--------------|------|------------|
-| 95% reads, 5% writes, 10M records | _[Fill in]_ | _[Explain]_ | _[Main downside]_ |
-| 50% reads, 50% writes, 100M records | _[Fill in]_ | _[Explain]_ | _[Main downside]_ |
-| Time-series data, range queries | _[Fill in]_ | _[Explain]_ | _[Main downside]_ |
-| Social network with celebrity users | _[Fill in]_ | _[Explain]_ | _[Main downside]_ |
-| Need 99.99% write availability | _[Fill in]_ | _[Explain]_ | _[Main downside]_ |
-| Small data, need low latency reads | _[Fill in]_ | _[Explain]_ | _[Main downside]_ |
+| 95% reads, 5% writes, 10M records | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[Main downside]</span> |
+| 50% reads, 50% writes, 100M records | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[Main downside]</span> |
+| Time-series data, range queries | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[Main downside]</span> |
+| Social network with celebrity users | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[Main downside]</span> |
+| Need 99.99% write availability | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[Main downside]</span> |
+| Small data, need low latency reads | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[Main downside]</span> |
 
 **Score:** ___/6 correct
 
@@ -1838,21 +1856,21 @@ If you scored below 5/6, review the patterns and try again.
 
 **Option A: Master-slave replication**
 
-- Number of read replicas needed: _[Calculate]_
-- Total monthly cost: _[Calculate]_
-- Write capacity: _[What happens?]_
+- Number of read replicas needed: <span class="fill-in">[Calculate]</span>
+- Total monthly cost: <span class="fill-in">[Calculate]</span>
+- Write capacity: <span class="fill-in">[What happens?]</span>
 
 **Option B: Sharding (hash-based)**
 
-- Number of shards needed: _[Calculate]_
-- Total monthly cost: _[Calculate]_
-- Write capacity: _[What happens?]_
+- Number of shards needed: <span class="fill-in">[Calculate]</span>
+- Total monthly cost: <span class="fill-in">[Calculate]</span>
+- Write capacity: <span class="fill-in">[What happens?]</span>
 
-**Your recommendation:** I would choose _[A/B]_ because...
+**Your recommendation:** I would choose <span class="fill-in">[A/B]</span> because...
 
-_[Fill in your reasoning - consider cost, complexity, scalability]_
+<span class="fill-in">[Fill in your reasoning - consider cost, complexity, scalability]</span>
 
-**What if read ratio changes to 50%?** _[How does this change your decision?]_
+**What if read ratio changes to 50%?** <span class="fill-in">[How does this change your decision?]</span>
 
 ---
 
@@ -1862,11 +1880,11 @@ _[Fill in your reasoning - consider cost, complexity, scalability]_
 
 **Your diagnosis:**
 
-1. **What's the likely cause?** _[Fill in]_
-2. **How would you verify this?** _[What metrics/logs to check?]_
-3. **Quick fix?** _[Immediate mitigation]_
-4. **Proper fix?** _[Long-term solution]_
-5. **Prevention?** _[How to avoid this in the future?]_
+1. **What's the likely cause?** <span class="fill-in">[Fill in]</span>
+2. **How would you verify this?** <span class="fill-in">[What metrics/logs to check?]</span>
+3. **Quick fix?** <span class="fill-in">[Immediate mitigation]</span>
+4. **Proper fix?** <span class="fill-in">[Long-term solution]</span>
+5. **Prevention?** <span class="fill-in">[How to avoid this in the future?]</span>
 
 **Verification checklist:**
 
@@ -1884,30 +1902,30 @@ _[Fill in your reasoning - consider cost, complexity, scalability]_
 
 **Sharding (horizontal scaling):**
 
-- Pros: _[List 3]_
-  1. _[Fill in]_
-  2. _[Fill in]_
-  3. _[Fill in]_
-- Cons: _[List 3]_
-  1. _[Fill in]_
-  2. _[Fill in]_
-  3. _[Fill in]_
+- Pros: <span class="fill-in">[List 3]</span>
+  1. <span class="fill-in">[Fill in]</span>
+  2. <span class="fill-in">[Fill in]</span>
+  3. <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[List 3]</span>
+  1. <span class="fill-in">[Fill in]</span>
+  2. <span class="fill-in">[Fill in]</span>
+  3. <span class="fill-in">[Fill in]</span>
 
 **Vertical Scaling (bigger server):**
 
-- Pros: _[List 3]_
-  1. _[Fill in]_
-  2. _[Fill in]_
-  3. _[Fill in]_
-- Cons: _[List 3]_
-  1. _[Fill in]_
-  2. _[Fill in]_
-  3. _[Fill in]_
+- Pros: <span class="fill-in">[List 3]</span>
+  1. <span class="fill-in">[Fill in]</span>
+  2. <span class="fill-in">[Fill in]</span>
+  3. <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[List 3]</span>
+  1. <span class="fill-in">[Fill in]</span>
+  2. <span class="fill-in">[Fill in]</span>
+  3. <span class="fill-in">[Fill in]</span>
 
 **When would you choose vertical scaling over sharding?**
 
-- Scenario 1: _[Fill in]_
-- Scenario 2: _[Fill in]_
+- Scenario 1: <span class="fill-in">[Fill in]</span>
+- Scenario 2: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1917,15 +1935,15 @@ _[Fill in your reasoning - consider cost, complexity, scalability]_
 
 **Your response plan (in order):**
 
-1. **Immediate action (0-5 minutes):** _[What do you do first?]_
-2. **Impact assessment (5-10 minutes):** _[What do you check?]_
-3. **Mitigation (10-30 minutes):** _[How to restore service?]_
-4. **Communication:** _[What do you tell users/team?]_
-5. **Root cause (next day):** _[How to prevent recurrence?]_
+1. **Immediate action (0-5 minutes):** <span class="fill-in">[What do you do first?]</span>
+2. **Impact assessment (5-10 minutes):** <span class="fill-in">[What do you check?]</span>
+3. **Mitigation (10-30 minutes):** <span class="fill-in">[How to restore service?]</span>
+4. **Communication:** <span class="fill-in">[What do you tell users/team?]</span>
+5. **Root cause (next day):** <span class="fill-in">[How to prevent recurrence?]</span>
 
 **Key question:** Why can't the other 90% of users access their data if only one shard is down?
 
-Your answer: _[Fill in - this tests understanding of sharding]_
+Your answer: <span class="fill-in">[Fill in - this tests understanding of sharding]</span>
 
 ---
 
@@ -1977,32 +1995,32 @@ public class ShardRouter {
 
 **1. Sharding strategy:**
 
-- Shard key: _[user_id/post_id/other?]_
-- Why this key? _[Fill in reasoning]_
-- Number of shards: _[Estimate]_
+- Shard key: <span class="fill-in">[user_id/post_id/other?]</span>
+- Why this key? <span class="fill-in">[Fill in reasoning]</span>
+- Number of shards: <span class="fill-in">[Estimate]</span>
 
 **2. Replication:**
 
-- Read replicas per shard? _[How many?]_
-- Why? _[Justify the number]_
+- Read replicas per shard? <span class="fill-in">[How many?]</span>
+- Why? <span class="fill-in">[Justify the number]</span>
 
 **3. Consistency:**
 
-- Strong or eventual? _[Choose and explain]_
-- Read-after-write consistency? _[Yes/No/Conditional?]_
+- Strong or eventual? <span class="fill-in">[Choose and explain]</span>
+- Read-after-write consistency? <span class="fill-in">[Yes/No/Conditional?]</span>
 
 **4. Hot shard handling:**
 
-- Problem: _[What causes hot shards?]_
-- Solution: _[How to handle celebrities?]_
+- Problem: <span class="fill-in">[What causes hot shards?]</span>
+- Solution: <span class="fill-in">[How to handle celebrities?]</span>
 
 **5. Cross-shard queries:**
 
 - Example query: "Show me posts from my followers"
-- How to execute? _[Explain your approach]_
-- Trade-offs? _[What's expensive?]_
+- How to execute? <span class="fill-in">[Explain your approach]</span>
+- Trade-offs? <span class="fill-in">[What's expensive?]</span>
 
-**Self-assessment:** Could you explain this design in a 45-minute interview? _[Yes/No]_
+**Self-assessment:** Could you explain this design in a 45-minute interview? <span class="fill-in">[Yes/No]</span>
 
 ---
 
@@ -2016,13 +2034,13 @@ Your explanation:
 
 > "Replication and sharding are both ways to scale databases, but..."
 >
-> _[Fill in 4-6 sentences explaining the key differences, when to use each, and a simple analogy for each]_
+> <span class="fill-in">[Fill in 4-6 sentences explaining the key differences, when to use each, and a simple analogy for each]</span>
 
 **Then explain the most common mistake:**
 
 > "The biggest mistake people make when first implementing [replication/sharding] is..."
 >
-> _[Fill in - what's the #1 pitfall?]_
+> <span class="fill-in">[Fill in - what's the #1 pitfall?]</span>
 
 ---
 

@@ -6,76 +6,83 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing all patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is binary search in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **Why is O(log n) so fast?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy:**
     - Example: "Binary search is like finding a word in a dictionary by opening to the middle..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **When does binary search work?**
-    - Your answer: _[Fill in after solving problems]_
+    - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
 
 5. **What breaks binary search?**
-    - Your answer: _[Fill in after testing]_
+    - Your answer: <span class="fill-in">[Fill in after testing]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Linear search through entire array:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Verified after learning: _[Actual: O(?)]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
 
 2. **Binary search in sorted array:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity: _[Your guess: O(?)]_
-    - Verified: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **Speedup calculation:**
-    - If n = 1,024, linear search = n = _____ operations
-    - Binary search = log₂(n) = _____ operations
-    - Speedup factor: _____ times faster
+    - If n = 1,024, linear search = n = <span class="fill-in">_____</span> operations
+    - Binary search = log₂(n) = <span class="fill-in">_____</span> operations
+    - Speedup factor: <span class="fill-in">_____</span> times faster
 
 ### Scenario Predictions
 
 **Scenario 1:** Find 7 in `[1, 3, 5, 7, 9, 11, 13]`
 
-- **Can you use binary search?** _[Yes/No - Why?]_
-- **Starting positions:** left = ___, right = ___
-- **First mid calculation:** mid = ___
-- **If nums[mid] = 5 (too small), which pointer moves?** _[Left/Right - Why?]_
-- **If nums[mid] = 9 (too big), which pointer moves?** _[Left/Right - Why?]_
+- **Can you use binary search?** <span class="fill-in">[Yes/No - Why?]</span>
+- **Starting positions:** left = <span class="fill-in">___</span>, right = <span class="fill-in">___</span>
+- **First mid calculation:** mid = <span class="fill-in">___</span>
+- **If nums[mid] = 5 (too small), which pointer moves?** <span class="fill-in">[Left/Right - Why?]</span>
+- **If nums[mid] = 9 (too big), which pointer moves?** <span class="fill-in">[Left/Right - Why?]</span>
 
 **Scenario 2:** Find 6 in `[1, 3, 5, 7, 9, 11, 13]` (not present)
 
-- **What will binary search return?** _[Fill in]_
-- **What's the value of left when search ends?** _[Fill in]_
-- **Could you use that for insert position?** _[Yes/No - Why?]_
+- **What will binary search return?** <span class="fill-in">[Fill in]</span>
+- **What's the value of left when search ends?** <span class="fill-in">[Fill in]</span>
+- **Could you use that for insert position?** <span class="fill-in">[Yes/No - Why?]</span>
 
 **Scenario 3:** Find 8 in rotated array `[6, 7, 8, 1, 2, 3, 4, 5]`
 
-- **Can you use classic binary search directly?** _[Yes/No - Why?]_
-- **Which half is sorted after first mid?** _[Fill in your reasoning]_
-- **How do you determine which half to search?** _[Fill in]_
+- **Can you use classic binary search directly?** <span class="fill-in">[Yes/No - Why?]</span>
+- **Which half is sorted after first mid?** <span class="fill-in">[Fill in your reasoning]</span>
+- **How do you determine which half to search?** <span class="fill-in">[Fill in]</span>
 
 ### Trade-off Quiz
 
 **Question:** When would linear search be BETTER than binary search?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** What's the MAIN requirement for binary search to work?
 
@@ -84,12 +91,15 @@
 - [ ] Array must contain unique elements
 - [ ] Array must be positive integers
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 **Question:** What happens if you calculate mid as `(left + right) / 2` with large numbers?
 
-- Your answer: _[Fill in - consider integer overflow]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in - consider integer overflow]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
+
+
+</div>
 
 ---
 
@@ -194,9 +204,13 @@ n = 1,048,576 → log₂(1,048,576) = 20 steps
 
 **After implementing, explain in your own words:**
 
-- _[Why is O(log n) so much faster than O(n)?]_
-- _[What property of sorted arrays makes this possible?]_
-- _[What happens at each step that makes it logarithmic?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why is O(log n) so much faster than O(n)?]</span>
+- <span class="fill-in">[What property of sorted arrays makes this possible?]</span>
+- <span class="fill-in">[What happens at each step that makes it logarithmic?]</span>
+
+</div>
 
 ---
 
@@ -679,13 +693,13 @@ public static int binarySearch_Buggy(int[] nums, int target) {
 
 **Your debugging:**
 
-- **Bug 1 location:** _[Which line?]_
-- **Bug 1 explanation:** _[What's wrong?]_
-- **Bug 1 fix:** _[What should it be?]_
+- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 1 explanation:** <span class="fill-in">[What's wrong?]</span>
+- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
 
-- **Bug 2 location:** _[Which line?]_
-- **Bug 2 explanation:** _[What error will occur with large numbers?]_
-- **Bug 2 fix:** _[How to fix?]_
+- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 2 explanation:** <span class="fill-in">[What error will occur with large numbers?]</span>
+- **Bug 2 fix:** <span class="fill-in">[How to fix?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -734,15 +748,15 @@ public static int findFirst_Buggy(int[] nums, int target) {
 
 **Your debugging:**
 
-- **Bug location:** _[Which line causes infinite loop?]_
-- **Bug explanation:** _[Why does it loop forever?]_
-- **Bug fix:** _[What should the line be?]_
+- **Bug location:** <span class="fill-in">[Which line causes infinite loop?]</span>
+- **Bug explanation:** <span class="fill-in">[Why does it loop forever?]</span>
+- **Bug fix:** <span class="fill-in">[What should the line be?]</span>
 
 **Test case to expose the bug:**
 
 - Input: `[5, 7, 7, 8, 8, 8, 10]`, target = 8
 - Expected: index 3 (first occurrence)
-- Actual: _[What happens? Trace through manually]_
+- Actual: <span class="fill-in">[What happens? Trace through manually]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -810,13 +824,13 @@ public static int searchRotated_Buggy(int[] nums, int target) {
 
 **Your debugging:**
 
-- **Bug:** _[What's the logic error in the left-sorted check?]_
+- **Bug:** <span class="fill-in">[What's the logic error in the left-sorted check?]</span>
 - **Example:** Test with `[3, 1]`, target = 1
     - Step 1: left=0, right=1, mid=0, nums[0]=3, nums[1]=1
-    - nums[left] < nums[mid]? _[What happens?]_
+    - nums[left] < nums[mid]? <span class="fill-in">[What happens?]</span>
     - Expected: return 1
-    - Actual: _[What do you get?]_
-- **Fix:** _[How to correct the condition?]_
+    - Actual: <span class="fill-in">[What do you get?]</span>
+- **Fix:** <span class="fill-in">[How to correct the condition?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -880,15 +894,15 @@ public static int searchInsert_Buggy(int[] nums, int target) {
 
 **Your debugging:**
 
-- **Bug 1:** _[Should loop condition be `<` or `<=`?]_
-- **Bug 2:** _[What if target should go after all elements?]_
+- **Bug 1:** <span class="fill-in">[Should loop condition be `<` or `<=`?]</span>
+- **Bug 2:** <span class="fill-in">[What if target should go after all elements?]</span>
 - **Example:** Input `[1, 3, 5]`, target = 4
     - Expected: 2 (insert between 3 and 5)
-    - Trace through: _[What do you get?]_
+    - Trace through: <span class="fill-in">[What do you get?]</span>
 - **Example:** Input `[1, 3, 5]`, target = 6
     - Expected: 3 (insert at end)
-    - Trace through: _[What do you get?]_
-- **Fix:** _[How to handle both cases correctly?]_
+    - Trace through: <span class="fill-in">[What do you get?]</span>
+- **Fix:** <span class="fill-in">[How to handle both cases correctly?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -957,12 +971,12 @@ public static int findMin_Buggy(int[] nums) {
 
 **Your debugging:**
 
-- **Bug 1:** _[Line with `left = mid` - what's wrong?]_
-- **Bug 2:** _[Line with `right = mid - 1` - what's wrong?]_
+- **Bug 1:** <span class="fill-in">[Line with `left = mid` - what's wrong?]</span>
+- **Bug 2:** <span class="fill-in">[Line with `right = mid - 1` - what's wrong?]</span>
 - **Example:** Input `[3, 4, 5, 1, 2]`
     - Expected: 1
-    - Trace through buggy version: _[What do you get?]_
-- **Fix:** _[Correct both pointer updates]_
+    - Trace through buggy version: <span class="fill-in">[What do you get?]</span>
+- **Fix:** <span class="fill-in">[Correct both pointer updates]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -977,6 +991,7 @@ nums = [3, 4, 5, 1, 2]
 left=0, right=4, mid=2, nums[2]=5, nums[4]=2
 5 > 2 → left=2  (WRONG! Should be 3)
 left=2, right=4, mid=3, nums[3]=1, nums[4]=2
+
 1 > 2? NO → right=2  (WRONG! Should be 3)
 left=2, right=2, loop ends
 return nums[2]=5  (WRONG! Should be 1)
@@ -1005,17 +1020,17 @@ After finding and fixing all bugs:
 
 **Common mistakes you discovered:**
 
-1. _[Off-by-one errors in initialization: right = length vs length-1]_
-2. _[Integer overflow in mid calculation]_
-3. _[Infinite loops from wrong pointer updates]_
-4. _[Wrong loop conditions: < vs <=]_
-5. _[Fill in more patterns you noticed]_
+1. <span class="fill-in">[Off-by-one errors in initialization: right = length vs length-1]</span>
+2. <span class="fill-in">[Integer overflow in mid calculation]</span>
+3. <span class="fill-in">[Infinite loops from wrong pointer updates]</span>
+4. <span class="fill-in">[Wrong loop conditions: < vs <=]</span>
+5. <span class="fill-in">[Fill in more patterns you noticed]</span>
 
 **The three most dangerous binary search bugs:**
 
-1. **Off-by-one:** _[When does this happen?]_
-2. **Infinite loop:** _[What causes this?]_
-3. **Integer overflow:** _[How to prevent?]_
+1. **Off-by-one:** <span class="fill-in">[When does this happen?]</span>
+2. **Infinite loop:** <span class="fill-in">[What causes this?]</span>
+3. **Integer overflow:** <span class="fill-in">[How to prevent?]</span>
 
 ---
 
@@ -1026,27 +1041,28 @@ After finding and fixing all bugs:
 ### Question 1: Is the data sorted?
 
 Answer after solving problems:
-- **Already sorted?** _[Classic binary search]_
-- **Rotated?** _[Find sorted half, adjust search]_
-- **Partially sorted?** _[Modified binary search]_
-- **Not sorted?** _[Can't use binary search]_
+
+- **Already sorted?** <span class="fill-in">[Classic binary search]</span>
+- **Rotated?** <span class="fill-in">[Find sorted half, adjust search]</span>
+- **Partially sorted?** <span class="fill-in">[Modified binary search]</span>
+- **Not sorted?** <span class="fill-in">[Can't use binary search]</span>
 
 ### Question 2: What are you searching for?
 
 **Search for value:**
 
-- Direct search: _[Classic binary search]_
-- First/last occurrence: _[Modified binary search]_
+- Direct search: <span class="fill-in">[Classic binary search]</span>
+- First/last occurrence: <span class="fill-in">[Modified binary search]</span>
 
 **Search for position:**
 
-- Insert position: _[Binary search with left pointer]_
-- Peak element: _[Binary search on local property]_
+- Insert position: <span class="fill-in">[Binary search with left pointer]</span>
+- Peak element: <span class="fill-in">[Binary search on local property]</span>
 
 **Search on answer space:**
 
-- Square root, capacity: _[Binary search on range]_
-- Minimize/maximize: _[Binary search with validation]_
+- Square root, capacity: <span class="fill-in">[Binary search on range]</span>
+- Minimize/maximize: <span class="fill-in">[Binary search with validation]</span>
 
 ### Your Decision Tree
 
@@ -1072,30 +1088,30 @@ Binary Search Pattern Selection
 
 **Don't use when:**
 
-1. _[Data is unsorted and can't be sorted]_
-2. _[Need all occurrences, not just one]_
-3. _[Small dataset where linear search is simpler]_
-4. _[No monotonic property to exploit]_
+1. <span class="fill-in">[Data is unsorted and can't be sorted]</span>
+2. <span class="fill-in">[Need all occurrences, not just one]</span>
+3. <span class="fill-in">[Small dataset where linear search is simpler]</span>
+4. <span class="fill-in">[No monotonic property to exploit]</span>
 
 ### The Rule of Three: Alternatives
 
 **Option 1: Binary Search**
 
-- Pros: _[O(log n), very fast]_
-- Cons: _[Requires sorted data]_
-- Use when: _[Large sorted dataset]_
+- Pros: <span class="fill-in">[O(log n), very fast]</span>
+- Cons: <span class="fill-in">[Requires sorted data]</span>
+- Use when: <span class="fill-in">[Large sorted dataset]</span>
 
 **Option 2: Linear Search**
 
-- Pros: _[Works on unsorted, simple]_
-- Cons: _[O(n), slow for large data]_
-- Use when: _[Small dataset or unsorted]_
+- Pros: <span class="fill-in">[Works on unsorted, simple]</span>
+- Cons: <span class="fill-in">[O(n), slow for large data]</span>
+- Use when: <span class="fill-in">[Small dataset or unsorted]</span>
 
 **Option 3: Hash Table**
 
-- Pros: _[O(1) lookup, no sorting needed]_
-- Cons: _[Extra space, can't find ranges]_
-- Use when: _[Single lookups, space available]_
+- Pros: <span class="fill-in">[O(1) lookup, no sorting needed]</span>
+- Cons: <span class="fill-in">[Extra space, can't find ranges]</span>
+- Use when: <span class="fill-in">[Single lookups, space available]</span>
 
 ---
 
@@ -1106,56 +1122,56 @@ Binary Search Pattern Selection
 **Easy (Complete all 4):**
 
 - [ ] [704. Binary Search](https://leetcode.com/problems/binary-search/)
-    - Pattern: _[Classic binary search]_
-    - Your solution time: ___
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Classic binary search]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [35. Search Insert Position](https://leetcode.com/problems/search-insert-position/)
-    - Pattern: _[Binary search with insert]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Binary search with insert]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [69. Sqrt(x)](https://leetcode.com/problems/sqrtx/)
-    - Pattern: _[Binary search on answer]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Binary search on answer]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [278. First Bad Version](https://leetcode.com/problems/first-bad-version/)
-    - Pattern: _[Find first occurrence]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Find first occurrence]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Medium (Complete 3-4):**
 
 - [ ] [33. Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array/)
-    - Pattern: _[Rotated array]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Rotated array]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [34. Find First and Last Position of Element in Sorted Array](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
-    - Pattern: _[Find range]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Find range]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [74. Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/)
-    - Pattern: _[2D binary search]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[2D binary search]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [153. Find Minimum in Rotated Sorted Array](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/)
-    - Pattern: _[Find minimum]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Find minimum]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Hard (Optional):**
 
 - [ ] [4. Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays/)
-    - Pattern: _[Binary search on two arrays]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Binary search on two arrays]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [410. Split Array Largest Sum](https://leetcode.com/problems/split-array-largest-sum/)
-    - Pattern: _[Binary search on answer]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Binary search on answer]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 ---
 
@@ -1208,13 +1224,13 @@ Before moving to the next topic:
 
 > "Binary search is a pattern where..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by a non-technical person? _[Yes/No]_
-- Did you use analogies or real-world examples? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
+- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -1255,12 +1271,12 @@ Step 3: [Continue until found]
 
 | Problem | Pattern | Why? |
 |---------|---------|------|
-| Find target in sorted array | _[Classic/Rotated/2D/Answer?]_ | _[Explain]_ |
-| Find minimum in rotated array | _[Classic/Rotated/2D/Answer?]_ | _[Explain]_ |
-| Search in row-sorted matrix | _[Classic/Rotated/2D/Answer?]_ | _[Explain]_ |
-| Find integer square root | _[Classic/Rotated/2D/Answer?]_ | _[Explain]_ |
-| Find first occurrence of target | _[Classic/Rotated/2D/Answer?]_ | _[Explain]_ |
-| Search in fully sorted matrix | _[Classic/Rotated/2D/Answer?]_ | _[Explain]_ |
+| Find target in sorted array | <span class="fill-in">[Classic/Rotated/2D/Answer?]</span> | <span class="fill-in">[Explain]</span> |
+| Find minimum in rotated array | <span class="fill-in">[Classic/Rotated/2D/Answer?]</span> | <span class="fill-in">[Explain]</span> |
+| Search in row-sorted matrix | <span class="fill-in">[Classic/Rotated/2D/Answer?]</span> | <span class="fill-in">[Explain]</span> |
+| Find integer square root | <span class="fill-in">[Classic/Rotated/2D/Answer?]</span> | <span class="fill-in">[Explain]</span> |
+| Find first occurrence of target | <span class="fill-in">[Classic/Rotated/2D/Answer?]</span> | <span class="fill-in">[Explain]</span> |
+| Search in fully sorted matrix | <span class="fill-in">[Classic/Rotated/2D/Answer?]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1274,19 +1290,20 @@ If you scored below 5/6, review the patterns and try again.
 
 | Pattern | Time Complexity | Space Complexity | Why? |
 |---------|----------------|------------------|------|
-| Classic Binary Search | O(?) | O(?) | _[Explain]_ |
-| Rotated Array Search | O(?) | O(?) | _[Explain]_ |
-| 2D Matrix (fully sorted) | O(?) | O(?) | _[Explain]_ |
-| Binary Search on Answer | O(?) | O(?) | _[Explain]_ |
+| Classic Binary Search | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Rotated Array Search | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| 2D Matrix (fully sorted) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Binary Search on Answer | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why is binary search O(log n) while linear search is O(n)?
 
-Your answer: _[Fill in - explain the fundamental difference]_
+Your answer: <span class="fill-in">[Fill in - explain the fundamental difference]</span>
 
 **Visual understanding:** How many comparisons for n = 1,048,576?
-- Linear search: _[Fill in]_
-- Binary search: _[Fill in]_
-- Speedup: _[Fill in]_ times faster
+
+- Linear search: <span class="fill-in">[Fill in]</span>
+- Binary search: <span class="fill-in">[Fill in]</span>
+- Speedup: <span class="fill-in">[Fill in]</span> times faster
 
 ---
 
@@ -1315,12 +1332,12 @@ if (nums[left] < nums[mid]) {  // Rotated array
 
 **Your answers:**
 
-- Bug 1: _[Explain the problem and fix]_
-- Bug 2: _[Explain the problem and fix]_
-- Bug 3: _[Explain when it loops and fix]_
-- Bug 4: _[Explain the edge case and fix]_
+- Bug 1: <span class="fill-in">[Explain the problem and fix]</span>
+- Bug 2: <span class="fill-in">[Explain the problem and fix]</span>
+- Bug 3: <span class="fill-in">[Explain when it loops and fix]</span>
+- Bug 4: <span class="fill-in">[Explain the edge case and fix]</span>
 
-**Verification:** Could you explain each bug to someone else? _[Yes/No]_
+**Verification:** Could you explain each bug to someone else? <span class="fill-in">[Yes/No]</span>
 
 ---
 
@@ -1329,27 +1346,30 @@ if (nums[left] < nums[mid]) {  // Rotated array
 **Scenario:** You need to find a value in an array of 10,000 elements.
 
 **Option A:** Sort first (O(n log n)), then use binary search (O(log n))
-- Total complexity: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
+
+- Total complexity: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
 **Option B:** Use linear search (O(n)) on unsorted array
-- Total complexity: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
+
+- Total complexity: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
 **Option C:** Use hash table (O(n) to build, O(1) to search)
-- Total complexity: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
 
-**Your decision for ONE lookup:** I would choose _[A/B/C]_ because...
+- Total complexity: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
-_[Fill in your reasoning]_
+**Your decision for ONE lookup:** I would choose <span class="fill-in">[A/B/C]</span> because...
 
-**Your decision for 1,000 lookups:** I would choose _[A/B/C]_ because...
+<span class="fill-in">[Fill in your reasoning]</span>
 
-_[Fill in your reasoning - does your answer change?]_
+**Your decision for 1,000 lookups:** I would choose <span class="fill-in">[A/B/C]</span> because...
+
+<span class="fill-in">[Fill in your reasoning - does your answer change?]</span>
 
 ---
 
@@ -1400,16 +1420,16 @@ Your explanation:
 
 > "Binary search only works on sorted data because..."
 >
-> _[Fill in - explain WHY sorting is essential, not just THAT it's required]_
+> <span class="fill-in">[Fill in - explain WHY sorting is essential, not just THAT it's required]</span>
 
 **Follow-up question:** What if the data has a different monotonic property (not sorted, but predictable)?
 
-Your answer: _[Can you still use binary search? Give an example]_
+Your answer: <span class="fill-in">[Can you still use binary search? Give an example]</span>
 
 **Examples to test your understanding:**
 
-1. _[Give an example where binary search works on non-sorted but monotonic data]_
-2. _[Give an example where binary search completely fails]_
+1. <span class="fill-in">[Give an example where binary search works on non-sorted but monotonic data]</span>
+2. <span class="fill-in">[Give an example where binary search completely fails]</span>
 
 ---
 
@@ -1418,18 +1438,21 @@ Your answer: _[Can you still use binary search? Give an example]_
 **Identify which binary search variant to use (without looking at code):**
 
 **Problem 1:** "Find the peak element in an array"
-- Pattern: _[Which variant?]_
-- Key insight: _[What monotonic property can you exploit?]_
+
+- Pattern: <span class="fill-in">[Which variant?]</span>
+- Key insight: <span class="fill-in">[What monotonic property can you exploit?]</span>
 
 **Problem 2:** "Find minimum days to ship packages with capacity constraints"
-- Pattern: _[Which variant?]_
-- Key insight: _[What are you binary searching on?]_
+
+- Pattern: <span class="fill-in">[Which variant?]</span>
+- Key insight: <span class="fill-in">[What are you binary searching on?]</span>
 
 **Problem 3:** "Search in a matrix where rows and columns are sorted"
-- Pattern: _[Which variant?]_
-- Key insight: _[Staircase or binary search?]_
 
-**Verification:** Could you start implementing these without looking up the solution? _[Yes/No]_
+- Pattern: <span class="fill-in">[Which variant?]</span>
+- Key insight: <span class="fill-in">[Staircase or binary search?]</span>
+
+**Verification:** Could you start implementing these without looking up the solution? <span class="fill-in">[Yes/No]</span>
 
 ---
 
@@ -1454,7 +1477,7 @@ Your answer: _[Can you still use binary search? Give an example]_
 
 **Final reflection:**
 
-- Most difficult part: _[Fill in]_
-- Biggest "aha" moment: _[Fill in]_
-- Pattern you'll remember most: _[Fill in]_
-- One thing you'd explain differently to a friend: _[Fill in]_
+- Most difficult part: <span class="fill-in">[Fill in]</span>
+- Biggest "aha" moment: <span class="fill-in">[Fill in]</span>
+- Pattern you'll remember most: <span class="fill-in">[Fill in]</span>
+- One thing you'd explain differently to a friend: <span class="fill-in">[Fill in]</span>

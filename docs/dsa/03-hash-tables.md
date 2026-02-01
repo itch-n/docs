@@ -6,87 +6,94 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing all patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is a hash table in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **Why is O(1) lookup possible?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy:**
     - Example: "Hash tables are like a library card catalog..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **When does this pattern work?**
-    - Your answer: _[Fill in after solving problems]_
+    - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
 
 5. **What happens when two keys hash to the same location?**
-    - Your answer: _[Fill in after learning about collisions]_
+    - Your answer: <span class="fill-in">[Fill in after learning about collisions]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Linear search through array to find if element exists:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Verified after learning: _[Actual: O(?)]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
 
 2. **Hash table lookup to find if element exists:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity: _[Your guess: O(?)]_
-    - Verified: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **Speedup calculation:**
-    - If n = 1,000, linear search = n = _____ operations
-    - Hash table lookup = _____ operations (average case)
-    - Speedup factor: _____ times faster
+    - If n = 1,000, linear search = n = <span class="fill-in">_____</span> operations
+    - Hash table lookup = <span class="fill-in">_____</span> operations (average case)
+    - Speedup factor: <span class="fill-in">_____</span> times faster
 
 ### Scenario Predictions
 
 **Scenario 1:** Count frequency of each word in `["cat", "dog", "cat", "bird", "dog", "cat"]`
 
-- **Can you use a hash map?** _[Yes/No - Why?]_
-- **What would be the key?** _[Fill in]_
-- **What would be the value?** _[Fill in]_
-- **What's the final map for "cat"?** _[Key: "cat", Value: ?]_
+- **Can you use a hash map?** <span class="fill-in">[Yes/No - Why?]</span>
+- **What would be the key?** <span class="fill-in">[Fill in]</span>
+- **What would be the value?** <span class="fill-in">[Fill in]</span>
+- **What's the final map for "cat"?** <span class="fill-in">[Key: "cat", Value: ?]</span>
 
 **Scenario 2:** Find two numbers that sum to 10 in `[2, 7, 11, 15]`
 
-- **Can you use a hash map?** _[Yes/No - Why?]_
-- **What would you store in the map?** _[Fill in]_
-- **How does hash map help vs nested loops?** _[Fill in]_
+- **Can you use a hash map?** <span class="fill-in">[Yes/No - Why?]</span>
+- **What would you store in the map?** <span class="fill-in">[Fill in]</span>
+- **How does hash map help vs nested loops?** <span class="fill-in">[Fill in]</span>
 
 **Scenario 3:** Group anagrams: `["eat", "tea", "tan", "ate", "nat", "bat"]`
 
-- **What makes two strings anagrams?** _[Fill in]_
-- **What should be the map key?** _[Fill in your idea]_
-- **How to create the key from "eat"?** _[Fill in]_
+- **What makes two strings anagrams?** <span class="fill-in">[Fill in]</span>
+- **What should be the map key?** <span class="fill-in">[Fill in your idea]</span>
+- **How to create the key from "eat"?** <span class="fill-in">[Fill in]</span>
 
 ### Hash Collision Quiz
 
 **Question:** What happens when two different keys hash to the same location?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** Why is HashMap lookup O(1) average but O(n) worst case?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 ### Trade-off Quiz
 
 **Question:** When would sorting + binary search be BETTER than using a HashMap?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** What's the MAIN advantage of HashMap over arrays?
 
@@ -95,7 +102,10 @@
 - [ ] Maintains sorted order
 - [ ] Always faster for all operations
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
+
+
+</div>
 
 ---
 
@@ -183,8 +193,12 @@ Step 2: num=7, complement=2, map={2→0} → FOUND! Return [0, 1]
 
 **After implementing, explain in your own words:**
 
-- _[Why does O(1) lookup matter?]_
-- _[What's the space/time trade-off?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does O(1) lookup matter?]</span>
+- <span class="fill-in">[What's the space/time trade-off?]</span>
+
+</div>
 
 ---
 
@@ -252,8 +266,12 @@ public static boolean containsDuplicate_HashSet(int[] nums) {
 
 **After implementing, answer:**
 
-- _[When is the space trade-off worth it?]_
-- _[When might you prefer the O(1) space solution?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[When is the space trade-off worth it?]</span>
+- <span class="fill-in">[When might you prefer the O(1) space solution?]</span>
+
+</div>
 
 ---
 
@@ -741,19 +759,19 @@ public static int[] twoSum_Buggy(int[] nums, int target) {
 
 **Your debugging:**
 
-- **Bug 1 location:** _[Which line?]_
-- **Bug 1 explanation:** _[Why separate loops? What's inefficient?]_
-- **Bug 1 fix:** _[How to combine into one loop?]_
+- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 1 explanation:** <span class="fill-in">[Why separate loops? What's inefficient?]</span>
+- **Bug 1 fix:** <span class="fill-in">[How to combine into one loop?]</span>
 
-- **Bug 2 location:** _[Which line?]_
+- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
 - **Bug 2 explanation:** _[What if nums[i] + nums[i] = target? Same index used twice!]_
-- **Bug 2 fix:** _[How to check indices are different?]_
+- **Bug 2 fix:** <span class="fill-in">[How to check indices are different?]</span>
 
 **Test case to expose Bug 2:**
 
 - Input: `nums = [3, 2, 4], target = 6`
 - Expected: `[1, 2]` (indices of 2 and 4)
-- Buggy output: _[What happens if we check 3+3?]_
+- Buggy output: <span class="fill-in">[What happens if we check 3+3?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -803,15 +821,15 @@ public static Map<Character, Integer> countChars_Buggy(String s) {
 
 **Your debugging:**
 
-- **Bug location:** _[Which line?]_
-- **Bug explanation:** _[What error occurs?]_
-- **Bug fix:** _[Two different ways to fix]_
+- **Bug location:** <span class="fill-in">[Which line?]</span>
+- **Bug explanation:** <span class="fill-in">[What error occurs?]</span>
+- **Bug fix:** <span class="fill-in">[Two different ways to fix]</span>
 
 **Test case:**
 
 - Input: `"hello"`
 - Expected: `{h=1, e=1, l=2, o=1}`
-- Buggy output: _[What exception?]_
+- Buggy output: <span class="fill-in">[What exception?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -866,15 +884,15 @@ public static List<List<String>> groupAnagrams_Buggy(String[] strs) {
 
 **Your debugging:**
 
-- **Bug location:** _[Which line?]_
-- **Bug explanation:** _[What makes strings anagrams? Same letters in different order!]_
-- **Bug fix:** _[How to create a key that's same for all anagrams?]_
+- **Bug location:** <span class="fill-in">[Which line?]</span>
+- **Bug explanation:** <span class="fill-in">[What makes strings anagrams? Same letters in different order!]</span>
+- **Bug fix:** <span class="fill-in">[How to create a key that's same for all anagrams?]</span>
 
 **Test case:**
 
 - Input: `["eat", "tea", "tan", "ate", "nat", "bat"]`
 - Expected: `[["eat", "tea", "ate"], ["tan", "nat"], ["bat"]]`
-- Buggy output: _[Each word in its own group!]_
+- Buggy output: <span class="fill-in">[Each word in its own group!]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -920,15 +938,15 @@ public static class BadHashCode {
 
 **Your debugging:**
 
-- **Bug:** _[What's wrong with always returning 42?]_
-- **Performance impact:** _[What's the time complexity now?]_
-- **Explanation:** _[How does HashMap work with this hashCode?]_
+- **Bug:** <span class="fill-in">[What's wrong with always returning 42?]</span>
+- **Performance impact:** <span class="fill-in">[What's the time complexity now?]</span>
+- **Explanation:** <span class="fill-in">[How does HashMap work with this hashCode?]</span>
 
 **Real-world scenario:**
 
 - HashMap with 10,000 BadHashCode objects
 - Expected lookup: O(1)
-- Actual lookup: _[What happens?]_
+- Actual lookup: <span class="fill-in">[What happens?]</span>
 
 <details markdown>
 <summary>Click to verify your understanding</summary>
@@ -984,14 +1002,14 @@ public static int[] intersection_Buggy(int[] nums1, int[] nums2) {
 
 **Your debugging:**
 
-- **Bug 1:** _[What happens if nums1 is null?]_
-- **Bug 2:** _[What happens if nums2 is null?]_
-- **Bug 3:** _[Is this actually a bug? Empty result valid?]_
+- **Bug 1:** <span class="fill-in">[What happens if nums1 is null?]</span>
+- **Bug 2:** <span class="fill-in">[What happens if nums2 is null?]</span>
+- **Bug 3:** <span class="fill-in">[Is this actually a bug? Empty result valid?]</span>
 
 **Fixes:**
 
-- _[Should you check for null? Return empty array? Throw exception?]_
-- _[Your defensive programming strategy]_
+- <span class="fill-in">[Should you check for null? Return empty array? Throw exception?]</span>
+- <span class="fill-in">[Your defensive programming strategy]</span>
 
 <details markdown>
 <summary>Click to verify your approach</summary>
@@ -1055,13 +1073,13 @@ public static int longestConsecutive_Buggy(int[] nums) {
 
 **Your debugging:**
 
-- **Bug:** _[What's returned for empty array?]_
-- **Expected:** _[What should be returned?]_
-- **Fix:** _[Is 0 correct for empty array? Or should it be different?]_
+- **Bug:** <span class="fill-in">[What's returned for empty array?]</span>
+- **Expected:** <span class="fill-in">[What should be returned?]</span>
+- **Fix:** <span class="fill-in">[Is 0 correct for empty array? Or should it be different?]</span>
 
 **Test cases:**
 
-- Input: `[]` → Expected: 0 or -1? _[Your decision]_
+- Input: `[]` → Expected: 0 or -1? <span class="fill-in">[Your decision]</span>
 - Input: `[100, 4, 200, 1, 3, 2]` → Expected: 4 (sequence: 1,2,3,4)
 
 <details markdown>
@@ -1070,6 +1088,7 @@ public static int longestConsecutive_Buggy(int[] nums) {
 **Bug:** For empty array, returns 0. Is this a bug?
 
 **Answer:** Depends on problem specification!
+
 - Returning 0 is often correct (no elements = sequence length 0)
 - Some problems might expect -1 or throw exception
 
@@ -1093,15 +1112,15 @@ After finding and fixing all bugs:
 
 **Common hash table mistakes you discovered:**
 
-1. _[List the patterns you noticed]_
-2. _[Fill in]_
-3. _[Fill in]_
+1. <span class="fill-in">[List the patterns you noticed]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 **Best practices learned:**
 
-1. _[When to use getOrDefault vs containsKey?]_
-2. _[Why check before adding to map in some cases?]_
-3. _[How to handle null inputs?]_
+1. <span class="fill-in">[When to use getOrDefault vs containsKey?]</span>
+2. <span class="fill-in">[Why check before adding to map in some cases?]</span>
+3. <span class="fill-in">[How to handle null inputs?]</span>
 
 ---
 
@@ -1112,10 +1131,11 @@ After finding and fixing all bugs:
 ### Question 1: What operation do you need?
 
 Answer after solving problems:
-- **Fast lookup by key?** _[When to use HashMap vs array?]_
-- **Fast membership test?** _[When to use HashSet?]_
-- **Frequency counting?** _[Why is HashMap ideal?]_
-- **Your observation:** _[Fill in based on testing]_
+
+- **Fast lookup by key?** <span class="fill-in">[When to use HashMap vs array?]</span>
+- **Fast membership test?** <span class="fill-in">[When to use HashSet?]</span>
+- **Frequency counting?** <span class="fill-in">[Why is HashMap ideal?]</span>
+- **Your observation:** <span class="fill-in">[Fill in based on testing]</span>
 
 ### Question 2: What are the time/space trade-offs?
 
@@ -1123,21 +1143,21 @@ Answer for each pattern:
 
 **HashMap for lookups:**
 
-- Time complexity: _[Average case? Worst case?]_
-- Space complexity: _[How much extra space?]_
-- Best use cases: _[List problems you solved]_
+- Time complexity: <span class="fill-in">[Average case? Worst case?]</span>
+- Space complexity: <span class="fill-in">[How much extra space?]</span>
+- Best use cases: <span class="fill-in">[List problems you solved]</span>
 
 **HashSet for membership:**
 
-- Time complexity: _[Compare to linear search]_
-- Space complexity: _[Trade-off worth it when?]_
-- Best use cases: _[List problems you solved]_
+- Time complexity: <span class="fill-in">[Compare to linear search]</span>
+- Space complexity: <span class="fill-in">[Trade-off worth it when?]</span>
+- Best use cases: <span class="fill-in">[List problems you solved]</span>
 
 **HashMap for grouping:**
 
-- Time complexity: _[Depends on what?]_
-- Space complexity: _[How to estimate?]_
-- Best use cases: _[List problems you solved]_
+- Time complexity: <span class="fill-in">[Depends on what?]</span>
+- Space complexity: <span class="fill-in">[How to estimate?]</span>
+- Best use cases: <span class="fill-in">[List problems you solved]</span>
 
 ### Your Decision Tree
 
@@ -1172,30 +1192,30 @@ Hash Table Pattern Selection
 
 **Don't use hash tables when:**
 
-1. _[Need sorted order? What to use instead?]_
-2. _[Space is critical constraint? What alternatives?]_
-3. _[Keys don't have good hash function? What happens?]_
-4. _[Need to maintain insertion order? What to use?]_
+1. <span class="fill-in">[Need sorted order? What to use instead?]</span>
+2. <span class="fill-in">[Space is critical constraint? What alternatives?]</span>
+3. <span class="fill-in">[Keys don't have good hash function? What happens?]</span>
+4. <span class="fill-in">[Need to maintain insertion order? What to use?]</span>
 
 ### The Rule of Three: Alternatives
 
 **Option 1: Hash Table**
 
-- Pros: _[Fill in - average O(1) operations?]_
-- Cons: _[Fill in - space overhead, no order?]_
-- Use when: _[Fill in - lookup speed critical?]_
+- Pros: <span class="fill-in">[Fill in - average O(1) operations?]</span>
+- Cons: <span class="fill-in">[Fill in - space overhead, no order?]</span>
+- Use when: <span class="fill-in">[Fill in - lookup speed critical?]</span>
 
 **Option 2: Sorted Array + Binary Search**
 
-- Pros: _[Fill in - less space, sorted order?]_
-- Cons: _[Fill in - O(log n) lookup?]_
-- Use when: _[Fill in - data rarely changes?]_
+- Pros: <span class="fill-in">[Fill in - less space, sorted order?]</span>
+- Cons: <span class="fill-in">[Fill in - O(log n) lookup?]</span>
+- Use when: <span class="fill-in">[Fill in - data rarely changes?]</span>
 
 **Option 3: Linear Search**
 
-- Pros: _[Fill in - no extra space, simple?]_
-- Cons: _[Fill in - O(n) lookup?]_
-- Use when: _[Fill in - small dataset?]_
+- Pros: <span class="fill-in">[Fill in - no extra space, simple?]</span>
+- Cons: <span class="fill-in">[Fill in - O(n) lookup?]</span>
+- Use when: <span class="fill-in">[Fill in - small dataset?]</span>
 
 ---
 
@@ -1206,56 +1226,56 @@ Hash Table Pattern Selection
 **Easy (Complete all 4):**
 
 - [ ] [1. Two Sum](https://leetcode.com/problems/two-sum/)
-    - Pattern: _[Which one?]_
-    - Your solution time: ___
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Which one?]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [217. Contains Duplicate](https://leetcode.com/problems/contains-duplicate/)
-    - Pattern: _[Which one?]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Which one?]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [242. Valid Anagram](https://leetcode.com/problems/valid-anagram/)
-    - Pattern: _[Which one?]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Which one?]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [349. Intersection of Two Arrays](https://leetcode.com/problems/intersection-of-two-arrays/)
-    - Pattern: _[Which one?]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Which one?]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Medium (Complete 3-4):**
 
 - [ ] [49. Group Anagrams](https://leetcode.com/problems/group-anagrams/)
-    - Pattern: _[Which one?]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
-    - Mistake made: _[Fill in if any]_
+    - Pattern: <span class="fill-in">[Which one?]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
+    - Mistake made: <span class="fill-in">[Fill in if any]</span>
 
 - [ ] [128. Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/)
-    - Pattern: _[Which one?]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Which one?]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [560. Subarray Sum Equals K](https://leetcode.com/problems/subarray-sum-equals-k/)
-    - Pattern: _[Which one?]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Prefix sum + HashMap]_
+    - Pattern: <span class="fill-in">[Which one?]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Prefix sum + HashMap]</span>
 
 - [ ] [387. First Unique Character in a String](https://leetcode.com/problems/first-unique-character-in-a-string/)
-    - Pattern: _[Which one?]_
-    - Comparison: _[Two-pass vs one-pass?]_
+    - Pattern: <span class="fill-in">[Which one?]</span>
+    - Comparison: <span class="fill-in">[Two-pass vs one-pass?]</span>
 
 **Hard (Optional):**
 
 - [ ] [76. Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/)
-    - Pattern: _[Sliding window + HashMap]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Sliding window + HashMap]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [30. Substring with Concatenation of All Words](https://leetcode.com/problems/substring-with-concatenation-of-all-words/)
-    - Pattern: _[Which variant?]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Which variant?]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 ---
 
@@ -1308,13 +1328,13 @@ Before moving to the next topic:
 
 > "Hash tables are a data structure that..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by a non-technical person? _[Yes/No]_
-- Did you use analogies or real-world examples? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
+- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -1358,12 +1378,12 @@ Step 3: [Continue until found]
 
 | Problem | Data Structure (HashMap/HashSet) | Why? |
 |---------|----------------------------------|------|
-| Count word frequency | _[Fill in]_ | _[Explain]_ |
-| Find if array has duplicates | _[Fill in]_ | _[Explain]_ |
-| Group strings by first letter | _[Fill in]_ | _[Explain]_ |
-| Check if two strings are anagrams | _[Fill in]_ | _[Explain]_ |
-| Find missing number from 1 to n | _[Fill in]_ | _[Explain]_ |
-| Two sum | _[Fill in]_ | _[Explain]_ |
+| Count word frequency | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Find if array has duplicates | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Group strings by first letter | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Check if two strings are anagrams | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Find missing number from 1 to n | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Two sum | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1383,7 +1403,7 @@ If you scored below 5/6, review the patterns and try again.
 
 **Deep question:** Why is hash table lookup O(1) average but O(n) worst case?
 
-Your answer: _[Fill in - explain hash collisions and bucket distribution]_
+Your answer: <span class="fill-in">[Fill in - explain hash collisions and bucket distribution]</span>
 
 ---
 
@@ -1392,24 +1412,26 @@ Your answer: _[Fill in - explain hash collisions and bucket distribution]_
 **Scenario:** You need to find duplicate elements in an array of 1 million integers.
 
 **Option A:** Sort first (O(n log n)), then scan for adjacent duplicates (O(n))
-- Total complexity: _[Fill in]_
-- Space complexity: _[Fill in - in-place sort vs new array]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
+
+- Total complexity: <span class="fill-in">[Fill in]</span>
+- Space complexity: <span class="fill-in">[Fill in - in-place sort vs new array]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
 **Option B:** Use HashSet (O(n) to build and check)
-- Total complexity: _[Fill in]_
-- Space complexity: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
 
-**Your decision:** I would choose _[A/B]_ because...
+- Total complexity: <span class="fill-in">[Fill in]</span>
+- Space complexity: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
-_[Fill in your reasoning - consider time, space, and constraints]_
+**Your decision:** I would choose <span class="fill-in">[A/B]</span> because...
+
+<span class="fill-in">[Fill in your reasoning - consider time, space, and constraints]</span>
 
 **What would make you change your decision?**
 
-- _[Fill in - what constraints would flip your choice?]_
+- <span class="fill-in">[Fill in - what constraints would flip your choice?]</span>
 
 ---
 
@@ -1421,13 +1443,13 @@ _[Fill in your reasoning - consider time, space, and constraints]_
 
 > "A hash collision happens when..."
 >
-> _[Fill in - explain what happens and how it's handled]_
+> <span class="fill-in">[Fill in - explain what happens and how it's handled]</span>
 
 **Follow-up questions to answer:**
 
-1. What's a good hash function? _[Fill in]_
-2. How does Java's HashMap handle collisions? _[Fill in - linked list/tree]_
-3. What happens to performance with many collisions? _[Fill in]_
+1. What's a good hash function? <span class="fill-in">[Fill in]</span>
+2. How does Java's HashMap handle collisions? <span class="fill-in">[Fill in - linked list/tree]</span>
+3. What happens to performance with many collisions? <span class="fill-in">[Fill in]</span>
 
 **Verification:**
 
@@ -1481,14 +1503,14 @@ Your explanation:
 
 > "You should NOT use hash tables when..."
 >
-> _[Fill in - list 3-4 scenarios and explain why]_
+> <span class="fill-in">[Fill in - list 3-4 scenarios and explain why]</span>
 
 **Examples of when it fails or is suboptimal:**
 
-1. _[Scenario where hash table doesn't work - e.g., need sorted order]_
-2. _[Scenario where another approach is better - e.g., small fixed dataset]_
-3. _[Scenario where space is critical - e.g., embedded systems]_
-4. _[Fill in]_
+1. <span class="fill-in">[Scenario where hash table doesn't work - e.g., need sorted order]</span>
+2. <span class="fill-in">[Scenario where another approach is better - e.g., small fixed dataset]</span>
+3. <span class="fill-in">[Scenario where space is critical - e.g., embedded systems]</span>
+4. <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1504,13 +1526,13 @@ Your explanation:
 
 **Your design:**
 
-**Data structure choice:** _[HashMap? Why?]_
+**Data structure choice:** <span class="fill-in">[HashMap? Why?]</span>
 
-**Key:** _[What's the key? URL string?]_
+**Key:** <span class="fill-in">[What's the key? URL string?]</span>
 
-**Value:** _[What's the value? Response object?]_
+**Value:** <span class="fill-in">[What's the value? Response object?]</span>
 
-**How to handle capacity limit:** _[Fill in - what happens when 101st item added?]_
+**How to handle capacity limit:** <span class="fill-in">[Fill in - what happens when 101st item added?]</span>
 
 **Code outline:**
 ```java
@@ -1522,7 +1544,7 @@ class SimpleCache {
 }
 ```
 
-**Alternative considered:** _[What other data structure? Why not use it?]_
+**Alternative considered:** <span class="fill-in">[What other data structure? Why not use it?]</span>
 
 ---
 
@@ -1534,7 +1556,7 @@ Your analogy:
 
 > "Imagine you have a huge toy box..."
 >
-> _[Fill in your complete analogy - make it relatable and accurate]_
+> <span class="fill-in">[Fill in your complete analogy - make it relatable and accurate]</span>
 
 **Elements to include:**
 
@@ -1543,7 +1565,7 @@ Your analogy:
 - [ ] How do you find things fast? (organized sections?)
 - [ ] What's a collision? (two toys in same spot?)
 
-**Test it:** Would a non-programmer understand this? _[Yes/No]_
+**Test it:** Would a non-programmer understand this? <span class="fill-in">[Yes/No]</span>
 
 ---
 
@@ -1564,9 +1586,9 @@ Your analogy:
 
 **What I still need to work on:**
 
-1. _[Fill in areas of weakness]_
-2. _[Fill in]_
-3. _[Fill in]_
+1. <span class="fill-in">[Fill in areas of weakness]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 **If score < 8:** Review the sections where you struggled, then retry this gate.
 

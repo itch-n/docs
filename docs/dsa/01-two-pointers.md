@@ -6,73 +6,80 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing all three patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is the two pointers pattern in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **Why is it faster than nested loops?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy:**
     - Example: "Two pointers is like two people searching..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **When does this pattern work?**
-    - Your answer: _[Fill in after solving problems]_
+    - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
 
 5. **When does this pattern fail?**
-    - Your answer: _[Fill in after trying unsorted arrays]_
+    - Your answer: <span class="fill-in">[Fill in after trying unsorted arrays]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Two nested loops searching for a pair:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Verified after learning: _[Actual: O(?)]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
 
 2. **Two pointers searching for a pair in sorted array:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity: _[Your guess: O(?)]_
-    - Verified: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **Speedup calculation:**
-    - If n = 1,000, nested loops = n² = _____ operations
-    - Two pointers = n = _____ operations
-    - Speedup factor: _____ times faster
+    - If n = 1,000, nested loops = n² = <span class="fill-in">_____</span> operations
+    - Two pointers = n = <span class="fill-in">_____</span> operations
+    - Speedup factor: <span class="fill-in">_____</span> times faster
 
 ### Scenario Predictions
 
 **Scenario 1:** Find pair that sums to 10 in `[1, 3, 5, 7, 9]`
 
-- **Can you use two pointers?** _[Yes/No - Why?]_
-- **Starting positions:** left = ___, right = ___
-- **If sum = 8 (too small), which pointer moves?** _[Left/Right - Why?]_
-- **If sum = 12 (too big), which pointer moves?** _[Left/Right - Why?]_
+- **Can you use two pointers?** <span class="fill-in">[Yes/No - Why?]</span>
+- **Starting positions:** left = <span class="fill-in">___</span>, right = <span class="fill-in">___</span>
+- **If sum = 8 (too small), which pointer moves?** <span class="fill-in">[Left/Right - Why?]</span>
+- **If sum = 12 (too big), which pointer moves?** <span class="fill-in">[Left/Right - Why?]</span>
 
 **Scenario 2:** Find pair that sums to 10 in `[9, 3, 1, 7, 5]` (unsorted)
 
-- **Can you use two pointers directly?** _[Yes/No - Why?]_
-- **What must you do first?** _[Fill in]_
+- **Can you use two pointers directly?** <span class="fill-in">[Yes/No - Why?]</span>
+- **What must you do first?** <span class="fill-in">[Fill in]</span>
 
 **Scenario 3:** Remove duplicates from `[1, 1, 2, 2, 3]`
 
-- **Which pattern applies?** _[Opposite/Same/Different speed]_
-- **Why that pattern?** _[Fill in your reasoning]_
+- **Which pattern applies?** <span class="fill-in">[Opposite/Same/Different speed]</span>
+- **Why that pattern?** <span class="fill-in">[Fill in your reasoning]</span>
 
 ### Trade-off Quiz
 
 **Question:** When would HashSet be BETTER than two pointers for finding pairs?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** What's the MAIN requirement for opposite-direction two pointers?
 
@@ -81,7 +88,10 @@
 - [ ] Array must contain unique elements
 - [ ] Array must be positive integers
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
+
+
+</div>
 
 ---
 
@@ -177,8 +187,12 @@ Step 2: left=1 (val=3), right=4 (val=9), sum=12 → FOUND!
 
 **After implementing, explain in your own words:**
 
-- _[Why does sorted order matter?]_
-- _[What pairs do we skip and why is it safe?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does sorted order matter?]</span>
+- <span class="fill-in">[What pairs do we skip and why is it safe?]</span>
+
+</div>
 
 ---
 
@@ -596,13 +610,13 @@ public static boolean isPalindrome_Buggy(String s) {
 
 **Your debugging:**
 
-- **Bug 1 location:** _[Which line?]_
-- **Bug 1 explanation:** _[What's wrong?]_
-- **Bug 1 fix:** _[What should it be?]_
+- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 1 explanation:** <span class="fill-in">[What's wrong?]</span>
+- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
 
-- **Bug 2 location:** _[Which line?]_
-- **Bug 2 explanation:** _[What error will occur?]_
-- **Bug 2 fix:** _[How to fix?]_
+- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 2 explanation:** <span class="fill-in">[What error will occur?]</span>
+- **Bug 2 fix:** <span class="fill-in">[How to fix?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -641,17 +655,17 @@ public static int removeDuplicates_Buggy(int[] nums) {
 
 **Your debugging:**
 
-- **Bug 1:** _[What's the problem? What gets overwritten incorrectly?]_
-- **Bug 1 fix:** _[Correct the order of operations]_
+- **Bug 1:** <span class="fill-in">[What's the problem? What gets overwritten incorrectly?]</span>
+- **Bug 1 fix:** <span class="fill-in">[Correct the order of operations]</span>
 
-- **Bug 2:** _[What should the return value be?]_
-- **Bug 2 fix:** _[Fill in]_
+- **Bug 2:** <span class="fill-in">[What should the return value be?]</span>
+- **Bug 2 fix:** <span class="fill-in">[Fill in]</span>
 
 **Test case to expose the bug:**
 
 - Input: `[1, 1, 2, 2, 3]`
 - Expected output: `[1, 2, 3, ?, ?]` and return length = 3
-- Actual output with buggy code: _[Trace through manually]_
+- Actual output with buggy code: <span class="fill-in">[Trace through manually]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -696,15 +710,15 @@ public static boolean hasCycle_Buggy(ListNode head) {
 
 **Your debugging:**
 
-- **Bug location:** _[What's missing in the while loop?]_
-- **Bug explanation:** _[Why does this cause incorrect results?]_
-- **Bug fix:** _[What code should be in the loop?]_
+- **Bug location:** <span class="fill-in">[What's missing in the while loop?]</span>
+- **Bug explanation:** <span class="fill-in">[Why does this cause incorrect results?]</span>
+- **Bug fix:** <span class="fill-in">[What code should be in the loop?]</span>
 
 **Trace through example:**
 
 - List with cycle: 1 → 2 → 3 → 4 → 2 (cycle back to 2)
 - Expected: `true`
-- Actual: _[What happens?]_
+- Actual: <span class="fill-in">[What happens?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -748,11 +762,11 @@ public static void moveZeroes_Buggy(int[] nums) {
 
 **Your debugging:**
 
-- **Bug:** _[What's the logic error?]_
-- **Example:** Input `[0, 1, 0, 3, 12]`, output is _[Fill in - trace manually]_
+- **Bug:** <span class="fill-in">[What's the logic error?]</span>
+- **Example:** Input `[0, 1, 0, 3, 12]`, output is <span class="fill-in">[Fill in - trace manually]</span>
 - **Expected:** `[1, 3, 12, 0, 0]`
-- **Actual:** _[What do you get?]_
-- **Fix:** _[How to correct it?]_
+- **Actual:** <span class="fill-in">[What do you get?]</span>
+- **Fix:** <span class="fill-in">[How to correct it?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -793,9 +807,9 @@ After finding and fixing all bugs:
 
 **Common mistakes you discovered:**
 
-1. _[List the patterns you noticed]_
-2. _[Fill in]_
-3. _[Fill in]_
+1. <span class="fill-in">[List the patterns you noticed]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -807,9 +821,9 @@ After finding and fixing all bugs:
 
 Answer after solving problems:
 
-- **Why does sorting matter?** _[Fill in]_
-- **Can two pointers work on unsorted arrays?** _[Yes/No - when?]_
-- **Your observation:** _[Fill in based on testing]_
+- **Why does sorting matter?** <span class="fill-in">[Fill in]</span>
+- **Can two pointers work on unsorted arrays?** <span class="fill-in">[Yes/No - when?]</span>
+- **Your observation:** <span class="fill-in">[Fill in based on testing]</span>
 
 ### Question 2: What are you looking for?
 
@@ -817,21 +831,21 @@ Answer for each pattern:
 
 **Opposite direction when:**
 
-- Looking for: _[Pairs? Palindromes? What else?]_
-- Movement rule: _[How do pointers move?]_
-- Example problems: _[List problems you solved]_
+- Looking for: <span class="fill-in">[Pairs? Palindromes? What else?]</span>
+- Movement rule: <span class="fill-in">[How do pointers move?]</span>
+- Example problems: <span class="fill-in">[List problems you solved]</span>
 
 **Same direction when:**
 
-- Looking for: _[Duplicates? Partitioning? What else?]_
-- Movement rule: _[How do slow/fast pointers move?]_
-- Example problems: _[List problems you solved]_
+- Looking for: <span class="fill-in">[Duplicates? Partitioning? What else?]</span>
+- Movement rule: <span class="fill-in">[How do slow/fast pointers move?]</span>
+- Example problems: <span class="fill-in">[List problems you solved]</span>
 
 **Different speed when:**
 
-- Looking for: _[Cycles? Middle? What else?]_
-- Movement rule: _[How do pointers move at different speeds?]_
-- Example problems: _[List problems you solved]_
+- Looking for: <span class="fill-in">[Cycles? Middle? What else?]</span>
+- Movement rule: <span class="fill-in">[How do pointers move at different speeds?]</span>
+- Example problems: <span class="fill-in">[List problems you solved]</span>
 
 ### Your Decision Tree
 
@@ -863,29 +877,29 @@ Two Pointers Pattern Selection
 
 **Don't use two pointers when:**
 
-1. _[Fill in - what kind of problems?]_
-2. _[Fill in - what data structures?]_
-3. _[Fill in - what requirements break it?]_
+1. <span class="fill-in">[Fill in - what kind of problems?]</span>
+2. <span class="fill-in">[Fill in - what data structures?]</span>
+3. <span class="fill-in">[Fill in - what requirements break it?]</span>
 
 ### The Rule of Three: Alternatives
 
 **Option 1: Two Pointers**
 
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
-- Use when: _[Fill in]_
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
+- Use when: <span class="fill-in">[Fill in]</span>
 
 **Option 2: Hash Table**
 
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
-- Use when: _[Fill in]_
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
+- Use when: <span class="fill-in">[Fill in]</span>
 
 **Option 3: Brute Force (Nested Loops)**
 
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
-- Use when: _[Fill in]_
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
+- Use when: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -896,42 +910,42 @@ Two Pointers Pattern Selection
 **Easy (Complete all 3):**
 
 - [ ] [125. Valid Palindrome](https://leetcode.com/problems/valid-palindrome/)
-    - Pattern: _[Which one?]_
-    - Your solution time: ___
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Which one?]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [26. Remove Duplicates from Sorted Array](https://leetcode.com/problems/remove-duplicates-from-sorted-array/)
-    - Pattern: _[Which one?]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Which one?]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [283. Move Zeroes](https://leetcode.com/problems/move-zeroes/)
-    - Pattern: _[Which one?]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Which one?]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Medium (Complete 2-3):**
 
 - [ ] [15. 3Sum](https://leetcode.com/problems/3sum/)
-    - Pattern: _[Extension of which pattern?]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
-    - Mistake made: _[Fill in if any]_
+    - Pattern: <span class="fill-in">[Extension of which pattern?]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
+    - Mistake made: <span class="fill-in">[Fill in if any]</span>
 
 - [ ] [11. Container With Most Water](https://leetcode.com/problems/container-with-most-water/)
-    - Pattern: _[Which one?]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Which one?]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [167. Two Sum II](https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/)
-    - Pattern: _[Which one?]_
-    - Comparison to Two Sum I: _[How is it different?]_
+    - Pattern: <span class="fill-in">[Which one?]</span>
+    - Comparison to Two Sum I: <span class="fill-in">[How is it different?]</span>
 
 **Hard (Optional):**
 
 - [ ] [42. Trapping Rain Water](https://leetcode.com/problems/trapping-rain-water/)
-    - Pattern: _[Which variant?]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Which variant?]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 
 ---
@@ -981,13 +995,13 @@ Before moving to the next topic:
 
 > "Two pointers is a pattern where..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by a non-technical person? _[Yes/No]_
-- Did you use analogies or real-world examples? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
+- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -1028,12 +1042,12 @@ Step 3: [Continue until found or exhausted]
 
 | Problem | Pattern (Opposite/Same/Different Speed) | Why? |
 |---------|----------------------------------------|------|
-| Find if array is palindrome | _[Fill in]_ | _[Explain]_ |
-| Remove all instances of value | _[Fill in]_ | _[Explain]_ |
-| Find middle of linked list | _[Fill in]_ | _[Explain]_ |
-| Partition array around pivot | _[Fill in]_ | _[Explain]_ |
-| Detect cycle in linked list | _[Fill in]_ | _[Explain]_ |
-| Find pair with given difference | _[Fill in]_ | _[Explain]_ |
+| Find if array is palindrome | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Remove all instances of value | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Find middle of linked list | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Partition array around pivot | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Detect cycle in linked list | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Find pair with given difference | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1047,13 +1061,13 @@ If you scored below 5/6, review the patterns and try again.
 
 | Pattern | Time Complexity | Space Complexity | Why? |
 |---------|----------------|------------------|------|
-| Opposite Direction | O(?) | O(?) | _[Explain]_ |
-| Same Direction | O(?) | O(?) | _[Explain]_ |
-| Different Speed | O(?) | O(?) | _[Explain]_ |
+| Opposite Direction | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Same Direction | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Different Speed | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why is two pointers O(n) while nested loops are O(n²)?
 
-Your answer: _[Fill in - explain the fundamental difference]_
+Your answer: <span class="fill-in">[Fill in - explain the fundamental difference]</span>
 
 ---
 
@@ -1063,23 +1077,23 @@ Your answer: _[Fill in - explain the fundamental difference]_
 
 **Option A:** Sort first (O(n log n)), then use two pointers (O(n))
 
-- Total complexity: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
+- Total complexity: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
 **Option B:** Use HashSet (O(n) to build, O(n) to check)
 
-- Total complexity: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
+- Total complexity: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
-**Your decision:** I would choose _[A/B]_ because...
+**Your decision:** I would choose <span class="fill-in">[A/B]</span> because...
 
-_[Fill in your reasoning - consider time, space, and constraints]_
+<span class="fill-in">[Fill in your reasoning - consider time, space, and constraints]</span>
 
 **What would make you change your decision?**
 
-- _[Fill in - what constraints would flip your choice?]_
+- <span class="fill-in">[Fill in - what constraints would flip your choice?]</span>
 
 ---
 
@@ -1126,13 +1140,13 @@ Your explanation:
 
 > "You should NOT use two pointers when..."
 >
-> _[Fill in - list 3-4 scenarios and explain why]_
+> <span class="fill-in">[Fill in - list 3-4 scenarios and explain why]</span>
 
 **Examples of when it fails:**
 
-1. _[Scenario where two pointers doesn't work]_
-2. _[Scenario where another approach is better]_
-3. _[Fill in]_
+1. <span class="fill-in">[Scenario where two pointers doesn't work]</span>
+2. <span class="fill-in">[Scenario where another approach is better]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 ---
 

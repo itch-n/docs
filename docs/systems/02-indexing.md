@@ -6,79 +6,89 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing indexes, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is a database index in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **Why do indexes speed up queries?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy:**
     - Example: "An index is like a book's table of contents that lets you jump to specific chapters..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **What's the cost of indexes?**
-    - Your answer: _[Fill in after practice]_
+    - Your answer: <span class="fill-in">[Fill in after practice]</span>
 
 5. **When should you NOT create an index?**
-    - Your answer: _[Fill in after understanding trade-offs]_
+    - Your answer: <span class="fill-in">[Fill in after understanding trade-offs]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition about indexes before writing code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Full table scan to find a record:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Verified after learning: _[Actual: O(?)]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
 
 2. **B+tree index lookup for a single record:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity: _[Your guess: O(?)]_
-    - Verified: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **Performance calculation:**
-    - If n = 1,000,000 records, table scan = _____ disk reads
-    - With B+tree index (height=4) = _____ disk reads
-    - Speedup factor: _____ times faster
+    - If n = 1,000,000 records, table scan = <span class="fill-in">_____</span> disk reads
+    - With B+tree index (height=4) = <span class="fill-in">_____</span> disk reads
+    - Speedup factor: <span class="fill-in">_____</span> times faster
 
 ### Scenario Predictions
 
 **Scenario 1:** Query: `SELECT * FROM users WHERE email = 'john@example.com'`
+
 - Table has 10 million users
 - No index on email column
 
-- **How many rows scanned?** _[Your guess]_
-- **Approximate time?** _[Fast/Medium/Slow - Why?]_
-- **Would index help?** _[Yes/No - Why?]_
+- **How many rows scanned?** <span class="fill-in">[Your guess]</span>
+- **Approximate time?** <span class="fill-in">[Fast/Medium/Slow - Why?]</span>
+- **Would index help?** <span class="fill-in">[Yes/No - Why?]</span>
 
 **Scenario 2:** Query: `SELECT * FROM orders WHERE customer_id = 42 AND created_at > '2024-01-01'`
+
 - Table has 5 million orders
 - Index option A: Single index on `customer_id`
 - Index option B: Composite index on `(customer_id, created_at)`
 
-- **Which index is better?** _[A/B - Why?]_
-- **Can you use just `created_at` index?** _[Yes/No - Why?]_
+- **Which index is better?** <span class="fill-in">[A/B - Why?]</span>
+- **Can you use just `created_at` index?** <span class="fill-in">[Yes/No - Why?]</span>
 
 **Scenario 3:** Query: `SELECT * FROM products WHERE category = 'electronics'`
+
 - Table has 1 million products
 - Category column has only 5 distinct values (books, electronics, clothing, toys, food)
 
-- **Should you create an index on category?** _[Yes/No - Why?]_
-- **What's the problem with this index?** _[Fill in]_
+- **Should you create an index on category?** <span class="fill-in">[Yes/No - Why?]</span>
+- **What's the problem with this index?** <span class="fill-in">[Fill in]</span>
 
 ### Index Type Quiz
 
 **Question:** When is a hash index BETTER than a B+tree index?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** What's the MAIN benefit of a covering index?
 
@@ -87,7 +97,7 @@
 - [ ] Query doesn't need to access table data
 - [ ] Better for range queries
 
-Verify after implementation: _[Which one?]_
+Verify after implementation: <span class="fill-in">[Which one?]</span>
 
 **Question:** In a composite index on (A, B, C), which queries can use the index?
 
@@ -97,7 +107,10 @@ Verify after implementation: _[Which one?]_
 - [ ] WHERE A = ? AND C = ?
 - [ ] WHERE B = ? AND C = ?
 
-Verify after implementation: _[Which ones and why?]_
+Verify after implementation: <span class="fill-in">[Which ones and why?]</span>
+
+
+</div>
 
 ---
 
@@ -222,9 +235,13 @@ Total: 4 disk reads instead of 10,000
 
 **After implementing, explain in your own words:**
 
-- _[Why does tree height stay small even for millions of records?]_
-- _[What's the trade-off: why do inserts become slower?]_
-- _[When would a table scan actually be faster than using an index?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does tree height stay small even for millions of records?]</span>
+- <span class="fill-in">[What's the trade-off: why do inserts become slower?]</span>
+- <span class="fill-in">[When would a table scan actually be faster than using an index?]</span>
+
+</div>
 
 ---
 
@@ -719,6 +736,7 @@ public class IndexingClient {
 ### Challenge 1: Missing Index Performance Bug
 
 ```sql
+
 -- Table with 5 million orders
 CREATE TABLE orders (
     id BIGINT PRIMARY KEY,
@@ -742,24 +760,25 @@ LIMIT 10;
 
 **Your debugging:**
 
-- **Bug identification:** _[Why is this query slow despite having an index?]_
-- **What's happening:** _[Explain the query execution]_
-    - Step 1: _[What does the index do?]_
-    - Step 2: _[What happens after using the index?]_
-    - Step 3: _[Why is this inefficient?]_
+- **Bug identification:** <span class="fill-in">[Why is this query slow despite having an index?]</span>
+- **What's happening:** <span class="fill-in">[Explain the query execution]</span>
+    - Step 1: <span class="fill-in">[What does the index do?]</span>
+    - Step 2: <span class="fill-in">[What happens after using the index?]</span>
+    - Step 3: <span class="fill-in">[Why is this inefficient?]</span>
 
-- **The fix:** _[What index would make this fast?]_
+- **The fix:** <span class="fill-in">[What index would make this fast?]</span>
 - **Better index:**
   ```sql
   CREATE INDEX _____ ON orders(_____);
   ```
 
-- **Why is the new index better?** _[Fill in]_
+- **Why is the new index better?** <span class="fill-in">[Fill in]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
 
 **Bug:** The query uses `idx_customer(customer_id)` to find all orders for customer 12345. But then it must:
+
 1. Scan all those results (could be 10,000 orders)
 2. Filter by `created_at >= '2024-01-01'` (another scan)
 3. Sort by `created_at` (expensive!)
@@ -815,13 +834,13 @@ SELECT * FROM events WHERE user_id = ? AND created_at > ?;
 
 **Your debugging:**
 
-- **Problem indexes:** _[Which indexes are hurting performance?]_
-  1. _[Index name and reason]_
-  2. _[Index name and reason]_
+- **Problem indexes:** <span class="fill-in">[Which indexes are hurting performance?]</span>
+  1. <span class="fill-in">[Index name and reason]</span>
+  2. <span class="fill-in">[Index name and reason]</span>
 
 - **Why these are bad:**
-    - _[What happens on every INSERT?]_
-    - _[Calculate: inserting 1 row updates how many indexes?]_
+    - <span class="fill-in">[What happens on every INSERT?]</span>
+    - <span class="fill-in">[Calculate: inserting 1 row updates how many indexes?]</span>
 
 - **Which indexes to DROP:**
   ```sql
@@ -829,7 +848,7 @@ SELECT * FROM events WHERE user_id = ? AND created_at > ?;
   DROP INDEX _____;
   ```
 
-- **Which indexes to KEEP:** _[List and explain why]_
+- **Which indexes to KEEP:** <span class="fill-in">[List and explain why]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -895,19 +914,19 @@ SELECT * FROM products WHERE price > 100.00 ORDER BY price;
 
 **Your debugging:**
 
-- **What's wrong with the hash index?** _[Fill in]_
+- **What's wrong with the hash index?** <span class="fill-in">[Fill in]</span>
 
-- **Why does exact match work but range fails?** _[Explain]_
-    - Hash index: _[What does it optimize for?]_
-    - Range query needs: _[What property?]_
+- **Why does exact match work but range fails?** <span class="fill-in">[Explain]</span>
+    - Hash index: <span class="fill-in">[What does it optimize for?]</span>
+    - Range query needs: <span class="fill-in">[What property?]</span>
 
-- **The fix:** _[What index type should we use?]_
+- **The fix:** <span class="fill-in">[What index type should we use?]</span>
   ```sql
   DROP INDEX idx_price;
   CREATE INDEX _____ ON products(_____);
   ```
 
-- **When WOULD a hash index be appropriate?** _[Give an example]_
+- **When WOULD a hash index be appropriate?** <span class="fill-in">[Give an example]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -975,23 +994,23 @@ WHERE customer_id = 12345
 
 **Your debugging:**
 
-- **Why doesn't Query 2 use the index?** _[Fill in]_
-    - Composite index rule: _[Explain "leftmost prefix" rule]_
-    - Query 2 skips: _[Which column?]_
+- **Why doesn't Query 2 use the index?** <span class="fill-in">[Fill in]</span>
+    - Composite index rule: <span class="fill-in">[Explain "leftmost prefix" rule]</span>
+    - Query 2 skips: <span class="fill-in">[Which column?]</span>
 
-- **Why is Query 3 inefficient?** _[Fill in]_
+- **Why is Query 3 inefficient?** <span class="fill-in">[Fill in]</span>
 
 - **Fix the index column order:**
   ```sql
   DROP INDEX idx_search;
   CREATE INDEX idx_search ON orders(_____, _____, _____);
   ```
-    - Order rule: _[Equality → Range → Sort]_
+    - Order rule: <span class="fill-in">[Equality → Range → Sort]</span>
 
 - **Verify each query:**
-    - Query 1 with new index: _[Will it work?]_
-    - Query 2 with new index: _[Will it work?]_
-    - Query 3 with new index: _[Will it work?]_
+    - Query 1 with new index: <span class="fill-in">[Will it work?]</span>
+    - Query 2 with new index: <span class="fill-in">[Will it work?]</span>
+    - Query 3 with new index: <span class="fill-in">[Will it work?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -999,16 +1018,19 @@ WHERE customer_id = 12345
 **Bug:** Column order violates the "leftmost prefix" rule.
 
 **Leftmost prefix rule:** Composite index on (A, B, C) can serve:
+
 - WHERE A = ?
 - WHERE A = ? AND B = ?
 - WHERE A = ? AND B = ? AND C = ?
 
 But CANNOT serve:
+
 - WHERE B = ? (skips A)
 - WHERE C = ? (skips A and B)
 - WHERE B = ? AND C = ? (skips A)
 
 **Original index:** (created_at, customer_id, status)
+
 - Query 2 filters on (customer_id, status) → skips created_at → index not used!
 - Query 3 filters on (customer_id, created_at) → skips first column → can't seek efficiently
 
@@ -1038,6 +1060,7 @@ CREATE INDEX idx_search ON orders(customer_id, created_at, status);
 ### Challenge 5: Index Not Used (Implicit Conversion)
 
 ```sql
+
 -- Table schema
 CREATE TABLE users (
     id BIGINT PRIMARY KEY,
@@ -1058,14 +1081,15 @@ SELECT * FROM users WHERE phone = 1234567890;  -- Number instead of string
 
 **Your debugging:**
 
-- **Why doesn't Query 2 use the index?** _[Fill in]_
-    - Data type in query: _[What type?]_
-    - Data type in column: _[What type?]_
-    - What happens: _[Implicit conversion]_
+- **Why doesn't Query 2 use the index?** <span class="fill-in">[Fill in]</span>
+    - Data type in query: <span class="fill-in">[What type?]</span>
+    - Data type in column: <span class="fill-in">[What type?]</span>
+    - What happens: <span class="fill-in">[Implicit conversion]</span>
 
 - **Similar bugs:**
 
 ```sql
+
 -- Index on created_at (TIMESTAMP)
 WHERE created_at = '2024-01-01'  -- String! Needs conversion
 
@@ -1073,10 +1097,10 @@ WHERE created_at = '2024-01-01'  -- String! Needs conversion
 WHERE status = 1  -- Number! Needs conversion
 ```
 
-- **The rule:** _[Explain why type mismatch prevents index usage]_
+- **The rule:** <span class="fill-in">[Explain why type mismatch prevents index usage]</span>
 
-- **How to detect in real databases:** _[What tool/command?]_
-    - Hint: _[EXPLAIN or EXPLAIN ANALYZE]_
+- **How to detect in real databases:** <span class="fill-in">[What tool/command?]</span>
+    - Hint: <span class="fill-in">[EXPLAIN or EXPLAIN ANALYZE]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1086,6 +1110,7 @@ WHERE status = 1  -- Number! Needs conversion
 **Why:** Database must convert EVERY row's `phone` column from VARCHAR to INT to compare with 1234567890. This requires scanning the entire table.
 
 **Rule:** When query value type doesn't match column type, database either:
+
 1. Converts column values (requires table scan, index useless)
 2. Converts query value (index can be used)
 
@@ -1096,6 +1121,7 @@ WHERE status = 1  -- Number! Needs conversion
 
 **Similar issues:**
 ```sql
+
 -- Don't do this:
 WHERE CAST(created_at AS DATE) = '2024-01-01'  -- Function on column = no index
 WHERE UPPER(email) = 'JOHN@EXAMPLE.COM'  -- Function on column = no index
@@ -1108,6 +1134,7 @@ WHERE email = 'john@example.com'  -- Store lowercase, search lowercase
 **Detection:** Use EXPLAIN:
 ```sql
 EXPLAIN SELECT * FROM users WHERE phone = 1234567890;
+
 -- Shows: "Table scan" or "Full table scan" instead of "Index scan"
 ```
 
@@ -1127,9 +1154,9 @@ After finding and fixing all bugs:
 
 **Common indexing mistakes you discovered:**
 
-1. _[List the patterns you noticed]_
-2. _[Fill in]_
-3. _[Fill in]_
+1. <span class="fill-in">[List the patterns you noticed]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1141,37 +1168,37 @@ After finding and fixing all bugs:
 
 **Primary Index:**
 
-- When: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
+- When: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
 **Secondary Index:**
 
-- When: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
+- When: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
 ### 2. When to use Composite Index?
 
 **Use composite index when:**
 
-- Query filters: _[Multiple columns together]_
-- Column order: _[Fill in rule]_
-- Example: _[Fill in]_
+- Query filters: <span class="fill-in">[Multiple columns together]</span>
+- Column order: <span class="fill-in">[Fill in rule]</span>
+- Example: <span class="fill-in">[Fill in]</span>
 
 **Column ordering rule:**
 
-1. _[Columns in equality filters first]_
-2. _[Then range filter columns]_
-3. _[Then sort columns]_
+1. <span class="fill-in">[Columns in equality filters first]</span>
+2. <span class="fill-in">[Then range filter columns]</span>
+3. <span class="fill-in">[Then sort columns]</span>
 
 ### 3. Covering Index?
 
-**What is it:** _[Index contains all columns needed by query]_
+**What is it:** <span class="fill-in">[Index contains all columns needed by query]</span>
 
-**Benefit:** _[No need to access main table]_
+**Benefit:** <span class="fill-in">[No need to access main table]</span>
 
-**Example:** _[Fill in after practice]_
+**Example:** <span class="fill-in">[Fill in after practice]</span>
 
 ### Your Decision Tree
 
@@ -1204,31 +1231,31 @@ Should I create an index?
 
 ### The "Kill Switch" - Don't index when:
 
-1. **Low cardinality** - _[Column has few distinct values (e.g., boolean, status with 3 values)]_
-2. **Write-heavy workload** - _[Index maintenance slows inserts/updates/deletes]_
-3. **Small table** - _[Table scan faster than index for tiny tables]_
-4. **Never queried** - _[Index on column never used in WHERE/JOIN/ORDER BY]_
-5. **Too many indexes** - _[Each index has memory/write cost]_
+1. **Low cardinality** - <span class="fill-in">[Column has few distinct values (e.g., boolean, status with 3 values)]</span>
+2. **Write-heavy workload** - <span class="fill-in">[Index maintenance slows inserts/updates/deletes]</span>
+3. **Small table** - <span class="fill-in">[Table scan faster than index for tiny tables]</span>
+4. **Never queried** - <span class="fill-in">[Index on column never used in WHERE/JOIN/ORDER BY]</span>
+5. **Too many indexes** - <span class="fill-in">[Each index has memory/write cost]</span>
 
 ### The Rule of Three: Alternatives
 
 **Option 1: B+Tree Index (TreeMap)**
 
-- Pros: _[Range queries, sorted order, balanced]_
-- Cons: _[Write overhead, memory usage]_
-- Use when: _[Range queries, ORDER BY, most general case]_
+- Pros: <span class="fill-in">[Range queries, sorted order, balanced]</span>
+- Cons: <span class="fill-in">[Write overhead, memory usage]</span>
+- Use when: <span class="fill-in">[Range queries, ORDER BY, most general case]</span>
 
 **Option 2: Hash Index (HashMap)**
 
-- Pros: _[O(1) lookups, less memory]_
-- Cons: _[No range queries, no sorting]_
-- Use when: _[Exact match only, high cardinality]_
+- Pros: <span class="fill-in">[O(1) lookups, less memory]</span>
+- Cons: <span class="fill-in">[No range queries, no sorting]</span>
+- Use when: <span class="fill-in">[Exact match only, high cardinality]</span>
 
 **Option 3: No Index (Table Scan)**
 
-- Pros: _[No write overhead, no memory cost]_
-- Cons: _[O(n) scans]_
-- Use when: _[Small tables, write-heavy, infrequent queries]_
+- Pros: <span class="fill-in">[No write overhead, no memory cost]</span>
+- Cons: <span class="fill-in">[O(n) scans]</span>
+- Use when: <span class="fill-in">[Small tables, write-heavy, infrequent queries]</span>
 
 ---
 
@@ -1255,9 +1282,9 @@ CREATE TABLE posts (
 
 **Your index design:**
 
-- Index 1: _[Fill in]_
-- Index 2: _[Fill in]_
-- Reasoning: _[Why these indexes?]_
+- Index 1: <span class="fill-in">[Fill in]</span>
+- Index 2: <span class="fill-in">[Fill in]</span>
+- Reasoning: <span class="fill-in">[Why these indexes?]</span>
 
 ---
 
@@ -1282,9 +1309,9 @@ CREATE TABLE orders (
 
 **Your index design:**
 
-- Index 1: _[Fill in]_
-- Index 2: _[Fill in]_
-- Reasoning: _[Explain your choices]_
+- Index 1: <span class="fill-in">[Fill in]</span>
+- Index 2: <span class="fill-in">[Fill in]</span>
+- Reasoning: <span class="fill-in">[Explain your choices]</span>
 
 ---
 
@@ -1309,9 +1336,9 @@ CREATE TABLE events (
 
 **Your index design:**
 
-- Index 1: _[Fill in]_
-- Index 2: _[Fill in]_
-- Why composite? _[Explain]_
+- Index 1: <span class="fill-in">[Fill in]</span>
+- Index 2: <span class="fill-in">[Fill in]</span>
+- Why composite? <span class="fill-in">[Explain]</span>
 
 ---
 
@@ -1357,7 +1384,7 @@ Before moving to the next topic:
 
 > "A database index is..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **Include in your explanation:**
 
@@ -1367,9 +1394,9 @@ Before moving to the next topic:
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by a non-technical person? _[Yes/No]_
-- Did you explain both benefits AND costs? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
+- Did you explain both benefits AND costs? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -1405,26 +1432,26 @@ CREATE TABLE posts (
    ```sql
    CREATE INDEX _____ ON posts(_____);
    ```
-    - Serves query: _[Which one?]_
-    - Column order reasoning: _[Why this order?]_
+    - Serves query: <span class="fill-in">[Which one?]</span>
+    - Column order reasoning: <span class="fill-in">[Why this order?]</span>
 
 2. **Index 2:**
    ```sql
    CREATE INDEX _____ ON posts(_____);
    ```
-    - Serves query: _[Which one?]_
-    - Why needed: _[Can't Index 1 serve this?]_
+    - Serves query: <span class="fill-in">[Which one?]</span>
+    - Why needed: <span class="fill-in">[Can't Index 1 serve this?]</span>
 
 3. **Index 3 (if needed):**
    ```sql
    CREATE INDEX _____ ON posts(_____);
    ```
-    - Or: _[Maybe we don't need this one? Explain.]_
+    - Or: <span class="fill-in">[Maybe we don't need this one? Explain.]</span>
 
 **Indexes you WON'T create:**
 
-- `is_published` alone → Why not? _[Low cardinality]_
-- `likes_count` alone → Why not? _[Fill in]_
+- `is_published` alone → Why not? <span class="fill-in">[Low cardinality]</span>
+- `likes_count` alone → Why not? <span class="fill-in">[Fill in]</span>
 
 **Verification:**
 
@@ -1439,6 +1466,7 @@ CREATE TABLE posts (
 
 **Given:**
 ```sql
+
 -- Existing indexes
 CREATE INDEX idx_user ON orders(user_id);
 CREATE INDEX idx_created ON orders(created_at);
@@ -1461,26 +1489,26 @@ LIMIT 20;
 
 **Your analysis:**
 
-1. **What index is being used?** _[Fill in]_
+1. **What index is being used?** <span class="fill-in">[Fill in]</span>
 
-2. **What's happening after the index scan?** _[List the steps]_
-    - _[Step 1]_
-    - _[Step 2]_
-    - _[Step 3]_
+2. **What's happening after the index scan?** <span class="fill-in">[List the steps]</span>
+    - <span class="fill-in">[Step 1]</span>
+    - <span class="fill-in">[Step 2]</span>
+    - <span class="fill-in">[Step 3]</span>
 
-3. **Why is this slow?** _[Identify the bottleneck]_
+3. **Why is this slow?** <span class="fill-in">[Identify the bottleneck]</span>
 
 4. **Your solution:**
    ```sql
    CREATE INDEX _____ ON orders(_____);
    ```
 
-5. **Why your index is better:** _[Explain the improvement]_
+5. **Why your index is better:** <span class="fill-in">[Explain the improvement]</span>
     - Reduces rows scanned from _____ to _____
-    - Eliminates _[which operation?]_
-    - Estimated new query time: _____
+    - Eliminates <span class="fill-in">[which operation?]</span>
+    - Estimated new query time: <span class="fill-in">_____</span>
 
-6. **Would a covering index help more?** _[Yes/No - Explain]_
+6. **Would a covering index help more?** <span class="fill-in">[Yes/No - Explain]</span>
    ```sql
    CREATE INDEX _____ ON orders(_____, _____, _____) INCLUDE (_____);
    ```
@@ -1500,15 +1528,15 @@ LIMIT 20;
 **Deep questions:**
 
 1. **Why is B+tree insert O(log n) but table scan insert is O(1)?**
-    - Your answer: _[Fill in - explain the trade-off]_
+    - Your answer: <span class="fill-in">[Fill in - explain the trade-off]</span>
 
 2. **A table with 10 million rows and 5 secondary indexes:**
-    - Single insert without indexes: ___ operations
-    - Single insert with indexes: ___ operations (1 table + 5 indexes)
-    - Write amplification factor: _____
+    - Single insert without indexes: <span class="fill-in">___</span> operations
+    - Single insert with indexes: <span class="fill-in">___</span> operations (1 table + 5 indexes)
+    - Write amplification factor: <span class="fill-in">_____</span>
 
 3. **Hash index is O(1) but B+tree is O(log n). Why use B+tree?**
-    - Your answer: _[List at least 3 reasons]_
+    - Your answer: <span class="fill-in">[List at least 3 reasons]</span>
 
 ---
 
@@ -1526,26 +1554,26 @@ LIMIT 20;
 
 **Engineer A:** "Add composite index on (customer_id, created_at)"
 
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
-- Impact on writes: _[Slower/Same/Faster - Why?]_
-- Impact on reads: _[Slower/Same/Faster - Why?]_
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
+- Impact on writes: <span class="fill-in">[Slower/Same/Faster - Why?]</span>
+- Impact on reads: <span class="fill-in">[Slower/Same/Faster - Why?]</span>
 
 **Engineer B:** "No index, partition table by created_at month, scan partitions"
 
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
-- Impact on writes: _[Slower/Same/Faster - Why?]_
-- Impact on reads: _[Slower/Same/Faster - Why?]_
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
+- Impact on writes: <span class="fill-in">[Slower/Same/Faster - Why?]</span>
+- Impact on reads: <span class="fill-in">[Slower/Same/Faster - Why?]</span>
 
-**Your decision:** I would choose _[A/B]_ because...
+**Your decision:** I would choose <span class="fill-in">[A/B]</span> because...
 
-_[Fill in your reasoning - consider read/write ratio, scalability, maintenance]_
+<span class="fill-in">[Fill in your reasoning - consider read/write ratio, scalability, maintenance]</span>
 
 **What would make you change your decision?**
 
-- If write volume increases to _____: _[Would you reconsider?]_
-- If read patterns change to _____: _[Would you reconsider?]_
+- If write volume increases to _____: <span class="fill-in">[Would you reconsider?]</span>
+- If read patterns change to _____: <span class="fill-in">[Would you reconsider?]</span>
 
 ---
 
@@ -1557,22 +1585,23 @@ _[Fill in your reasoning - consider read/write ratio, scalability, maintenance]_
 
 | Query | Uses Index? | Efficiency |
 |-------|-------------|------------|
-| `WHERE customer_id = ?` | _[Y/N]_ | _[Full/Partial/None]_ |
-| `WHERE status = ?` | _[Y/N]_ | _[Full/Partial/None]_ |
-| `WHERE customer_id = ? AND status = ?` | _[Y/N]_ | _[Full/Partial/None]_ |
-| `WHERE customer_id = ? AND created_at > ?` | _[Y/N]_ | _[Full/Partial/None]_ |
-| `WHERE customer_id = ? AND status = ? AND created_at > ?` | _[Y/N]_ | _[Full/Partial/None]_ |
-| `WHERE status = ? AND created_at > ?` | _[Y/N]_ | _[Full/Partial/None]_ |
+| `WHERE customer_id = ?` | <span class="fill-in">[Y/N]</span> | <span class="fill-in">[Full/Partial/None]</span> |
+| `WHERE status = ?` | <span class="fill-in">[Y/N]</span> | <span class="fill-in">[Full/Partial/None]</span> |
+| `WHERE customer_id = ? AND status = ?` | <span class="fill-in">[Y/N]</span> | <span class="fill-in">[Full/Partial/None]</span> |
+| `WHERE customer_id = ? AND created_at > ?` | <span class="fill-in">[Y/N]</span> | <span class="fill-in">[Full/Partial/None]</span> |
+| `WHERE customer_id = ? AND status = ? AND created_at > ?` | <span class="fill-in">[Y/N]</span> | <span class="fill-in">[Full/Partial/None]</span> |
+| `WHERE status = ? AND created_at > ?` | <span class="fill-in">[Y/N]</span> | <span class="fill-in">[Full/Partial/None]</span> |
 
 **For each "Partial" efficiency, explain why:**
 
-- _[Fill in the limitation]_
+- <span class="fill-in">[Fill in the limitation]</span>
 
 **Optimal column order for these queries:**
 ```sql
 CREATE INDEX idx_optimal ON orders(_____, _____, _____);
 ```
-- Reasoning: _[Why this order?]_
+
+- Reasoning: <span class="fill-in">[Why this order?]</span>
 
 ---
 
@@ -1602,32 +1631,33 @@ CREATE INDEX idx_email ON users(email);
 
 **Query execution:**
 
-1. _[Use index to find row ID]_
-2. _[Access main table to get name and city]_
-3. _[Total disk reads: ___ ]_
+1. <span class="fill-in">[Use index to find row ID]</span>
+2. <span class="fill-in">[Access main table to get name and city]</span>
+3. <span class="fill-in">[Total disk reads: <span class="fill-in">___</span> ]</span>
 
 **Option 2: Covering index**
 ```sql
 CREATE INDEX idx_email_covering ON users(email) INCLUDE (name, city);
+
 -- Or: CREATE INDEX idx_email_covering ON users(email, name, city);
 ```
 
 **Query execution:**
 
-1. _[Use index to find row]_
-2. _[Get name and city from index itself]_
-3. _[Total disk reads: ___ ]_
+1. <span class="fill-in">[Use index to find row]</span>
+2. <span class="fill-in">[Get name and city from index itself]</span>
+3. <span class="fill-in">[Total disk reads: <span class="fill-in">___</span> ]</span>
 
 **Analysis:**
 
-- Speed improvement: _[Approximately how much faster?]_
-- Space cost: _[How much larger is the index?]_
-- Write cost: _[Impact on INSERT/UPDATE]_
+- Speed improvement: <span class="fill-in">[Approximately how much faster?]</span>
+- Space cost: <span class="fill-in">[How much larger is the index?]</span>
+- Write cost: <span class="fill-in">[Impact on INSERT/UPDATE]</span>
 
 **When NOT to use covering index:**
 
-- _[Scenario 1]_
-- _[Scenario 2]_
+- <span class="fill-in">[Scenario 1]</span>
+- <span class="fill-in">[Scenario 2]</span>
 
 ---
 
@@ -1652,9 +1682,9 @@ WHERE category = 'electronics'
 
 **Analysis:**
 
-1. **What's wrong?** _[No index being used]_
+1. **What's wrong?** <span class="fill-in">[No index being used]</span>
 
-2. **How can you tell?** _[Seq Scan = table scan]_
+2. **How can you tell?** <span class="fill-in">[Seq Scan = table scan]</span>
 
 3. **Design the optimal index:**
    ```sql
@@ -1662,9 +1692,9 @@ WHERE category = 'electronics'
    ```
 
 4. **Column order reasoning:**
-    - First column: _____ because _____
-    - Second column: _____ because _____
-    - Third column: _____ because _____
+    - First column: <span class="fill-in">_____</span> because _____
+    - Second column: <span class="fill-in">_____</span> because _____
+    - Third column: <span class="fill-in">_____</span> because _____
 
 5. **Expected improvement:**
     - Rows examined: 50,000 → _____
@@ -1689,8 +1719,8 @@ WHERE category = 'electronics'
 
 **Areas needing more practice:**
 
-1. _[Fill in if any]_
-2. _[Fill in if any]_
+1. <span class="fill-in">[Fill in if any]</span>
+2. <span class="fill-in">[Fill in if any]</span>
 
 **If score < 8:** Review the sections where you struggled, then retry this gate.
 

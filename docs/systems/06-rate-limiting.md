@@ -6,91 +6,98 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing different rate limiting algorithms, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is rate limiting in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **Why do we need rate limiting?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy for token bucket:**
     - Example: "Token bucket is like a piggy bank where..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **What is the token bucket algorithm in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 5. **How is leaky bucket different from token bucket?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 6. **Real-world analogy for leaky bucket:**
     - Example: "Leaky bucket is like a water tower where..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 7. **What is sliding window algorithm in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 8. **When would you use fixed window vs sliding window?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition about rate limiting algorithms. Answer these, then verify after implementation.
 
 ### Algorithm Understanding Predictions
 
 1. **Token bucket with 10 tokens, 2 tokens/sec refill:**
-    - How many requests can burst immediately? _[Your guess]_
-    - After waiting 5 seconds, how many tokens? _[Your guess]_
-    - Verified after implementation: _[Actual]_
+    - How many requests can burst immediately? <span class="fill-in">[Your guess]</span>
+    - After waiting 5 seconds, how many tokens? <span class="fill-in">[Your guess]</span>
+    - Verified after implementation: <span class="fill-in">[Actual]</span>
 
 2. **Leaky bucket vs token bucket for 100 req/sec:**
-    - Which allows bursts? _[Token/Leaky]_
-    - Which smooths traffic? _[Token/Leaky]_
-    - Verified: _[Fill in]_
+    - Which allows bursts? <span class="fill-in">[Token/Leaky]</span>
+    - Which smooths traffic? <span class="fill-in">[Token/Leaky]</span>
+    - Verified: <span class="fill-in">[Fill in]</span>
 
 3. **Fixed window: 10 req/min starting at 12:00:00:**
     - 9 requests at 12:00:58
     - 9 requests at 12:01:01
-    - Total allowed in 3 seconds: _[Your guess: 9? 10? 18?]_
-    - Why is this a problem? _[Fill in]_
-    - Verified: _[Actual behavior]_
+    - Total allowed in 3 seconds: <span class="fill-in">[Your guess: 9? 10? 18?]</span>
+    - Why is this a problem? <span class="fill-in">[Fill in]</span>
+    - Verified: <span class="fill-in">[Actual behavior]</span>
 
 ### Scenario Predictions
 
 **Scenario 1:** API needs to handle traffic spikes but prevent abuse
 
-- **Best algorithm?** _[Token bucket/Leaky bucket/Fixed window/Sliding window]_
-- **Why?** _[Your reasoning]_
-- **Verified after implementation:** _[Fill in]_
+- **Best algorithm?** <span class="fill-in">[Token bucket/Leaky bucket/Fixed window/Sliding window]</span>
+- **Why?** <span class="fill-in">[Your reasoning]</span>
+- **Verified after implementation:** <span class="fill-in">[Fill in]</span>
 
 **Scenario 2:** Login system needs steady rate limiting (no bursts)
 
-- **Best algorithm?** _[Token bucket/Leaky bucket/Fixed window/Sliding window]_
-- **Why?** _[Your reasoning]_
-- **Verified after implementation:** _[Fill in]_
+- **Best algorithm?** <span class="fill-in">[Token bucket/Leaky bucket/Fixed window/Sliding window]</span>
+- **Why?** <span class="fill-in">[Your reasoning]</span>
+- **Verified after implementation:** <span class="fill-in">[Fill in]</span>
 
 **Scenario 3:** Rate limit 100 requests per minute with 1 million users
 
-- **Fixed window memory:** _[Estimate: bytes per user]_
-- **Sliding window log memory:** _[Estimate: bytes per user]_
-- **Which is more memory efficient?** _[Your guess]_
-- **Verified:** _[Fill in calculations]_
+- **Fixed window memory:** <span class="fill-in">[Estimate: bytes per user]</span>
+- **Sliding window log memory:** <span class="fill-in">[Estimate: bytes per user]</span>
+- **Which is more memory efficient?** <span class="fill-in">[Your guess]</span>
+- **Verified:** <span class="fill-in">[Fill in calculations]</span>
 
 ### Refill Logic Quiz
 
 **Token bucket refills 5 tokens/second, last refill at T=0:**
 
-1. **At T=2 seconds, how many tokens added?** _[Your calculation]_
-2. **At T=2.5 seconds, how many tokens added?** _[Your calculation]_
+1. **At T=2 seconds, how many tokens added?** <span class="fill-in">[Your calculation]</span>
+2. **At T=2.5 seconds, how many tokens added?** <span class="fill-in">[Your calculation]</span>
 3. **If capacity is 10 and current tokens = 8:**
-    - After 1 second: _[tokens available?]_
-    - After 5 seconds: _[tokens available? can exceed capacity?]_
+    - After 1 second: <span class="fill-in">[tokens available?]</span>
+    - After 5 seconds: <span class="fill-in">[tokens available? can exceed capacity?]</span>
 
 **Verify these calculations after implementation!**
 
@@ -98,8 +105,8 @@
 
 **Question:** Why would you choose fixed window over sliding window?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** Token bucket allows 100 burst requests. Is this ALWAYS good?
 
@@ -108,7 +115,10 @@
 - [ ] No, depends on abuse prevention needs
 - [ ] It depends on the use case
 
-**Verify after implementation:** _[Which one(s) and why?]_
+**Verify after implementation:** <span class="fill-in">[Which one(s) and why?]</span>
+
+
+</div>
 
 ---
 
@@ -225,8 +235,9 @@ public class TokenBucketRateLimiter {
 | CPU per request | Low | Low | Low | Medium (cleanup) |
 
 **Your calculation:** For 10 million users with sliding window log tracking 1000 requests each:
-- Memory needed: _[Calculate after implementation]_
-- Why this might be impractical: _[Fill in]_
+
+- Memory needed: <span class="fill-in">[Calculate after implementation]</span>
+- Why this might be impractical: <span class="fill-in">[Fill in]</span>
 
 #### Boundary Attack Demonstration
 
@@ -237,6 +248,7 @@ Window 1: 12:00:00 - 12:01:00 (limit: 100 req)
 Window 2: 12:01:00 - 12:02:00 (limit: 100 req)
 
 Attack pattern:
+
 - 12:00:59 → 100 requests (allowed, fills window 1)
 - 12:01:01 → 100 requests (allowed, new window 2)
 - Total: 200 requests in 2 seconds!
@@ -248,6 +260,7 @@ Attack pattern:
 Capacity: 100 tokens, Refill: 10 tokens/sec
 
 Attack pattern:
+
 - 12:00:59 → 100 requests (bucket empties)
 - 12:01:01 → 20 requests (only ~20 tokens refilled)
 - Total: 120 requests max (controlled burst)
@@ -255,9 +268,9 @@ Attack pattern:
 
 **After implementing, explain in your own words:**
 
-- Why does fixed window allow double rate at boundaries? _[Fill in]_
-- How does token bucket prevent this? _[Fill in]_
-- When is fixed window "good enough"? _[Fill in]_
+- Why does fixed window allow double rate at boundaries? <span class="fill-in">[Fill in]</span>
+- How does token bucket prevent this? <span class="fill-in">[Fill in]</span>
+- When is fixed window "good enough"? <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1002,13 +1015,13 @@ public class BrokenTokenBucket {
 
 **Your debugging:**
 
-- **Bug location:** _[Which line?]_
-- **Bug explanation:** _[What's wrong with the calculation?]_
-- **Bug manifestation:** _[What happens? Too many/few tokens?]_
+- **Bug location:** <span class="fill-in">[Which line?]</span>
+- **Bug explanation:** <span class="fill-in">[What's wrong with the calculation?]</span>
+- **Bug manifestation:** <span class="fill-in">[What happens? Too many/few tokens?]</span>
 - **Test case:** elapsed = 2000ms (2 seconds), refillRate = 2 tokens/sec
-    - Current calculation: `2000 * 2 = 4000` tokens! _[Why is this wrong?]_
-    - Expected: _[How many tokens should be added?]_
-- **Fix:** _[Correct the formula]_
+    - Current calculation: `2000 * 2 = 4000` tokens! <span class="fill-in">[Why is this wrong?]</span>
+    - Expected: <span class="fill-in">[How many tokens should be added?]</span>
+- **Fix:** <span class="fill-in">[Correct the formula]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1065,8 +1078,8 @@ public class RacyTokenBucket {
 
 **Your debugging:**
 
-- **Bug 1:** _[What's missing from method signature?]_
-- **Bug 2:** _[What happens when 2 threads check `tokens >= 1` simultaneously?]_
+- **Bug 1:** <span class="fill-in">[What's missing from method signature?]</span>
+- **Bug 2:** <span class="fill-in">[What happens when 2 threads check `tokens >= 1` simultaneously?]</span>
 - **Scenario to expose bug:**
   ```
   Thread 1: checks tokens (1.0) >= 1 ✓
@@ -1074,7 +1087,7 @@ public class RacyTokenBucket {
   Thread 1: tokens-- (now 0.0)
   Thread 2: tokens-- (now -1.0)  [negative tokens!]
   ```
-- **Fix:** _[How to prevent race condition?]_
+- **Fix:** <span class="fill-in">[How to prevent race condition?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1143,14 +1156,14 @@ public class BrokenFixedWindow {
 **Your debugging:**
 
 - **Bug 1:** Line with `now - windowStart > windowMs`
-    - Why > might be wrong: _[Fill in]_
-    - Should it be >=? _[Yes/No and why]_
+    - Why > might be wrong: <span class="fill-in">[Fill in]</span>
+    - Should it be >=? <span class="fill-in">[Yes/No and why]</span>
 - **Bug 2:** Line with `counter <= maxRequests`
     - Expected: Allow 10 requests (counter 0-9)
-    - Actual: _[How many requests allowed?]_
-    - Fix: _[Should be < or <= ?]_
+    - Actual: <span class="fill-in">[How many requests allowed?]</span>
+    - Fix: <span class="fill-in">[Should be < or <= ?]</span>
 - **Test case:** maxRequests = 3
-    - Counter values: 0, 1, 2, 3 → _[How many increments? Is 4 requests allowed?]_
+    - Counter values: 0, 1, 2, 3 → <span class="fill-in">[How many increments? Is 4 requests allowed?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1158,6 +1171,7 @@ public class BrokenFixedWindow {
 **Bug 1:** Using `>` instead of `>=` means windows that expire exactly at the boundary don't reset. Using `>=` is standard and clearer.
 
 **Bug 2:** The condition `counter <= maxRequests` allows 11 requests:
+
 - counter = 0 → increment to 1 (1st request)
 - counter = 1 → increment to 2 (2nd request)
 - ...
@@ -1220,15 +1234,15 @@ public class LeakyWindowLog {
 **Your debugging:**
 
 - **Bug scenario:** Low traffic for 5 minutes, then burst of 10,000 rejected requests
-    - How many timestamps in queue? _[Fill in]_
-    - Are rejected requests added to log? _[Yes/No]_
-    - Wait, re-read the code carefully... _[What actually happens?]_
+    - How many timestamps in queue? <span class="fill-in">[Fill in]</span>
+    - Are rejected requests added to log? <span class="fill-in">[Yes/No]</span>
+    - Wait, re-read the code carefully... <span class="fill-in">[What actually happens?]</span>
 - **Memory analysis:**
     - Each timestamp: 8 bytes (long)
-    - After 1 hour of 100 req/min: _[Calculate queue size]_
-    - After 24 hours: _[Calculate queue size]_
-- **The ACTUAL bug:** _[Is there actually a memory leak, or is this a trick question?]_
-- **Discussion:** _[Is the cleanup sufficient? When would memory grow?]_
+    - After 1 hour of 100 req/min: <span class="fill-in">[Calculate queue size]</span>
+    - After 24 hours: <span class="fill-in">[Calculate queue size]</span>
+- **The ACTUAL bug:** <span class="fill-in">[Is there actually a memory leak, or is this a trick question?]</span>
+- **Discussion:** <span class="fill-in">[Is the cleanup sufficient? When would memory grow?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1298,16 +1312,16 @@ public class BrokenSlidingCounter {
 **Your debugging:**
 
 - **Formula analysis:** `previousCount * ratio + currentCount`
-    - If elapsed = 0ms (start of window): ratio = 0, weighted = _[calculate]_
-    - If elapsed = 30s (halfway): ratio = 0.5, weighted = _[calculate]_
-    - If elapsed = 60s (end of window): ratio = 1.0, weighted = _[calculate]_
-- **Is this correct?** _[Should previous count INCREASE or DECREASE as time passes?]_
+    - If elapsed = 0ms (start of window): ratio = 0, weighted = <span class="fill-in">[calculate]</span>
+    - If elapsed = 30s (halfway): ratio = 0.5, weighted = <span class="fill-in">[calculate]</span>
+    - If elapsed = 60s (end of window): ratio = 1.0, weighted = <span class="fill-in">[calculate]</span>
+- **Is this correct?** <span class="fill-in">[Should previous count INCREASE or DECREASE as time passes?]</span>
 - **Expected:** As time passes, previous window matters less
     - Start of window: previous = 100%, current = 0%
     - Middle of window: previous = 50%, current = 50%
     - End of window: previous = 0%, current = 100%
-- **Bug:** _[What's wrong with the formula?]_
-- **Fix:** _[Correct formula]_
+- **Bug:** <span class="fill-in">[What's wrong with the formula?]</span>
+- **Fix:** <span class="fill-in">[Correct formula]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1386,14 +1400,14 @@ public class BrokenLeakyBucket {
 
 - **Bug 1:** Calculation `elapsed * leakRate`
     - elapsed = 2000ms, leakRate = 2 req/sec
-    - Current: 2000 × 2 = _[What?]_
-    - Expected: _[How many requests should leak in 2 seconds?]_
-    - Fix: _[Correct formula]_
+    - Current: 2000 × 2 = <span class="fill-in">[What?]</span>
+    - Expected: <span class="fill-in">[How many requests should leak in 2 seconds?]</span>
+    - Fix: <span class="fill-in">[Correct formula]</span>
 - **Bug 2:** `lastLeakTime = now` happens every call
     - Scenario: elapsed = 500ms, leakRate = 2 req/sec
     - requests to leak = 1 request
     - We update lastLeakTime, "losing" the remaining 0.5 requests worth of time
-    - Fix: _[Should we account for fractional leak time?]_
+    - Fix: <span class="fill-in">[Should we account for fractional leak time?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1444,15 +1458,19 @@ After finding and fixing all bugs:
 
 **Common rate limiting bugs you discovered:**
 
-1. _[List the patterns you noticed]_
-2. _[Fill in]_
-3. _[Fill in]_
+1. <span class="fill-in">[List the patterns you noticed]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 **Testing strategies you learned:**
 
-- _[How would you test for race conditions?]_
-- _[How would you test boundary conditions?]_
-- _[How would you test time-based calculations?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[How would you test for race conditions?]</span>
+- <span class="fill-in">[How would you test boundary conditions?]</span>
+- <span class="fill-in">[How would you test time-based calculations?]</span>
+
+</div>
 
 ---
 
@@ -1464,45 +1482,45 @@ After finding and fixing all bugs:
 
 **When to use Token Bucket?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 **When to use Leaky Bucket?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 **When to use Fixed Window?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 **When to use Sliding Window?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 ### 2. Trade-offs
 
 **Token Bucket:**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 **Leaky Bucket:**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 **Fixed Window:**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 **Sliding Window:**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 ### 3. Your Decision Tree
 
@@ -1520,18 +1538,18 @@ What is your priority?
 
 **Token Bucket:**
 
-1. _[When does token bucket fail? Fill in]_
-2. _[Another failure case]_
+1. <span class="fill-in">[When does token bucket fail? Fill in]</span>
+2. <span class="fill-in">[Another failure case]</span>
 
 **Leaky Bucket:**
 
-1. _[When does leaky bucket fail? Fill in]_
-2. _[Another failure case]_
+1. <span class="fill-in">[When does leaky bucket fail? Fill in]</span>
+2. <span class="fill-in">[Another failure case]</span>
 
 **Sliding Window:**
 
-1. _[When does sliding window fail? Fill in]_
-2. _[Another failure case]_
+1. <span class="fill-in">[When does sliding window fail? Fill in]</span>
+2. <span class="fill-in">[Another failure case]</span>
 
 ### 5. Rule of Three - Alternatives
 
@@ -1539,9 +1557,9 @@ For each scenario, identify alternatives and compare:
 
 **Scenario: Public API with burst traffic**
 
-1. Option A: _[Fill in]_
-2. Option B: _[Fill in]_
-3. Option C: _[Fill in]_
+1. Option A: <span class="fill-in">[Fill in]</span>
+2. Option B: <span class="fill-in">[Fill in]</span>
+3. Option C: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1558,10 +1576,10 @@ For each scenario, identify alternatives and compare:
 
 **Your design:**
 
-- Which algorithm would you choose? _[Fill in]_
-- Why? _[Fill in]_
-- How to handle different user tiers? _[Fill in]_
-- How to handle distributed servers? _[Fill in]_
+- Which algorithm would you choose? <span class="fill-in">[Fill in]</span>
+- Why? <span class="fill-in">[Fill in]</span>
+- How to handle different user tiers? <span class="fill-in">[Fill in]</span>
+- How to handle distributed servers? <span class="fill-in">[Fill in]</span>
 
 ### Scenario 2: Rate limit login attempts
 
@@ -1574,10 +1592,10 @@ For each scenario, identify alternatives and compare:
 
 **Your design:**
 
-- Which algorithm would you choose? _[Fill in]_
-- Why? _[Fill in]_
-- How to implement blocking? _[Fill in]_
-- How to handle false positives? _[Fill in]_
+- Which algorithm would you choose? <span class="fill-in">[Fill in]</span>
+- Why? <span class="fill-in">[Fill in]</span>
+- How to implement blocking? <span class="fill-in">[Fill in]</span>
+- How to handle false positives? <span class="fill-in">[Fill in]</span>
 
 ### Scenario 3: Rate limit microservice calls
 
@@ -1590,10 +1608,10 @@ For each scenario, identify alternatives and compare:
 
 **Your design:**
 
-- Which algorithm would you choose? _[Fill in]_
-- Why? _[Fill in]_
-- How to handle backpressure? _[Fill in]_
-- Circuit breaker integration? _[Fill in]_
+- Which algorithm would you choose? <span class="fill-in">[Fill in]</span>
+- Why? <span class="fill-in">[Fill in]</span>
+- How to handle backpressure? <span class="fill-in">[Fill in]</span>
+- Circuit breaker integration? <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1623,21 +1641,21 @@ For each scenario, identify alternatives and compare:
 
 > "Rate limiting is..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 > "The four main algorithms are..."
 >
-> _[Fill in brief explanation of token bucket, leaky bucket, fixed window, sliding window]_
+> <span class="fill-in">[Fill in brief explanation of token bucket, leaky bucket, fixed window, sliding window]</span>
 
 > "For your API, I would recommend... because..."
 >
-> _[Fill in your recommendation with reasoning]_
+> <span class="fill-in">[Fill in your recommendation with reasoning]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could you explain the trade-offs clearly? _[Yes/No]_
-- Did you mention memory, accuracy, and burst handling? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could you explain the trade-offs clearly? <span class="fill-in">[Yes/No]</span>
+- Did you mention memory, accuracy, and burst handling? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -1659,8 +1677,8 @@ T=0s:   [##########] 10 tokens
 T=2s:   Refill 4 tokens → [#########.] 9 tokens
         3 requests → [######....] 6 tokens
 
-T=5s:   Refill calculation: _[Your work]_
-        Final tokens: _[Fill in]_
+T=5s:   Refill calculation: <span class="fill-in">[Your work]</span>
+        Final tokens: <span class="fill-in">[Fill in]</span>
 ```
 
 **Verification:**
@@ -1678,12 +1696,12 @@ T=5s:   Refill calculation: _[Your work]_
 
 | Scenario | Best Algorithm | Why? |
 |----------|----------------|------|
-| Public API, allow traffic spikes | _[Fill in]_ | _[Explain]_ |
-| Login attempts, prevent brute force | _[Fill in]_ | _[Explain]_ |
-| Video streaming, smooth bandwidth | _[Fill in]_ | _[Explain]_ |
-| 10M users, minimize memory | _[Fill in]_ | _[Explain]_ |
-| Critical API, perfect accuracy needed | _[Fill in]_ | _[Explain]_ |
-| Internal service, simple is better | _[Fill in]_ | _[Explain]_ |
+| Public API, allow traffic spikes | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Login attempts, prevent brute force | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Video streaming, smooth bandwidth | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| 10M users, minimize memory | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Critical API, perfect accuracy needed | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Internal service, simple is better | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1697,15 +1715,15 @@ If you scored below 5/6, review the trade-offs and try again.
 
 | Algorithm | Time per Request | Space per User | Memory for 1M Users |
 |-----------|------------------|----------------|---------------------|
-| Token Bucket | O(?) | O(?) | _[Calculate]_ |
-| Leaky Bucket | O(?) | O(?) | _[Calculate]_ |
-| Fixed Window | O(?) | O(?) | _[Calculate]_ |
-| Sliding Window Log | O(?) | O(?) | _[Calculate]_ |
-| Sliding Window Counter | O(?) | O(?) | _[Calculate]_ |
+| Token Bucket | O(?) | O(?) | <span class="fill-in">[Calculate]</span> |
+| Leaky Bucket | O(?) | O(?) | <span class="fill-in">[Calculate]</span> |
+| Fixed Window | O(?) | O(?) | <span class="fill-in">[Calculate]</span> |
+| Sliding Window Log | O(?) | O(?) | <span class="fill-in">[Calculate]</span> |
+| Sliding Window Counter | O(?) | O(?) | <span class="fill-in">[Calculate]</span> |
 
 **Deep question:** Why is sliding window log more accurate than fixed window, and what's the trade-off?
 
-Your answer: _[Fill in - explain the fundamental difference]_
+Your answer: <span class="fill-in">[Fill in - explain the fundamental difference]</span>
 
 ---
 
@@ -1717,21 +1735,22 @@ Your answer: _[Fill in - explain the fundamental difference]_
 
 ```
 Attack pattern:
+
 - 12:00:59 → 100 requests
 - 12:01:01 → 100 requests
 
-Total in 2 seconds: _____ requests
-Is this a problem? _[Yes/No - Why?]_
+Total in 2 seconds: <span class="fill-in">_____</span> requests
+Is this a problem? <span class="fill-in">[Yes/No - Why?]</span>
 ```
 
 **How would each algorithm handle this?**
 
-1. **Fixed Window:** _[Fill in behavior]_
-2. **Token Bucket:** _[Fill in behavior]_
-3. **Sliding Window Log:** _[Fill in behavior]_
-4. **Sliding Window Counter:** _[Fill in behavior]_
+1. **Fixed Window:** <span class="fill-in">[Fill in behavior]</span>
+2. **Token Bucket:** <span class="fill-in">[Fill in behavior]</span>
+3. **Sliding Window Log:** <span class="fill-in">[Fill in behavior]</span>
+4. **Sliding Window Counter:** <span class="fill-in">[Fill in behavior]</span>
 
-**Which algorithms prevent this attack?** _[Fill in and explain why]_
+**Which algorithms prevent this attack?** <span class="fill-in">[Fill in and explain why]</span>
 
 ---
 
@@ -1744,21 +1763,21 @@ Is this a problem? _[Yes/No - Why?]_
 **Your solution:**
 
 - **Option A:** Use Redis to centralize token buckets
-    - Pros: _[Fill in]_
-    - Cons: _[Fill in]_
-    - Latency impact: _[Fill in]_
+    - Pros: <span class="fill-in">[Fill in]</span>
+    - Cons: <span class="fill-in">[Fill in]</span>
+    - Latency impact: <span class="fill-in">[Fill in]</span>
 
 - **Option B:** Use local buckets with total rate / server count
-    - Pros: _[Fill in]_
-    - Cons: _[Fill in]_
-    - Problem: _[What if servers have uneven load?]_
+    - Pros: <span class="fill-in">[Fill in]</span>
+    - Cons: <span class="fill-in">[Fill in]</span>
+    - Problem: <span class="fill-in">[What if servers have uneven load?]</span>
 
 - **Option C:** Hybrid approach
-    - Your design: _[Fill in your approach]_
+    - Your design: <span class="fill-in">[Fill in your approach]</span>
 
-**Your decision:** I would choose _[A/B/C]_ because...
+**Your decision:** I would choose <span class="fill-in">[A/B/C]</span> because...
 
-_[Fill in your reasoning considering latency, accuracy, and complexity]_
+<span class="fill-in">[Fill in your reasoning considering latency, accuracy, and complexity]</span>
 
 ---
 
@@ -1785,10 +1804,10 @@ public boolean tryAcquire() {
 
 **Your analysis:**
 
-- **Bug location:** _[Which line?]_
-- **Bug type:** _[Time units? Off-by-one? Race condition? Other?]_
-- **Why it breaks:** _[Explain]_
-- **Fix:** _[Correct code]_
+- **Bug location:** <span class="fill-in">[Which line?]</span>
+- **Bug type:** <span class="fill-in">[Time units? Off-by-one? Race condition? Other?]</span>
+- **Why it breaks:** <span class="fill-in">[Explain]</span>
+- **Fix:** <span class="fill-in">[Correct code]</span>
 
 **Verification:**
 
@@ -1814,15 +1833,15 @@ public boolean tryAcquire() {
 
 | Algorithm | Latency | Memory | Meets Requirements? |
 |-----------|---------|--------|---------------------|
-| Token Bucket | _[Estimate]_ | _[Calculate]_ | _[Yes/No - Why?]_ |
-| Leaky Bucket | _[Estimate]_ | _[Calculate]_ | _[Yes/No - Why?]_ |
-| Fixed Window | _[Estimate]_ | _[Calculate]_ | _[Yes/No - Why?]_ |
-| Sliding Window Log | _[Estimate]_ | _[Calculate]_ | _[Yes/No - Why?]_ |
-| Sliding Window Counter | _[Estimate]_ | _[Calculate]_ | _[Yes/No - Why?]_ |
+| Token Bucket | <span class="fill-in">[Estimate]</span> | <span class="fill-in">[Calculate]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
+| Leaky Bucket | <span class="fill-in">[Estimate]</span> | <span class="fill-in">[Calculate]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
+| Fixed Window | <span class="fill-in">[Estimate]</span> | <span class="fill-in">[Calculate]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
+| Sliding Window Log | <span class="fill-in">[Estimate]</span> | <span class="fill-in">[Calculate]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
+| Sliding Window Counter | <span class="fill-in">[Estimate]</span> | <span class="fill-in">[Calculate]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
 
-**Your final decision:** _[Which algorithm and why?]_
+**Your final decision:** <span class="fill-in">[Which algorithm and why?]</span>
 
-**What would make you change your decision?** _[Fill in constraints that would flip your choice]_
+**What would make you change your decision?** <span class="fill-in">[Fill in constraints that would flip your choice]</span>
 
 ---
 
@@ -1873,25 +1892,25 @@ public class TokenBucketRateLimiter {
 
 > "You should NOT use token bucket when..."
 >
-> _[Fill in - list 2-3 scenarios]_
+> <span class="fill-in">[Fill in - list 2-3 scenarios]</span>
 
 > "You should NOT use leaky bucket when..."
 >
-> _[Fill in - list 2-3 scenarios]_
+> <span class="fill-in">[Fill in - list 2-3 scenarios]</span>
 
 > "You should NOT use fixed window when..."
 >
-> _[Fill in - list 2-3 scenarios]_
+> <span class="fill-in">[Fill in - list 2-3 scenarios]</span>
 
 > "You should NOT use sliding window when..."
 >
-> _[Fill in - list 2-3 scenarios]_
+> <span class="fill-in">[Fill in - list 2-3 scenarios]</span>
 
 **Examples of failures:**
 
-1. Token bucket: _[Scenario where it fails]_
-2. Fixed window: _[Scenario where it fails]_
-3. Sliding window log: _[Scenario where it fails]_
+1. Token bucket: <span class="fill-in">[Scenario where it fails]</span>
+2. Fixed window: <span class="fill-in">[Scenario where it fails]</span>
+3. Sliding window log: <span class="fill-in">[Scenario where it fails]</span>
 
 ---
 

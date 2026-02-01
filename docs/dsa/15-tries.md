@@ -6,75 +6,82 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing all patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is a trie in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **How is a trie different from a hash table for strings?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy:**
     - Example: "A trie is like how you organize words in a dictionary by first letter, then second letter..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **When does this pattern work?**
-    - Your answer: _[Fill in after solving problems]_
+    - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
 
 5. **What's the space-time tradeoff with tries?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **HashMap search for word in dictionary of n words:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Verified after learning: _[Actual: O(?)]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
 
 2. **Trie search for word of length m in dictionary of n words:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity for entire trie: _[Your guess: O(?)]_
-    - Verified: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity for entire trie: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **Prefix search comparison:**
-    - Find all words starting with "app" using HashMap: _[Time: O(?)]_
-    - Find all words starting with "app" using Trie: _[Time: O(?)]_
-    - Which is faster: _[HashMap/Trie - Why?]_
+    - Find all words starting with "app" using HashMap: <span class="fill-in">[Time: O(?)]</span>
+    - Find all words starting with "app" using Trie: <span class="fill-in">[Time: O(?)]</span>
+    - Which is faster: <span class="fill-in">[HashMap/Trie - Why?]</span>
 
 ### Scenario Predictions
 
 **Scenario 1:** Dictionary has ["apple", "app", "application", "apply"]
 
-- **How many nodes in the trie?** _[Count them]_
-- **Which nodes have isEndOfWord = true?** _[List them]_
-- **How many nodes share the prefix "app"?** _[Count]_
-- **Memory saved compared to storing each word separately?** _[Estimate]_
+- **How many nodes in the trie?** <span class="fill-in">[Count them]</span>
+- **Which nodes have isEndOfWord = true?** <span class="fill-in">[List them]</span>
+- **How many nodes share the prefix "app"?** <span class="fill-in">[Count]</span>
+- **Memory saved compared to storing each word separately?** <span class="fill-in">[Estimate]</span>
 
 **Scenario 2:** Search for "appl" in above dictionary
 
-- **Using search(): returns** _[true/false - Why?]_
-- **Using startsWith(): returns** _[true/false - Why?]_
-- **What's the difference?** _[Fill in your reasoning]_
+- **Using search(): returns** <span class="fill-in">[true/false - Why?]</span>
+- **Using startsWith(): returns** <span class="fill-in">[true/false - Why?]</span>
+- **What's the difference?** <span class="fill-in">[Fill in your reasoning]</span>
 
 **Scenario 3:** Autocomplete with prefix "ap"
 
-- **Which words match?** _[List them]_
-- **Path through trie:** _[Describe the traversal]_
-- **Why is trie better than checking each word?** _[Fill in]_
+- **Which words match?** <span class="fill-in">[List them]</span>
+- **Path through trie:** <span class="fill-in">[Describe the traversal]</span>
+- **Why is trie better than checking each word?** <span class="fill-in">[Fill in]</span>
 
 ### Trade-off Quiz
 
 **Question:** When would HashMap be BETTER than Trie for dictionary?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** What's the MAIN advantage of trie over hash table?
 
@@ -83,7 +90,7 @@
 - [ ] Efficient prefix queries
 - [ ] Simpler to implement
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 **Question:** What's the space complexity of trie with n words of average length m?
 
@@ -92,7 +99,10 @@ Verify after implementation: _[Which one(s)?]_
 - [ ] O(n * m) worst case
 - [ ] O(1)
 
-Verify: _[Which one and why?]_
+Verify: <span class="fill-in">[Which one and why?]</span>
+
+
+</div>
 
 ---
 
@@ -216,9 +226,13 @@ Found: "app", "apple", "application", "apply"
 
 **After implementing, explain in your own words:**
 
-- _[Why is trie better for prefix queries than hash table?]_
-- _[What's the space-time tradeoff?]_
-- _[When would hash table still be better?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why is trie better for prefix queries than hash table?]</span>
+- <span class="fill-in">[What's the space-time tradeoff?]</span>
+- <span class="fill-in">[When would hash table still be better?]</span>
+
+</div>
 
 ---
 
@@ -295,8 +309,12 @@ public List<String> findWords_Trie(char[][] board, String[] words) {
 
 **After implementing, explain in your own words:**
 
-- _[How does trie enable early pruning in DFS?]_
-- _[Why is single DFS with trie better than multiple DFS?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[How does trie enable early pruning in DFS?]</span>
+- <span class="fill-in">[Why is single DFS with trie better than multiple DFS?]</span>
+
+</div>
 
 ---
 
@@ -886,18 +904,18 @@ public void insert_Buggy(String word) {
 
 **Your debugging:**
 
-- **Bug 1 location:** _[Which line?]_
-- **Bug 1 explanation:** _[What's wrong?]_
-- **Bug 1 fix:** _[What code is missing?]_
+- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 1 explanation:** <span class="fill-in">[What's wrong?]</span>
+- **Bug 1 fix:** <span class="fill-in">[What code is missing?]</span>
 
-- **Bug 2 location:** _[After the loop]_
-- **Bug 2 explanation:** _[What's missing?]_
-- **Bug 2 fix:** _[What should be added?]_
+- **Bug 2 location:** <span class="fill-in">[After the loop]</span>
+- **Bug 2 explanation:** <span class="fill-in">[What's missing?]</span>
+- **Bug 2 fix:** <span class="fill-in">[What should be added?]</span>
 
 **Test case to expose the bug:**
 
 - Insert: "app" and "apple"
-- Search for "app": Expected true, Actual: _[Trace through manually]_
+- Search for "app": Expected true, Actual: <span class="fill-in">[Trace through manually]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -942,15 +960,15 @@ public boolean search_Buggy(String word) {
 
 **Your debugging:**
 
-- **Bug location:** _[Which line?]_
-- **Bug explanation:** _[What's the problem?]_
-- **Bug fix:** _[What should it return?]_
+- **Bug location:** <span class="fill-in">[Which line?]</span>
+- **Bug explanation:** <span class="fill-in">[What's the problem?]</span>
+- **Bug fix:** <span class="fill-in">[What should it return?]</span>
 
 **Test case to expose the bug:**
 
 - Dictionary: ["apple", "application"]
-- Search for "app": Expected false, Actual: _[What happens?]_
-- Search for "apple": Expected true, Actual: _[What happens?]_
+- Search for "app": Expected false, Actual: <span class="fill-in">[What happens?]</span>
+- Search for "apple": Expected true, Actual: <span class="fill-in">[What happens?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1012,17 +1030,17 @@ private void collectWords(TrieNode node, String currentWord, List<String> result
 
 **Your debugging:**
 
-- **Bug 1:** _[What check is missing?]_
-- **Bug 1 fix:** _[What code to add?]_
+- **Bug 1:** <span class="fill-in">[What check is missing?]</span>
+- **Bug 1 fix:** <span class="fill-in">[What code to add?]</span>
 
-- **Bug 2:** _[What's wrong with the order?]_
-- **Bug 2 fix:** _[Where should the check go?]_
+- **Bug 2:** <span class="fill-in">[What's wrong with the order?]</span>
+- **Bug 2 fix:** <span class="fill-in">[Where should the check go?]</span>
 
 **Test case:**
 
 - Dictionary: ["app", "apple", "application"]
 - Autocomplete("app"): Expected ["app", "apple", "application"]
-- Actual: _[Trace through - what's wrong?]_
+- Actual: <span class="fill-in">[Trace through - what's wrong?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1096,21 +1114,22 @@ private boolean deleteHelper(TrieNode node, String word, int index) {
 
 **Your debugging:**
 
-- **Bug 1:** _[What's the logic error?]_
-- **Bug 2:** _[When should we delete a node?]_
-- **Bug 3:** _[What should the final return be?]_
+- **Bug 1:** <span class="fill-in">[What's the logic error?]</span>
+- **Bug 2:** <span class="fill-in">[When should we delete a node?]</span>
+- **Bug 3:** <span class="fill-in">[What should the final return be?]</span>
 
 **Test case:**
 
 - Dictionary: ["app", "apple"]
 - Delete "apple"
 - Expected: "app" still works, nodes for "le" are removed
-- Actual: _[What happens? Trace through]_
+- Actual: <span class="fill-in">[What happens? Trace through]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
 
 **Bug:** The logic for when to delete nodes is wrong. We should only delete a node if:
+
 1. It's not an end of word (after marking false)
 2. It has no children
 
@@ -1199,15 +1218,15 @@ private void dfs_Buggy(char[][] board, int i, int j, TrieNode node,
 
 **Your debugging:**
 
-- **Bug location:** _[What's missing at the start?]_
-- **Bug explanation:** _[What will happen?]_
-- **Bug fix:** _[What checks are needed?]_
+- **Bug location:** <span class="fill-in">[What's missing at the start?]</span>
+- **Bug explanation:** <span class="fill-in">[What will happen?]</span>
+- **Bug fix:** <span class="fill-in">[What checks are needed?]</span>
 
 **Test case:**
 
 - Grid: [['a','b'],['c','d']]
 - Dictionary: ["ab"]
-- What error occurs? _[Fill in]_
+- What error occurs? <span class="fill-in">[Fill in]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1261,12 +1280,12 @@ After finding and fixing all bugs:
 
 **Common mistakes you discovered:**
 
-1. _[Forgetting to mark isEndOfWord]_
-2. _[Not creating new nodes during insert]_
-3. _[Not checking isEndOfWord in search]_
-4. _[Wrong order in DFS collection]_
-5. _[Missing boundary checks in grid search]_
-6. _[Incomplete deletion logic]_
+1. <span class="fill-in">[Forgetting to mark isEndOfWord]</span>
+2. <span class="fill-in">[Not creating new nodes during insert]</span>
+3. <span class="fill-in">[Not checking isEndOfWord in search]</span>
+4. <span class="fill-in">[Wrong order in DFS collection]</span>
+5. <span class="fill-in">[Missing boundary checks in grid search]</span>
+6. <span class="fill-in">[Incomplete deletion logic]</span>
 
 ---
 
@@ -1277,26 +1296,27 @@ After finding and fixing all bugs:
 ### Question 1: What operations do you need?
 
 Answer after solving problems:
-- **Insert/search single word?** _[Basic trie]_
-- **Prefix search?** _[Trie with prefix traversal]_
-- **Find all words with prefix?** _[Autocomplete trie]_
-- **Multiple word search in grid?** _[Trie + DFS]_
+
+- **Insert/search single word?** <span class="fill-in">[Basic trie]</span>
+- **Prefix search?** <span class="fill-in">[Trie with prefix traversal]</span>
+- **Find all words with prefix?** <span class="fill-in">[Autocomplete trie]</span>
+- **Multiple word search in grid?** <span class="fill-in">[Trie + DFS]</span>
 
 ### Question 2: What are the constraints?
 
 **Space critical:**
 
-- Use: _[Hash map for children (sparse)]_
-- Avoid: _[Array for children (dense)]_
+- Use: <span class="fill-in">[Hash map for children (sparse)]</span>
+- Avoid: <span class="fill-in">[Array for children (dense)]</span>
 
 **Need frequency/values:**
 
-- Store: _[Additional data at nodes]_
-- Examples: _[MapSum, frequency trie]_
+- Store: <span class="fill-in">[Additional data at nodes]</span>
+- Examples: <span class="fill-in">[MapSum, frequency trie]</span>
 
 **Need to delete:**
 
-- Implement: _[Recursive deletion with cleanup]_
+- Implement: <span class="fill-in">[Recursive deletion with cleanup]</span>
 
 ### Your Decision Tree
 
@@ -1326,30 +1346,30 @@ Trie Pattern Selection
 
 **Don't use trie when:**
 
-1. _[Small dictionary - hash set simpler]_
-2. _[No prefix queries - hash table better]_
-3. _[Memory constrained - hash set more compact]_
-4. _[Single word lookup - hash table O(1) vs O(m)]_
+1. <span class="fill-in">[Small dictionary - hash set simpler]</span>
+2. <span class="fill-in">[No prefix queries - hash table better]</span>
+3. <span class="fill-in">[Memory constrained - hash set more compact]</span>
+4. <span class="fill-in">[Single word lookup - hash table O(1) vs O(m)]</span>
 
 ### The Rule of Three: Alternatives
 
 **Option 1: Trie**
 
-- Pros: _[Prefix queries O(m), space-efficient for common prefixes]_
-- Cons: _[More complex, pointer overhead]_
-- Use when: _[Many prefix queries, common prefixes]_
+- Pros: <span class="fill-in">[Prefix queries O(m), space-efficient for common prefixes]</span>
+- Cons: <span class="fill-in">[More complex, pointer overhead]</span>
+- Use when: <span class="fill-in">[Many prefix queries, common prefixes]</span>
 
 **Option 2: Hash Set**
 
-- Pros: _[Simple, O(1) lookup, less space]_
-- Cons: _[No prefix queries]_
-- Use when: _[Just membership testing]_
+- Pros: <span class="fill-in">[Simple, O(1) lookup, less space]</span>
+- Cons: <span class="fill-in">[No prefix queries]</span>
+- Use when: <span class="fill-in">[Just membership testing]</span>
 
 **Option 3: Sorted Array + Binary Search**
 
-- Pros: _[Less space, can do prefix queries]_
-- Cons: _[Slower insert/delete]_
-- Use when: _[Static dictionary]_
+- Pros: <span class="fill-in">[Less space, can do prefix queries]</span>
+- Cons: <span class="fill-in">[Slower insert/delete]</span>
+- Use when: <span class="fill-in">[Static dictionary]</span>
 
 ---
 
@@ -1360,46 +1380,46 @@ Trie Pattern Selection
 **Easy (Complete all 2):**
 
 - [ ] [208. Implement Trie](https://leetcode.com/problems/implement-trie-prefix-tree/)
-    - Pattern: _[Basic trie]_
-    - Your solution time: ___
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Basic trie]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [720. Longest Word in Dictionary](https://leetcode.com/problems/longest-word-in-dictionary/)
-    - Pattern: _[Trie with validation]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Trie with validation]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Medium (Complete 3-4):**
 
 - [ ] [211. Design Add and Search Words Data Structure](https://leetcode.com/problems/design-add-and-search-words-data-structure/)
-    - Pattern: _[Trie with wildcard]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Trie with wildcard]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [212. Word Search II](https://leetcode.com/problems/word-search-ii/)
-    - Pattern: _[Trie + DFS]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Trie + DFS]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [1268. Search Suggestions System](https://leetcode.com/problems/search-suggestions-system/)
-    - Pattern: _[Autocomplete]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Autocomplete]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [648. Replace Words](https://leetcode.com/problems/replace-words/)
-    - Pattern: _[Dictionary trie]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Dictionary trie]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Hard (Optional):**
 
 - [ ] [472. Concatenated Words](https://leetcode.com/problems/concatenated-words/)
-    - Pattern: _[Trie + DP]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Trie + DP]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [1707. Maximum XOR With an Element From Array](https://leetcode.com/problems/maximum-xor-with-an-element-from-array/)
-    - Pattern: _[Binary trie]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Binary trie]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 ---
 
@@ -1452,13 +1472,13 @@ Before moving to the next topic:
 
 > "A trie is a data structure where..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by a non-technical person? _[Yes/No]_
-- Did you use analogies or real-world examples? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
+- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -1495,12 +1515,12 @@ Root:
 
 | Problem | Data Structure (Trie/HashMap/Array) | Why? |
 |---------|-------------------------------------|------|
-| Check if word exists in dictionary | _[Fill in]_ | _[Explain]_ |
-| Autocomplete with prefix | _[Fill in]_ | _[Explain]_ |
-| Find all anagrams of word | _[Fill in]_ | _[Explain]_ |
-| Word search in 2D grid (multiple words) | _[Fill in]_ | _[Explain]_ |
-| Count words with given prefix | _[Fill in]_ | _[Explain]_ |
-| Longest common prefix of strings | _[Fill in]_ | _[Explain]_ |
+| Check if word exists in dictionary | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Autocomplete with prefix | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Find all anagrams of word | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Word search in 2D grid (multiple words) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Count words with given prefix | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Longest common prefix of strings | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1521,11 +1541,11 @@ If you scored below 5/6, review the patterns and try again.
 
 **Deep question:** When does trie use LESS space than storing words in array?
 
-Your answer: _[Fill in - explain the shared prefix concept]_
+Your answer: <span class="fill-in">[Fill in - explain the shared prefix concept]</span>
 
 **Deep question:** When does trie use MORE space than hash set?
 
-Your answer: _[Fill in - explain pointer overhead]_
+Your answer: <span class="fill-in">[Fill in - explain pointer overhead]</span>
 
 ---
 
@@ -1534,22 +1554,24 @@ Your answer: _[Fill in - explain pointer overhead]_
 **Scenario:** You're building an autocomplete system for 1 million product names. Average name length is 15 characters. Users type prefix and expect instant suggestions.
 
 **Option A:** Hash Set with linear scan
-- Complexity: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
+
+- Complexity: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
 **Option B:** Trie with prefix traversal
-- Complexity: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
 
-**Your decision:** I would choose _[A/B]_ because...
+- Complexity: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
-_[Fill in your reasoning - consider time, space, and user experience]_
+**Your decision:** I would choose <span class="fill-in">[A/B]</span> because...
+
+<span class="fill-in">[Fill in your reasoning - consider time, space, and user experience]</span>
 
 **What would make you change your decision?**
 
-- _[Fill in - what constraints would flip your choice?]_
+- <span class="fill-in">[Fill in - what constraints would flip your choice?]</span>
 
 ---
 
@@ -1607,9 +1629,9 @@ public void insert(String word) {
 }
 ```
 
-**Your answer:** _[What's the bug?]_
+**Your answer:** <span class="fill-in">[What's the bug?]</span>
 
-**How to fix:** _[Fill in]_
+**How to fix:** <span class="fill-in">[Fill in]</span>
 
 **Verification:**
 
@@ -1625,18 +1647,18 @@ public void insert(String word) {
 
 **Your design:**
 
-1. **Data structure:** _[Trie/HashMap/Other - Why?]_
+1. **Data structure:** <span class="fill-in">[Trie/HashMap/Other - Why?]</span>
 2. **Core operations needed:**
-    - _[List 3-4 operations]_
+    - <span class="fill-in">[List 3-4 operations]</span>
 3. **How to find suggestions:**
-    - _[Describe algorithm]_
+    - <span class="fill-in">[Describe algorithm]</span>
 4. **Complexity:**
-    - Build dictionary: _[O(?)]_
-    - Find suggestions: _[O(?)]_
+    - Build dictionary: <span class="fill-in">[O(?)]</span>
+    - Find suggestions: <span class="fill-in">[O(?)]</span>
 
 **Challenge question:** How would you handle typos (1 character off)?
 
-Your approach: _[Fill in - BFS/DFS with edit distance?]_
+Your approach: <span class="fill-in">[Fill in - BFS/DFS with edit distance?]</span>
 
 ---
 
@@ -1650,13 +1672,13 @@ Your explanation:
 
 > "For autocomplete, tries are better because..."
 >
-> _[Fill in - use concrete example with numbers]_
+> <span class="fill-in">[Fill in - use concrete example with numbers]</span>
 
 **Examples you would show:**
 
-1. _[Scenario where trie wins]_
-2. _[Scenario where hash table might be better]_
-3. _[Visual diagram you'd draw]_
+1. <span class="fill-in">[Scenario where trie wins]</span>
+2. <span class="fill-in">[Scenario where hash table might be better]</span>
+3. <span class="fill-in">[Visual diagram you'd draw]</span>
 
 ---
 
@@ -1665,25 +1687,25 @@ Your explanation:
 **Common mistakes to avoid - can you explain each?**
 
 1. **Forgetting isEndOfWord flag**
-    - Why it matters: _[Fill in]_
-    - Example problem: _[Fill in]_
+    - Why it matters: <span class="fill-in">[Fill in]</span>
+    - Example problem: <span class="fill-in">[Fill in]</span>
 
 2. **Not creating new nodes in insert**
-    - Why it matters: _[Fill in]_
-    - What happens: _[Fill in]_
+    - Why it matters: <span class="fill-in">[Fill in]</span>
+    - What happens: <span class="fill-in">[Fill in]</span>
 
 3. **Wrong return in search method**
-    - Correct return: _[Fill in]_
-    - Wrong return: _[Fill in]_
-    - Why it matters: _[Fill in]_
+    - Correct return: <span class="fill-in">[Fill in]</span>
+    - Wrong return: <span class="fill-in">[Fill in]</span>
+    - Why it matters: <span class="fill-in">[Fill in]</span>
 
 4. **Missing boundary checks in grid search**
-    - Why it matters: _[Fill in]_
-    - What happens: _[Fill in]_
+    - Why it matters: <span class="fill-in">[Fill in]</span>
+    - What happens: <span class="fill-in">[Fill in]</span>
 
 5. **Incomplete deletion logic**
-    - What to check: _[Fill in]_
-    - Why it matters: _[Fill in]_
+    - What to check: <span class="fill-in">[Fill in]</span>
+    - Why it matters: <span class="fill-in">[Fill in]</span>
 
 ---
 

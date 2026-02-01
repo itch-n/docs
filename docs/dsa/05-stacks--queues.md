@@ -6,78 +6,85 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing all patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What are stacks and queues in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **What's the key difference between stack and queue?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy:**
     - Example: "A stack is like a stack of plates - last one on, first one off..."
-    - Your analogy for stack: _[Fill in]_
-    - Your analogy for queue: _[Fill in]_
+    - Your analogy for stack: <span class="fill-in">[Fill in]</span>
+    - Your analogy for queue: <span class="fill-in">[Fill in]</span>
 
 4. **When does each pattern work?**
-    - Your answer: _[Fill in after solving problems]_
+    - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
 
 5. **What problems require stacks vs queues?**
-    - Your answer: _[Fill in after practice]_
+    - Your answer: <span class="fill-in">[Fill in after practice]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Stack operations (push, pop, peek):**
-    - Time complexity: _[Your guess: O(?)]_
-    - Verified after learning: _[Actual: O(?)]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
 
 2. **Queue operations (enqueue, dequeue):**
-    - Time complexity: _[Your guess: O(?)]_
-    - Verified after learning: _[Actual: O(?)]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
 
 3. **Monotonic stack for next greater element:**
-    - Time complexity: _[Your guess: O(?) - seems like nested loops?]_
-    - Verified: _[Actual: O(?)]_
-    - Why not O(n²): _[Fill in after learning]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?) - seems like nested loops?]</span>
+    - Verified: <span class="fill-in">[Actual: O(?)]</span>
+    - Why not O(n²): <span class="fill-in">[Fill in after learning]</span>
 
 ### Scenario Predictions
 
 **Scenario 1:** Check if brackets are balanced: `"([{}])"`
 
-- **Can you use a stack?** _[Yes/No - Why?]_
-- **What do you push?** _[Opening brackets? Closing brackets?]_
-- **When you see `)`**, what do you do? _[Push or Pop?]_
-- **How do you know it's valid?** _[Fill in]_
+- **Can you use a stack?** <span class="fill-in">[Yes/No - Why?]</span>
+- **What do you push?** <span class="fill-in">[Opening brackets? Closing brackets?]</span>
+- **When you see `)`**, what do you do? <span class="fill-in">[Push or Pop?]</span>
+- **How do you know it's valid?** <span class="fill-in">[Fill in]</span>
 
 **Scenario 2:** Find next greater element in `[2, 1, 2, 4, 3]`
 
-- **Can you use a regular stack?** _[Yes/No]_
-- **What kind of stack?** _[Monotonic increasing or decreasing?]_
-- **What do you store in the stack?** _[Values or indices?]_
-- **When do you pop?** _[Fill in your reasoning]_
+- **Can you use a regular stack?** <span class="fill-in">[Yes/No]</span>
+- **What kind of stack?** <span class="fill-in">[Monotonic increasing or decreasing?]</span>
+- **What do you store in the stack?** <span class="fill-in">[Values or indices?]</span>
+- **When do you pop?** <span class="fill-in">[Fill in your reasoning]</span>
 
 **Scenario 3:** Implement a queue using two stacks
 
-- **Which stack handles enqueue?** _[Stack 1 or Stack 2?]_
-- **Which stack handles dequeue?** _[Stack 1 or Stack 2?]_
-- **When do you transfer elements?** _[Fill in]_
-- **What's the amortized time complexity?** _[Your guess]_
+- **Which stack handles enqueue?** <span class="fill-in">[Stack 1 or Stack 2?]</span>
+- **Which stack handles dequeue?** <span class="fill-in">[Stack 1 or Stack 2?]</span>
+- **When do you transfer elements?** <span class="fill-in">[Fill in]</span>
+- **What's the amortized time complexity?** <span class="fill-in">[Your guess]</span>
 
 ### Trade-off Quiz
 
 **Question:** When would you use a stack vs a queue?
 
-- Stack (LIFO): _[Fill in - what problems need last-in-first-out?]_
-- Queue (FIFO): _[Fill in - what problems need first-in-first-out?]_
-- Your observation: _[Fill in after testing]_
+- Stack (LIFO): <span class="fill-in">[Fill in - what problems need last-in-first-out?]</span>
+- Queue (FIFO): <span class="fill-in">[Fill in - what problems need first-in-first-out?]</span>
+- Your observation: <span class="fill-in">[Fill in after testing]</span>
 
 **Question:** What's the MAIN requirement for monotonic stack to work?
 
@@ -86,7 +93,10 @@
 - [ ] You need to find next greater/smaller element
 - [ ] Array must be positive integers
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
+
+
+</div>
 
 ---
 
@@ -244,8 +254,12 @@ i=4, val=3: stack=[3,4], result=[4,2,4,-1,-1]  (3 < 4, just push)
 
 **After implementing, explain in your own words:**
 
-- _[Why does monotonic decreasing order help?]_
-- _[What work are we avoiding compared to brute force?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does monotonic decreasing order help?]</span>
+- <span class="fill-in">[What work are we avoiding compared to brute force?]</span>
+
+</div>
 
 ---
 
@@ -325,8 +339,12 @@ public static int[] maxSlidingWindow_Deque(int[] nums, int k) {
 
 **After implementing, explain:**
 
-- _[Why does deque work better than rescanning?]_
-- _[What invariant does the deque maintain?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does deque work better than rescanning?]</span>
+- <span class="fill-in">[What invariant does the deque maintain?]</span>
+
+</div>
 
 ---
 
@@ -808,13 +826,13 @@ public static boolean isValid_Buggy(String s) {
 
 **Your debugging:**
 
-- **Bug 1 location:** _[Which line?]_
-- **Bug 1 explanation:** _[What error will occur?]_
-- **Bug 1 fix:** _[What should it be?]_
+- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 1 explanation:** <span class="fill-in">[What error will occur?]</span>
+- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
 
-- **Bug 2 location:** _[Which line?]_
-- **Bug 2 explanation:** _[Test with "(((" - what happens?]_
-- **Bug 2 fix:** _[How to fix?]_
+- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 2 explanation:** <span class="fill-in">[Test with "(((" - what happens?]</span>
+- **Bug 2 fix:** <span class="fill-in">[How to fix?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -862,16 +880,16 @@ public static int[] nextGreaterElement_Buggy(int[] nums) {
 **Your debugging:**
 
 - **Bug 1:** _[What's wrong with result[i] = nums[i]?]_
-- **Bug 1 fix:** _[What should it be?]_
+- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
 
 - **Bug 2:** _[Should we push nums[i] or i?]_
-- **Bug 2 fix:** _[Why does it matter?]_
+- **Bug 2 fix:** <span class="fill-in">[Why does it matter?]</span>
 
 **Test case to expose the bugs:**
 
 - Input: `[2, 1, 2, 4, 3]`
 - Expected output: `[4, 2, 4, -1, -1]`
-- Actual output with buggy code: _[Trace through manually]_
+- Actual output with buggy code: <span class="fill-in">[Trace through manually]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -923,15 +941,15 @@ static class MinStack_Buggy {
 
 **Your debugging:**
 
-- **Bug location:** _[What's wrong with pop()?]_
-- **Bug explanation:** _[Why does this break getMin()?]_
-- **Bug fix:** _[What code should be in pop()?]_
+- **Bug location:** <span class="fill-in">[What's wrong with pop()?]</span>
+- **Bug explanation:** <span class="fill-in">[Why does this break getMin()?]</span>
+- **Bug fix:** <span class="fill-in">[What code should be in pop()?]</span>
 
 **Trace through example:**
 
 - Operations: `push(-2), push(0), push(-3), getMin(), pop(), getMin()`
 - Expected final min: `-2`
-- Actual: _[What happens with buggy code?]_
+- Actual: <span class="fill-in">[What happens with buggy code?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -992,16 +1010,16 @@ static class QueueWithStacks_Buggy {
 
 **Your debugging:**
 
-- **Bug:** _[What's the performance issue?]_
-- **Time complexity:** _[What is it now? What should it be?]_
-- **Fix:** _[How to make it amortized O(1)?]_
+- **Bug:** <span class="fill-in">[What's the performance issue?]</span>
+- **Time complexity:** <span class="fill-in">[What is it now? What should it be?]</span>
+- **Fix:** <span class="fill-in">[How to make it amortized O(1)?]</span>
 
 **Example that shows the problem:**
 
 - Operations: `enqueue(1), enqueue(2), dequeue(), dequeue()`
-- How many transfers happen? _[Count them]_
-- Expected transfers: _[Fill in]_
-- Actual with buggy code: _[Fill in]_
+- How many transfers happen? <span class="fill-in">[Count them]</span>
+- Expected transfers: <span class="fill-in">[Fill in]</span>
+- Actual with buggy code: <span class="fill-in">[Fill in]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1064,26 +1082,28 @@ public static int[] maxSlidingWindow_Buggy(int[] nums, int k) {
 
 **Your debugging:**
 
-- **Bug 1:** _[Should it be <= or <? Why?]_
-- **Bug 1 fix:** _[Correct comparison]_
+- **Bug 1:** <span class="fill-in">[Should it be <= or <? Why?]</span>
+- **Bug 1 fix:** <span class="fill-in">[Correct comparison]</span>
 
-- **Bug 2:** _[Should it be > or >=? When should we start recording?]_
-- **Bug 2 fix:** _[Correct comparison]_
+- **Bug 2:** <span class="fill-in">[Should it be > or >=? When should we start recording?]</span>
+- **Bug 2 fix:** <span class="fill-in">[Correct comparison]</span>
 
 **Test case:**
 
 - Input: `nums = [1,3,-1,-3,5,3,6,7]`, `k = 3`
 - Expected: `[3,3,5,5,6,7]`
-- Actual with buggy code: _[Trace first few windows]_
+- Actual with buggy code: <span class="fill-in">[Trace first few windows]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
 
 **Bug 1:** Should be `<`, not `<=`. When `deque.peekFirst() == i - k`, it's still in the window.
+
 - Window at i=3, k=3: includes indices [1,2,3]
 - Remove when index < 1 (i.e., index 0)
 
 **Bug 2:** Should be `>=`, not `>`. We want to start recording when i = k-1 (first complete window).
+
 - First window completes at i=2 (indices 0,1,2 for k=3)
 
 **Correct code:**
@@ -1111,21 +1131,21 @@ After finding and fixing all bugs:
 
 **Common mistakes you discovered:**
 
-1. _[List the patterns you noticed]_
-2. _[Fill in]_
-3. _[Fill in]_
+1. <span class="fill-in">[List the patterns you noticed]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 **Stack-specific gotchas:**
 
-- _[What are the common stack underflow issues?]_
-- _[When do you check isEmpty()?]_
-- _[Index vs value in monotonic stack?]_
+- <span class="fill-in">[What are the common stack underflow issues?]</span>
+- <span class="fill-in">[When do you check isEmpty()?]</span>
+- <span class="fill-in">[Index vs value in monotonic stack?]</span>
 
 **Queue-specific gotchas:**
 
-- _[When to transfer between stacks?]_
-- _[Off-by-one errors in deque?]_
-- _[How to maintain invariants?]_
+- <span class="fill-in">[When to transfer between stacks?]</span>
+- <span class="fill-in">[Off-by-one errors in deque?]</span>
+- <span class="fill-in">[How to maintain invariants?]</span>
 
 ---
 
@@ -1136,24 +1156,25 @@ After finding and fixing all bugs:
 ### Question 1: LIFO vs FIFO?
 
 Answer after solving problems:
-- **Need last item first?** _[Use stack]_
-- **Need first item first?** _[Use queue]_
-- **Need both ends?** _[Use deque]_
-- **Your observation:** _[Fill in based on testing]_
+
+- **Need last item first?** <span class="fill-in">[Use stack]</span>
+- **Need first item first?** <span class="fill-in">[Use queue]</span>
+- **Need both ends?** <span class="fill-in">[Use deque]</span>
+- **Your observation:** <span class="fill-in">[Fill in based on testing]</span>
 
 ### Question 2: When to use each pattern?
 
 **Stack patterns:**
 
-- Valid parentheses: _[Why stack?]_
-- Expression evaluation: _[Why stack?]_
-- Monotonic stack: _[What problems?]_
+- Valid parentheses: <span class="fill-in">[Why stack?]</span>
+- Expression evaluation: <span class="fill-in">[Why stack?]</span>
+- Monotonic stack: <span class="fill-in">[What problems?]</span>
 
 **Queue patterns:**
 
-- BFS: _[Why queue?]_
-- Level order traversal: _[Why queue?]_
-- Task scheduling: _[Why queue?]_
+- BFS: <span class="fill-in">[Why queue?]</span>
+- Level order traversal: <span class="fill-in">[Why queue?]</span>
+- Task scheduling: <span class="fill-in">[Why queue?]</span>
 
 ### Your Decision Tree
 
@@ -1180,30 +1201,30 @@ Stack vs Queue Selection
 
 **Don't use when:**
 
-1. _[Need random access? Use array/list]_
-2. _[Need to search? Use hash table]_
-3. _[Need sorted order? Use heap/tree]_
-4. _[Need both LIFO and FIFO? Use deque]_
+1. <span class="fill-in">[Need random access? Use array/list]</span>
+2. <span class="fill-in">[Need to search? Use hash table]</span>
+3. <span class="fill-in">[Need sorted order? Use heap/tree]</span>
+4. <span class="fill-in">[Need both LIFO and FIFO? Use deque]</span>
 
 ### The Rule of Three: Alternatives
 
 **Option 1: Stack**
 
-- Pros: _[O(1) push/pop, simple]_
-- Cons: _[Only access top, no random access]_
-- Use when: _[LIFO order needed]_
+- Pros: <span class="fill-in">[O(1) push/pop, simple]</span>
+- Cons: <span class="fill-in">[Only access top, no random access]</span>
+- Use when: <span class="fill-in">[LIFO order needed]</span>
 
 **Option 2: Queue**
 
-- Pros: _[O(1) enqueue/dequeue, FIFO]_
-- Cons: _[Only access front/rear]_
-- Use when: _[FIFO order needed]_
+- Pros: <span class="fill-in">[O(1) enqueue/dequeue, FIFO]</span>
+- Cons: <span class="fill-in">[Only access front/rear]</span>
+- Use when: <span class="fill-in">[FIFO order needed]</span>
 
 **Option 3: Deque**
 
-- Pros: _[O(1) at both ends, flexible]_
-- Cons: _[Slightly more complex]_
-- Use when: _[Need access to both ends]_
+- Pros: <span class="fill-in">[O(1) at both ends, flexible]</span>
+- Cons: <span class="fill-in">[Slightly more complex]</span>
+- Use when: <span class="fill-in">[Need access to both ends]</span>
 
 ---
 
@@ -1214,56 +1235,56 @@ Stack vs Queue Selection
 **Easy (Complete all 4):**
 
 - [ ] [20. Valid Parentheses](https://leetcode.com/problems/valid-parentheses/)
-    - Pattern: _[Basic stack]_
-    - Your solution time: ___
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Basic stack]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [232. Implement Queue using Stacks](https://leetcode.com/problems/implement-queue-using-stacks/)
-    - Pattern: _[Queue with stacks]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Queue with stacks]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [225. Implement Stack using Queues](https://leetcode.com/problems/implement-stack-using-queues/)
-    - Pattern: _[Stack with queues]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Stack with queues]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [155. Min Stack](https://leetcode.com/problems/min-stack/)
-    - Pattern: _[Stack with tracking]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Stack with tracking]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Medium (Complete 3-4):**
 
 - [ ] [739. Daily Temperatures](https://leetcode.com/problems/daily-temperatures/)
-    - Pattern: _[Monotonic stack]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Monotonic stack]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [150. Evaluate Reverse Polish Notation](https://leetcode.com/problems/evaluate-reverse-polish-notation/)
-    - Pattern: _[Basic stack]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Basic stack]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [394. Decode String](https://leetcode.com/problems/decode-string/)
-    - Pattern: _[Stack]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Stack]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [622. Design Circular Queue](https://leetcode.com/problems/design-circular-queue/)
-    - Pattern: _[Circular queue]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Circular queue]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Hard (Optional):**
 
 - [ ] [84. Largest Rectangle in Histogram](https://leetcode.com/problems/largest-rectangle-in-histogram/)
-    - Pattern: _[Monotonic stack]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Monotonic stack]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)
-    - Pattern: _[Monotonic deque]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Monotonic deque]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 ---
 
@@ -1316,13 +1337,13 @@ Before moving to the next topic:
 
 > "Stacks and queues are..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by a non-technical person? _[Yes/No]_
-- Did you use analogies or real-world examples? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
+- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -1369,12 +1390,12 @@ Stack: [Your drawing]
 Result: [Your drawing]
 
 Step 2 (i=1, val=1):
-Stack: _________________________________
-Result: _________________________________
+Stack: <span class="fill-in">_________________________________</span>
+Result: <span class="fill-in">_________________________________</span>
 
 Step 3 (i=2, val=2):
-Stack: _________________________________
-Result: _________________________________
+Stack: <span class="fill-in">_________________________________</span>
+Result: <span class="fill-in">_________________________________</span>
 
 [Continue for all elements]
 ```
@@ -1394,13 +1415,13 @@ Result: _________________________________
 
 | Problem | Data Structure | Why? |
 |---------|----------------|------|
-| Undo/Redo operations | _[Stack/Queue/Deque]_ | _[Explain]_ |
-| Print jobs (first come, first served) | _[Fill in]_ | _[Explain]_ |
-| Browser back button | _[Fill in]_ | _[Explain]_ |
-| Find next warmer day | _[Fill in]_ | _[Explain]_ |
-| BFS traversal | _[Fill in]_ | _[Explain]_ |
-| Expression evaluation | _[Fill in]_ | _[Explain]_ |
-| Sliding window maximum | _[Fill in]_ | _[Explain]_ |
+| Undo/Redo operations | <span class="fill-in">[Stack/Queue/Deque]</span> | <span class="fill-in">[Explain]</span> |
+| Print jobs (first come, first served) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Browser back button | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Find next warmer day | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| BFS traversal | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Expression evaluation | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Sliding window maximum | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/7 correct
 
@@ -1422,10 +1443,10 @@ If you scored below 6/7, review the patterns and try again.
 **Deep questions:**
 
 1. **Why is queue with two stacks O(1) amortized, not O(n)?**
-    - Your answer: _[Fill in - explain amortized analysis]_
+    - Your answer: <span class="fill-in">[Fill in - explain amortized analysis]</span>
 
 2. **Why is monotonic stack O(n) even though it has nested loops?**
-    - Your answer: _[Fill in - explain why each element is pushed/popped once]_
+    - Your answer: <span class="fill-in">[Fill in - explain why each element is pushed/popped once]</span>
 
 ---
 
@@ -1434,20 +1455,23 @@ If you scored below 6/7, review the patterns and try again.
 **Scenario:** You need to check if brackets are balanced in a 100,000 character string.
 
 **Option A:** Stack (O(n) time, O(n) space worst case)
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
-- Space analysis: _[How much space in worst case?]_
+
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
+- Space analysis: <span class="fill-in">[How much space in worst case?]</span>
 
 **Option B:** Counter (track balance with integers)
-- Pros: _[Fill in]_
-- Cons: _[Fill in - can it handle multiple bracket types?]_
 
-**Your decision:** I would choose _[A/B]_ because...
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in - can it handle multiple bracket types?]</span>
 
-_[Fill in your reasoning]_
+**Your decision:** I would choose <span class="fill-in">[A/B]</span> because...
+
+<span class="fill-in">[Fill in your reasoning]</span>
 
 **Follow-up:** What if you only have one bracket type `()`?
-- Would you change your decision? _[Yes/No - Why?]_
+
+- Would you change your decision? <span class="fill-in">[Yes/No - Why?]</span>
 
 ---
 
@@ -1456,19 +1480,22 @@ _[Fill in your reasoning]_
 **Scenario:** Implement a queue. You can use arrays or linked list.
 
 **Option A:** Array-based circular queue
-- Pros: _[Fill in]_
-- Cons: _[Fill in - what about resizing?]_
-- Use when: _[Fill in]_
+
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in - what about resizing?]</span>
+- Use when: <span class="fill-in">[Fill in]</span>
 
 **Option B:** Linked list queue
-- Pros: _[Fill in]_
-- Cons: _[Fill in - memory overhead?]_
-- Use when: _[Fill in]_
 
-**Your decision:** I would choose _[A/B]_ for...
-- Web server request queue: _[Which? Why?]_
-- Fixed-size buffer: _[Which? Why?]_
-- Dynamic task scheduler: _[Which? Why?]_
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in - memory overhead?]</span>
+- Use when: <span class="fill-in">[Fill in]</span>
+
+**Your decision:** I would choose <span class="fill-in">[A/B]</span> for...
+
+- Web server request queue: <span class="fill-in">[Which? Why?]</span>
+- Fixed-size buffer: <span class="fill-in">[Which? Why?]</span>
+- Dynamic task scheduler: <span class="fill-in">[Which? Why?]</span>
 
 ---
 
@@ -1588,7 +1615,7 @@ Your explanation:
 
 > "You should NOT use a stack when..."
 >
-> _[Fill in - list 3-4 scenarios and explain why]_
+> <span class="fill-in">[Fill in - list 3-4 scenarios and explain why]</span>
 
 **Task 2:** Explain the key insight behind monotonic stacks.
 
@@ -1596,7 +1623,7 @@ Your explanation:
 
 > "Monotonic stacks are powerful because..."
 >
-> _[Fill in - explain why they achieve O(n) despite nested loops]_
+> <span class="fill-in">[Fill in - explain why they achieve O(n) despite nested loops]</span>
 
 **Task 3:** Explain amortized analysis for queue with two stacks.
 
@@ -1604,7 +1631,7 @@ Your explanation:
 
 > "Queue with two stacks is O(1) amortized because..."
 >
-> _[Fill in - explain why each element is transferred at most once]_
+> <span class="fill-in">[Fill in - explain why each element is transferred at most once]</span>
 
 ---
 
@@ -1666,11 +1693,11 @@ Your approach:
 
 **Specific competencies:**
 
-- Stack operations (push/pop/peek): ___/10
-- Queue operations (enqueue/dequeue): ___/10
-- Monotonic stack pattern: ___/10
-- Deque for sliding window: ___/10
-- Queue with stacks: ___/10
+- Stack operations (push/pop/peek): <span class="fill-in">___</span>/10
+- Queue operations (enqueue/dequeue): <span class="fill-in">___</span>/10
+- Monotonic stack pattern: <span class="fill-in">___</span>/10
+- Deque for sliding window: <span class="fill-in">___</span>/10
+- Queue with stacks: <span class="fill-in">___</span>/10
 
 **If any score < 7:** Review that specific pattern, then retry this gate.
 
@@ -1678,12 +1705,12 @@ Your approach:
 
 **What was your biggest challenge?**
 
-- _[Reflect on what was hardest to understand]_
+- <span class="fill-in">[Reflect on what was hardest to understand]</span>
 
 **What clicked for you?**
 
-- _[What insight made it all come together?]_
+- <span class="fill-in">[What insight made it all come together?]</span>
 
 **What would you explain differently to your past self?**
 
-- _[How would you teach this more effectively?]_
+- <span class="fill-in">[How would you teach this more effectively?]</span>

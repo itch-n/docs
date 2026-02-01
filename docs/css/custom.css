@@ -1,3 +1,7 @@
+/* ==========================================
+   COLLAPSIBLE DETAILS (Solutions/Answers)
+   ========================================== */
+
 /* Style for the container */
 details {
     border: 1px solid #ddd;
@@ -39,4 +43,86 @@ details summary::before {
 
 details[open] summary::before {
     content: "▼ ";
+}
+
+/* ==========================================
+   LEARNER-SPECIFIC CLASSES (Opt-in styling)
+   ========================================== */
+
+/* .learner-section - Wrap areas where learner fills in content */
+.learner-section {
+    background-color: #fffbf0;
+    border-left: 4px solid #f9c74f;
+    padding: 15px 20px;
+    margin: 15px 0;
+    border-radius: 4px;
+}
+
+.learner-section p {
+    margin: 0.5em 0;
+}
+
+/* .fill-in - Individual fill-in-the-blank prompts */
+.fill-in {
+    font-weight: bold;
+    color: #ea580c;
+    font-style: italic;
+    background-color: #fff7ed;
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid #fed7aa;
+    display: inline-block;
+    min-width: 100px;
+}
+
+/* .learner-prompt - For list items with prompts */
+.learner-prompt {
+    background-color: #fffbf0;
+    border-left: 3px solid #fbbf24;
+    padding: 10px 15px;
+    margin: 8px 0;
+    border-radius: 3px;
+}
+
+/* .benchmark-table - Tables where learners record results */
+.benchmark-table {
+    background-color: #fffbf0;
+    border: 2px solid #fbbf24;
+    margin: 20px 0;
+}
+
+.benchmark-table td,
+.benchmark-table th {
+    padding: 10px;
+}
+
+.benchmark-table thead {
+    background-color: #fef3c7;
+}
+
+/* Blank cells in benchmark tables */
+.benchmark-table .blank {
+    font-weight: bold;
+    color: #ea580c;
+    background-color: #fff7ed;
+}
+
+/* ==========================================
+   CODE REFERENCE CLASSES
+   ========================================== */
+
+/* .code-reference - Auto-generated code examples */
+.code-reference {
+    background-color: #f8f9fa;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+.code-reference pre {
+    margin: 0;
+    background-color: transparent;
+    border: none;
+    padding: 0;
 }

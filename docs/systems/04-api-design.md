@@ -6,87 +6,94 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing different API patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is REST in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **Why do we use REST for web APIs?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy for REST:**
     - Example: "REST is like a restaurant menu where..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **What is GraphQL in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 5. **When would you choose GraphQL over REST?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 6. **Real-world analogy for GraphQL:**
     - Example: "GraphQL is like a buffet where..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 7. **What is RPC (gRPC) in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 8. **When would you use RPC instead of REST?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **REST API endpoint for listing resources:**
-    - What HTTP method should be used? _[Your guess: GET/POST/PUT/DELETE]_
-    - What status code for success? _[Your guess: 200/201/204]_
-    - Verified after learning: _[Actual: ?]_
+    - What HTTP method should be used? <span class="fill-in">[Your guess: GET/POST/PUT/DELETE]</span>
+    - What status code for success? <span class="fill-in">[Your guess: 200/201/204]</span>
+    - Verified after learning: <span class="fill-in">[Actual: ?]</span>
 
 2. **GraphQL query that fetches nested data:**
-    - How many HTTP requests needed? _[Your guess: 1/multiple]_
-    - Compared to REST for same data: _[More/Less/Same requests?]_
-    - Verified: _[Actual]_
+    - How many HTTP requests needed? <span class="fill-in">[Your guess: 1/multiple]</span>
+    - Compared to REST for same data: <span class="fill-in">[More/Less/Same requests?]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **API pagination parameters:**
-    - Common parameter names: _[Your guesses]_
-    - Default limit should be: _[Your guess: 10/50/100/unlimited?]_
-    - Verified: _[Actual best practices]_
+    - Common parameter names: <span class="fill-in">[Your guesses]</span>
+    - Default limit should be: <span class="fill-in">[Your guess: 10/50/100/unlimited?]</span>
+    - Verified: <span class="fill-in">[Actual best practices]</span>
 
 ### Scenario Predictions
 
 **Scenario 1:** Design endpoint to get user with their posts and comments
 
-- **REST approach:** How many endpoints? _[Your guess]_
-- **GraphQL approach:** How many endpoints? _[Your guess]_
-- **Which has over-fetching risk?** _[REST/GraphQL - Why?]_
-- **Which has N+1 query risk?** _[REST/GraphQL - Why?]_
+- **REST approach:** How many endpoints? <span class="fill-in">[Your guess]</span>
+- **GraphQL approach:** How many endpoints? <span class="fill-in">[Your guess]</span>
+- **Which has over-fetching risk?** <span class="fill-in">[REST/GraphQL - Why?]</span>
+- **Which has N+1 query risk?** <span class="fill-in">[REST/GraphQL - Why?]</span>
 
 **Scenario 2:** Client needs to update user's email address
 
-- **Which HTTP method?** _[GET/POST/PUT/PATCH/DELETE]_
-- **PUT vs PATCH - what's the difference?** _[Fill in]_
-- **Success status code:** _[200/201/204/304]_
-- **If email already taken, status code:** _[400/404/409/500]_
+- **Which HTTP method?** <span class="fill-in">[GET/POST/PUT/PATCH/DELETE]</span>
+- **PUT vs PATCH - what's the difference?** <span class="fill-in">[Fill in]</span>
+- **Success status code:** <span class="fill-in">[200/201/204/304]</span>
+- **If email already taken, status code:** <span class="fill-in">[400/404/409/500]</span>
 
 **Scenario 3:** API versioning strategy
 
-- **Version in URL (/v1/users) or header?** _[Which is better? Why?]_
-- **When to create new version?** _[Fill in your reasoning]_
-- **How to deprecate old version?** _[Your approach]_
+- **Version in URL (/v1/users) or header?** <span class="fill-in">[Which is better? Why?]</span>
+- **When to create new version?** <span class="fill-in">[Fill in your reasoning]</span>
+- **How to deprecate old version?** <span class="fill-in">[Your approach]</span>
 
 ### Trade-off Quiz
 
 **Question:** When would REST be BETTER than GraphQL?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** What's the MAIN benefit of API pagination?
 
@@ -95,13 +102,16 @@
 - [ ] Reduces response size and improves performance
 - [ ] Required by HTTP specification
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 **Question:** What makes an API idempotent?
 
-- Your answer: _[Fill in]_
-- Example of idempotent operation: _[Fill in]_
-- Example of non-idempotent operation: _[Fill in]_
+- Your answer: <span class="fill-in">[Fill in]</span>
+- Example of idempotent operation: <span class="fill-in">[Fill in]</span>
+- Example of non-idempotent operation: <span class="fill-in">[Fill in]</span>
+
+
+</div>
 
 ---
 
@@ -194,9 +204,13 @@ public UserV2 getUserV2(String id) {
 
 **After implementing, answer:**
 
-- _[Why is versioning critical for APIs?]_
-- _[When would you create a new API version?]_
-- _[How long should you support old versions?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why is versioning critical for APIs?]</span>
+- <span class="fill-in">[When would you create a new API version?]</span>
+- <span class="fill-in">[How long should you support old versions?]</span>
+
+</div>
 
 ---
 
@@ -289,9 +303,13 @@ class PaginatedResponse<T> {
 
 **After implementing, answer:**
 
-- _[Why is pagination essential for production APIs?]_
-- _[What's a good default page size?]_
-- _[Offset-based vs cursor-based pagination - when to use each?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why is pagination essential for production APIs?]</span>
+- <span class="fill-in">[What's a good default page size?]</span>
+- <span class="fill-in">[Offset-based vs cursor-based pagination - when to use each?]</span>
+
+</div>
 
 ---
 
@@ -407,9 +425,13 @@ class ApiError {
 
 **After implementing, answer:**
 
-- _[Why are specific HTTP status codes important?]_
-- _[What makes a good error message?]_
-- _[When should you use 400 vs 409 vs 422?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why are specific HTTP status codes important?]</span>
+- <span class="fill-in">[What makes a good error message?]</span>
+- <span class="fill-in">[When should you use 400 vs 409 vs 422?]</span>
+
+</div>
 
 ---
 
@@ -508,10 +530,14 @@ Result: User charged $100 only once - correct!
 
 **After implementing, answer:**
 
-- _[What does idempotent mean?]_
-- _[Why is POST not naturally idempotent?]_
-- _[How do you make POST idempotent?]_
-- _[Why is PUT idempotent but POST is not?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[What does idempotent mean?]</span>
+- <span class="fill-in">[Why is POST not naturally idempotent?]</span>
+- <span class="fill-in">[How do you make POST idempotent?]</span>
+- <span class="fill-in">[Why is PUT idempotent but POST is not?]</span>
+
+</div>
 
 ---
 
@@ -1024,13 +1050,13 @@ public class UserController {
 
 **Your debugging:**
 
-- **Bug 1 location:** _[Which line/annotation?]_
-- **Bug 1 explanation:** _[What's wrong with the v2 route?]_
-- **Bug 1 fix:** _[What should it be?]_
+- **Bug 1 location:** <span class="fill-in">[Which line/annotation?]</span>
+- **Bug 1 explanation:** <span class="fill-in">[What's wrong with the v2 route?]</span>
+- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
 
-- **Bug 2 location:** _[Which method?]_
-- **Bug 2 explanation:** _[What happens when v1 clients try to update?]_
-- **Bug 2 fix:** _[How to handle both versions?]_
+- **Bug 2 location:** <span class="fill-in">[Which method?]</span>
+- **Bug 2 explanation:** <span class="fill-in">[What happens when v1 clients try to update?]</span>
+- **Bug 2 fix:** <span class="fill-in">[How to handle both versions?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1106,18 +1132,21 @@ public PaginatedResponse getPosts(
 
 **Your debugging:**
 
-**Bug 1:** _[What happens if client doesn't send page/limit parameters?]_
-- Impact: _[What error occurs?]_
-- Fix: _[What should be added?]_
+**Bug 1:** <span class="fill-in">[What happens if client doesn't send page/limit parameters?]</span>
 
-**Bug 2:** _[What if client sends limit=999999?]_
-- Impact: _[What problem does this cause?]_
-- Fix: _[How to prevent abuse?]_
+- Impact: <span class="fill-in">[What error occurs?]</span>
+- Fix: <span class="fill-in">[What should be added?]</span>
 
-**Bug 3:** _[Is the offset calculation correct?]_
-- Test: page=1, limit=10 → offset = ___
+**Bug 2:** <span class="fill-in">[What if client sends limit=999999?]</span>
+
+- Impact: <span class="fill-in">[What problem does this cause?]</span>
+- Fix: <span class="fill-in">[How to prevent abuse?]</span>
+
+**Bug 3:** <span class="fill-in">[Is the offset calculation correct?]</span>
+
+- Test: page=1, limit=10 → offset = <span class="fill-in">___</span>
 - Expected: offset should be ___
-- Fix: _[Correct formula?]_
+- Fix: <span class="fill-in">[Correct formula?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1206,10 +1235,10 @@ public Response partialUpdate(
 
 | Operation | Current Method | Correct Method | Why? |
 |-----------|---------------|----------------|------|
-| Get profile | POST | _[Fill in]_ | _[Explain]_ |
-| Update email | GET | _[Fill in]_ | _[Explain]_ |
-| Delete user | POST | _[Fill in]_ | _[Explain]_ |
-| Partial update | PUT | _[Fill in]_ | _[Explain]_ |
+| Get profile | POST | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Update email | GET | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Delete user | POST | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Partial update | PUT | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1307,19 +1336,22 @@ public Response createUser(@RequestBody CreateUserRequest req) {
 **Bug 2:** Invalid email format should return status ___ with message ___
 
 **Bug 3:** Duplicate email should return status ___ with message ___
+
 - Current: 400 Bad Request
-- Correct: _[Fill in]_
-- Why: _[Explain the difference]_
+- Correct: <span class="fill-in">[Fill in]</span>
+- Why: <span class="fill-in">[Explain the difference]</span>
 
 **Bug 4:** Successful creation should return status ___
+
 - Current: 200 OK
-- Correct: _[Fill in]_
-- Why: _[Explain]_
+- Correct: <span class="fill-in">[Fill in]</span>
+- Why: <span class="fill-in">[Explain]</span>
 
 **Bug 5:** Generic catch block problems:
-1. _[What's lost?]_
-2. _[How to fix?]_
-3. _[What should be logged?]_
+
+1. <span class="fill-in">[What's lost?]</span>
+2. <span class="fill-in">[How to fix?]</span>
+3. <span class="fill-in">[What should be logged?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1431,21 +1463,23 @@ public Response processPayment(@RequestBody PaymentRequest req) {
 **Your debugging:**
 
 **Scenario 1:** Client submits payment, network timeout before response
+
 - Client doesn't know if payment succeeded
 - Client retries request
-- What happens? _[Fill in]_
-- Impact: _[Fill in]_
+- What happens? <span class="fill-in">[Fill in]</span>
+- Impact: <span class="fill-in">[Fill in]</span>
 
 **Scenario 2:** Request processed, card charged, but database save fails
-- Card was charged: _[Yes/No]_
-- Payment record exists: _[Yes/No]_
-- User's money: _[What happened?]_
+
+- Card was charged: <span class="fill-in">[Yes/No]</span>
+- Payment record exists: <span class="fill-in">[Yes/No]</span>
+- User's money: <span class="fill-in">[What happened?]</span>
 
 **Fixes needed:**
 
-1. Add _[what field?]_ to ensure idempotency
-2. Check _[what?]_ before processing
-3. Handle _[what scenario?]_ to prevent double charging
+1. Add <span class="fill-in">[what field?]</span> to ensure idempotency
+2. Check <span class="fill-in">[what?]</span> before processing
+3. Handle <span class="fill-in">[what scenario?]</span> to prevent double charging
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1535,15 +1569,15 @@ After finding and fixing all bugs:
 
 **Common API mistakes you discovered:**
 
-1. _[List the patterns you noticed]_
-2. _[Fill in]_
-3. _[Fill in]_
+1. <span class="fill-in">[List the patterns you noticed]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 **Production-critical issues:**
 
-- Which bug could cause financial loss? _[Fill in]_
-- Which bug would break clients immediately? _[Fill in]_
-- Which bug would cause performance issues at scale? _[Fill in]_
+- Which bug could cause financial loss? <span class="fill-in">[Fill in]</span>
+- Which bug would break clients immediately? <span class="fill-in">[Fill in]</span>
+- Which bug would cause performance issues at scale? <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1555,35 +1589,35 @@ After finding and fixing all bugs:
 
 **When to use REST?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 **When to use GraphQL?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 **When to use RPC?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 ### 2. Trade-offs
 
 **REST:**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 **GraphQL:**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 **RPC:**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 ### 3. Your Decision Tree
 
@@ -1601,18 +1635,18 @@ What kind of API are you building?
 
 **REST:**
 
-1. _[When does REST fail? Fill in]_
-2. _[Another failure case]_
+1. <span class="fill-in">[When does REST fail? Fill in]</span>
+2. <span class="fill-in">[Another failure case]</span>
 
 **GraphQL:**
 
-1. _[When does GraphQL fail? Fill in]_
-2. _[Another failure case]_
+1. <span class="fill-in">[When does GraphQL fail? Fill in]</span>
+2. <span class="fill-in">[Another failure case]</span>
 
 **RPC:**
 
-1. _[When does RPC fail? Fill in]_
-2. _[Another failure case]_
+1. <span class="fill-in">[When does RPC fail? Fill in]</span>
+2. <span class="fill-in">[Another failure case]</span>
 
 ### 5. Rule of Three - Alternatives
 
@@ -1620,9 +1654,9 @@ For each API paradigm, identify alternatives and compare:
 
 **Scenario: Building a mobile app backend**
 
-1. Option A: _[Fill in]_
-2. Option B: _[Fill in]_
-3. Option C: _[Fill in]_
+1. Option A: <span class="fill-in">[Fill in]</span>
+2. Option B: <span class="fill-in">[Fill in]</span>
+3. Option C: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1639,10 +1673,10 @@ For each API paradigm, identify alternatives and compare:
 
 **Your API design:**
 
-- Which paradigm would you choose? _[Fill in]_
-- Why? _[Fill in]_
-- Key endpoints/queries: _[Fill in]_
-- How to handle feed generation? _[Fill in]_
+- Which paradigm would you choose? <span class="fill-in">[Fill in]</span>
+- Why? <span class="fill-in">[Fill in]</span>
+- Key endpoints/queries: <span class="fill-in">[Fill in]</span>
+- How to handle feed generation? <span class="fill-in">[Fill in]</span>
 
 ### Scenario 2: Design API for microservices
 
@@ -1655,10 +1689,10 @@ For each API paradigm, identify alternatives and compare:
 
 **Your API design:**
 
-- Which paradigm would you choose? _[Fill in]_
-- Why? _[Fill in]_
-- How to handle errors? _[Fill in]_
-- How to handle retries? _[Fill in]_
+- Which paradigm would you choose? <span class="fill-in">[Fill in]</span>
+- Why? <span class="fill-in">[Fill in]</span>
+- How to handle errors? <span class="fill-in">[Fill in]</span>
+- How to handle retries? <span class="fill-in">[Fill in]</span>
 
 ### Scenario 3: Design API for mobile app with poor network
 
@@ -1671,10 +1705,10 @@ For each API paradigm, identify alternatives and compare:
 
 **Your API design:**
 
-- Which paradigm would you choose? _[Fill in]_
-- Why? _[Fill in]_
-- How to optimize for mobile? _[Fill in]_
-- Caching strategy? _[Fill in]_
+- Which paradigm would you choose? <span class="fill-in">[Fill in]</span>
+- Why? <span class="fill-in">[Fill in]</span>
+- How to optimize for mobile? <span class="fill-in">[Fill in]</span>
+- Caching strategy? <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1702,24 +1736,24 @@ For each API paradigm, identify alternatives and compare:
 
 > "REST is an architectural style where..."
 >
-> _[Fill in your explanation in plain English - 4-5 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 4-5 sentences max]</span>
 
 **Follow-up questions to answer:**
 
 1. Why do we version APIs?
-    - Your answer: _[Fill in]_
+    - Your answer: <span class="fill-in">[Fill in]</span>
 
 2. What's the difference between PUT and PATCH?
-    - Your answer: _[Fill in]_
+    - Your answer: <span class="fill-in">[Fill in]</span>
 
 3. Why use different HTTP status codes instead of just 200 and 500?
-    - Your answer: _[Fill in]_
+    - Your answer: <span class="fill-in">[Fill in]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by someone from a different tech background? _[Yes/No]_
-- Did you use examples? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by someone from a different tech background? <span class="fill-in">[Yes/No]</span>
+- Did you use examples? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -1731,22 +1765,22 @@ If you scored below 7 or answered "No" to either question, revise your explanati
 
 | Scenario | Your Answer | Correct |
 |----------|-------------|---------|
-| User successfully fetched | _[Status code?]_ | 200 |
-| User successfully created | _[Status code?]_ | 201 |
-| User successfully deleted | _[Status code?]_ | 204 |
-| Email format is invalid | _[Status code?]_ | 400 |
-| Email already exists | _[Status code?]_ | 409 |
-| User not authenticated | _[Status code?]_ | 401 |
-| User not authorized | _[Status code?]_ | 403 |
-| User not found | _[Status code?]_ | 404 |
-| Too many requests | _[Status code?]_ | 429 |
-| Server crashed | _[Status code?]_ | 500 |
+| User successfully fetched | <span class="fill-in">[Status code?]</span> | 200 |
+| User successfully created | <span class="fill-in">[Status code?]</span> | 201 |
+| User successfully deleted | <span class="fill-in">[Status code?]</span> | 204 |
+| Email format is invalid | <span class="fill-in">[Status code?]</span> | 400 |
+| Email already exists | <span class="fill-in">[Status code?]</span> | 409 |
+| User not authenticated | <span class="fill-in">[Status code?]</span> | 401 |
+| User not authorized | <span class="fill-in">[Status code?]</span> | 403 |
+| User not found | <span class="fill-in">[Status code?]</span> | 404 |
+| Too many requests | <span class="fill-in">[Status code?]</span> | 429 |
+| Server crashed | <span class="fill-in">[Status code?]</span> | 500 |
 
 **Score:** ___/10 correct
 
 **Deep question:** What's the difference between 401 Unauthorized and 403 Forbidden?
 
-Your answer: _[Fill in]_
+Your answer: <span class="fill-in">[Fill in]</span>
 
 If you scored below 8/10, review the error handling section and try again.
 
@@ -1760,24 +1794,24 @@ If you scored below 8/10, review the error handling section and try again.
 I need to build an API
 │
 ├─ What type of clients will consume it?
-│   ├─ Public third-party developers → Use: _[REST/GraphQL/RPC?]_
-│   ├─ Internal microservices → Use: _[REST/GraphQL/RPC?]_
-│   └─ Mobile apps (complex queries) → Use: _[REST/GraphQL/RPC?]_
+│   ├─ Public third-party developers → Use: <span class="fill-in">[REST/GraphQL/RPC?]</span>
+│   ├─ Internal microservices → Use: <span class="fill-in">[REST/GraphQL/RPC?]</span>
+│   └─ Mobile apps (complex queries) → Use: <span class="fill-in">[REST/GraphQL/RPC?]</span>
 │
 ├─ How should I version my API?
-│   ├─ URL path (/v1/users) → When: _[Fill in scenario]_
-│   ├─ Header (Accept: application/vnd.api.v1+json) → When: _[Fill in scenario]_
-│   └─ Query param (?version=1) → When: _[Fill in scenario]_
+│   ├─ URL path (/v1/users) → When: <span class="fill-in">[Fill in scenario]</span>
+│   ├─ Header (Accept: application/vnd.api.v1+json) → When: <span class="fill-in">[Fill in scenario]</span>
+│   └─ Query param (?version=1) → When: <span class="fill-in">[Fill in scenario]</span>
 │
 ├─ Does my endpoint return list data?
-│   ├─ Yes → Must implement: _[What feature?]_
-│   │   Default page size: _[Your choice]_
-│   │   Max page size: _[Your choice]_
-│   └─ No → Still check: _[What could go wrong with single resource?]_
+│   ├─ Yes → Must implement: <span class="fill-in">[What feature?]</span>
+│   │   Default page size: <span class="fill-in">[Your choice]</span>
+│   │   Max page size: <span class="fill-in">[Your choice]</span>
+│   └─ No → Still check: <span class="fill-in">[What could go wrong with single resource?]</span>
 │
 └─ Is this a critical operation (payment, delete)?
-    ├─ Yes → Must implement: _[What feature?]_
-    └─ No → Still consider: _[What about retries?]_
+    ├─ Yes → Must implement: <span class="fill-in">[What feature?]</span>
+    └─ No → Still consider: <span class="fill-in">[What about retries?]</span>
 ```
 
 **Verification:**
@@ -1794,9 +1828,9 @@ I need to build an API
 
 **Design your pagination strategy:**
 
-1. **Default page size:** _[Your choice and why]_
+1. **Default page size:** <span class="fill-in">[Your choice and why]</span>
 
-2. **Maximum page size:** _[Your choice and why]_
+2. **Maximum page size:** <span class="fill-in">[Your choice and why]</span>
 
 3. **Response structure (design the JSON):**
 ```json
@@ -1805,19 +1839,20 @@ I need to build an API
 }
 ```
 
-4. **Links to include:** _[What URLs for navigation?]_
+4. **Links to include:** <span class="fill-in">[What URLs for navigation?]</span>
 
 5. **Offset vs Cursor pagination:**
-    - When to use offset: _[Fill in]_
-    - When to use cursor: _[Fill in]_
+    - When to use offset: <span class="fill-in">[Fill in]</span>
+    - When to use cursor: <span class="fill-in">[Fill in]</span>
 
 **Test your design:**
 
 Given 87 total posts, page=3, limit=20:
-- Offset calculation: ___
-- Items returned: ___ to ___
-- Has next page? _[Yes/No]_
-- Has previous page? _[Yes/No]_
+
+- Offset calculation: <span class="fill-in">___</span>
+- Items returned: <span class="fill-in">___</span> to ___
+- Has next page? <span class="fill-in">[Yes/No]</span>
+- Has previous page? <span class="fill-in">[Yes/No]</span>
 
 ---
 
@@ -1825,33 +1860,35 @@ Given 87 total posts, page=3, limit=20:
 
 **Core question:** Explain idempotency in one sentence.
 
-Your answer: _[Fill in]_
+Your answer: <span class="fill-in">[Fill in]</span>
 
 **Classification test:** Mark each operation as Idempotent or Not Idempotent
 
 | Operation | Naturally Idempotent? | Why? |
 |-----------|----------------------|------|
-| GET /users/123 | _[Yes/No]_ | _[Explain]_ |
-| POST /users | _[Yes/No]_ | _[Explain]_ |
-| PUT /users/123 | _[Yes/No]_ | _[Explain]_ |
-| PATCH /users/123 (set email) | _[Yes/No]_ | _[Explain]_ |
-| PATCH /users/123 (increment counter) | _[Yes/No]_ | _[Explain]_ |
-| DELETE /users/123 | _[Yes/No]_ | _[Explain]_ |
+| GET /users/123 | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| POST /users | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| PUT /users/123 | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| PATCH /users/123 (set email) | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| PATCH /users/123 (increment counter) | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| DELETE /users/123 | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
 **Design challenge:** How would you make POST /payments idempotent?
 
 Your solution:
-1. _[Step 1]_
-2. _[Step 2]_
-3. _[Step 3]_
+
+1. <span class="fill-in">[Step 1]</span>
+2. <span class="fill-in">[Step 2]</span>
+3. <span class="fill-in">[Step 3]</span>
 
 **Critical scenario:** Client retries payment after timeout. Walk through what happens with your solution:
-- First request: _[Fill in]_
-- Timeout occurs: _[Fill in]_
-- Retry request: _[Fill in]_
-- Final result: _[Fill in]_
+
+- First request: <span class="fill-in">[Fill in]</span>
+- Timeout occurs: <span class="fill-in">[Fill in]</span>
+- Retry request: <span class="fill-in">[Fill in]</span>
+- Final result: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1872,7 +1909,7 @@ Your solution:
 - [ ] Human-readable message
 - [ ] Field that caused the error
 - [ ] Suggestion for fixing it
-- [ ] Correct HTTP status code: ___
+- [ ] Correct HTTP status code: <span class="fill-in">___</span>
 
 **Compare to bad design:**
 
@@ -1884,9 +1921,10 @@ Bad example:
 ```
 
 Why is this bad?
-1. _[Fill in]_
-2. _[Fill in]_
-3. _[Fill in]_
+
+1. <span class="fill-in">[Fill in]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1895,24 +1933,28 @@ Why is this bad?
 **For each scenario, choose the BEST API paradigm and explain why:**
 
 **Scenario 1:** Public API for a payment processing service
-- Your choice: _[REST/GraphQL/RPC]_
-- Why: _[Fill in reasoning]_
-- Alternative considered: _[What did you rule out and why?]_
+
+- Your choice: <span class="fill-in">[REST/GraphQL/RPC]</span>
+- Why: <span class="fill-in">[Fill in reasoning]</span>
+- Alternative considered: <span class="fill-in">[What did you rule out and why?]</span>
 
 **Scenario 2:** Internal service-to-service calls in a microservices architecture
-- Your choice: _[REST/GraphQL/RPC]_
-- Why: _[Fill in reasoning]_
-- Key consideration: _[What made this decision?]_
+
+- Your choice: <span class="fill-in">[REST/GraphQL/RPC]</span>
+- Why: <span class="fill-in">[Fill in reasoning]</span>
+- Key consideration: <span class="fill-in">[What made this decision?]</span>
 
 **Scenario 3:** Mobile app that needs user profile, posts, comments, and likes
-- Your choice: _[REST/GraphQL/RPC]_
-- Why: _[Fill in reasoning]_
-- Problem it solves: _[What specific issue?]_
+
+- Your choice: <span class="fill-in">[REST/GraphQL/RPC]</span>
+- Why: <span class="fill-in">[Fill in reasoning]</span>
+- Problem it solves: <span class="fill-in">[What specific issue?]</span>
 
 **Scenario 4:** Real-time stock trading platform (high throughput, low latency)
-- Your choice: _[REST/GraphQL/RPC]_
-- Why: _[Fill in reasoning]_
-- Critical factor: _[What requirement drove this?]_
+
+- Your choice: <span class="fill-in">[REST/GraphQL/RPC]</span>
+- Why: <span class="fill-in">[Fill in reasoning]</span>
+- Critical factor: <span class="fill-in">[What requirement drove this?]</span>
 
 ---
 
@@ -1933,35 +1975,35 @@ Why is this bad?
 Endpoints:
 
 1. Users
-   GET /v1/users/{id}           - _[What does this return?]_
-   POST /v1/users               - _[What does this create?]_
-   PATCH /v1/users/{id}         - _[What does this update?]_
-   DELETE /v1/users/{id}        - _[What does this delete?]_
+   GET /v1/users/{id}           - <span class="fill-in">[What does this return?]</span>
+   POST /v1/users               - <span class="fill-in">[What does this create?]</span>
+   PATCH /v1/users/{id}         - <span class="fill-in">[What does this update?]</span>
+   DELETE /v1/users/{id}        - <span class="fill-in">[What does this delete?]</span>
 
 2. Posts
-   GET /v1/posts/{id}           - Status: ___ Returns: ___
-   GET /v1/users/{id}/posts     - Status: ___ Returns: ___ (with ___ feature)
-   POST /v1/posts               - Status: ___ Returns: ___
-   PATCH /v1/posts/{id}         - Status: ___ Returns: ___
-   DELETE /v1/posts/{id}        - Status: ___ Returns: ___
+   GET /v1/posts/{id}           - Status: <span class="fill-in">___</span> Returns: <span class="fill-in">___</span>
+   GET /v1/users/{id}/posts     - Status: <span class="fill-in">___</span> Returns: <span class="fill-in">___</span> (with ___ feature)
+   POST /v1/posts               - Status: <span class="fill-in">___</span> Returns: <span class="fill-in">___</span>
+   PATCH /v1/posts/{id}         - Status: <span class="fill-in">___</span> Returns: <span class="fill-in">___</span>
+   DELETE /v1/posts/{id}        - Status: <span class="fill-in">___</span> Returns: <span class="fill-in">___</span>
 
 3. Comments
-   _[Design the comment endpoints]_
+   <span class="fill-in">[Design the comment endpoints]</span>
 
 4. Follows
-   _[Design the follow/unfollow endpoints]_
+   <span class="fill-in">[Design the follow/unfollow endpoints]</span>
 
 5. Feed
-   _[Design the feed endpoint with pagination]_
+   <span class="fill-in">[Design the feed endpoint with pagination]</span>
 ```
 
 **For your feed endpoint, specify:**
 
-- HTTP method: ___
-- Full URL: ___
-- Pagination parameters: ___
-- Response structure: _[Sketch JSON]_
-- Edge cases handled: ___
+- HTTP method: <span class="fill-in">___</span>
+- Full URL: <span class="fill-in">___</span>
+- Pagination parameters: <span class="fill-in">___</span>
+- Response structure: <span class="fill-in">[Sketch JSON]</span>
+- Edge cases handled: <span class="fill-in">___</span>
 
 **Verification checklist:**
 
@@ -1979,26 +2021,27 @@ Endpoints:
 
 | Change | Breaking or Compatible? | Why? |
 |--------|------------------------|------|
-| Add new optional field to response | _[B/C]_ | _[Explain]_ |
-| Remove field from response | _[B/C]_ | _[Explain]_ |
-| Rename field in response | _[B/C]_ | _[Explain]_ |
-| Change field type (string → int) | _[B/C]_ | _[Explain]_ |
-| Add new required field to request | _[B/C]_ | _[Explain]_ |
-| Make existing required field optional | _[B/C]_ | _[Explain]_ |
-| Add new endpoint | _[B/C]_ | _[Explain]_ |
-| Change HTTP method (POST → PUT) | _[B/C]_ | _[Explain]_ |
+| Add new optional field to response | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
+| Remove field from response | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
+| Rename field in response | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
+| Change field type (string → int) | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
+| Add new required field to request | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
+| Make existing required field optional | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
+| Add new endpoint | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
+| Change HTTP method (POST → PUT) | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/8 correct
 
 **Strategy question:** You need to make a breaking change. What's your migration plan?
 
 Your plan:
-1. _[Step 1]_
-2. _[Step 2]_
-3. _[Step 3]_
-4. _[Step 4]_
 
-How long to support old version? _[Your policy]_
+1. <span class="fill-in">[Step 1]</span>
+2. <span class="fill-in">[Step 2]</span>
+3. <span class="fill-in">[Step 3]</span>
+4. <span class="fill-in">[Step 4]</span>
+
+How long to support old version? <span class="fill-in">[Your policy]</span>
 
 ---
 
@@ -2010,15 +2053,15 @@ How long to support old version? _[Your policy]_
 
 Your explanation for each:
 
-**GET:** _[When to use and why]_
+**GET:** <span class="fill-in">[When to use and why]</span>
 
-**POST:** _[When to use and why]_
+**POST:** <span class="fill-in">[When to use and why]</span>
 
-**PUT:** _[When to use and why]_
+**PUT:** <span class="fill-in">[When to use and why]</span>
 
-**PATCH:** _[When to use and why]_
+**PATCH:** <span class="fill-in">[When to use and why]</span>
 
-**DELETE:** _[When to use and why]_
+**DELETE:** <span class="fill-in">[When to use and why]</span>
 
 **Task 2:** Explain why pagination matters using a concrete example.
 
@@ -2026,7 +2069,7 @@ Your explanation with numbers:
 
 > "Imagine an API endpoint that returns user posts. Without pagination..."
 >
-> _[Fill in your explanation with specific numbers showing the problem and solution]_
+> <span class="fill-in">[Fill in your explanation with specific numbers showing the problem and solution]</span>
 
 ---
 
@@ -2049,9 +2092,9 @@ Your explanation with numbers:
 
 **Real-world readiness:**
 
-- Can you design a production API from scratch? _[Yes/No]_
-- Can you review and critique an existing API? _[Yes/No]_
-- Can you handle API versioning and migrations? _[Yes/No]_
+- Can you design a production API from scratch? <span class="fill-in">[Yes/No]</span>
+- Can you review and critique an existing API? <span class="fill-in">[Yes/No]</span>
+- Can you handle API versioning and migrations? <span class="fill-in">[Yes/No]</span>
 
 **If score < 8 or any "No" above:** Review the sections where you struggled, then retry this gate.
 
@@ -2065,22 +2108,22 @@ Based on everything you've learned, write your personal API design checklist:
 
 **My Top 5 API Design Principles:**
 
-1. _[Fill in]_
-2. _[Fill in]_
-3. _[Fill in]_
-4. _[Fill in]_
-5. _[Fill in]_
+1. <span class="fill-in">[Fill in]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
+4. <span class="fill-in">[Fill in]</span>
+5. <span class="fill-in">[Fill in]</span>
 
 **My Top 3 API Anti-Patterns to Avoid:**
 
-1. _[Fill in]_
-2. _[Fill in]_
-3. _[Fill in]_
+1. <span class="fill-in">[Fill in]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 **When I review an API, I check:**
 
-- [ ] _[Your checklist item]_
-- [ ] _[Your checklist item]_
-- [ ] _[Your checklist item]_
-- [ ] _[Your checklist item]_
-- [ ] _[Your checklist item]_
+- [ ] <span class="fill-in">[Your checklist item]</span>
+- [ ] <span class="fill-in">[Your checklist item]</span>
+- [ ] <span class="fill-in">[Your checklist item]</span>
+- [ ] <span class="fill-in">[Your checklist item]</span>
+- [ ] <span class="fill-in">[Your checklist item]</span>

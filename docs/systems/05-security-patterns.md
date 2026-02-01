@@ -6,79 +6,86 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing security patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is authentication in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **What is authorization in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy for authentication:**
     - Example: "Authentication is like showing your ID at the door..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **Real-world analogy for authorization:**
     - Example: "Authorization is like having a key to certain rooms..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 5. **What is JWT in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 6. **When should you use JWT vs sessions?**
-    - Your answer: _[Fill in after practice]_
+    - Your answer: <span class="fill-in">[Fill in after practice]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your security intuition without looking at code. Answer these, then verify after implementation.
 
 ### Security Concept Predictions
 
 1. **Authentication vs Authorization:**
-    - Authentication is: _[Your definition]_
-    - Authorization is: _[Your definition]_
-    - Example scenario: _[Think of real-world example]_
+    - Authentication is: <span class="fill-in">[Your definition]</span>
+    - Authorization is: <span class="fill-in">[Your definition]</span>
+    - Example scenario: <span class="fill-in">[Think of real-world example]</span>
 
 2. **JWT token structure:**
-    - Three parts: _[What are they?]_
-    - Why is signature needed?: _[Your guess]_
-    - Can client modify payload?: _[Yes/No - Why?]_
+    - Three parts: <span class="fill-in">[What are they?]</span>
+    - Why is signature needed?: <span class="fill-in">[Your guess]</span>
+    - Can client modify payload?: <span class="fill-in">[Yes/No - Why?]</span>
 
 3. **RBAC complexity:**
     - Checking permission for user with 3 roles: O(?)
-    - Better than checking each permission individually?: _[Yes/No - Why?]_
+    - Better than checking each permission individually?: <span class="fill-in">[Yes/No - Why?]</span>
 
 ### Scenario Predictions
 
 **Scenario 1:** A user tries to access a protected resource with JWT token
 
-- **What gets validated first?** _[Signature? Expiration? Claims?]_
-- **If signature invalid, what does it mean?** _[Token tampered? Expired? Wrong secret?]_
-- **What happens if token expired but signature valid?** _[Allow? Deny? Refresh?]_
+- **What gets validated first?** <span class="fill-in">[Signature? Expiration? Claims?]</span>
+- **If signature invalid, what does it mean?** <span class="fill-in">[Token tampered? Expired? Wrong secret?]</span>
+- **What happens if token expired but signature valid?** <span class="fill-in">[Allow? Deny? Refresh?]</span>
 
 **Scenario 2:** Implementing RBAC for a blog platform
 
-- **Roles needed:** _[List them]_
-- **VIEWER can:** _[What permissions?]_
-- **EDITOR can:** _[What permissions beyond VIEWER?]_
-- **ADMIN can:** _[Everything or specific permissions?]_
+- **Roles needed:** <span class="fill-in">[List them]</span>
+- **VIEWER can:** <span class="fill-in">[What permissions?]</span>
+- **EDITOR can:** <span class="fill-in">[What permissions beyond VIEWER?]</span>
+- **ADMIN can:** <span class="fill-in">[Everything or specific permissions?]</span>
 
 **Scenario 3:** API key gets leaked on GitHub
 
-- **Immediate action:** _[What to do first?]_
-- **Why rotation matters:** _[Explain]_
-- **How to prevent:** _[Fill in]_
+- **Immediate action:** <span class="fill-in">[What to do first?]</span>
+- **Why rotation matters:** <span class="fill-in">[Explain]</span>
+- **How to prevent:** <span class="fill-in">[Fill in]</span>
 
 ### Security Trade-off Quiz
 
 **Question:** When would Session-based auth be BETTER than JWT?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** What's the MAIN advantage of JWT over sessions?
 
@@ -87,12 +94,15 @@
 - [ ] Easier to implement
 - [ ] Better performance
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 **Question:** Why use HMAC for JWT signature instead of just Base64 encoding?
 
-- Your answer: _[Fill in]_
-- Verified: _[Fill in after implementation]_
+- Your answer: <span class="fill-in">[Fill in]</span>
+- Verified: <span class="fill-in">[Fill in after implementation]</span>
+
+
+</div>
 
 ---
 
@@ -201,9 +211,10 @@ public class SecureJWTAuth {
 | Audit trail | Difficult | Token ID trackable | Complete |
 
 **Your calculation:** If a user makes 1,000 API calls per day:
+
 - Insecure approach exposes credentials _____ times
 - Secure approach exposes credentials _____ time(s)
-- Security improvement: _____ x safer
+- Security improvement: <span class="fill-in">_____</span> x safer
 
 ---
 
@@ -300,9 +311,13 @@ public class RBACBlog {
 
 **After implementing, explain in your own words:**
 
-- _[Why is "deny by default" important?]_
-- _[What happens if you forget one authorization check?]_
-- _[How does RBAC prevent privilege escalation?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why is "deny by default" important?]</span>
+- <span class="fill-in">[What happens if you forget one authorization check?]</span>
+- <span class="fill-in">[How does RBAC prevent privilege escalation?]</span>
+
+</div>
 
 ---
 
@@ -412,9 +427,9 @@ public class SecureSecretsManagement {
 
 **Your reflection after implementation:**
 
-- _[How would you rotate a leaked hardcoded password?]_
-- _[What's the blast radius if secrets manager is breached vs. hardcoded?]_
-- _[Why is "secrets in environment variables" better than hardcoded but still not ideal?]_
+- <span class="fill-in">[How would you rotate a leaked hardcoded password?]</span>
+- <span class="fill-in">[What's the blast radius if secrets manager is breached vs. hardcoded?]</span>
+- <span class="fill-in">[Why is "secrets in environment variables" better than hardcoded but still not ideal?]</span>
 
 ---
 
@@ -1145,22 +1160,23 @@ public class BrokenJWTValidator {
 
 **Your debugging:**
 
-- **Bug 1 location:** _[Which line?]_
-- **Bug 1 explanation:** _[What if token is malformed?]_
-- **Bug 1 fix:** _[What validation is needed?]_
+- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 1 explanation:** <span class="fill-in">[What if token is malformed?]</span>
+- **Bug 1 fix:** <span class="fill-in">[What validation is needed?]</span>
 
-- **Bug 2 location:** _[Which line?]_
-- **Bug 2 explanation:** _[Most critical security flaw - what's missing?]_
-- **Bug 2 fix:** _[What MUST be verified?]_
+- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 2 explanation:** <span class="fill-in">[Most critical security flaw - what's missing?]</span>
+- **Bug 2 fix:** <span class="fill-in">[What MUST be verified?]</span>
 
-- **Bug 3 location:** _[Which line?]_
-- **Bug 3 explanation:** _[What timing issue exists?]_
-- **Bug 3 fix:** _[What field to check?]_
+- **Bug 3 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 3 explanation:** <span class="fill-in">[What timing issue exists?]</span>
+- **Bug 3 fix:** <span class="fill-in">[What field to check?]</span>
 
 **Security impact:** What can an attacker do with these bugs?
-- Bug 1 impact: _[Fill in]_
-- Bug 2 impact: _[Fill in - this is the worst one!]_
-- Bug 3 impact: _[Fill in]_
+
+- Bug 1 impact: <span class="fill-in">[Fill in]</span>
+- Bug 2 impact: <span class="fill-in">[Fill in - this is the worst one!]</span>
+- Bug 3 impact: <span class="fill-in">[Fill in]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1240,20 +1256,20 @@ public class BrokenRBAC {
 
 **Your debugging:**
 
-- **Bug 1:** _[What exception occurs?]_
-- **Bug 1 exploit:** _[Can attacker use this?]_
-- **Bug 1 fix:** _[Add what check?]_
+- **Bug 1:** <span class="fill-in">[What exception occurs?]</span>
+- **Bug 1 exploit:** <span class="fill-in">[Can attacker use this?]</span>
+- **Bug 1 fix:** <span class="fill-in">[Add what check?]</span>
 
-- **Bug 2:** _[What's the security flaw?]_
-- **Bug 2 exploit:** _[How can attacker abuse this?]_
-- **Bug 2 fix:** _[What MUST happen before delete?]_
+- **Bug 2:** <span class="fill-in">[What's the security flaw?]</span>
+- **Bug 2 exploit:** <span class="fill-in">[How can attacker abuse this?]</span>
+- **Bug 2 fix:** <span class="fill-in">[What MUST happen before delete?]</span>
 
 **Trace through attack scenario:**
 
 - Attacker with no roles calls `deleteResource("admin-data", "attacker")`
-- What happens at Bug 1? _[Fill in]_
-- What happens at Bug 2? _[Fill in]_
-- Final result: _[Is resource deleted? Should it be?]_
+- What happens at Bug 1? <span class="fill-in">[Fill in]</span>
+- What happens at Bug 2? <span class="fill-in">[Fill in]</span>
+- Final result: <span class="fill-in">[Is resource deleted? Should it be?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1330,18 +1346,18 @@ public class TimingAttackVulnerable {
 
 **Your debugging:**
 
-- **Bug location:** _[Both versions have the same class of bug]_
-- **Bug type:** _[What kind of attack is possible?]_
-- **Bug explanation:** _[How does attacker exploit timing differences?]_
-- **Why is this dangerous?** _[Can attacker guess the secret?]_
+- **Bug location:** <span class="fill-in">[Both versions have the same class of bug]</span>
+- **Bug type:** <span class="fill-in">[What kind of attack is possible?]</span>
+- **Bug explanation:** <span class="fill-in">[How does attacker exploit timing differences?]</span>
+- **Why is this dangerous?** <span class="fill-in">[Can attacker guess the secret?]</span>
 
 **Attack simulation:**
 
 - Try key: `"sk_live_XXXXXXXX"` (wrong prefix) → Takes ___ time
 - Try key: `"sk_live_a1XXXXXX"` (first 2 chars match) → Takes ___ time
-- Pattern: _[What does attacker learn from timing?]_
+- Pattern: <span class="fill-in">[What does attacker learn from timing?]</span>
 
-**Your fix:** _[How to compare in constant time?]_
+**Your fix:** <span class="fill-in">[How to compare in constant time?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1349,6 +1365,7 @@ public class TimingAttackVulnerable {
 **Bug:** Both use non-constant-time comparison. String comparison returns early on first mismatch, leaking information about which characters are correct.
 
 **Attack:** Attacker measures response times:
+
 - `"sk_live_XXXXXXXX"` → Fast (fails at 8th char)
 - `"sk_live_a1XXXXXX"` → Slightly slower (fails at 10th char)
 - Attacker learns: first 2 chars after underscore are "a1"
@@ -1424,23 +1441,23 @@ public class SecretLeakage {
 
 **Your debugging:**
 
-- **Bug 1:** _[What's exposed in the URL?]_
-- **Bug 2:** _[What gets printed to console?]_
-- **Bug 3:** _[What's in the SQLException details?]_
-- **Bug 4:** _[Is logging the token a security issue? Why?]_
+- **Bug 1:** <span class="fill-in">[What's exposed in the URL?]</span>
+- **Bug 2:** <span class="fill-in">[What gets printed to console?]</span>
+- **Bug 3:** <span class="fill-in">[What's in the SQLException details?]</span>
+- **Bug 4:** <span class="fill-in">[Is logging the token a security issue? Why?]</span>
 
 **Real-world impact:**
 
-- Logs stored in: _[Where can these secrets end up?]_
-- Who can access logs: _[List potential exposure points]_
-- Lifetime: _[How long do logs persist?]_
+- Logs stored in: <span class="fill-in">[Where can these secrets end up?]</span>
+- Who can access logs: <span class="fill-in">[List potential exposure points]</span>
+- Lifetime: <span class="fill-in">[How long do logs persist?]</span>
 
 **Your fixes:**
 
-1. _[How to connect without password in URL?]_
-2. _[How to log without secrets?]_
-3. _[How to handle exceptions securely?]_
-4. _[What to log instead of full token?]_
+1. <span class="fill-in">[How to connect without password in URL?]</span>
+2. <span class="fill-in">[How to log without secrets?]</span>
+3. <span class="fill-in">[How to handle exceptions securely?]</span>
+4. <span class="fill-in">[What to log instead of full token?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1512,10 +1529,10 @@ After finding and fixing all bugs:
 
 **Common security bugs you discovered:**
 
-1. _[List the patterns - e.g., "Missing signature validation"]_
-2. _[Fill in]_
-3. _[Fill in]_
-4. _[Fill in]_
+1. <span class="fill-in">[List the patterns - e.g., "Missing signature validation"]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
+4. <span class="fill-in">[Fill in]</span>
 
 **Your security checklist for code review:**
 
@@ -1538,45 +1555,45 @@ Answer after implementation:
 
 **Use JWT when:**
 
-- Stateless architecture: _[No session storage needed]_
-- Microservices: _[Token contains all necessary data]_
-- Mobile/SPA apps: _[Easy to store and send]_
-- Cross-domain: _[Can share across services]_
+- Stateless architecture: <span class="fill-in">[No session storage needed]</span>
+- Microservices: <span class="fill-in">[Token contains all necessary data]</span>
+- Mobile/SPA apps: <span class="fill-in">[Easy to store and send]</span>
+- Cross-domain: <span class="fill-in">[Can share across services]</span>
 
 **Use Session-based when:**
 
-- Traditional web apps: _[Server-side sessions]_
-- Need to revoke immediately: _[Can invalidate server-side]_
-- Large user data: _[Don't want to send in every request]_
-- Simpler security model: _[Server controls everything]_
+- Traditional web apps: <span class="fill-in">[Server-side sessions]</span>
+- Need to revoke immediately: <span class="fill-in">[Can invalidate server-side]</span>
+- Large user data: <span class="fill-in">[Don't want to send in every request]</span>
+- Simpler security model: <span class="fill-in">[Server controls everything]</span>
 
 ### Question 2: When to use API Keys vs JWT?
 
 **API Keys when:**
 
-- Service-to-service: _[Long-lived credentials]_
-- Simple auth: _[Just need to identify caller]_
-- Third-party integrations: _[Easy to rotate]_
+- Service-to-service: <span class="fill-in">[Long-lived credentials]</span>
+- Simple auth: <span class="fill-in">[Just need to identify caller]</span>
+- Third-party integrations: <span class="fill-in">[Easy to rotate]</span>
 
 **JWT when:**
 
-- User authentication: _[Short-lived, contains user claims]_
-- Need user context: _[Embedded in token]_
-- Stateless: _[No lookup needed]_
+- User authentication: <span class="fill-in">[Short-lived, contains user claims]</span>
+- Need user context: <span class="fill-in">[Embedded in token]</span>
+- Stateless: <span class="fill-in">[No lookup needed]</span>
 
 ### Question 3: RBAC vs ABAC (Attribute-Based)?
 
 **RBAC when:**
 
-- Clear role hierarchy: _[Admin, Editor, Viewer]_
-- Simple permissions: _[Read, Write, Delete]_
-- Most users: _[70% of access control needs]_
+- Clear role hierarchy: <span class="fill-in">[Admin, Editor, Viewer]</span>
+- Simple permissions: <span class="fill-in">[Read, Write, Delete]</span>
+- Most users: <span class="fill-in">[70% of access control needs]</span>
 
 **ABAC when:**
 
-- Complex rules: _[Based on time, location, resource attributes]_
-- Fine-grained control: _[User can edit own posts only]_
-- Dynamic policies: _[Rules change frequently]_
+- Complex rules: <span class="fill-in">[Based on time, location, resource attributes]</span>
+- Fine-grained control: <span class="fill-in">[User can edit own posts only]</span>
+- Dynamic policies: <span class="fill-in">[Rules change frequently]</span>
 
 ### Your Decision Tree
 
@@ -1610,33 +1627,33 @@ Security Pattern Selection
 
 **Don't do this:**
 
-1. **Store passwords in plain text** - _[Always hash with bcrypt/argon2]_
-2. **Use weak secrets** - _[Minimum 32 bytes entropy]_
-3. **Hard-code credentials** - _[Use environment vars or secrets manager]_
-4. **Send tokens in URL** - _[Use headers or secure cookies]_
-5. **Never rotate secrets** - _[Rotate regularly, especially after breaches]_
-6. **Trust client-side validation** - _[Always validate on server]_
-7. **Use MD5/SHA1 for passwords** - _[Use bcrypt, scrypt, or argon2]_
+1. **Store passwords in plain text** - <span class="fill-in">[Always hash with bcrypt/argon2]</span>
+2. **Use weak secrets** - <span class="fill-in">[Minimum 32 bytes entropy]</span>
+3. **Hard-code credentials** - <span class="fill-in">[Use environment vars or secrets manager]</span>
+4. **Send tokens in URL** - <span class="fill-in">[Use headers or secure cookies]</span>
+5. **Never rotate secrets** - <span class="fill-in">[Rotate regularly, especially after breaches]</span>
+6. **Trust client-side validation** - <span class="fill-in">[Always validate on server]</span>
+7. **Use MD5/SHA1 for passwords** - <span class="fill-in">[Use bcrypt, scrypt, or argon2]</span>
 
 ### The Rule of Three: Alternatives
 
 **Option 1: JWT (Stateless)**
 
-- Pros: _[Scalable, no server state, works across services]_
-- Cons: _[Can't revoke easily, token size, need refresh mechanism]_
-- Use when: _[Microservices, SPAs, mobile apps]_
+- Pros: <span class="fill-in">[Scalable, no server state, works across services]</span>
+- Cons: <span class="fill-in">[Can't revoke easily, token size, need refresh mechanism]</span>
+- Use when: <span class="fill-in">[Microservices, SPAs, mobile apps]</span>
 
 **Option 2: Session (Stateful)**
 
-- Pros: _[Easy to revoke, smaller cookies, server controls state]_
-- Cons: _[Requires session store, sticky sessions, doesn't scale horizontally easily]_
-- Use when: _[Monoliths, need immediate revocation, simpler security model]_
+- Pros: <span class="fill-in">[Easy to revoke, smaller cookies, server controls state]</span>
+- Cons: <span class="fill-in">[Requires session store, sticky sessions, doesn't scale horizontally easily]</span>
+- Use when: <span class="fill-in">[Monoliths, need immediate revocation, simpler security model]</span>
 
 **Option 3: OAuth2/OIDC (Delegated)**
 
-- Pros: _[Industry standard, handles complex flows, third-party integration]_
-- Cons: _[Complex implementation, relies on identity provider]_
-- Use when: _[Social login, enterprise SSO, third-party services]_
+- Pros: <span class="fill-in">[Industry standard, handles complex flows, third-party integration]</span>
+- Cons: <span class="fill-in">[Complex implementation, relies on identity provider]</span>
+- Use when: <span class="fill-in">[Social login, enterprise SSO, third-party services]</span>
 
 ---
 
@@ -1653,11 +1670,11 @@ Security Pattern Selection
 
 **Your security design:**
 
-- Auth mechanism: _[JWT or API keys? Why?]_
-- Authorization: _[RBAC setup for customer, admin, partner roles]_
-- Secrets: _[How to manage payment gateway keys?]_
-- Token expiry: _[Short-lived or long-lived? Refresh strategy?]_
-- Rate limiting: _[Per user? Per API key?]_
+- Auth mechanism: <span class="fill-in">[JWT or API keys? Why?]</span>
+- Authorization: <span class="fill-in">[RBAC setup for customer, admin, partner roles]</span>
+- Secrets: <span class="fill-in">[How to manage payment gateway keys?]</span>
+- Token expiry: <span class="fill-in">[Short-lived or long-lived? Refresh strategy?]</span>
+- Rate limiting: <span class="fill-in">[Per user? Per API key?]</span>
 
 ### Scenario 2: Multi-Tenant SaaS Platform
 
@@ -1670,11 +1687,11 @@ Security Pattern Selection
 
 **Your security design:**
 
-- Tenant isolation: _[How to ensure data separation?]_
-- User roles: _[Super admin, tenant admin, user]_
-- SSO integration: _[SAML, OAuth2, or both?]_
-- Token claims: _[What to include in JWT?]_
-- Cross-tenant attacks: _[How to prevent?]_
+- Tenant isolation: <span class="fill-in">[How to ensure data separation?]</span>
+- User roles: <span class="fill-in">[Super admin, tenant admin, user]</span>
+- SSO integration: <span class="fill-in">[SAML, OAuth2, or both?]</span>
+- Token claims: <span class="fill-in">[What to include in JWT?]</span>
+- Cross-tenant attacks: <span class="fill-in">[How to prevent?]</span>
 
 ### Scenario 3: Microservices Internal Auth
 
@@ -1687,11 +1704,11 @@ Security Pattern Selection
 
 **Your security design:**
 
-- Service-to-service auth: _[Mutual TLS? JWT? API keys?]_
-- Service identity: _[How to identify calling service?]_
-- Permission model: _[Service-level RBAC?]_
-- Secret distribution: _[How do services get credentials?]_
-- Rotation: _[How to rotate without downtime?]_
+- Service-to-service auth: <span class="fill-in">[Mutual TLS? JWT? API keys?]</span>
+- Service identity: <span class="fill-in">[How to identify calling service?]</span>
+- Permission model: <span class="fill-in">[Service-level RBAC?]</span>
+- Secret distribution: <span class="fill-in">[How do services get credentials?]</span>
+- Rotation: <span class="fill-in">[How to rotate without downtime?]</span>
 
 ---
 
@@ -1748,21 +1765,21 @@ Before moving to the next topic:
 
 > "Authentication is..."
 >
-> _[Fill in your explanation - 2-3 sentences]_
+> <span class="fill-in">[Fill in your explanation - 2-3 sentences]</span>
 >
 > "Authorization is..."
 >
-> _[Fill in your explanation - 2-3 sentences]_
+> <span class="fill-in">[Fill in your explanation - 2-3 sentences]</span>
 >
 > "Real-world example: When you go to a concert..."
 >
-> _[Complete the analogy]_
+> <span class="fill-in">[Complete the analogy]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by a non-technical person? _[Yes/No]_
-- Did you use analogies or real-world examples? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
+- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -1784,30 +1801,31 @@ If you scored below 7 or answered "No" to either question, revise your explanati
 
 **1. Authentication mechanism:**
 
-- I would use: _[JWT/Session/API Keys - which and why?]_
-- Token expiration: _[How long? Why?]_
-- Refresh strategy: _[How to handle expiration?]_
+- I would use: <span class="fill-in">[JWT/Session/API Keys - which and why?]</span>
+- Token expiration: <span class="fill-in">[How long? Why?]</span>
+- Refresh strategy: <span class="fill-in">[How to handle expiration?]</span>
 
 **2. Authorization model:**
 ```
 Role Hierarchy:
-- VIEWER: _[List permissions]_
-- AUTHOR: _[List permissions]_
-- EDITOR: _[List permissions]_
-- ADMIN: _[List permissions]_
+
+- VIEWER: <span class="fill-in">[List permissions]</span>
+- AUTHOR: <span class="fill-in">[List permissions]</span>
+- EDITOR: <span class="fill-in">[List permissions]</span>
+- ADMIN: <span class="fill-in">[List permissions]</span>
 ```
 
 **3. Permission checks:**
 
-- Before creating post: _[What to check?]_
-- Before editing post: _[What to check?]_
-- Before deleting post: _[What to check?]_
+- Before creating post: <span class="fill-in">[What to check?]</span>
+- Before editing post: <span class="fill-in">[What to check?]</span>
+- Before deleting post: <span class="fill-in">[What to check?]</span>
 
 **4. Edge cases:**
 
-- What if author tries to edit another author's post? _[Allow/Deny - Why?]_
-- What if admin role is compromised? _[Mitigation strategy?]_
-- What if JWT secret is leaked? _[Response plan?]_
+- What if author tries to edit another author's post? <span class="fill-in">[Allow/Deny - Why?]</span>
+- What if admin role is compromised? <span class="fill-in">[Mitigation strategy?]</span>
+- What if JWT secret is leaked? <span class="fill-in">[Response plan?]</span>
 
 **Verification:**
 
@@ -1829,21 +1847,21 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMTIzIn0.signature
 
 | Part | Name | Contains | Encoded? | Signed? |
 |------|------|----------|----------|---------|
-| Part 1 | _[?]_ | _[?]_ | _[Yes/No]_ | _[Yes/No]_ |
-| Part 2 | _[?]_ | _[?]_ | _[Yes/No]_ | _[Yes/No]_ |
-| Part 3 | _[?]_ | _[?]_ | _[Yes/No]_ | _[Yes/No]_ |
+| Part 1 | <span class="fill-in">[?]</span> | <span class="fill-in">[?]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Yes/No]</span> |
+| Part 2 | <span class="fill-in">[?]</span> | <span class="fill-in">[?]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Yes/No]</span> |
+| Part 3 | <span class="fill-in">[?]</span> | <span class="fill-in">[?]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Yes/No]</span> |
 
 **Deep questions:**
 
-1. **Can client read the payload?** _[Yes/No - Explain why]_
+1. **Can client read the payload?** <span class="fill-in">[Yes/No - Explain why]</span>
 
-2. **Can client modify the payload?** _[What happens if they try?]_
+2. **Can client modify the payload?** <span class="fill-in">[What happens if they try?]</span>
 
-3. **Why use HMAC-SHA256 for signature?** _[What does it prevent?]_
+3. **Why use HMAC-SHA256 for signature?** <span class="fill-in">[What does it prevent?]</span>
 
-4. **What's in the "exp" claim?** _[Format? Purpose?]_
+4. **What's in the "exp" claim?** <span class="fill-in">[Format? Purpose?]</span>
 
-5. **How to handle expired tokens?** _[Reject? Refresh? Explain]_
+5. **How to handle expired tokens?** <span class="fill-in">[Reject? Refresh? Explain]</span>
 
 **Security scenario:**
 
@@ -1863,7 +1881,7 @@ Attacker decodes payload to:
 
 Attacker changes "role" to "admin" and re-encodes. What happens?
 
-Your answer: _[Explain the attack failure]_
+Your answer: <span class="fill-in">[Explain the attack failure]</span>
 
 ---
 
@@ -1922,20 +1940,20 @@ public class RBACChallenge {
 
 | Attack Vector | Can attacker succeed? | Why/Why not? | Mitigation |
 |---------------|---------------------|--------------|------------|
-| Replay captured token | _[Yes/No]_ | _[Explain]_ | _[How to prevent?]_ |
-| Modify token payload | _[Yes/No]_ | _[Explain]_ | _[What stops this?]_ |
-| Bruteforce HMAC secret | _[Yes/No]_ | _[Explain]_ | _[What makes it hard?]_ |
-| Use token after logout | _[Yes/No]_ | _[Explain]_ | _[Stateless problem?]_ |
-| Timing attack on validation | _[Yes/No]_ | _[Explain]_ | _[How to prevent?]_ |
+| Replay captured token | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[How to prevent?]</span> |
+| Modify token payload | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[What stops this?]</span> |
+| Bruteforce HMAC secret | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[What makes it hard?]</span> |
+| Use token after logout | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[Stateless problem?]</span> |
+| Timing attack on validation | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[How to prevent?]</span> |
 
 **For each "Yes" answer:**
 
-- Severity (Low/Medium/High/Critical): ___
-- Your mitigation strategy: _[Explain]_
+- Severity (Low/Medium/High/Critical): <span class="fill-in">___</span>
+- Your mitigation strategy: <span class="fill-in">[Explain]</span>
 
 **Deep question:** If JWT is stateless, how can you implement logout?
 
-Your answer: _[Explain the trade-offs of different approaches]_
+Your answer: <span class="fill-in">[Explain the trade-offs of different approaches]</span>
 
 ---
 
@@ -1949,38 +1967,42 @@ export DB_PASSWORD="secret123"
 export API_KEY="sk_live_xyz"
 ```
 
-**Pros:** _[List 3]_
-1. _[Fill in]_
-2. _[Fill in]_
-3. _[Fill in]_
+**Pros:** <span class="fill-in">[List 3]</span>
 
-**Cons:** _[List 3]_
-1. _[Fill in]_
-2. _[Fill in]_
-3. _[Fill in]_
+1. <span class="fill-in">[Fill in]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
+
+**Cons:** <span class="fill-in">[List 3]</span>
+
+1. <span class="fill-in">[Fill in]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 **Option B:** Secrets Manager (Vault/AWS Secrets Manager)
 ```java
 String password = secretsManager.getSecret("db_password");
 ```
 
-**Pros:** _[List 3]_
-1. _[Fill in]_
-2. _[Fill in]_
-3. _[Fill in]_
+**Pros:** <span class="fill-in">[List 3]</span>
 
-**Cons:** _[List 3]_
-1. _[Fill in]_
-2. _[Fill in]_
-3. _[Fill in]_
+1. <span class="fill-in">[Fill in]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
 
-**Your decision:** For production with 20 microservices, I would choose _[A/B]_ because...
+**Cons:** <span class="fill-in">[List 3]</span>
 
-_[Fill in your reasoning - consider: rotation, audit, compliance, operations, cost]_
+1. <span class="fill-in">[Fill in]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
+
+**Your decision:** For production with 20 microservices, I would choose <span class="fill-in">[A/B]</span> because...
+
+<span class="fill-in">[Fill in your reasoning - consider: rotation, audit, compliance, operations, cost]</span>
 
 **What would make you change your decision?**
 
-- _[Fill in - what constraints would flip your choice?]_
+- <span class="fill-in">[Fill in - what constraints would flip your choice?]</span>
 
 ---
 
@@ -2020,12 +2042,13 @@ public class SecurityReview {
 ```
 
 **Bugs found:** (List them all)
-1. _[Bug + Line number + Why it's dangerous]_
-2. _[Fill in]_
-3. _[Fill in]_
-4. _[Fill in]_
-5. _[Fill in]_
-6. _[Fill in]_
+
+1. <span class="fill-in">[Bug + Line number + Why it's dangerous]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
+4. <span class="fill-in">[Fill in]</span>
+5. <span class="fill-in">[Fill in]</span>
+6. <span class="fill-in">[Fill in]</span>
 
 **Score:** ___/6 bugs found
 
@@ -2060,17 +2083,17 @@ Your explanation:
 
 > "You should NOT use JWT when..."
 >
-> _[Fill in - list 3-4 scenarios and explain why]_
+> <span class="fill-in">[Fill in - list 3-4 scenarios and explain why]</span>
 
 **Examples of when it fails:**
 
-1. _[Scenario where JWT doesn't work well]_
-2. _[Scenario where another approach is better]_
-3. _[Fill in]_
+1. <span class="fill-in">[Scenario where JWT doesn't work well]</span>
+2. <span class="fill-in">[Scenario where another approach is better]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 **Now explain:** "You should NOT use RBAC when..."
 
-> _[Fill in - when is RBAC too simple? When is ABAC better?]_
+> <span class="fill-in">[Fill in - when is RBAC too simple? When is ABAC better?]</span>
 
 ---
 

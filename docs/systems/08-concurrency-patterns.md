@@ -6,54 +6,61 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing concurrency patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is a lock in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **Why do we need locks in concurrent programs?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy for ReentrantLock:**
     - Example: "A ReentrantLock is like a bathroom key that you can use multiple times..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **What is a thread pool in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 5. **Why use a thread pool instead of creating threads directly?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 6. **Real-world analogy for BlockingQueue:**
     - Example: "A BlockingQueue is like a conveyor belt in a factory..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition about concurrency without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Synchronized vs Lock-Free counter with 10 threads, 1M increments each:**
-    - Synchronized time: _[Your guess: faster/slower than lock-free?]_
-    - Lock-free time: _[Your guess]_
-    - Verified after learning: _[Actual results]_
+    - Synchronized time: <span class="fill-in">[Your guess: faster/slower than lock-free?]</span>
+    - Lock-free time: <span class="fill-in">[Your guess]</span>
+    - Verified after learning: <span class="fill-in">[Actual results]</span>
 
 2. **Producer-Consumer with bounded queue (size 10), 1 producer, 1 consumer:**
-    - What happens when queue is full? _[Your guess]_
-    - What happens when queue is empty? _[Your guess]_
-    - Verified: _[Actual behavior]_
+    - What happens when queue is full? <span class="fill-in">[Your guess]</span>
+    - What happens when queue is empty? <span class="fill-in">[Your guess]</span>
+    - Verified: <span class="fill-in">[Actual behavior]</span>
 
 3. **Thread pool sizing calculation:**
     - For 8 CPU cores, 100ms CPU work, 0ms I/O per task:
-     - Optimal pool size: _[Your guess: O(?)]_
+     - Optimal pool size: <span class="fill-in">[Your guess: O(?)]</span>
     - For 8 CPU cores, 50ms CPU work, 200ms I/O per task:
-     - Optimal pool size: _[Your guess: O(?)]_
-    - Verified: _[Actual formula and results]_
+     - Optimal pool size: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual formula and results]</span>
 
 ### Scenario Predictions
 
@@ -65,9 +72,9 @@ Thread t1 = new Thread(() -> { for(int i=0; i<1000; i++) counter++; });
 Thread t2 = new Thread(() -> { for(int i=0; i<1000; i++) counter++; });
 ```
 
-- **Expected counter value:** _[2000, right?]_
-- **Actual typical value:** _[Will it be 2000? Why or why not?]_
-- **This bug is called:** _[Fill in after learning]_
+- **Expected counter value:** <span class="fill-in">[2000, right?]</span>
+- **Actual typical value:** <span class="fill-in">[Will it be 2000? Why or why not?]</span>
+- **This bug is called:** <span class="fill-in">[Fill in after learning]</span>
 
 **Scenario 2:** Bank transfer with incorrect locking
 
@@ -77,27 +84,27 @@ Thread t2 = new Thread(() -> { for(int i=0; i<1000; i++) counter++; });
 // Each thread locks: lock(from), lock(to), then transfers
 ```
 
-- **Can deadlock occur?** _[Yes/No - Why?]_
-- **How to prevent it?** _[Fill in your guess]_
-- **Verified solution:** _[Fill in after implementation]_
+- **Can deadlock occur?** <span class="fill-in">[Yes/No - Why?]</span>
+- **How to prevent it?** <span class="fill-in">[Fill in your guess]</span>
+- **Verified solution:** <span class="fill-in">[Fill in after implementation]</span>
 
 **Scenario 3:** ConcurrentHashMap vs Hashtable (synchronized)
 
-- **Which is faster for 100 threads reading?** _[Your guess]_
-- **Why?** _[Reason]_
-- **What's the key difference?** _[Fill in after learning about lock striping]_
+- **Which is faster for 100 threads reading?** <span class="fill-in">[Your guess]</span>
+- **Why?** <span class="fill-in">[Reason]</span>
+- **What's the key difference?** <span class="fill-in">[Fill in after learning about lock striping]</span>
 
 ### Trade-off Quiz
 
 **Question:** When would synchronized be BETTER than ReentrantLock?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** When would lock-free (Atomic) be WORSE than locks?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning about contention and CAS retries]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning about contention and CAS retries]</span>
 
 **Question:** What's the MAIN risk of unbounded thread pools?
 
@@ -106,7 +113,10 @@ Thread t2 = new Thread(() -> { for(int i=0; i<1000; i++) counter++; });
 - [ ] OutOfMemoryError
 - [ ] Race conditions
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
+
+
+</div>
 
 ---
 
@@ -251,9 +261,13 @@ do {
 
 **After implementing, explain in your own words:**
 
-- _[Why does unsynchronized code lose updates?]_
-- _[When would you choose synchronized over lock-free?]_
-- _[What is the "ABA problem" in lock-free algorithms?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does unsynchronized code lose updates?]</span>
+- <span class="fill-in">[When would you choose synchronized over lock-free?]</span>
+- <span class="fill-in">[What is the "ABA problem" in lock-free algorithms?]</span>
+
+</div>
 
 ---
 
@@ -1851,13 +1865,13 @@ public class BrokenBankAccount {
 
 **Your debugging:**
 
-- **Bug location:** _[Which lines?]_
-- **Bug explanation:** _[What can go wrong?]_
+- **Bug location:** <span class="fill-in">[Which lines?]</span>
+- **Bug explanation:** <span class="fill-in">[What can go wrong?]</span>
 - **Scenario:** Thread A and B both call withdraw(600) when balance=1000
     - Expected: One succeeds, one fails, final balance = 400
-    - Actual: _[What happens?]_
-    - Final balance could be: _[Fill in]_
-- **Bug fix:** _[How to make it thread-safe?]_
+    - Actual: <span class="fill-in">[What happens?]</span>
+    - Final balance could be: <span class="fill-in">[Fill in]</span>
+- **Bug fix:** <span class="fill-in">[How to make it thread-safe?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1943,12 +1957,12 @@ public class DeadlockTransfer {
 
 **Your debugging:**
 
-- **Bug explanation:** _[Why does deadlock occur?]_
+- **Bug explanation:** <span class="fill-in">[Why does deadlock occur?]</span>
 - **Deadlock scenario:**
     - Thread 1: Holds lock on ___, waiting for lock on ___
     - Thread 2: Holds lock on ___, waiting for lock on ___
-    - Result: _[Both threads stuck forever]_
-- **Bug fix:** _[What's the solution?]_
+    - Result: <span class="fill-in">[Both threads stuck forever]</span>
+- **Bug fix:** <span class="fill-in">[What's the solution?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -2028,13 +2042,13 @@ public class BrokenShutdown {
 
 **Your debugging:**
 
-- **Bug location:** _[Which line?]_
-- **Bug explanation:** _[What's the visibility problem?]_
-- **Why does it fail?** _[CPU caching? Compiler optimization?]_
+- **Bug location:** <span class="fill-in">[Which line?]</span>
+- **Bug explanation:** <span class="fill-in">[What's the visibility problem?]</span>
+- **Why does it fail?** <span class="fill-in">[CPU caching? Compiler optimization?]</span>
 - **Symptoms:**
     - Expected: Worker stops immediately when requestStop() is called
-    - Actual: _[What happens?]_
-- **Bug fix:** _[How to ensure visibility?]_
+    - Actual: <span class="fill-in">[What happens?]</span>
+- **Bug fix:** <span class="fill-in">[How to ensure visibility?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -2053,6 +2067,7 @@ public class BrokenShutdown {
 ```java
 private volatile boolean stopRequested = false;
 ```
+
 - `volatile` ensures writes are visible to all threads
 - Prevents CPU caching
 - Adds memory barrier (flush to main memory)
@@ -2147,14 +2162,14 @@ public class StarvationExample {
 
 **Your debugging:**
 
-- **Bug explanation:** _[Why does it deadlock?]_
+- **Bug explanation:** <span class="fill-in">[Why does it deadlock?]</span>
 - **Thread pool state:**
     - Pool size: 2 threads
-    - Thread 1 executing: ___
-    - Thread 2 executing: ___
-    - Queued subtasks: ___
-    - Why can't subtasks run? _[Fill in]_
-- **Bug fix:** _[How to prevent starvation?]_
+    - Thread 1 executing: <span class="fill-in">___</span>
+    - Thread 2 executing: <span class="fill-in">___</span>
+    - Queued subtasks: <span class="fill-in">___</span>
+    - Why can't subtasks run? <span class="fill-in">[Fill in]</span>
+- **Bug fix:** <span class="fill-in">[How to prevent starvation?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -2252,14 +2267,14 @@ public class ABAStack<T> {
 
 **Your debugging:**
 
-- **Bug explanation:** _[What is the ABA problem?]_
+- **Bug explanation:** <span class="fill-in">[What is the ABA problem?]</span>
 - **ABA scenario:**
   1. Thread 1 reads head = A
   2. Thread 2 pops A, pops B, pushes A back
   3. Thread 1's CAS succeeds (A == A) but...
-  4. Problem: _[What's wrong?]_
-- **When does this cause issues?** _[What if nodes are reused?]_
-- **Bug fix:** _[How to prevent ABA?]_
+  4. Problem: <span class="fill-in">[What's wrong?]</span>
+- **When does this cause issues?** <span class="fill-in">[What if nodes are reused?]</span>
+- **Bug fix:** <span class="fill-in">[How to prevent ABA?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -2325,19 +2340,19 @@ After finding and fixing all bugs:
 
 **Common concurrency bugs you discovered:**
 
-1. _[Race conditions: read-modify-write, check-then-act]_
-2. _[Deadlocks: circular lock dependencies]_
-3. _[Visibility: CPU caching, missing volatile/synchronized]_
-4. _[Starvation: blocking on tasks in same pool]_
-5. _[ABA problem: CAS with recycled values]_
+1. <span class="fill-in">[Race conditions: read-modify-write, check-then-act]</span>
+2. <span class="fill-in">[Deadlocks: circular lock dependencies]</span>
+3. <span class="fill-in">[Visibility: CPU caching, missing volatile/synchronized]</span>
+4. <span class="fill-in">[Starvation: blocking on tasks in same pool]</span>
+5. <span class="fill-in">[ABA problem: CAS with recycled values]</span>
 
 **How to prevent these bugs:**
 
-1. _[Use locks for compound operations]_
-2. _[Always acquire locks in consistent order]_
-3. _[Use volatile for flags, Atomic for counters]_
-4. _[Separate thread pools for dependent tasks]_
-5. _[Use stamped references or hazard pointers]_
+1. <span class="fill-in">[Use locks for compound operations]</span>
+2. <span class="fill-in">[Always acquire locks in consistent order]</span>
+3. <span class="fill-in">[Use volatile for flags, Atomic for counters]</span>
+4. <span class="fill-in">[Separate thread pools for dependent tasks]</span>
+5. <span class="fill-in">[Use stamped references or hazard pointers]</span>
 
 ---
 
@@ -2351,59 +2366,59 @@ Answer after implementation:
 
 **Use Locks when:**
 
-- Complex operations: _[Multiple steps that must be atomic]_
-- Simple reasoning: _[Lock-based code is easier to understand]_
-- Fairness needed: _[Locks can guarantee FIFO ordering]_
-- Most use cases: _[Locks are sufficient for 90% of scenarios]_
+- Complex operations: <span class="fill-in">[Multiple steps that must be atomic]</span>
+- Simple reasoning: <span class="fill-in">[Lock-based code is easier to understand]</span>
+- Fairness needed: <span class="fill-in">[Locks can guarantee FIFO ordering]</span>
+- Most use cases: <span class="fill-in">[Locks are sufficient for 90% of scenarios]</span>
 
 **Use Lock-Free when:**
 
-- High contention: _[Many threads competing for same resource]_
-- Low-latency critical: _[Cannot afford lock overhead]_
-- Progress guarantees: _[At least one thread makes progress]_
-- Simple operations: _[Increment, swap, stack push/pop]_
+- High contention: <span class="fill-in">[Many threads competing for same resource]</span>
+- Low-latency critical: <span class="fill-in">[Cannot afford lock overhead]</span>
+- Progress guarantees: <span class="fill-in">[At least one thread makes progress]</span>
+- Simple operations: <span class="fill-in">[Increment, swap, stack push/pop]</span>
 
 ### Question 2: Which thread pool to use?
 
 **FixedThreadPool when:**
 
-- Known workload: _[Consistent number of tasks]_
-- Resource limiting: _[Don't want unbounded thread creation]_
-- CPU-bound tasks: _[Pool size = CPU cores]_
+- Known workload: <span class="fill-in">[Consistent number of tasks]</span>
+- Resource limiting: <span class="fill-in">[Don't want unbounded thread creation]</span>
+- CPU-bound tasks: <span class="fill-in">[Pool size = CPU cores]</span>
 
 **CachedThreadPool when:**
 
-- Unpredictable load: _[Varying number of tasks]_
-- I/O-bound tasks: _[Threads spend time waiting]_
-- Short-lived tasks: _[Quick execution, many tasks]_
+- Unpredictable load: <span class="fill-in">[Varying number of tasks]</span>
+- I/O-bound tasks: <span class="fill-in">[Threads spend time waiting]</span>
+- Short-lived tasks: <span class="fill-in">[Quick execution, many tasks]</span>
 
 **ScheduledThreadPool when:**
 
-- Delayed execution: _[Run after delay]_
-- Periodic tasks: _[Cron-like scheduling]_
-- Background jobs: _[Cleanup, monitoring, etc.]_
+- Delayed execution: <span class="fill-in">[Run after delay]</span>
+- Periodic tasks: <span class="fill-in">[Cron-like scheduling]</span>
+- Background jobs: <span class="fill-in">[Cleanup, monitoring, etc.]</span>
 
 **ForkJoinPool when:**
 
-- Recursive tasks: _[Divide-and-conquer algorithms]_
-- Parallel algorithms: _[Parallel sort, sum, map-reduce]_
-- Work stealing: _[Balance load across threads]_
+- Recursive tasks: <span class="fill-in">[Divide-and-conquer algorithms]</span>
+- Parallel algorithms: <span class="fill-in">[Parallel sort, sum, map-reduce]</span>
+- Work stealing: <span class="fill-in">[Balance load across threads]</span>
 
 ### Question 3: Synchronized vs ReentrantLock?
 
 **Synchronized when:**
 
-- Simple use case: _[Just need mutual exclusion]_
-- Less code: _[synchronized(this) { ... }]_
-- No advanced features needed: _[Try-lock, interruptible, timeouts not needed]_
+- Simple use case: <span class="fill-in">[Just need mutual exclusion]</span>
+- Less code: <span class="fill-in">[synchronized(this) { ... }]</span>
+- No advanced features needed: <span class="fill-in">[Try-lock, interruptible, timeouts not needed]</span>
 
 **ReentrantLock when:**
 
-- Try-lock needed: _[Attempt lock without blocking]_
-- Timeouts: _[Give up after waiting]_
-- Interruptible: _[Can interrupt waiting thread]_
-- Fairness: _[FIFO lock acquisition]_
-- Condition variables: _[Complex waiting conditions]_
+- Try-lock needed: <span class="fill-in">[Attempt lock without blocking]</span>
+- Timeouts: <span class="fill-in">[Give up after waiting]</span>
+- Interruptible: <span class="fill-in">[Can interrupt waiting thread]</span>
+- Fairness: <span class="fill-in">[FIFO lock acquisition]</span>
+- Condition variables: <span class="fill-in">[Complex waiting conditions]</span>
 
 ### Your Decision Tree
 
@@ -2438,33 +2453,33 @@ Concurrency Pattern Selection
 
 **Don't do this:**
 
-1. **Creating threads manually** - _[Use thread pools instead]_
-2. **Synchronized on String literals** - _[Strings are interned, global lock]_
-3. **Nested locks without ordering** - _[Causes deadlocks]_
-4. **Catching InterruptedException and ignoring** - _[Prevents proper shutdown]_
-5. **Using Thread.stop()** - _[Unsafe, deprecated, corrupts state]_
-6. **Unbounded thread creation** - _[OOM, CPU thrashing]_
-7. **Busy waiting (while loops)** - _[Wastes CPU, use wait/notify or BlockingQueue]_
+1. **Creating threads manually** - <span class="fill-in">[Use thread pools instead]</span>
+2. **Synchronized on String literals** - <span class="fill-in">[Strings are interned, global lock]</span>
+3. **Nested locks without ordering** - <span class="fill-in">[Causes deadlocks]</span>
+4. **Catching InterruptedException and ignoring** - <span class="fill-in">[Prevents proper shutdown]</span>
+5. **Using Thread.stop()** - <span class="fill-in">[Unsafe, deprecated, corrupts state]</span>
+6. **Unbounded thread creation** - <span class="fill-in">[OOM, CPU thrashing]</span>
+7. **Busy waiting (while loops)** - <span class="fill-in">[Wastes CPU, use wait/notify or BlockingQueue]</span>
 
 ### The Rule of Three: Alternatives
 
 **Option 1: Locks (ReentrantLock)**
 
-- Pros: _[Simple mental model, guaranteed mutual exclusion, fair ordering]_
-- Cons: _[Performance overhead, can deadlock, blocking]_
-- Use when: _[Complex critical sections, most use cases]_
+- Pros: <span class="fill-in">[Simple mental model, guaranteed mutual exclusion, fair ordering]</span>
+- Cons: <span class="fill-in">[Performance overhead, can deadlock, blocking]</span>
+- Use when: <span class="fill-in">[Complex critical sections, most use cases]</span>
 
 **Option 2: Lock-Free (Atomic/CAS)**
 
-- Pros: _[No blocking, high performance under contention, progress guarantee]_
-- Cons: _[Complex to implement, limited to simple operations, ABA problem]_
-- Use when: _[High contention, simple operations like counters]_
+- Pros: <span class="fill-in">[No blocking, high performance under contention, progress guarantee]</span>
+- Cons: <span class="fill-in">[Complex to implement, limited to simple operations, ABA problem]</span>
+- Use when: <span class="fill-in">[High contention, simple operations like counters]</span>
 
 **Option 3: Immutable + Message Passing**
 
-- Pros: _[No synchronization needed, easy to reason about, functional style]_
-- Cons: _[Memory overhead (copying), not always applicable]_
-- Use when: _[Can afford immutability, actor model, functional programming]_
+- Pros: <span class="fill-in">[No synchronization needed, easy to reason about, functional style]</span>
+- Cons: <span class="fill-in">[Memory overhead (copying), not always applicable]</span>
+- Use when: <span class="fill-in">[Can afford immutability, actor model, functional programming]</span>
 
 ---
 
@@ -2483,17 +2498,19 @@ Concurrency Pattern Selection
 **Your design:**
 
 Thread pool configuration:
-- Pool type: _[Fixed, Cached, or Custom?]_
-- Core threads: _[How many?]_
-- Max threads: _[How many?]_
-- Queue size: _[Bounded or unbounded?]_
-- Rejection policy: _[What happens when queue full?]_
+
+- Pool type: <span class="fill-in">[Fixed, Cached, or Custom?]</span>
+- Core threads: <span class="fill-in">[How many?]</span>
+- Max threads: <span class="fill-in">[How many?]</span>
+- Queue size: <span class="fill-in">[Bounded or unbounded?]</span>
+- Rejection policy: <span class="fill-in">[What happens when queue full?]</span>
 
 Reasoning:
-1. _[Why this pool type?]_
-2. _[How did you calculate thread counts?]_
-3. _[How does it handle bursts?]_
-4. _[What about database connection pool coordination?]_
+
+1. <span class="fill-in">[Why this pool type?]</span>
+2. <span class="fill-in">[How did you calculate thread counts?]</span>
+3. <span class="fill-in">[How does it handle bursts?]</span>
+4. <span class="fill-in">[What about database connection pool coordination?]</span>
 
 ### Scenario 2: Real-Time Analytics Pipeline
 
@@ -2508,14 +2525,16 @@ Reasoning:
 **Your design:**
 
 Pipeline architecture:
-- Number of stages: _[How many?]_
-- Queue between stages: _[Bounded or unbounded?]_
-- Threads per stage: _[How many?]_
-- Backpressure handling: _[What to do when backed up?]_
+
+- Number of stages: <span class="fill-in">[How many?]</span>
+- Queue between stages: <span class="fill-in">[Bounded or unbounded?]</span>
+- Threads per stage: <span class="fill-in">[How many?]</span>
+- Backpressure handling: <span class="fill-in">[What to do when backed up?]</span>
 
 Ordering guarantee:
-- How to maintain order per user_id: _[Your approach]_
-- Trade-off: _[Ordering vs throughput]_
+
+- How to maintain order per user_id: <span class="fill-in">[Your approach]</span>
+- Trade-off: <span class="fill-in">[Ordering vs throughput]</span>
 
 ### Scenario 3: Distributed Cache
 
@@ -2530,19 +2549,22 @@ Ordering guarantee:
 **Your design:**
 
 Data structure:
-- Base structure: _[ConcurrentHashMap? Why?]_
-- Synchronization: _[Where do you need locks?]_
-- Statistics tracking: _[Atomic variables?]_
+
+- Base structure: <span class="fill-in">[ConcurrentHashMap? Why?]</span>
+- Synchronization: <span class="fill-in">[Where do you need locks?]</span>
+- Statistics tracking: <span class="fill-in">[Atomic variables?]</span>
 
 LRU implementation:
-- How to track access order: _[Your approach]_
-- Thread-safe eviction: _[How to handle concurrent evictions?]_
-- Read-write coordination: _[ReadWriteLock? Why or why not?]_
+
+- How to track access order: <span class="fill-in">[Your approach]</span>
+- Thread-safe eviction: <span class="fill-in">[How to handle concurrent evictions?]</span>
+- Read-write coordination: <span class="fill-in">[ReadWriteLock? Why or why not?]</span>
 
 Trade-offs:
-1. _[Accuracy vs performance]_
-2. _[Lock-free vs locked]_
-3. _[Memory overhead]_
+
+1. <span class="fill-in">[Accuracy vs performance]</span>
+2. <span class="fill-in">[Lock-free vs locked]</span>
+3. <span class="fill-in">[Memory overhead]</span>
 
 ---
 
@@ -2604,13 +2626,13 @@ Before moving to the next topic:
 
 > "Thread safety means..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by a non-technical person? _[Yes/No]_
-- Did you use analogies or real-world examples? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
+- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -2631,16 +2653,16 @@ Thread 1: transfer(acc1, acc2, $500)
 Thread 2: transfer(acc2, acc1, $300)
 
 T1: [Your drawing - show what each thread does]
-    Thread 1: _______________
-    Thread 2: _______________
+    Thread 1: <span class="fill-in">_______________</span>
+    Thread 2: <span class="fill-in">_______________</span>
 
 T2: [Continue - when does deadlock occur?]
-    Thread 1: _______________
-    Thread 2: _______________
+    Thread 1: <span class="fill-in">_______________</span>
+    Thread 2: <span class="fill-in">_______________</span>
 
 T3: [Final state]
-    Thread 1: _______________
-    Thread 2: _______________
+    Thread 1: <span class="fill-in">_______________</span>
+    Thread 2: <span class="fill-in">_______________</span>
 ```
 
 **Verification:**
@@ -2658,12 +2680,12 @@ T3: [Final state]
 
 | Scenario | Pattern (Lock/Lock-Free/Queue/Pool) | Synchronization Needed? |
 |----------|-----------------------------------|------------------------|
-| Increment shared counter from 100 threads | _[Fill in]_ | _[Yes/No - Why?]_ |
-| Background job processing pipeline | _[Fill in]_ | _[Yes/No - Why?]_ |
-| Cache with 90% reads, 10% writes | _[Fill in]_ | _[Yes/No - Why?]_ |
-| Web server handling HTTP requests | _[Fill in]_ | _[Yes/No - Why?]_ |
-| Bank account transfers | _[Fill in]_ | _[Yes/No - Why?]_ |
-| Shutdown flag for worker thread | _[Fill in]_ | _[Yes/No - Why?]_ |
+| Increment shared counter from 100 threads | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
+| Background job processing pipeline | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
+| Cache with 90% reads, 10% writes | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
+| Web server handling HTTP requests | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
+| Bank account transfers | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
+| Shutdown flag for worker thread | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
 
 **Score:** ___/6 correct
 
@@ -2677,13 +2699,13 @@ If you scored below 5/6, review the patterns and try again.
 
 | Operation | Unsynchronized | Synchronized | Lock-Free (Atomic) | Why Different? |
 |-----------|----------------|--------------|-------------------|----------------|
-| Counter increment | O(?) | O(?) | O(?) | _[Explain]_ |
-| Cache get (no contention) | O(?) | O(?) | O(?) | _[Explain]_ |
-| Cache get (high contention) | O(?) | O(?) | O(?) | _[Explain]_ |
+| Counter increment | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Cache get (no contention) | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Cache get (high contention) | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why does synchronized counter perform worse than lock-free under high contention?
 
-Your answer: _[Fill in - explain blocking vs retry]_
+Your answer: <span class="fill-in">[Fill in - explain blocking vs retry]</span>
 
 ---
 
@@ -2707,13 +2729,13 @@ public class BankAccount {
 
 **Your analysis:**
 
-- **Bug type:** _[Race condition/Deadlock/Visibility/Starvation?]_
-- **Root cause:** _[Explain in one sentence]_
+- **Bug type:** <span class="fill-in">[Race condition/Deadlock/Visibility/Starvation?]</span>
+- **Root cause:** <span class="fill-in">[Explain in one sentence]</span>
 - **Timeline of failure:**
-  1. Thread A: ___
-  2. Thread B: ___
-  3. Result: ___
-- **Fix:** _[Write the corrected code]_
+  1. Thread A: <span class="fill-in">___</span>
+  2. Thread B: <span class="fill-in">___</span>
+  3. Result: <span class="fill-in">___</span>
+- **Fix:** <span class="fill-in">[Write the corrected code]</span>
 
 **Verification:**
 
@@ -2753,17 +2775,17 @@ AtomicInteger globalHits = new AtomicInteger(0);
 
 | Option | Throughput | Accuracy | Complexity | Your Choice? |
 |--------|-----------|----------|------------|--------------|
-| A: Synchronized | _[High/Med/Low]_ | _[Exact/Approx]_ | _[Simple/Complex]_ | _[Yes/No]_ |
-| B: AtomicInteger | _[High/Med/Low]_ | _[Exact/Approx]_ | _[Simple/Complex]_ | _[Yes/No]_ |
-| C: Approximate | _[High/Med/Low]_ | _[Exact/Approx]_ | _[Simple/Complex]_ | _[Yes/No]_ |
+| A: Synchronized | <span class="fill-in">[High/Med/Low]</span> | <span class="fill-in">[Exact/Approx]</span> | <span class="fill-in">[Simple/Complex]</span> | <span class="fill-in">[Yes/No]</span> |
+| B: AtomicInteger | <span class="fill-in">[High/Med/Low]</span> | <span class="fill-in">[Exact/Approx]</span> | <span class="fill-in">[Simple/Complex]</span> | <span class="fill-in">[Yes/No]</span> |
+| C: Approximate | <span class="fill-in">[High/Med/Low]</span> | <span class="fill-in">[Exact/Approx]</span> | <span class="fill-in">[Simple/Complex]</span> | <span class="fill-in">[Yes/No]</span> |
 
-**Your decision:** I would choose _[A/B/C]_ because...
+**Your decision:** I would choose <span class="fill-in">[A/B/C]</span> because...
 
-_[Fill in your reasoning - consider throughput, accuracy, and complexity trade-offs]_
+<span class="fill-in">[Fill in your reasoning - consider throughput, accuracy, and complexity trade-offs]</span>
 
 **What would make you change your decision?**
 
-- _[Fill in - what requirements would flip your choice?]_
+- <span class="fill-in">[Fill in - what requirements would flip your choice?]</span>
 
 ---
 
@@ -2780,8 +2802,8 @@ _[Fill in your reasoning - consider throughput, accuracy, and complexity trade-o
 
 **Your calculations:**
 
-1. **Utilization:** CPU time / total time = ___ %
-2. **Formula:** Threads = Cores × (1 + Wait time / CPU time) = ___
+1. **Utilization:** CPU time / total time = <span class="fill-in">___</span> %
+2. **Formula:** Threads = Cores × (1 + Wait time / CPU time) = <span class="fill-in">___</span>
 3. **Queue size:** Bounded or unbounded? ___ (why?)
 4. **Rejection policy:** What happens when queue is full? ___
 
@@ -2885,13 +2907,13 @@ Your explanation:
 
 > "You should NOT use locks when..."
 >
-> _[Fill in - list 3-4 scenarios and explain why]_
+> <span class="fill-in">[Fill in - list 3-4 scenarios and explain why]</span>
 
 **Examples of when locks are wrong choice:**
 
-1. _[Scenario where lock-free is better]_
-2. _[Scenario where immutability is better]_
-3. _[Scenario where message passing is better]_
+1. <span class="fill-in">[Scenario where lock-free is better]</span>
+2. <span class="fill-in">[Scenario where immutability is better]</span>
+3. <span class="fill-in">[Scenario where message passing is better]</span>
 
 ---
 

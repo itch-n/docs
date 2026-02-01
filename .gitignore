@@ -116,4 +116,17 @@ fabric.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij
 
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Python (MkDocs)
+.venv/
+__pycache__/
+*.py[cod]
+site/
+
 .claude

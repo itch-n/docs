@@ -6,83 +6,90 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing distributed transaction patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is a distributed transaction in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **Why are distributed transactions hard?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy for 2PC:**
     - Example: "Two-phase commit is like a wedding ceremony where..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **What is the Saga pattern in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 5. **How is orchestration different from choreography?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 6. **Real-world analogy for Saga choreography:**
     - Example: "Saga choreography is like a relay race where..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 7. **What is compensation in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 8. **When would you use event sourcing?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Two-phase commit with 3 participants:**
-    - Network round trips: _[Your guess: ?]_
-    - Verified after learning: _[Actual: ?]_
+    - Network round trips: <span class="fill-in">[Your guess: ?]</span>
+    - Verified after learning: <span class="fill-in">[Actual: ?]</span>
 
 2. **Saga with 5 steps:**
-    - If 3rd step fails, how many compensations? _[Your guess: ?]_
-    - Verified: _[Actual: ?]_
+    - If 3rd step fails, how many compensations? <span class="fill-in">[Your guess: ?]</span>
+    - Verified: <span class="fill-in">[Actual: ?]</span>
 
 3. **Consistency guarantees:**
-    - 2PC provides: _[Strong/Eventual consistency?]_
-    - Saga provides: _[Strong/Eventual consistency?]_
-    - Verified: _[Actual answers]_
+    - 2PC provides: <span class="fill-in">[Strong/Eventual consistency?]</span>
+    - Saga provides: <span class="fill-in">[Strong/Eventual consistency?]</span>
+    - Verified: <span class="fill-in">[Actual answers]</span>
 
 ### Scenario Predictions
 
 **Scenario 1:** Transfer $100 from Account A to Account B across different databases
 
-- **Can you use 2PC?** _[Yes/No - Why?]_
-- **What if one database is down during commit phase?** _[What happens?]_
-- **Is the transaction atomic?** _[Yes/No - Explain]_
+- **Can you use 2PC?** <span class="fill-in">[Yes/No - Why?]</span>
+- **What if one database is down during commit phase?** <span class="fill-in">[What happens?]</span>
+- **Is the transaction atomic?** <span class="fill-in">[Yes/No - Explain]</span>
 
 **Scenario 2:** Order processing: Reserve inventory → Charge payment → Ship order
 
-- **Can you use 2PC?** _[Yes/No - Why?]_
-- **What if payment fails after inventory is reserved?** _[How to handle?]_
-- **Should you use orchestration or choreography?** _[Fill in reasoning]_
+- **Can you use 2PC?** <span class="fill-in">[Yes/No - Why?]</span>
+- **What if payment fails after inventory is reserved?** <span class="fill-in">[How to handle?]</span>
+- **Should you use orchestration or choreography?** <span class="fill-in">[Fill in reasoning]</span>
 
 **Scenario 3:** Payment service charged customer but shipping service is down
 
-- **With 2PC, can this happen?** _[Yes/No - Why?]_
-- **With Saga, can this happen?** _[Yes/No - Why?]_
-- **How would you recover?** _[Fill in your approach]_
+- **With 2PC, can this happen?** <span class="fill-in">[Yes/No - Why?]</span>
+- **With Saga, can this happen?** <span class="fill-in">[Yes/No - Why?]</span>
+- **How would you recover?** <span class="fill-in">[Fill in your approach]</span>
 
 ### Trade-off Quiz
 
 **Question:** When would 2PC be WORSE than Saga for distributed transactions?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** What's the MAIN challenge with compensation in Saga?
 
@@ -91,12 +98,15 @@
 - [ ] Order matters (reverse order)
 - [ ] All of the above
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 **Question:** Why does 2PC block while Saga doesn't?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
+
+
+</div>
 
 ---
 
@@ -282,8 +292,8 @@ public class SagaOrderProcessing {
 
 - For 5 microservices with 100ms latency each, 2PC takes approximately _____ ms
 - Saga with same services takes approximately _____ ms
-- If one service has 10% failure rate, 2PC success rate: ____%
-- Saga can still complete (with compensation) in: ___% of cases
+- If one service has 10% failure rate, 2PC success rate: <span class="fill-in">___</span>_%
+- Saga can still complete (with compensation) in: <span class="fill-in">___</span>% of cases
 
 #### Why Does Saga Work?
 
@@ -304,9 +314,13 @@ Saga: Reserve → Charge → Ship (if any fails, undo previous)
 
 **After implementing, explain in your own words:**
 
-- _[Why is compensation in reverse order critical?]_
-- _[What makes a good compensation operation?]_
-- _[When would you need orchestration vs choreography?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why is compensation in reverse order critical?]</span>
+- <span class="fill-in">[What makes a good compensation operation?]</span>
+- <span class="fill-in">[When would you need orchestration vs choreography?]</span>
+
+</div>
 
 ---
 
@@ -1304,10 +1318,10 @@ public class BrokenSagaCompensation {
 
 **Your debugging:**
 
-- **Bug location:** _[Which line?]_
-- **Bug explanation:** _[Why is the compensation order wrong?]_
-- **Real-world impact:** _[What could happen?]_
-- **Fix:** _[How to correct it?]_
+- **Bug location:** <span class="fill-in">[Which line?]</span>
+- **Bug explanation:** <span class="fill-in">[Why is the compensation order wrong?]</span>
+- **Real-world impact:** <span class="fill-in">[What could happen?]</span>
+- **Fix:** <span class="fill-in">[How to correct it?]</span>
 
 **Scenario to trace:**
 
@@ -1372,10 +1386,10 @@ public class NonIdempotentCompensation extends CompensatingAction {
 
 **Your debugging:**
 
-- **Bug:** _[What happens if compensate() is called twice?]_
-- **Scenario:** _[Network timeout causes retry - what's the result?]_
-- **Impact:** _[What's wrong with the inventory now?]_
-- **Fix:** _[How to make it idempotent?]_
+- **Bug:** <span class="fill-in">[What happens if compensate() is called twice?]</span>
+- **Scenario:** <span class="fill-in">[Network timeout causes retry - what's the result?]</span>
+- **Impact:** <span class="fill-in">[What's wrong with the inventory now?]</span>
+- **Fix:** <span class="fill-in">[How to make it idempotent?]</span>
 
 **Test case:**
 
@@ -1384,7 +1398,7 @@ public class NonIdempotentCompensation extends CompensatingAction {
 - Compensation called first time: adds back 10 (inventory now 100) ✓
 - Network timeout, retry...
 - Compensation called second time: adds back 10 again!
-- Current inventory: _[Fill in - is this correct?]_
+- Current inventory: <span class="fill-in">[Fill in - is this correct?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1459,10 +1473,10 @@ public class OrphanedSaga {
 
 **Your debugging:**
 
-- **Problem:** _[What's the system state after crash?]_
-- **Detection:** _[How do you detect this orphaned saga?]_
-- **Recovery strategy:** _[Should you complete it or compensate?]_
-- **Prevention:** _[How to prevent this?]_
+- **Problem:** <span class="fill-in">[What's the system state after crash?]</span>
+- **Detection:** <span class="fill-in">[How do you detect this orphaned saga?]</span>
+- **Recovery strategy:** <span class="fill-in">[Should you complete it or compensate?]</span>
+- **Prevention:** <span class="fill-in">[How to prevent this?]</span>
 
 **Scenario:**
 
@@ -1471,9 +1485,9 @@ public class OrphanedSaga {
 - Step 2 completed at 10:00:02
 - Coordinator crashed at 10:00:02.5
 - Current time: 10:05:00 (5 minutes later)
-- Saga status: _[What does the log show?]_
-- Customer charged: _[Yes/No?]_
-- Order shipped: _[Yes/No?]_
+- Saga status: <span class="fill-in">[What does the log show?]</span>
+- Customer charged: <span class="fill-in">[Yes/No?]</span>
+- Order shipped: <span class="fill-in">[Yes/No?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1559,7 +1573,7 @@ public class CompensationFailure {
 
             } catch (Exception compensationError) {
                 // NOW WHAT? Customer charged, no order, refund failed!
-                // Your code here: _[How do you handle this?]_
+                // Your code here: <span class="fill-in">[How do you handle this?]</span>
             }
         }
     }
@@ -1568,10 +1582,10 @@ public class CompensationFailure {
 
 **Your debugging:**
 
-- **Problem:** _[What's the current state?]_
-- **Can you retry?** _[What if retry also fails?]_
-- **Manual intervention?** _[How to flag for human review?]_
-- **Customer impact:** _[What does the customer see?]_
+- **Problem:** <span class="fill-in">[What's the current state?]</span>
+- **Can you retry?** <span class="fill-in">[What if retry also fails?]</span>
+- **Manual intervention?** <span class="fill-in">[How to flag for human review?]</span>
+- **Customer impact:** <span class="fill-in">[What does the customer see?]</span>
 
 **Failure tree:**
 ```
@@ -1582,6 +1596,7 @@ Transaction: Charge $100 → Reserve inventory
    └─ Refund FAILS ✗ (payment gateway down)
 
 Current state:
+
 - Customer charged: $100 ✓
 - Inventory reserved: No ✗
 - Refund processed: No ✗
@@ -1650,6 +1665,7 @@ catch (Exception compensationError) {
 ```
 
 **Key principle:** Compensation failures require:
+
 1. Persistent retry mechanism
 2. Monitoring and alerting
 3. Manual intervention workflow
@@ -1697,10 +1713,10 @@ public class TwoPhaseCommitPartialFailure {
 
 **Your debugging:**
 
-- **Problem:** _[What state are the waiting participants in?]_
-- **Blocking:** _[Are they holding locks?]_
-- **Recovery:** _[How do they know to commit or abort?]_
-- **Data consistency:** _[Is data consistent across participants?]_
+- **Problem:** <span class="fill-in">[What state are the waiting participants in?]</span>
+- **Blocking:** <span class="fill-in">[Are they holding locks?]</span>
+- **Recovery:** <span class="fill-in">[How do they know to commit or abort?]</span>
+- **Data consistency:** <span class="fill-in">[Is data consistent across participants?]</span>
 
 **Participant states:**
 ```
@@ -1798,15 +1814,15 @@ After finding and fixing all bugs:
 
 **Common distributed transaction bugs you discovered:**
 
-1. _[List the patterns you noticed]_
-2. _[Fill in]_
-3. _[Fill in]_
+1. <span class="fill-in">[List the patterns you noticed]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 **Real-world war stories (fill in after implementation):**
 
-- Most surprising bug: _[Fill in]_
-- Hardest to debug: _[Fill in]_
-- Most dangerous if missed: _[Fill in]_
+- Most surprising bug: <span class="fill-in">[Fill in]</span>
+- Hardest to debug: <span class="fill-in">[Fill in]</span>
+- Most dangerous if missed: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1818,45 +1834,45 @@ After finding and fixing all bugs:
 
 **When to use Two-Phase Commit?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 **When to use Saga (Orchestration)?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 **When to use Saga (Choreography)?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 **When to use Event Sourcing?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 ### 2. Trade-offs
 
 **Two-Phase Commit:**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 **Saga (Orchestration):**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 **Saga (Choreography):**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 **Event Sourcing:**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 ### 3. Your Decision Tree
 
@@ -1875,18 +1891,18 @@ What consistency do you need?
 
 **Two-Phase Commit:**
 
-1. _[When does 2PC fail? Fill in]_
-2. _[Another failure case]_
+1. <span class="fill-in">[When does 2PC fail? Fill in]</span>
+2. <span class="fill-in">[Another failure case]</span>
 
 **Saga Pattern:**
 
-1. _[When does Saga fail? Fill in]_
-2. _[Another failure case]_
+1. <span class="fill-in">[When does Saga fail? Fill in]</span>
+2. <span class="fill-in">[Another failure case]</span>
 
 **Event Sourcing:**
 
-1. _[When does event sourcing fail? Fill in]_
-2. _[Another failure case]_
+1. <span class="fill-in">[When does event sourcing fail? Fill in]</span>
+2. <span class="fill-in">[Another failure case]</span>
 
 ### 5. Rule of Three - Alternatives
 
@@ -1894,9 +1910,9 @@ For each scenario, identify alternatives and compare:
 
 **Scenario: E-commerce order processing**
 
-1. Option A: _[Fill in]_
-2. Option B: _[Fill in]_
-3. Option C: _[Fill in]_
+1. Option A: <span class="fill-in">[Fill in]</span>
+2. Option B: <span class="fill-in">[Fill in]</span>
+3. Option C: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1914,10 +1930,10 @@ For each scenario, identify alternatives and compare:
 
 **Your design:**
 
-- Which pattern would you choose? _[Fill in]_
-- Why? _[Fill in]_
-- How to handle failures? _[Fill in]_
-- Consistency guarantees? _[Fill in]_
+- Which pattern would you choose? <span class="fill-in">[Fill in]</span>
+- Why? <span class="fill-in">[Fill in]</span>
+- How to handle failures? <span class="fill-in">[Fill in]</span>
+- Consistency guarantees? <span class="fill-in">[Fill in]</span>
 
 ### Scenario 2: E-commerce order
 
@@ -1931,10 +1947,10 @@ For each scenario, identify alternatives and compare:
 
 **Your design:**
 
-- Which pattern would you choose? _[Fill in]_
-- Why? _[Fill in]_
-- Compensation strategy? _[Fill in]_
-- How to monitor progress? _[Fill in]_
+- Which pattern would you choose? <span class="fill-in">[Fill in]</span>
+- Why? <span class="fill-in">[Fill in]</span>
+- Compensation strategy? <span class="fill-in">[Fill in]</span>
+- How to monitor progress? <span class="fill-in">[Fill in]</span>
 
 ### Scenario 3: Account audit system
 
@@ -1948,10 +1964,10 @@ For each scenario, identify alternatives and compare:
 
 **Your design:**
 
-- Which pattern would you choose? _[Fill in]_
-- Why? _[Fill in]_
-- Storage strategy? _[Fill in]_
-- Query optimization? _[Fill in]_
+- Which pattern would you choose? <span class="fill-in">[Fill in]</span>
+- Why? <span class="fill-in">[Fill in]</span>
+- Storage strategy? <span class="fill-in">[Fill in]</span>
+- Query optimization? <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1981,19 +1997,19 @@ For each scenario, identify alternatives and compare:
 
 > "Distributed transactions are..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **Now explain the difference between 2PC and Saga:**
 
 > "2PC is like... while Saga is like..."
 >
-> _[Fill in with analogy]_
+> <span class="fill-in">[Fill in with analogy]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by someone who doesn't know distributed systems? _[Yes/No]_
-- Did you use analogies or real-world examples? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by someone who doesn't know distributed systems? <span class="fill-in">[Yes/No]</span>
+- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -2039,12 +2055,12 @@ Compensation flow:
 
 | Scenario | Best Pattern (2PC/Saga-Orch/Saga-Chor/Event Sourcing) | Why? |
 |----------|-------------------------------------------------------|------|
-| Bank transfer between two accounts | _[Fill in]_ | _[Explain]_ |
-| E-commerce order (inventory + payment + shipping) | _[Fill in]_ | _[Explain]_ |
-| User signup flow (create account + send email + provision resources) | _[Fill in]_ | _[Explain]_ |
-| Financial audit system | _[Fill in]_ | _[Explain]_ |
-| Flight booking (multiple airlines) | _[Fill in]_ | _[Explain]_ |
-| Microservices with loose coupling | _[Fill in]_ | _[Explain]_ |
+| Bank transfer between two accounts | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| E-commerce order (inventory + payment + shipping) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| User signup flow (create account + send email + provision resources) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Financial audit system | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Flight booking (multiple airlines) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Microservices with loose coupling | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -2058,13 +2074,13 @@ If you scored below 5/6, review the Decision Framework and try again.
 
 | Pattern | What happens if coordinator crashes? | What happens if participant fails? | Can you rollback? |
 |---------|--------------------------------------|-------------------------------------|-------------------|
-| 2PC | _[Fill in]_ | _[Fill in]_ | _[Yes/No - How?]_ |
-| Saga Orchestration | _[Fill in]_ | _[Fill in]_ | _[Yes/No - How?]_ |
-| Saga Choreography | _[Fill in]_ | _[Fill in]_ | _[Yes/No - How?]_ |
+| 2PC | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - How?]</span> |
+| Saga Orchestration | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - How?]</span> |
+| Saga Choreography | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - How?]</span> |
 
 **Deep question:** What happens when compensation itself fails?
 
-Your answer: _[Fill in - this has no perfect solution, explain the strategies]_
+Your answer: <span class="fill-in">[Fill in - this has no perfect solution, explain the strategies]</span>
 
 ---
 
@@ -2074,32 +2090,32 @@ Your answer: _[Fill in - this has no perfect solution, explain the strategies]_
 
 **Option A: Two-Phase Commit**
 
-- Consistency guarantee: _[Fill in]_
-- Availability impact: _[Fill in]_
-- Latency: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
+- Consistency guarantee: <span class="fill-in">[Fill in]</span>
+- Availability impact: <span class="fill-in">[Fill in]</span>
+- Latency: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
 **Option B: Saga (Orchestration)**
 
-- Consistency guarantee: _[Fill in]_
-- Availability impact: _[Fill in]_
-- Latency: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
+- Consistency guarantee: <span class="fill-in">[Fill in]</span>
+- Availability impact: <span class="fill-in">[Fill in]</span>
+- Latency: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
-**Your decision:** I would choose _[A/B]_ because...
+**Your decision:** I would choose <span class="fill-in">[A/B]</span> because...
 
-_[Fill in your reasoning - consider CAP theorem, business requirements, failure scenarios]_
+<span class="fill-in">[Fill in your reasoning - consider CAP theorem, business requirements, failure scenarios]</span>
 
 **What would make you change your decision?**
 
-- _[Fill in - what constraints would flip your choice?]_
+- <span class="fill-in">[Fill in - what constraints would flip your choice?]</span>
 
 **CAP theorem application:**
 
-- 2PC favors: _[Consistency/Availability/Partition tolerance - pick 2]_
-- Saga favors: _[Consistency/Availability/Partition tolerance - pick 2]_
+- 2PC favors: <span class="fill-in">[Consistency/Availability/Partition tolerance - pick 2]</span>
+- Saga favors: <span class="fill-in">[Consistency/Availability/Partition tolerance - pick 2]</span>
 
 ---
 
@@ -2211,25 +2227,26 @@ public void refundPayment(String transactionId, String customerId, double amount
 
 > "You should NOT use 2PC when..."
 >
-> _[Fill in - list 2-3 scenarios and explain why]_
+> <span class="fill-in">[Fill in - list 2-3 scenarios and explain why]</span>
 
 **When NOT to use Saga:**
 
 > "You should NOT use Saga when..."
 >
-> _[Fill in - list 2-3 scenarios and explain why]_
+> <span class="fill-in">[Fill in - list 2-3 scenarios and explain why]</span>
 
 **Examples of anti-patterns:**
 
-1. _[Scenario where wrong pattern causes disaster]_
-2. _[Scenario where simpler approach is better]_
-3. _[Fill in]_
+1. <span class="fill-in">[Scenario where wrong pattern causes disaster]</span>
+2. <span class="fill-in">[Scenario where simpler approach is better]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 ---
 
 ### Gate 9: Real-World Scenario
 
 **Problem:** Your company processes 10,000 orders/hour. Orders involve:
+
 1. Inventory reservation (3 different warehouses)
 2. Payment processing (external payment gateway)
 3. Shipping label creation (external carrier API)
@@ -2244,33 +2261,33 @@ public void refundPayment(String transactionId, String customerId, double amount
 
 **Your solution design:**
 
-**Pattern chosen:** _[Fill in - which distributed transaction pattern?]_
+**Pattern chosen:** <span class="fill-in">[Fill in - which distributed transaction pattern?]</span>
 
 **Why this pattern:**
 
-1. _[Reason 1]_
-2. _[Reason 2]_
-3. _[Reason 3]_
+1. <span class="fill-in">[Reason 1]</span>
+2. <span class="fill-in">[Reason 2]</span>
+3. <span class="fill-in">[Reason 3]</span>
 
 **How you'll handle:**
 
-- Payment gateway timeout: _[Fill in]_
-- Shipping API failure: _[Fill in]_
-- Partial failures: _[Fill in]_
-- Idempotency: _[Fill in]_
-- Monitoring: _[Fill in]_
+- Payment gateway timeout: <span class="fill-in">[Fill in]</span>
+- Shipping API failure: <span class="fill-in">[Fill in]</span>
+- Partial failures: <span class="fill-in">[Fill in]</span>
+- Idempotency: <span class="fill-in">[Fill in]</span>
+- Monitoring: <span class="fill-in">[Fill in]</span>
 
 **Compensation strategy:**
 
-- If payment fails: _[Fill in]_
-- If shipping fails: _[Fill in]_
-- If compensation fails: _[Fill in]_
+- If payment fails: <span class="fill-in">[Fill in]</span>
+- If shipping fails: <span class="fill-in">[Fill in]</span>
+- If compensation fails: <span class="fill-in">[Fill in]</span>
 
 **Expected improvements:**
 
-- Order success rate: ___% (up from 98%)
-- Average latency: ___ms
-- Stuck orders: ___% (down from 2%)
+- Order success rate: <span class="fill-in">___</span>% (up from 98%)
+- Average latency: <span class="fill-in">___</span>ms
+- Stuck orders: <span class="fill-in">___</span>% (down from 2%)
 
 ---
 
@@ -2292,9 +2309,9 @@ public void refundPayment(String transactionId, String customerId, double amount
 
 **Critical understanding questions:**
 
-1. What's the main difference between 2PC and Saga? _[Fill in]_
-2. Why must compensations be idempotent? _[Fill in]_
-3. What's the hardest failure scenario in distributed transactions? _[Fill in]_
+1. What's the main difference between 2PC and Saga? <span class="fill-in">[Fill in]</span>
+2. Why must compensations be idempotent? <span class="fill-in">[Fill in]</span>
+3. What's the hardest failure scenario in distributed transactions? <span class="fill-in">[Fill in]</span>
 
 **If score < 8:** Review the sections where you struggled, implement the patterns again, then retry this gate.
 

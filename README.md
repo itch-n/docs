@@ -23,6 +23,7 @@ Open: http://127.0.0.1:8000
 ### 2. Choose Your Path
 
 **Systems Design** → Start at [01-storage-engines.md](docs/systems/01-storage-engines.md)
+
 - Implement B+Tree and LSM Tree from scratch
 - Run client code with test data
 - Fill in ELI5 explanations
@@ -30,6 +31,7 @@ Open: http://127.0.0.1:8000
 - Complete practice scenarios
 
 **DSA** → Start at [01-two-pointers.md](docs/dsa/01-two-pointers.md)
+
 - Implement three two-pointer patterns
 - Run client code with examples
 - Solve LeetCode problems
@@ -38,6 +40,7 @@ Open: http://127.0.0.1:8000
 ### 3. Learn → Fill In → Move On
 
 For each topic:
+
 1. **Try implementing first** (don't peek at solutions!)
 2. **Run the client code** to verify it works
 3. **Fill in ELI5 section** (if you can't explain it simply, you don't understand it)
@@ -93,18 +96,21 @@ docs/
 Prompts to help you explain concepts simply. If you can't fill this in, you need to study more.
 
 ### 2. Implementation Section
+
 - Java code stubs with TODO comments
 - Method signatures provided
 - Runnable client code with test data
 - You fill in the logic
 
 ### 3. Decision Framework Section
+
 - Questions to answer
 - Decision trees to build
 - "Kill switch" - when NOT to use
 - "Rule of Three" - alternative approaches
 
 ### 4. Practice Section
+
 - Systems: Real design scenarios
 - DSA: LeetCode problems with links
 - Space to document your solutions
@@ -142,16 +148,19 @@ Don't move on until all boxes checked!
 **Day 5:**
 ```markdown
 // Fill in ELI5 section:
+
 - Explain B+Tree like a filing cabinet
 - Explain LSM Tree like a notebook
 - Answer all prompts
 
 // Build decision tree:
+
 - When write-heavy? → LSM
 - When read-heavy? → B+Tree
 - When range queries? → B+Tree
 
 // Complete practice scenarios:
+
 - Design storage for Posts table
 - Design storage for Metrics
 - Design storage for Inventory

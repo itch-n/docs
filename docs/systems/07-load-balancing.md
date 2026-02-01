@@ -6,85 +6,92 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing different load balancing algorithms, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is load balancing in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **Why do we need load balancers?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy for round robin:**
     - Example: "Round robin is like a carousel where..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **What is round robin in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 5. **How is least connections different from round robin?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 6. **Real-world analogy for consistent hashing:**
     - Example: "Consistent hashing is like a clock where..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 7. **What is consistent hashing in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 8. **When would you use weighted load balancing?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Round robin server selection:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity: _[Your guess: O(?)]_
-    - Verified after learning: _[Actual: O(?)]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
 
 2. **Least connections server selection:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity: _[Your guess: O(?)]_
-    - Verified: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **Consistent hashing lookup:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity: _[Your guess: O(?)]_
-    - Verified: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 ### Scenario Predictions
 
 **Scenario 1:** 3 identical servers, 12 requests using round robin
 
-- **How many requests does each server get?** _[Fill in]_
-- **If we add a 4th server after 8 requests, what happens?** _[Explain]_
-- **Is this distribution optimal for all workloads?** _[Yes/No - Why?]_
+- **How many requests does each server get?** <span class="fill-in">[Fill in]</span>
+- **If we add a 4th server after 8 requests, what happens?** <span class="fill-in">[Explain]</span>
+- **Is this distribution optimal for all workloads?** <span class="fill-in">[Yes/No - Why?]</span>
 
 **Scenario 2:** 3 servers, server 1 has 5 connections, server 2 has 2, server 3 has 3
 
-- **Which server does least connections choose?** _[Fill in]_
-- **Why not round robin in this case?** _[Explain]_
-- **What if requests have varying durations?** _[Which algorithm is better?]_
+- **Which server does least connections choose?** <span class="fill-in">[Fill in]</span>
+- **Why not round robin in this case?** <span class="fill-in">[Explain]</span>
+- **What if requests have varying durations?** <span class="fill-in">[Which algorithm is better?]</span>
 
 **Scenario 3:** Consistent hashing with 3 servers, 100 cache keys
 
-- **If you add a 4th server, approximately what % of keys are remapped?** _[Fill in]_
-- **If you remove 1 server, what % of keys are remapped?** _[Fill in]_
-- **Why is this better than simple hash % server_count?** _[Explain]_
+- **If you add a 4th server, approximately what % of keys are remapped?** <span class="fill-in">[Fill in]</span>
+- **If you remove 1 server, what % of keys are remapped?** <span class="fill-in">[Fill in]</span>
+- **Why is this better than simple hash % server_count?** <span class="fill-in">[Explain]</span>
 
 ### Trade-off Quiz
 
 **Question:** When would IP hash be WORSE than round robin?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** What's the MAIN problem with simple hash-based load balancing?
 
@@ -93,12 +100,15 @@
 - [ ] Adding/removing servers causes massive redistribution
 - [ ] It requires too much memory
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 **Question:** What problem do virtual nodes solve in consistent hashing?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
+
+
+</div>
 
 ---
 
@@ -206,9 +216,10 @@ System.out.println(userId + " -> " + entry.getValue().id);
 - 3x improvement in cache hit rate during scaling
 
 **Your calculation:** With 100 servers and 1,000,000 cached keys:
-- Simple hash remapping: _____ keys need to move
-- Consistent hash remapping: _____ keys need to move
-- Improvement factor: _____ times better
+
+- Simple hash remapping: <span class="fill-in">_____</span> keys need to move
+- Consistent hash remapping: <span class="fill-in">_____</span> keys need to move
+- Improvement factor: <span class="fill-in">_____</span> times better
 
 #### Comparison: Session Persistence
 
@@ -233,9 +244,13 @@ Result: Same server every time, session maintained
 
 **After implementing, explain in your own words:**
 
-- _[When would you choose round robin over least connections?]_
-- _[Why use consistent hashing for a cache cluster?]_
-- _[What are the trade-offs of IP hash for session persistence?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[When would you choose round robin over least connections?]</span>
+- <span class="fill-in">[Why use consistent hashing for a cache cluster?]</span>
+- <span class="fill-in">[What are the trade-offs of IP hash for session persistence?]</span>
+
+</div>
 
 ---
 
@@ -920,9 +935,9 @@ public synchronized Server getNextServer_Buggy() {
 
 **Your debugging:**
 
-- **Bug location:** _[Which line?]_
-- **Bug explanation:** _[What error occurs?]_
-- **Bug fix:** _[How to fix?]_
+- **Bug location:** <span class="fill-in">[Which line?]</span>
+- **Bug explanation:** <span class="fill-in">[What error occurs?]</span>
+- **Bug fix:** <span class="fill-in">[How to fix?]</span>
 - **Test case:** servers = [S1, S2, S3], after 3 requests what happens?
 
 <details markdown>
@@ -976,10 +991,10 @@ public void releaseConnection_Buggy(Server server) {
 
 **Your debugging:**
 
-- **Bug 1:** _[What's the concurrency issue?]_
-- **Bug 1 fix:** _[How to make it thread-safe?]_
-- **Bug 2:** _[What if connections goes negative?]_
-- **Bug 2 fix:** _[Add safety check]_
+- **Bug 1:** <span class="fill-in">[What's the concurrency issue?]</span>
+- **Bug 1 fix:** <span class="fill-in">[How to make it thread-safe?]</span>
+- **Bug 2:** <span class="fill-in">[What if connections goes negative?]</span>
+- **Bug 2 fix:** <span class="fill-in">[Add safety check]</span>
 
 **Trace through scenario:**
 ```
@@ -1055,9 +1070,9 @@ public ConsistentHashingLoadBalancer_Buggy(List<Server> servers, int virtualNode
 
 **Your debugging:**
 
-- **Bug:** _[What's wrong with this initialization?]_
-- **Result:** _[How does this affect distribution?]_
-- **Fix:** _[What should the code be?]_
+- **Bug:** <span class="fill-in">[What's wrong with this initialization?]</span>
+- **Result:** <span class="fill-in">[How does this affect distribution?]</span>
+- **Fix:** <span class="fill-in">[What should the code be?]</span>
 
 **Test case:**
 ```
@@ -1114,9 +1129,9 @@ public Server getServer_Buggy(String key) {
 
 **Your debugging:**
 
-- **Bug:** _[When does ceilingEntry return null?]_
-- **Scenario:** _[Give an example where this fails]_
-- **Fix:** _[How to handle wraparound?]_
+- **Bug:** <span class="fill-in">[When does ceilingEntry return null?]</span>
+- **Scenario:** <span class="fill-in">[Give an example where this fails]</span>
+- **Fix:** <span class="fill-in">[How to handle wraparound?]</span>
 
 **Example:**
 ```
@@ -1181,10 +1196,10 @@ public Server getNextServer_Buggy() {
 
 **Your debugging:**
 
-- **Bug:** _[What's wrong with this distribution logic?]_
+- **Bug:** <span class="fill-in">[What's wrong with this distribution logic?]</span>
 - **Result:** Servers with weight=3 get 3 requests in a row, then none
 - **Expected:** Smooth distribution mixed with other servers
-- **Fix:** _[How to implement smooth weighted round robin?]_
+- **Fix:** <span class="fill-in">[How to implement smooth weighted round robin?]</span>
 
 **Example with weights [1, 2, 3]:**
 ```
@@ -1261,9 +1276,9 @@ public class HealthAwareLoadBalancer {
 
 **Your debugging:**
 
-- **Bug 1:** _[What happens if health check runs during getNextServer?]_
-- **Bug 2:** _[What if list size changes during modulo operation?]_
-- **Fix:** _[How to make this thread-safe?]_
+- **Bug 1:** <span class="fill-in">[What happens if health check runs during getNextServer?]</span>
+- **Bug 2:** <span class="fill-in">[What if list size changes during modulo operation?]</span>
+- **Fix:** <span class="fill-in">[How to make this thread-safe?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1322,9 +1337,9 @@ After finding and fixing all bugs:
 
 **Common mistakes you discovered:**
 
-1. _[List the patterns you noticed]_
-2. _[Fill in]_
-3. _[Fill in]_
+1. <span class="fill-in">[List the patterns you noticed]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1336,50 +1351,50 @@ After finding and fixing all bugs:
 
 **When to use Round Robin?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 **When to use Least Connections?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 **When to use Weighted Round Robin?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 **When to use Consistent Hashing?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 **When to use IP Hash?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 ### 2. Trade-offs
 
 **Round Robin:**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 **Least Connections:**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 **Consistent Hashing:**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 **IP Hash:**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 ### 3. Your Decision Tree
 
@@ -1398,18 +1413,18 @@ What is your priority?
 
 **Round Robin:**
 
-1. _[When does round robin fail? Fill in]_
-2. _[Another failure case]_
+1. <span class="fill-in">[When does round robin fail? Fill in]</span>
+2. <span class="fill-in">[Another failure case]</span>
 
 **Least Connections:**
 
-1. _[When does least connections fail? Fill in]_
-2. _[Another failure case]_
+1. <span class="fill-in">[When does least connections fail? Fill in]</span>
+2. <span class="fill-in">[Another failure case]</span>
 
 **Consistent Hashing:**
 
-1. _[When does consistent hashing fail? Fill in]_
-2. _[Another failure case]_
+1. <span class="fill-in">[When does consistent hashing fail? Fill in]</span>
+2. <span class="fill-in">[Another failure case]</span>
 
 ### 5. Rule of Three - Alternatives
 
@@ -1417,9 +1432,9 @@ For each scenario, identify alternatives and compare:
 
 **Scenario: Distribute requests across web servers**
 
-1. Option A: _[Fill in]_
-2. Option B: _[Fill in]_
-3. Option C: _[Fill in]_
+1. Option A: <span class="fill-in">[Fill in]</span>
+2. Option B: <span class="fill-in">[Fill in]</span>
+3. Option C: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1436,10 +1451,10 @@ For each scenario, identify alternatives and compare:
 
 **Your design:**
 
-- Which algorithm would you choose? _[Fill in]_
-- Why? _[Fill in]_
-- How to handle server failures? _[Fill in]_
-- Health check strategy? _[Fill in]_
+- Which algorithm would you choose? <span class="fill-in">[Fill in]</span>
+- Why? <span class="fill-in">[Fill in]</span>
+- How to handle server failures? <span class="fill-in">[Fill in]</span>
+- Health check strategy? <span class="fill-in">[Fill in]</span>
 
 ### Scenario 2: Load balance with session state
 
@@ -1452,10 +1467,10 @@ For each scenario, identify alternatives and compare:
 
 **Your design:**
 
-- Which algorithm would you choose? _[Fill in]_
-- Why? _[Fill in]_
-- How to handle server additions? _[Fill in]_
-- Alternative to sticky sessions? _[Fill in]_
+- Which algorithm would you choose? <span class="fill-in">[Fill in]</span>
+- Why? <span class="fill-in">[Fill in]</span>
+- How to handle server additions? <span class="fill-in">[Fill in]</span>
+- Alternative to sticky sessions? <span class="fill-in">[Fill in]</span>
 
 ### Scenario 3: Distributed cache cluster
 
@@ -1468,10 +1483,10 @@ For each scenario, identify alternatives and compare:
 
 **Your design:**
 
-- Which algorithm would you choose? _[Fill in]_
-- Why? _[Fill in]_
-- How many virtual nodes? _[Fill in]_
-- Replication strategy? _[Fill in]_
+- Which algorithm would you choose? <span class="fill-in">[Fill in]</span>
+- Why? <span class="fill-in">[Fill in]</span>
+- How many virtual nodes? <span class="fill-in">[Fill in]</span>
+- Replication strategy? <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1501,27 +1516,27 @@ For each scenario, identify alternatives and compare:
 
 > "Load balancing is..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **Explain each algorithm:**
 
 > "Round robin is best for..."
 >
-> _[Fill in - when to use and why]_
+> <span class="fill-in">[Fill in - when to use and why]</span>
 
 > "Least connections is better than round robin when..."
 >
-> _[Fill in - key difference]_
+> <span class="fill-in">[Fill in - key difference]</span>
 
 > "Consistent hashing solves the problem of..."
 >
-> _[Fill in - main benefit]_
+> <span class="fill-in">[Fill in - main benefit]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by someone new to distributed systems? _[Yes/No]_
-- Did you use analogies or real-world examples? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by someone new to distributed systems? <span class="fill-in">[Yes/No]</span>
+- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -1568,12 +1583,12 @@ Percentage remapped: approximately ___ %
 
 | Scenario | Algorithm | Why? |
 |----------|-----------|------|
-| 3 identical web servers, stateless app | _[Fill in]_ | _[Explain]_ |
-| Requests have varying durations (1ms to 10s) | _[Fill in]_ | _[Explain]_ |
-| Shopping cart stored in server memory | _[Fill in]_ | _[Explain]_ |
-| Cache cluster that scales frequently | _[Fill in]_ | _[Explain]_ |
-| Mix of powerful and weak servers | _[Fill in]_ | _[Explain]_ |
-| Need session persistence without cookies | _[Fill in]_ | _[Explain]_ |
+| 3 identical web servers, stateless app | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Requests have varying durations (1ms to 10s) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Shopping cart stored in server memory | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Cache cluster that scales frequently | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Mix of powerful and weak servers | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Need session persistence without cookies | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1587,25 +1602,26 @@ If you scored below 5/6, review the algorithms and try again.
 
 | Algorithm | Selection Time | Selection Space | When to Use |
 |-----------|----------------|-----------------|-------------|
-| Round Robin | O(?) | O(?) | _[Explain]_ |
-| Least Connections | O(?) | O(?) | _[Explain]_ |
-| Weighted Round Robin | O(?) | O(?) | _[Explain]_ |
-| Consistent Hashing | O(?) | O(?) | _[Explain]_ |
-| IP Hash | O(?) | O(?) | _[Explain]_ |
+| Round Robin | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Least Connections | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Weighted Round Robin | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Consistent Hashing | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| IP Hash | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why does consistent hashing use O(log n) lookup time?
 
-Your answer: _[Fill in - explain TreeMap structure]_
+Your answer: <span class="fill-in">[Fill in - explain TreeMap structure]</span>
 
 **Deep question:** Why does least connections need O(n) time per request?
 
-Your answer: _[Fill in - explain the scan process]_
+Your answer: <span class="fill-in">[Fill in - explain the scan process]</span>
 
 ---
 
 ### Gate 5: Trade-off Decision
 
 **Scenario:** Design load balancing for an e-commerce site with these requirements:
+
 - 20 web servers (varying capacity: 5 small, 10 medium, 5 large)
 - Users have shopping carts (session state)
 - Peak traffic: 10,000 requests/second
@@ -1614,22 +1630,22 @@ Your answer: _[Fill in - explain the scan process]_
 
 **Your design:**
 
-**Algorithm choice:** _[Fill in]_
+**Algorithm choice:** <span class="fill-in">[Fill in]</span>
 
 **Reasoning:**
 
-- _[Why this algorithm?]_
-- _[How does it handle session state?]_
-- _[How does it handle varying server capacity?]_
-- _[How does it handle scaling?]_
+- <span class="fill-in">[Why this algorithm?]</span>
+- <span class="fill-in">[How does it handle session state?]</span>
+- <span class="fill-in">[How does it handle varying server capacity?]</span>
+- <span class="fill-in">[How does it handle scaling?]</span>
 
-**Alternative considered:** _[Fill in other option]_
+**Alternative considered:** <span class="fill-in">[Fill in other option]</span>
 
-**Why you rejected it:** _[Fill in reasoning]_
+**Why you rejected it:** <span class="fill-in">[Fill in reasoning]</span>
 
 **Backup plan if chosen algorithm fails:**
 
-- _[What's your fallback?]_
+- <span class="fill-in">[What's your fallback?]</span>
 
 ---
 
@@ -1688,9 +1704,9 @@ public Server getServer(String key) {
 
 **Your analysis:**
 
-- **What's wrong?** _[Fill in]_
-- **When does it fail?** _[Fill in scenario]_
-- **How to fix?** _[Fill in solution]_
+- **What's wrong?** <span class="fill-in">[Fill in]</span>
+- **When does it fail?** <span class="fill-in">[Fill in scenario]</span>
+- **How to fix?** <span class="fill-in">[Fill in solution]</span>
 
 **Verification:**
 
@@ -1710,15 +1726,15 @@ Your explanation:
 
 > "Simple hash uses modulo (key % server_count) which means..."
 >
-> _[Fill in - explain the remapping problem]_
+> <span class="fill-in">[Fill in - explain the remapping problem]</span>
 
 > "Consistent hashing uses a ring structure which means..."
 >
-> _[Fill in - explain why fewer keys move]_
+> <span class="fill-in">[Fill in - explain why fewer keys move]</span>
 
 > "This matters in production because..."
 >
-> _[Fill in - real-world impact]_
+> <span class="fill-in">[Fill in - real-world impact]</span>
 
 **Draw a comparison diagram:**
 ```
@@ -1740,9 +1756,9 @@ _________________________________
 
 **Debug this:**
 
-- **What's the likely cause?** _[Fill in]_
-- **How do you fix it?** _[Fill in solution]_
-- **How many virtual nodes do you recommend?** _[Fill in with reasoning]_
+- **What's the likely cause?** <span class="fill-in">[Fill in]</span>
+- **How do you fix it?** <span class="fill-in">[Fill in solution]</span>
+- **How many virtual nodes do you recommend?** <span class="fill-in">[Fill in with reasoning]</span>
 
 <details markdown>
 <summary>Verify your answer</summary>
@@ -1762,19 +1778,19 @@ _________________________________
 
 **For Round Robin:**
 
-- Operations per request: ___
-- Total operations per second: ___
-- Can it handle the load? _[Yes/No - Why?]_
+- Operations per request: <span class="fill-in">___</span>
+- Total operations per second: <span class="fill-in">___</span>
+- Can it handle the load? <span class="fill-in">[Yes/No - Why?]</span>
 
 **For Least Connections:**
 
-- Operations per request: ___
-- Total operations per second: ___
-- Can it handle the load? _[Yes/No - Why?]_
+- Operations per request: <span class="fill-in">___</span>
+- Total operations per second: <span class="fill-in">___</span>
+- Can it handle the load? <span class="fill-in">[Yes/No - Why?]</span>
 
-**Your recommendation:** _[Which algorithm and why?]_
+**Your recommendation:** <span class="fill-in">[Which algorithm and why?]</span>
 
-**Optimization strategy:** _[How would you improve performance?]_
+**Optimization strategy:** <span class="fill-in">[How would you improve performance?]</span>
 
 ---
 

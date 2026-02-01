@@ -6,76 +6,83 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing all patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What are these advanced techniques in one sentence each?**
-    - Bit manipulation: _[Fill in after implementation]_
-    - Intervals: _[Fill in after implementation]_
-    - Prefix sum: _[Fill in after implementation]_
-    - Monotonic stack: _[Fill in after implementation]_
+    - Bit manipulation: <span class="fill-in">[Fill in after implementation]</span>
+    - Intervals: <span class="fill-in">[Fill in after implementation]</span>
+    - Prefix sum: <span class="fill-in">[Fill in after implementation]</span>
+    - Monotonic stack: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **Real-world analogies:**
     - Bit manipulation: "Like using switches that are either on or off..."
     - Intervals: "Like managing calendar appointments..."
     - Prefix sum: "Like keeping a running total..."
     - Monotonic stack: "Like organizing plates by size..."
-    - Your analogies: _[Fill in]_
+    - Your analogies: <span class="fill-in">[Fill in]</span>
 
 3. **When does each pattern work?**
-    - Your answers: _[Fill in after solving problems]_
+    - Your answers: <span class="fill-in">[Fill in after solving problems]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **XOR all elements to find single number:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity: _[Your guess: O(?)]_
-    - Verified after learning: _[Actual: O(?)]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
 
 2. **Merge overlapping intervals:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Why that complexity? _[Fill in your reasoning]_
-    - Verified: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Why that complexity? <span class="fill-in">[Fill in your reasoning]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **Monotonic stack for next greater element:**
-    - Time complexity: _[Your guess: O(?)]_
-    - How many times can each element be pushed/popped? _[Fill in]_
-    - Verified: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - How many times can each element be pushed/popped? <span class="fill-in">[Fill in]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 ### Scenario Predictions
 
 **Scenario 1:** Find single number in `[2, 3, 2, 4, 3]`
 
-- **Can you use XOR?** _[Yes/No - Why?]_
-- **What property of XOR makes this work?** _[Fill in]_
-- **What is 2 XOR 2?** _[Fill in]_
-- **What is any number XOR 0?** _[Fill in]_
+- **Can you use XOR?** <span class="fill-in">[Yes/No - Why?]</span>
+- **What property of XOR makes this work?** <span class="fill-in">[Fill in]</span>
+- **What is 2 XOR 2?** <span class="fill-in">[Fill in]</span>
+- **What is any number XOR 0?** <span class="fill-in">[Fill in]</span>
 
 **Scenario 2:** Merge intervals `[[1,3], [2,6], [8,10], [15,18]]`
 
-- **Must you sort first?** _[Yes/No - Why?]_
-- **How do you check if intervals overlap?** _[Fill in the condition]_
-- **How many intervals in final result?** _[Your prediction: ___]_
+- **Must you sort first?** <span class="fill-in">[Yes/No - Why?]</span>
+- **How do you check if intervals overlap?** <span class="fill-in">[Fill in the condition]</span>
+- **How many intervals in final result?** <span class="fill-in">[Your prediction: <span class="fill-in">___</span>]</span>
 
 **Scenario 3:** Next greater element for `[2, 1, 2, 4, 3]`
 
-- **Which type of stack?** _[Increasing/Decreasing]_
-- **Why that direction?** _[Fill in your reasoning]_
-- **When do you pop from stack?** _[Fill in]_
+- **Which type of stack?** <span class="fill-in">[Increasing/Decreasing]</span>
+- **Why that direction?** <span class="fill-in">[Fill in your reasoning]</span>
+- **When do you pop from stack?** <span class="fill-in">[Fill in]</span>
 
 ### Bit Manipulation Quiz
 
 **Question:** What does `n & (n-1)` do?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** How to check if a number is a power of 2?
 
@@ -84,20 +91,23 @@
 - [ ] `n == (n | (n-1))`
 - [ ] `Math.log(n) % 2 == 0`
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 ### Intervals Quiz
 
 **Question:** For intervals `[1,4]` and `[3,6]`, do they overlap?
 
-- Your answer: _[Yes/No]_
-- The condition is: `start1 <= _____ && start2 <= _____`
-- Fill in the blanks: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Yes/No]</span>
+- The condition is: `start1 <= <span class="fill-in">_____</span> && start2 <= <span class="fill-in">_____</span>`
+- Fill in the blanks: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** What's faster: using a heap vs two sorted arrays for finding meeting rooms?
 
-- Your prediction: _[Fill in]_
-- Verified: _[Fill in after implementation]_
+- Your prediction: <span class="fill-in">[Fill in]</span>
+- Verified: <span class="fill-in">[Fill in after implementation]</span>
+
+
+</div>
 
 ---
 
@@ -182,8 +192,12 @@ Example with `[2, 3, 2, 4, 3]`:
 
 **After implementing, explain in your own words:**
 
-- _[Why does XOR cancel out duplicates?]_
-- _[When would HashSet be better than XOR?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does XOR cancel out duplicates?]</span>
+- <span class="fill-in">[When would HashSet be better than XOR?]</span>
+
+</div>
 
 ---
 
@@ -289,14 +303,19 @@ Sorted:   [[1,3], [2,6], [8,10], [15,18]]
 ```
 
 Now you only need to check if `current interval end >= next interval start`:
+
 - `[1,3]` and `[2,6]`: 3 >= 2 → Merge to `[1,6]`
 - `[1,6]` and `[8,10]`: 6 < 8 → Keep separate
 - `[8,10]` and `[15,18]`: 10 < 15 → Keep separate
 
 **After implementing, explain in your own words:**
 
-- _[Why can we merge in a single pass after sorting?]_
-- _[What intervals do we never need to compare?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why can we merge in a single pass after sorting?]</span>
+- <span class="fill-in">[What intervals do we never need to compare?]</span>
+
+</div>
 
 ---
 
@@ -394,8 +413,12 @@ Result: [4, 2, 4, -1, -1]
 
 **After implementing, explain in your own words:**
 
-- _[Why do we maintain a decreasing stack?]_
-- _[Why is each element processed only twice?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why do we maintain a decreasing stack?]</span>
+- <span class="fill-in">[Why is each element processed only twice?]</span>
+
+</div>
 
 ---
 
@@ -1092,15 +1115,15 @@ public static int hammingWeight_Buggy(int n) {
 
 **Your debugging:**
 
-- **Bug location:** _[Which line?]_
-- **Bug explanation:** _[What's wrong? Try with n = -1]_
-- **Bug fix:** _[How to fix?]_
+- **Bug location:** <span class="fill-in">[Which line?]</span>
+- **Bug explanation:** <span class="fill-in">[What's wrong? Try with n = -1]</span>
+- **Bug fix:** <span class="fill-in">[How to fix?]</span>
 
 **Test case to expose the bug:**
 
 - Input: `n = -1` (all 32 bits are 1)
 - Expected output: `32`
-- Actual output with buggy code: _[Trace through - what happens?]_
+- Actual output with buggy code: <span class="fill-in">[Trace through - what happens?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1159,16 +1182,16 @@ public static int[][] merge_Buggy(int[][] intervals) {
 
 **Your debugging:**
 
-- **Bug 1:** _[Overlap check is correct, but what about the merge?]_
-- **Bug 2:** _[Should use Math.max - why?]_
-- **Bug 3:** _[What's missing at the end?]_
+- **Bug 1:** <span class="fill-in">[Overlap check is correct, but what about the merge?]</span>
+- **Bug 2:** <span class="fill-in">[Should use Math.max - why?]</span>
+- **Bug 3:** <span class="fill-in">[What's missing at the end?]</span>
 
 **Test case to expose bugs:**
 
 - Input: `[[1,3], [2,6], [8,10]]`
 - Expected: `[[1,6], [8,10]]`
-- Actual with Bug 1-2: _[What do you get?]_
-- Actual with Bug 3: _[What's missing?]_
+- Actual with Bug 1-2: <span class="fill-in">[What do you get?]</span>
+- Actual with Bug 3: <span class="fill-in">[What's missing?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1221,15 +1244,15 @@ public static int subarraySum_Buggy(int[] nums, int k) {
 
 **Your debugging:**
 
-- **Bug location:** _[What's missing?]_
-- **Bug explanation:** _[What case does this miss?]_
-- **Bug fix:** _[Add what check?]_
+- **Bug location:** <span class="fill-in">[What's missing?]</span>
+- **Bug explanation:** <span class="fill-in">[What case does this miss?]</span>
+- **Bug fix:** <span class="fill-in">[Add what check?]</span>
 
 **Test case to expose the bug:**
 
 - Input: `nums = [1, 2, 3], k = 3`
 - Expected: `2` (subarrays: [1,2] and [3])
-- Actual: _[Trace through - what do you get?]_
+- Actual: <span class="fill-in">[Trace through - what do you get?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1291,11 +1314,11 @@ public static int[] nextGreater_Buggy(int[] nums) {
 
 **Your debugging:**
 
-- **Bug:** _[What's the logic error?]_
-- **Example:** Input `[2, 1, 2, 4, 3]`, output is _[Fill in - trace manually]_
+- **Bug:** <span class="fill-in">[What's the logic error?]</span>
+- **Example:** Input `[2, 1, 2, 4, 3]`, output is <span class="fill-in">[Fill in - trace manually]</span>
 - **Expected:** `[4, 2, 4, -1, -1]`
-- **Actual:** _[What do you get?]_
-- **Fix:** _[How to correct it?]_
+- **Actual:** <span class="fill-in">[What do you get?]</span>
+- **Fix:** <span class="fill-in">[How to correct it?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1329,15 +1352,16 @@ public static boolean isPowerOfTwo_Buggy(int n) {
 
 **Your debugging:**
 
-- **Bug:** _[What edge case is missed?]_
-- **Example:** Try with `n = 0`, expected `false`, actual _[what?]_
-- **Example:** Try with `n = -16`, expected `false`, actual _[what?]_
-- **Fix:** _[Add what condition?]_
+- **Bug:** <span class="fill-in">[What edge case is missed?]</span>
+- **Example:** Try with `n = 0`, expected `false`, actual <span class="fill-in">[what?]</span>
+- **Example:** Try with `n = -16`, expected `false`, actual <span class="fill-in">[what?]</span>
+- **Fix:** <span class="fill-in">[Add what condition?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
 
 **Bug:** Missing check for `n > 0`. The expression `n & (n-1) == 0` is true for:
+
 - `n = 0`: `0 & -1 = 0` → returns `true` (wrong!)
 - `n = -16`: Negative powers of 2 also pass (wrong!)
 
@@ -1389,11 +1413,11 @@ public static int[][] intervalIntersection_Buggy(
 
 **Your debugging:**
 
-- **Bug:** _[What check is missing?]_
+- **Bug:** <span class="fill-in">[What check is missing?]</span>
 - **Example:** `firstList = [[0,2]]`, `secondList = [[4,6]]` (no overlap)
 - **Expected:** `[]` (empty)
-- **Actual:** _[What do you get?]_
-- **Fix:** _[Add what condition?]_
+- **Actual:** <span class="fill-in">[What do you get?]</span>
+- **Fix:** <span class="fill-in">[Add what condition?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1426,11 +1450,11 @@ After finding and fixing all bugs:
 
 **Common mistakes you discovered:**
 
-1. **Bit manipulation:** _[Sign handling, shift operators]_
-2. **Intervals:** _[Forgetting final interval, not using Math.max in merge]_
-3. **Prefix sum:** _[Missing zero-sum check, initial map state]_
-4. **Monotonic stack:** _[Wrong result index, maintaining stack invariant]_
-5. **Edge cases:** _[Zero, negatives, empty arrays, non-overlapping intervals]_
+1. **Bit manipulation:** <span class="fill-in">[Sign handling, shift operators]</span>
+2. **Intervals:** <span class="fill-in">[Forgetting final interval, not using Math.max in merge]</span>
+3. **Prefix sum:** <span class="fill-in">[Missing zero-sum check, initial map state]</span>
+4. **Monotonic stack:** <span class="fill-in">[Wrong result index, maintaining stack invariant]</span>
+5. **Edge cases:** <span class="fill-in">[Zero, negatives, empty arrays, non-overlapping intervals]</span>
 
 ---
 
@@ -1442,27 +1466,27 @@ After finding and fixing all bugs:
 
 **Bit manipulation when:**
 
-- Need: _[Constant space for flags/subsets]_
-- Operations: _[XOR, AND, OR, shifts]_
-- Examples: _[Single number, power of 2]_
+- Need: <span class="fill-in">[Constant space for flags/subsets]</span>
+- Operations: <span class="fill-in">[XOR, AND, OR, shifts]</span>
+- Examples: <span class="fill-in">[Single number, power of 2]</span>
 
 **Intervals when:**
 
-- Need: _[Merge, insert, find overlaps]_
+- Need: <span class="fill-in">[Merge, insert, find overlaps]</span>
 - Input: _[Array of [start, end] pairs]_
-- Examples: _[Meeting rooms, merge intervals]_
+- Examples: <span class="fill-in">[Meeting rooms, merge intervals]</span>
 
 **Prefix sum when:**
 
-- Need: _[Fast range sum queries]_
-- Trade-off: _[O(n) space for O(1) queries]_
-- Examples: _[Subarray sum, range query]_
+- Need: <span class="fill-in">[Fast range sum queries]</span>
+- Trade-off: <span class="fill-in">[O(n) space for O(1) queries]</span>
+- Examples: <span class="fill-in">[Subarray sum, range query]</span>
 
 **Monotonic stack when:**
 
-- Need: _[Next greater/smaller element]_
-- Pattern: _[Looking for boundary values]_
-- Examples: _[Histogram, temperatures]_
+- Need: <span class="fill-in">[Next greater/smaller element]</span>
+- Pattern: <span class="fill-in">[Looking for boundary values]</span>
+- Examples: <span class="fill-in">[Histogram, temperatures]</span>
 
 ### Your Decision Trees
 
@@ -1498,19 +1522,19 @@ Monotonic Stack:
 
 **Bit manipulation:**
 
-- Don't use when: _[Logic complex, readability suffers]_
+- Don't use when: <span class="fill-in">[Logic complex, readability suffers]</span>
 
 **Intervals:**
 
-- Don't use when: _[Not dealing with ranges]_
+- Don't use when: <span class="fill-in">[Not dealing with ranges]</span>
 
 **Prefix sum:**
 
-- Don't use when: _[Array is mutable, single query]_
+- Don't use when: <span class="fill-in">[Array is mutable, single query]</span>
 
 **Monotonic stack:**
 
-- Don't use when: _[Not finding next/previous boundary]_
+- Don't use when: <span class="fill-in">[Not finding next/previous boundary]</span>
 
 ---
 
@@ -1521,57 +1545,57 @@ Monotonic Stack:
 **Easy (Complete 4):**
 
 - [ ] [136. Single Number](https://leetcode.com/problems/single-number/)
-    - Pattern: _[Bit manipulation - XOR]_
-    - Your solution time: ___
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Bit manipulation - XOR]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [191. Number of 1 Bits](https://leetcode.com/problems/number-of-1-bits/)
-    - Pattern: _[Bit counting]_
-    - Your solution time: ___
+    - Pattern: <span class="fill-in">[Bit counting]</span>
+    - Your solution time: <span class="fill-in">___</span>
 
 - [ ] [303. Range Sum Query](https://leetcode.com/problems/range-sum-query-immutable/)
-    - Pattern: _[Prefix sum]_
-    - Your solution time: ___
+    - Pattern: <span class="fill-in">[Prefix sum]</span>
+    - Your solution time: <span class="fill-in">___</span>
 
 - [ ] [496. Next Greater Element I](https://leetcode.com/problems/next-greater-element-i/)
-    - Pattern: _[Monotonic stack]_
-    - Your solution time: ___
+    - Pattern: <span class="fill-in">[Monotonic stack]</span>
+    - Your solution time: <span class="fill-in">___</span>
 
 **Medium (Complete 6-8):**
 
 - [ ] [56. Merge Intervals](https://leetcode.com/problems/merge-intervals/)
-    - Pattern: _[Intervals]_
-    - Difficulty: _[Rate 1-10]_
+    - Pattern: <span class="fill-in">[Intervals]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
 
 - [ ] [57. Insert Interval](https://leetcode.com/problems/insert-interval/)
-    - Pattern: _[Intervals]_
-    - Difficulty: _[Rate 1-10]_
+    - Pattern: <span class="fill-in">[Intervals]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
 
 - [ ] [560. Subarray Sum Equals K](https://leetcode.com/problems/subarray-sum-equals-k/)
-    - Pattern: _[Prefix sum + hashmap]_
-    - Difficulty: _[Rate 1-10]_
+    - Pattern: <span class="fill-in">[Prefix sum + hashmap]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
 
 - [ ] [739. Daily Temperatures](https://leetcode.com/problems/daily-temperatures/)
-    - Pattern: _[Monotonic stack]_
-    - Difficulty: _[Rate 1-10]_
+    - Pattern: <span class="fill-in">[Monotonic stack]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
 
 - [ ] [84. Largest Rectangle in Histogram](https://leetcode.com/problems/largest-rectangle-in-histogram/)
-    - Pattern: _[Monotonic stack]_
-    - Difficulty: _[Rate 1-10]_
+    - Pattern: <span class="fill-in">[Monotonic stack]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
 
 - [ ] [238. Product of Array Except Self](https://leetcode.com/problems/product-of-array-except-self/)
-    - Pattern: _[Prefix/suffix products]_
-    - Difficulty: _[Rate 1-10]_
+    - Pattern: <span class="fill-in">[Prefix/suffix products]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
 
 **Hard (Optional):**
 
 - [ ] [42. Trapping Rain Water](https://leetcode.com/problems/trapping-rain-water/)
-    - Pattern: _[Monotonic stack or two pointers]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Monotonic stack or two pointers]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [85. Maximal Rectangle](https://leetcode.com/problems/maximal-rectangle/)
-    - Pattern: _[Histogram + monotonic stack]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Histogram + monotonic stack]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 ---
 
@@ -1624,20 +1648,20 @@ Before moving on:
 
 > "Advanced techniques like bit manipulation, intervals, prefix sums, and monotonic stacks are..."
 >
-> _[Fill in your explanation in plain English - 4-5 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 4-5 sentences max]</span>
 
 **For each pattern, explain in one sentence:**
 
-- **Bit manipulation:** _[Fill in]_
-- **Intervals:** _[Fill in]_
-- **Prefix sum:** _[Fill in]_
-- **Monotonic stack:** _[Fill in]_
+- **Bit manipulation:** <span class="fill-in">[Fill in]</span>
+- **Intervals:** <span class="fill-in">[Fill in]</span>
+- **Prefix sum:** <span class="fill-in">[Fill in]</span>
+- **Monotonic stack:** <span class="fill-in">[Fill in]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by a non-technical person? _[Yes/No]_
-- Did you use analogies or real-world examples? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
+- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -1651,15 +1675,15 @@ If you scored below 7 or answered "No" to either question, revise your explanati
 Array: [2, 3, 2, 4, 3]
 
 Step 1: XOR first two elements
-        2 XOR 3 = ___ (binary: _________)
+        2 XOR 3 = <span class="fill-in">___</span> (binary: <span class="fill-in">_________</span>)
 
 Step 2: XOR with next element
-        ___ XOR 2 = ___ (explain why pairs cancel)
+        ___ XOR 2 = <span class="fill-in">___</span> (explain why pairs cancel)
 
 Step 3: Continue...
         _________________________________
 
-Final result: ___
+Final result: <span class="fill-in">___</span>
 ```
 
 **Task 2:** Draw monotonic stack for next greater element.
@@ -1698,12 +1722,12 @@ Continue until complete...
 
 | Problem | Pattern | Key Technique | Why? |
 |---------|---------|---------------|------|
-| Find two numbers appearing once (rest twice) | _[Fill in]_ | _[Fill in]_ | _[Explain]_ |
-| Merge meeting time slots | _[Fill in]_ | _[Fill in]_ | _[Explain]_ |
-| Count subarrays with sum K | _[Fill in]_ | _[Fill in]_ | _[Explain]_ |
-| Largest rectangle in histogram | _[Fill in]_ | _[Fill in]_ | _[Explain]_ |
-| Check if number is power of 4 | _[Fill in]_ | _[Fill in]_ | _[Explain]_ |
-| Range sum query (immutable array) | _[Fill in]_ | _[Fill in]_ | _[Explain]_ |
+| Find two numbers appearing once (rest twice) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Merge meeting time slots | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Count subarrays with sum K | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Largest rectangle in histogram | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Check if number is power of 4 | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Range sum query (immutable array) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1717,22 +1741,22 @@ If you scored below 5/6, review the patterns and try again.
 
 | Pattern | Time Complexity | Space Complexity | Why? |
 |---------|----------------|------------------|------|
-| Bit Manipulation (XOR all) | O(?) | O(?) | _[Explain]_ |
-| Merge Intervals (with sort) | O(?) | O(?) | _[Explain]_ |
-| Prefix Sum (build + query) | O(?) per query | O(?) | _[Explain]_ |
-| Monotonic Stack | O(?) | O(?) | _[Explain]_ |
+| Bit Manipulation (XOR all) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Merge Intervals (with sort) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Prefix Sum (build + query) | O(?) per query | O(?) | <span class="fill-in">[Explain]</span> |
+| Monotonic Stack | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
 
 **Deep questions:**
 
 1. **Why is monotonic stack O(n) not O(n²)?**
-    - Your answer: _[Fill in - explain push/pop operations]_
+    - Your answer: <span class="fill-in">[Fill in - explain push/pop operations]</span>
 
 2. **Why does prefix sum trade space for time?**
-    - Your answer: _[Fill in - explain the trade-off]_
+    - Your answer: <span class="fill-in">[Fill in - explain the trade-off]</span>
 
 3. **When is O(n log n) interval merge faster than O(n²) brute force?**
-    - For n = 100: O(n log n) = ___, O(n²) = ___
-    - Breakeven point: _[Estimate]_
+    - For n = 100: O(n log n) = <span class="fill-in">___</span>, O(n²) = <span class="fill-in">___</span>
+    - Breakeven point: <span class="fill-in">[Estimate]</span>
 
 ---
 
@@ -1741,51 +1765,58 @@ If you scored below 5/6, review the patterns and try again.
 **Scenario 1:** Find single number in array of 10 million elements.
 
 **Option A:** Use HashSet (O(n) time, O(n) space)
-- Space needed: ~5 million integers = ___ MB
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
+
+- Space needed: ~5 million integers = <span class="fill-in">___</span> MB
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
 **Option B:** Use XOR (O(n) time, O(1) space)
-- Space needed: 1 integer = ___ bytes
-- Pros: _[Fill in]_
-- Cons: _[Fill in - when does XOR NOT work?]_
 
-**Your decision:** I would choose _[A/B]_ because...
+- Space needed: 1 integer = <span class="fill-in">___</span> bytes
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in - when does XOR NOT work?]</span>
+
+**Your decision:** I would choose <span class="fill-in">[A/B]</span> because...
 
 **What would make you change your decision?**
 
-- _[Fill in - what constraints would flip your choice?]_
+- <span class="fill-in">[Fill in - what constraints would flip your choice?]</span>
 
 ---
 
 **Scenario 2:** Need to answer 1 million range sum queries on an array with 1000 elements.
 
 **Option A:** Compute sum each time (O(n) per query)
+
 - Total time: O(1,000 × 1,000,000) = O(10⁹) operations
 - Space: O(1)
 
 **Option B:** Build prefix sum array (O(n) build, O(1) per query)
+
 - Total time: O(1,000 + 1,000,000) = O(10⁶) operations
 - Space: O(1,000)
 
-**Your decision:** _[Which is better and why?]_
+**Your decision:** <span class="fill-in">[Which is better and why?]</span>
 
 **What if:** Only 10 queries on the same array?
-- Would you still use prefix sum? _[Yes/No - Why?]_
+
+- Would you still use prefix sum? <span class="fill-in">[Yes/No - Why?]</span>
 
 ---
 
 **Scenario 3:** Merge 10,000 intervals.
 
 **Option A:** Brute force nested loops (O(n²))
-- Approximate operations: ___
-- When acceptable? _[Fill in]_
+
+- Approximate operations: <span class="fill-in">___</span>
+- When acceptable? <span class="fill-in">[Fill in]</span>
 
 **Option B:** Sort + merge (O(n log n))
-- Approximate operations: ___
-- Extra space needed? _[Fill in]_
 
-**Your reasoning:** _[Fill in - consider both time and space]_
+- Approximate operations: <span class="fill-in">___</span>
+- Extra space needed? <span class="fill-in">[Fill in]</span>
+
+**Your reasoning:** <span class="fill-in">[Fill in - consider both time and space]</span>
 
 ---
 
@@ -1854,27 +1885,27 @@ public static int[] nextGreaterElement(int[] nums) {
 
 **Bit manipulation - Don't use when:**
 
-1. _[Scenario 1]_
-2. _[Scenario 2]_
-3. _[Why readability might suffer]_
+1. <span class="fill-in">[Scenario 1]</span>
+2. <span class="fill-in">[Scenario 2]</span>
+3. <span class="fill-in">[Why readability might suffer]</span>
 
 **Intervals - Don't use when:**
 
-1. _[Scenario 1]_
-2. _[Scenario 2]_
-3. _[When simpler approach works]_
+1. <span class="fill-in">[Scenario 1]</span>
+2. <span class="fill-in">[Scenario 2]</span>
+3. <span class="fill-in">[When simpler approach works]</span>
 
 **Prefix sum - Don't use when:**
 
-1. _[Scenario 1]_
-2. _[Scenario 2]_
-3. _[When space is limited]_
+1. <span class="fill-in">[Scenario 1]</span>
+2. <span class="fill-in">[Scenario 2]</span>
+3. <span class="fill-in">[When space is limited]</span>
 
 **Monotonic stack - Don't use when:**
 
-1. _[Scenario 1]_
-2. _[Scenario 2]_
-3. _[When simpler scan works]_
+1. <span class="fill-in">[Scenario 1]</span>
+2. <span class="fill-in">[Scenario 2]</span>
+3. <span class="fill-in">[When simpler scan works]</span>
 
 ---
 
@@ -1886,24 +1917,28 @@ public static int[] nextGreaterElement(int[] nums) {
 === ADVANCED PATTERNS CHEAT SHEET ===
 
 BIT MANIPULATION
-- Key operations: _[Fill in]_
-- Common tricks: _[Fill in]_
-- Watch out for: _[Fill in]_
+
+- Key operations: <span class="fill-in">[Fill in]</span>
+- Common tricks: <span class="fill-in">[Fill in]</span>
+- Watch out for: <span class="fill-in">[Fill in]</span>
 
 INTERVALS
-- Sort by: _[Fill in]_
-- Merge condition: _[Fill in]_
-- Don't forget: _[Fill in]_
+
+- Sort by: <span class="fill-in">[Fill in]</span>
+- Merge condition: <span class="fill-in">[Fill in]</span>
+- Don't forget: <span class="fill-in">[Fill in]</span>
 
 PREFIX SUM
-- Build: _[Fill in]_
-- Query: _[Fill in]_
-- Initial state: _[Fill in]_
+
+- Build: <span class="fill-in">[Fill in]</span>
+- Query: <span class="fill-in">[Fill in]</span>
+- Initial state: <span class="fill-in">[Fill in]</span>
 
 MONOTONIC STACK
-- Stack type: _[Fill in]_
-- Push when: _[Fill in]_
-- Pop when: _[Fill in]_
+
+- Stack type: <span class="fill-in">[Fill in]</span>
+- Push when: <span class="fill-in">[Fill in]</span>
+- Pop when: <span class="fill-in">[Fill in]</span>
 ```
 
 ---
@@ -1914,29 +1949,29 @@ MONOTONIC STACK
 
 **Problem 1:** Find all subarrays with sum 0 in `[1, -1, 2, -2, 3]`
 
-- Pattern to use: _[Fill in]_
-- Key insight: _[Fill in]_
-- Data structure needed: _[Fill in]_
-- Time complexity: _[Fill in]_
+- Pattern to use: <span class="fill-in">[Fill in]</span>
+- Key insight: <span class="fill-in">[Fill in]</span>
+- Data structure needed: <span class="fill-in">[Fill in]</span>
+- Time complexity: <span class="fill-in">[Fill in]</span>
 
 **Problem 2:** Minimum platforms needed for train schedule
 
 Arrivals: `[9:00, 9:40, 9:50]`
 Departures: `[9:10, 12:00, 11:20]`
 
-- Pattern to use: _[Fill in]_
-- Key insight: _[Fill in]_
-- Sort strategy: _[Fill in]_
-- Time complexity: _[Fill in]_
+- Pattern to use: <span class="fill-in">[Fill in]</span>
+- Key insight: <span class="fill-in">[Fill in]</span>
+- Sort strategy: <span class="fill-in">[Fill in]</span>
+- Time complexity: <span class="fill-in">[Fill in]</span>
 
 **Problem 3:** Find pair of elements where second is double of first
 
 Array: `[3, 1, 4, 2, 5]`
 
-- Pattern to use: _[Fill in]_
-- Key insight: _[Fill in]_
-- Why bit manipulation won't work here: _[Fill in]_
-- Alternative approach: _[Fill in]_
+- Pattern to use: <span class="fill-in">[Fill in]</span>
+- Key insight: <span class="fill-in">[Fill in]</span>
+- Why bit manipulation won't work here: <span class="fill-in">[Fill in]</span>
+- Alternative approach: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1957,10 +1992,10 @@ Array: `[3, 1, 4, 2, 5]`
 
 **Pattern-specific confidence:**
 
-- Bit manipulation: ___/10
-- Intervals: ___/10
-- Prefix sum: ___/10
-- Monotonic stack: ___/10
+- Bit manipulation: <span class="fill-in">___</span>/10
+- Intervals: <span class="fill-in">___</span>/10
+- Prefix sum: <span class="fill-in">___</span>/10
+- Monotonic stack: <span class="fill-in">___</span>/10
 
 **If any score < 7:** Review the sections where you struggled, then retry this gate.
 

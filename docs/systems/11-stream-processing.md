@@ -6,82 +6,89 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing stream processing patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is stream processing in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **What is a window in stream processing?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy for tumbling window:**
     - Example: "A tumbling window is like counting cars that pass every 5 minutes..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **What are watermarks in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 5. **What is the difference between event time and processing time?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 6. **Real-world analogy for late data handling:**
     - Example: "Late data is like receiving a postcard that was sent last week..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition about stream processing. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Tumbling window processing:**
-    - Time complexity per event: _[Your guess: O(?)]_
-    - Space complexity for K keys over W windows: _[Your guess: O(?)]_
-    - Verified after learning: _[Actual]_
+    - Time complexity per event: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity for K keys over W windows: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified after learning: <span class="fill-in">[Actual]</span>
 
 2. **Sliding window vs tumbling window:**
-    - If sliding window size = 10s, slide = 2s, how many windows per event? _[Guess]_
-    - Space overhead compared to tumbling: _[Guess: X times larger]_
-    - Verified: _[Actual]_
+    - If sliding window size = 10s, slide = 2s, how many windows per event? <span class="fill-in">[Guess]</span>
+    - Space overhead compared to tumbling: <span class="fill-in">[Guess: X times larger]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **State size calculation:**
     - If you have 100K unique keys, each storing 1KB of state
-    - Total memory needed: _[Calculate]_
-    - After 1 hour with TTL = 5 minutes: _[Will it grow unbounded?]_
+    - Total memory needed: <span class="fill-in">[Calculate]</span>
+    - After 1 hour with TTL = 5 minutes: <span class="fill-in">[Will it grow unbounded?]</span>
 
 ### Scenario Predictions
 
 **Scenario 1:** Events arriving: timestamps [100, 200, 150, 300] (out of order)
 
 - **Tumbling window (size=100ms):** Which windows do they belong to?
-    - Event@100ms → Window _[0-100? 100-200?]_
-    - Event@200ms → Window _[Fill in]_
-    - Event@150ms → Window _[Fill in]_
-    - Event@300ms → Window _[Fill in]_
+    - Event@100ms → Window <span class="fill-in">[0-100? 100-200?]</span>
+    - Event@200ms → Window <span class="fill-in">[Fill in]</span>
+    - Event@150ms → Window <span class="fill-in">[Fill in]</span>
+    - Event@300ms → Window <span class="fill-in">[Fill in]</span>
 
 - **If watermark = 250ms and allowed lateness = 50ms:**
-    - Event@150ms arrives when watermark=250ms: _[Accept or Drop?]_
-    - Event@100ms arrives when watermark=250ms: _[Accept or Drop?]_
-    - Why? _[Fill in your reasoning]_
+    - Event@150ms arrives when watermark=250ms: <span class="fill-in">[Accept or Drop?]</span>
+    - Event@100ms arrives when watermark=250ms: <span class="fill-in">[Accept or Drop?]</span>
+    - Why? <span class="fill-in">[Fill in your reasoning]</span>
 
 **Scenario 2:** Session window with 3-second gap
 
 Events for user1: [1000ms, 2000ms, 3000ms, 7000ms, 8000ms]
 
-- **How many sessions?** _[Guess]_
-- **Session boundaries:** _[Fill in]_
-- **If event@4500ms arrives late, what happens?** _[New session or merge?]_
+- **How many sessions?** <span class="fill-in">[Guess]</span>
+- **Session boundaries:** <span class="fill-in">[Fill in]</span>
+- **If event@4500ms arrives late, what happens?** <span class="fill-in">[New session or merge?]</span>
 
 **Scenario 3:** Processing 100K events/second
 
-- **Without state:** Memory usage _[Constant? Growing?]_
-- **With state (no TTL):** Memory usage _[Constant? Growing?]_
-- **With state (TTL=5min):** Memory usage _[Constant? Growing?]_
-- **Your reasoning:** _[Fill in]_
+- **Without state:** Memory usage <span class="fill-in">[Constant? Growing?]</span>
+- **With state (no TTL):** Memory usage <span class="fill-in">[Constant? Growing?]</span>
+- **With state (TTL=5min):** Memory usage <span class="fill-in">[Constant? Growing?]</span>
+- **Your reasoning:** <span class="fill-in">[Fill in]</span>
 
 ### Watermark Quiz
 
@@ -89,22 +96,22 @@ Events for user1: [1000ms, 2000ms, 3000ms, 7000ms, 8000ms]
 
 For a tumbling window [0-1000ms]:
 
-- When does the window start computing? _[Fill in]_
-- When does the window close and stop accepting data? _[Fill in]_
-- Event@900ms arrives at processing time 1500ms: _[Accepted?]_
-- Event@900ms arrives at processing time 1300ms: _[Accepted?]_
+- When does the window start computing? <span class="fill-in">[Fill in]</span>
+- When does the window close and stop accepting data? <span class="fill-in">[Fill in]</span>
+- Event@900ms arrives at processing time 1500ms: <span class="fill-in">[Accepted?]</span>
+- Event@900ms arrives at processing time 1300ms: <span class="fill-in">[Accepted?]</span>
 
 **Question:** What happens if you set allowed lateness = 0?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 ### Trade-off Quiz
 
 **Question:** When would batch processing be BETTER than stream processing?
 
-- Your answer: _[Fill in]_
-- Verified: _[Fill in after implementation]_
+- Your answer: <span class="fill-in">[Fill in]</span>
+- Verified: <span class="fill-in">[Fill in after implementation]</span>
 
 **Question:** What's the MAIN trade-off of exactly-once processing?
 
@@ -113,15 +120,18 @@ For a tumbling window [0-1000ms]:
 - [ ] Increases latency
 - [ ] All of the above
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 **Question:** Event time vs Processing time
 
 Event occurs at 10:00:00 but arrives at system at 10:00:05:
 
-- Event time = _[Fill in]_
-- Processing time = _[Fill in]_
-- Which one should windowing use? _[Why?]_
+- Event time = <span class="fill-in">[Fill in]</span>
+- Processing time = <span class="fill-in">[Fill in]</span>
+- Which one should windowing use? <span class="fill-in">[Why?]</span>
+
+
+</div>
 
 ---
 
@@ -252,10 +262,13 @@ User sees:                                   ↑
 
 **Batch approach:**
 ```
+
 10:00:00 - Fraudulent transaction occurs
 10:00:05 - 3 more suspicious transactions
+
 10:00:45 - 5 more transactions (pattern clear)
 10:01:00 - Batch job runs, detects fraud
+
 10:01:05 - Alert sent, account frozen
 
 Total: 9 fraudulent transactions, $4,500 loss
@@ -264,8 +277,10 @@ Detection delay: 65 seconds
 
 **Stream approach:**
 ```
+
 10:00:00 - Fraudulent transaction occurs
 10:00:05 - 3 more suspicious transactions
+
 10:00:10 - Pattern detected (window closed at watermark)
 10:00:11 - Alert sent, account frozen
 
@@ -297,7 +312,7 @@ Results:     ↑            ↑
 
 - For 1M events/second, batch processing with 5-minute windows needs _____ GB memory
 - Stream processing with 1-minute windows needs _____ GB memory
-- Memory savings: _____ times less
+- Memory savings: <span class="fill-in">_____</span> times less
 
 #### When Batch Processing Is Still Better
 
@@ -310,9 +325,13 @@ Results:     ↑            ↑
 
 **After implementing, explain in your own words:**
 
-- _[Why does stream processing use less memory?]_
-- _[What's the trade-off between latency and accuracy with watermarks?]_
-- _[When would you still choose batch processing?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does stream processing use less memory?]</span>
+- <span class="fill-in">[What's the trade-off between latency and accuracy with watermarks?]</span>
+- <span class="fill-in">[When would you still choose batch processing?]</span>
+
+</div>
 
 ---
 
@@ -1566,24 +1585,25 @@ public static Map<Long, Map<String, Long>> tumblingWindow_Buggy(
 
 **Your debugging:**
 
-- **Bug 1 location:** _[Which line?]_
-- **Bug 1 explanation:** _[What's wrong with window calculation?]_
-- **Bug 1 fix:** _[What should it be?]_
+- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 1 explanation:** <span class="fill-in">[What's wrong with window calculation?]</span>
+- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
 - **Test case:** Events at [1500ms, 2500ms] with windowSize=1000ms
-    - Current output: _[What windows?]_
-    - Expected output: _[What windows?]_
+    - Current output: <span class="fill-in">[What windows?]</span>
+    - Expected output: <span class="fill-in">[What windows?]</span>
 
-- **Bug 2 location:** _[Which line?]_
-- **Bug 2 explanation:** _[What happens to the count?]_
-- **Bug 2 fix:** _[How to fix?]_
+- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 2 explanation:** <span class="fill-in">[What happens to the count?]</span>
+- **Bug 2 fix:** <span class="fill-in">[How to fix?]</span>
 - **Test case:** Events [("user1", 1000), ("user1", 1100), ("user1", 1200)]
-    - Current count: _[What do you get?]_
-    - Expected count: _[Should be?]_
+    - Current count: <span class="fill-in">[What do you get?]</span>
+    - Expected count: <span class="fill-in">[Should be?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
 
 **Bug 1:** Window start should be `(event.timestamp / windowSize) * windowSize` to align to window boundaries.
+
 - Current: windowStart = 1500 / 1000 = 1 (wrong - just the window index)
 - Fixed: windowStart = (1500 / 1000) * 1000 = 1000 (correct - actual timestamp)
 
@@ -1642,29 +1662,30 @@ public void processEvent_Buggy(Event<String, String> event) {
 
 **Bug 1: Late data check**
 
-- **Problem:** _[What's wrong with the late data check?]_
+- **Problem:** <span class="fill-in">[What's wrong with the late data check?]</span>
 - **Scenario:** Event@100ms, watermark=300ms, allowedLateness=50ms
-    - Should be: _[Accepted or Dropped?]_
-    - Currently: _[What happens?]_
-- **Fix:** _[Correct condition?]_
+    - Should be: <span class="fill-in">[Accepted or Dropped?]</span>
+    - Currently: <span class="fill-in">[What happens?]</span>
+- **Fix:** <span class="fill-in">[Correct condition?]</span>
 
 **Bug 2: Window closing**
 
-- **Problem:** _[What's wrong with window closing logic?]_
+- **Problem:** <span class="fill-in">[What's wrong with window closing logic?]</span>
 - **Scenario:** Event@250ms, windowEnd=300ms, watermark=310ms, allowedLateness=50ms
-    - Should be: _[Accepted or Dropped?]_
-    - Currently: _[What happens?]_
-- **Fix:** _[How to properly check if window is still open?]_
+    - Should be: <span class="fill-in">[Accepted or Dropped?]</span>
+    - Currently: <span class="fill-in">[What happens?]</span>
+- **Fix:** <span class="fill-in">[How to properly check if window is still open?]</span>
 
 **Test trace:**
 ```
 Window [0-1000ms], allowedLateness=200ms
+
 - Event@900ms arrives, watermark=900ms → ?
 - Event@800ms arrives, watermark=1100ms → ?
 - Event@800ms arrives, watermark=1300ms → ?
 ```
 
-Your predictions: _[Fill in for each event]_
+Your predictions: <span class="fill-in">[Fill in for each event]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1749,20 +1770,20 @@ public class ValueState_Buggy<K, S> {
 
 - Process 1M unique keys over 1 hour
 - TTL = 5 minutes
-- Expected memory: _[How many keys should remain?]_
-- Actual memory: _[What happens?]_
+- Expected memory: <span class="fill-in">[How many keys should remain?]</span>
+- Actual memory: <span class="fill-in">[What happens?]</span>
 
-**Bug location:** _[Which method and line?]_
+**Bug location:** <span class="fill-in">[Which method and line?]</span>
 
-**Bug explanation:** _[Why does state grow unbounded?]_
+**Bug explanation:** <span class="fill-in">[Why does state grow unbounded?]</span>
 
-**Bug fix:** _[What code is missing?]_
+**Bug fix:** <span class="fill-in">[What code is missing?]</span>
 
 **Performance impact:**
 
-- After 1 hour: _[How many expired keys still in memory?]_
-- Memory waste: _[Calculate]_
-- Performance degradation: _[Why does this hurt performance?]_
+- After 1 hour: <span class="fill-in">[How many expired keys still in memory?]</span>
+- Memory waste: <span class="fill-in">[Calculate]</span>
+- Performance degradation: <span class="fill-in">[Why does this hurt performance?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1854,23 +1875,23 @@ public static List<WindowResult<String>> sessionWindow_Buggy(
 **Bug 1: Missing sort**
 
 - **Scenario:** Events arrive [3000ms, 1000ms, 2000ms], gap=1000ms
-- **Expected sessions:** _[Fill in after sorting]_
-- **Actual sessions:** _[What do you get without sorting?]_
-- **Why is this wrong?** _[Explain]_
+- **Expected sessions:** <span class="fill-in">[Fill in after sorting]</span>
+- **Actual sessions:** <span class="fill-in">[What do you get without sorting?]</span>
+- **Why is this wrong?** <span class="fill-in">[Explain]</span>
 
 **Bug 2: Gap boundary condition**
 
 - **Scenario:** Events at [0ms, 1000ms, 2000ms], gap=1000ms
 - **Current logic:** gap check uses `>=`
-    - Event@1000ms: gap = 1000 - 0 = 1000ms → _[New session or same?]_
-    - Event@2000ms: gap = 2000 - 1000 = 1000ms → _[New session or same?]_
-- **Is this correct?** _[Should gap of exactly 1000ms create new session?]_
-- **Fix:** _[Use > or >=?]_
+    - Event@1000ms: gap = 1000 - 0 = 1000ms → <span class="fill-in">[New session or same?]</span>
+    - Event@2000ms: gap = 2000 - 1000 = 1000ms → <span class="fill-in">[New session or same?]</span>
+- **Is this correct?** <span class="fill-in">[Should gap of exactly 1000ms create new session?]</span>
+- **Fix:** <span class="fill-in">[Use > or >=?]</span>
 
 **Bug 3: Edge case - Empty events**
 
-- **What happens if keyEvents is empty?** _[Will it crash?]_
-- **Fix:** _[Add what check?]_
+- **What happens if keyEvents is empty?** <span class="fill-in">[Will it crash?]</span>
+- **Fix:** <span class="fill-in">[Add what check?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1952,7 +1973,7 @@ public List<String> processLeft_Buggy(Event<String, String> event) {
 - **What happens?**
     - processLeft(L1): Looks in rightState, empty, no match → stores L1
     - processRight(R1): Looks in leftState, finds L1, match! → stores R1
-    - **Problem:** _[Is this symmetric? Do we emit join twice or once?]_
+    - **Problem:** <span class="fill-in">[Is this symmetric? Do we emit join twice or once?]</span>
 
 - **Scenario 2:**
     - Right event R1 arrives first at T=0
@@ -1960,16 +1981,16 @@ public List<String> processLeft_Buggy(Event<String, String> event) {
 - **What happens?**
     - processRight(R1): Looks in leftState, empty, no match → stores R1
     - processLeft(L1): Looks in rightState, finds R1, match! → stores L1
-    - **Problem:** _[Same or different from scenario 1?]_
+    - **Problem:** <span class="fill-in">[Same or different from scenario 1?]</span>
 
 **Question:** Should the join be emitted by processLeft, processRight, or both?
 
-Your answer: _[Fill in]_
+Your answer: <span class="fill-in">[Fill in]</span>
 
 **Memory issue:**
 
-- **Without TTL on state, what happens?** _[Fill in]_
-- **With join window = 5 seconds, what TTL should you use?** _[Fill in]_
+- **Without TTL on state, what happens?** <span class="fill-in">[Fill in]</span>
+- **With join window = 5 seconds, what TTL should you use?** <span class="fill-in">[Fill in]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -2011,10 +2032,10 @@ After finding and fixing all bugs:
 
 **Common mistakes you discovered:**
 
-1. _[List the patterns - e.g., "Not accounting for allowed lateness"]_
-2. _[Fill in]_
-3. _[Fill in]_
-4. _[Fill in]_
+1. <span class="fill-in">[List the patterns - e.g., "Not accounting for allowed lateness"]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
+4. <span class="fill-in">[Fill in]</span>
 
 **Prevention checklist:**
 
@@ -2037,80 +2058,80 @@ Answer after implementation:
 
 **Use Tumbling Window when:**
 
-- Fixed time boundaries: _[Every hour, every day]_
-- Non-overlapping: _[Each event in exactly one window]_
-- Simple aggregation: _[Count, sum per time period]_
-- Example: _[Hourly sales reports, daily active users]_
+- Fixed time boundaries: <span class="fill-in">[Every hour, every day]</span>
+- Non-overlapping: <span class="fill-in">[Each event in exactly one window]</span>
+- Simple aggregation: <span class="fill-in">[Count, sum per time period]</span>
+- Example: <span class="fill-in">[Hourly sales reports, daily active users]</span>
 
 **Use Sliding Window when:**
 
-- Moving average: _[Last N minutes]_
-- Overlapping periods: _[Need smooth transitions]_
-- Real-time dashboards: _[Updated frequently]_
-- Example: _[5-minute average updated every 30 seconds]_
+- Moving average: <span class="fill-in">[Last N minutes]</span>
+- Overlapping periods: <span class="fill-in">[Need smooth transitions]</span>
+- Real-time dashboards: <span class="fill-in">[Updated frequently]</span>
+- Example: <span class="fill-in">[5-minute average updated every 30 seconds]</span>
 
 **Use Session Window when:**
 
-- User activity: _[Group by engagement sessions]_
-- Variable length: _[Based on inactivity]_
-- Burst detection: _[Cluster related events]_
-- Example: _[User browsing sessions, click streams]_
+- User activity: <span class="fill-in">[Group by engagement sessions]</span>
+- Variable length: <span class="fill-in">[Based on inactivity]</span>
+- Burst detection: <span class="fill-in">[Cluster related events]</span>
+- Example: <span class="fill-in">[User browsing sessions, click streams]</span>
 
 ### Question 2: How do you handle late data?
 
 **Use Watermarks when:**
 
-- Bounded lateness: _[Most events arrive within X seconds]_
-- Completeness needed: _[Want accurate results]_
-- Can tolerate delay: _[Results can wait for late data]_
+- Bounded lateness: <span class="fill-in">[Most events arrive within X seconds]</span>
+- Completeness needed: <span class="fill-in">[Want accurate results]</span>
+- Can tolerate delay: <span class="fill-in">[Results can wait for late data]</span>
 
 **Allow Lateness when:**
 
-- Some late arrivals: _[Network delays, mobile sync]_
-- Update results: _[Can emit corrections]_
-- Balance accuracy/latency: _[Wait a bit, not forever]_
+- Some late arrivals: <span class="fill-in">[Network delays, mobile sync]</span>
+- Update results: <span class="fill-in">[Can emit corrections]</span>
+- Balance accuracy/latency: <span class="fill-in">[Wait a bit, not forever]</span>
 
 **Drop Late Data when:**
 
-- Strict latency: _[Need real-time results]_
-- Rare late arrivals: _[< 1% of events]_
-- Approximate OK: _[Metrics, dashboards]_
+- Strict latency: <span class="fill-in">[Need real-time results]</span>
+- Rare late arrivals: <span class="fill-in">[< 1% of events]</span>
+- Approximate OK: <span class="fill-in">[Metrics, dashboards]</span>
 
 ### Question 3: Do you need state?
 
 **Stateless processing when:**
 
-- Pure transformations: _[map, filter]_
-- No aggregation: _[Just routing events]_
-- No joins: _[Single stream]_
-- Maximum throughput: _[No state overhead]_
+- Pure transformations: <span class="fill-in">[map, filter]</span>
+- No aggregation: <span class="fill-in">[Just routing events]</span>
+- No joins: <span class="fill-in">[Single stream]</span>
+- Maximum throughput: <span class="fill-in">[No state overhead]</span>
 
 **Stateful processing when:**
 
-- Aggregations: _[count, sum, average]_
-- Joins: _[Combine multiple streams]_
-- Enrichment: _[Add reference data]_
-- Session tracking: _[User state across events]_
+- Aggregations: <span class="fill-in">[count, sum, average]</span>
+- Joins: <span class="fill-in">[Combine multiple streams]</span>
+- Enrichment: <span class="fill-in">[Add reference data]</span>
+- Session tracking: <span class="fill-in">[User state across events]</span>
 
 ### Question 4: What consistency level?
 
 **At-most-once when:**
 
-- Monitoring/Metrics: _[Losing some data OK]_
-- Maximum throughput: _[No overhead]_
-- Non-critical: _[Dashboards, alerts]_
+- Monitoring/Metrics: <span class="fill-in">[Losing some data OK]</span>
+- Maximum throughput: <span class="fill-in">[No overhead]</span>
+- Non-critical: <span class="fill-in">[Dashboards, alerts]</span>
 
 **At-least-once when:**
 
-- Idempotent operations: _[Safe to retry]_
-- Can deduplicate: _[Downstream handles duplicates]_
-- Good balance: _[Performance + reliability]_
+- Idempotent operations: <span class="fill-in">[Safe to retry]</span>
+- Can deduplicate: <span class="fill-in">[Downstream handles duplicates]</span>
+- Good balance: <span class="fill-in">[Performance + reliability]</span>
 
 **Exactly-once when:**
 
-- Financial: _[Money, billing, payments]_
-- Critical business logic: _[Inventory, orders]_
-- Compliance: _[Audit trails]_
+- Financial: <span class="fill-in">[Money, billing, payments]</span>
+- Critical business logic: <span class="fill-in">[Inventory, orders]</span>
+- Compliance: <span class="fill-in">[Audit trails]</span>
 
 ### Your Decision Tree
 
@@ -2145,33 +2166,33 @@ Stream Processing Pattern Selection
 
 **Don't do this:**
 
-1. **Large state without cleanup** - _[Set TTL, use cleanup triggers]_
-2. **No backpressure handling** - _[Rate limit, buffer with spillover]_
-3. **Ignoring late data** - _[Understand arrival patterns first]_
-4. **Synchronous external calls** - _[Use async I/O or batching]_
-5. **No monitoring of watermarks** - _[Track lag, late events]_
-6. **Infinite session windows** - _[Set max session duration]_
-7. **Stateful operations without checkpoints** - _[Enable fault tolerance]_
+1. **Large state without cleanup** - <span class="fill-in">[Set TTL, use cleanup triggers]</span>
+2. **No backpressure handling** - <span class="fill-in">[Rate limit, buffer with spillover]</span>
+3. **Ignoring late data** - <span class="fill-in">[Understand arrival patterns first]</span>
+4. **Synchronous external calls** - <span class="fill-in">[Use async I/O or batching]</span>
+5. **No monitoring of watermarks** - <span class="fill-in">[Track lag, late events]</span>
+6. **Infinite session windows** - <span class="fill-in">[Set max session duration]</span>
+7. **Stateful operations without checkpoints** - <span class="fill-in">[Enable fault tolerance]</span>
 
 ### The Rule of Three: Alternatives
 
 **Option 1: Batch Processing (e.g., Spark)**
 
-- Pros: _[Simple, high throughput, SQL support]_
-- Cons: _[Higher latency, no real-time]_
-- Use when: _[Hourly/daily jobs, historical data]_
+- Pros: <span class="fill-in">[Simple, high throughput, SQL support]</span>
+- Cons: <span class="fill-in">[Higher latency, no real-time]</span>
+- Use when: <span class="fill-in">[Hourly/daily jobs, historical data]</span>
 
 **Option 2: Stream Processing (e.g., Flink, Kafka Streams)**
 
-- Pros: _[Low latency, exactly-once, stateful]_
-- Cons: _[Complex, operational overhead]_
-- Use when: _[Real-time, event-driven, sub-second]_
+- Pros: <span class="fill-in">[Low latency, exactly-once, stateful]</span>
+- Cons: <span class="fill-in">[Complex, operational overhead]</span>
+- Use when: <span class="fill-in">[Real-time, event-driven, sub-second]</span>
 
 **Option 3: Micro-Batch (e.g., Spark Streaming)**
 
-- Pros: _[Balance latency/throughput, Spark ecosystem]_
-- Cons: _[Not true streaming, higher latency than pure streaming]_
-- Use when: _[Second-level latency OK, existing Spark]_
+- Pros: <span class="fill-in">[Balance latency/throughput, Spark ecosystem]</span>
+- Cons: <span class="fill-in">[Not true streaming, higher latency than pure streaming]</span>
+- Use when: <span class="fill-in">[Second-level latency OK, existing Spark]</span>
 
 ---
 
@@ -2189,23 +2210,26 @@ Stream Processing Pattern Selection
 
 **Your design:**
 
-Windowing strategy: _[Tumbling, Sliding, or Session?]_
+Windowing strategy: <span class="fill-in">[Tumbling, Sliding, or Session?]</span>
 
 Reasoning:
-- Window type: _[Fill in]_
-- Window size: _[Fill in]_
-- Slide interval: _[Fill in]_
-- Why this choice: _[Fill in]_
 
-Late data handling: _[How to handle 30s delayed mobile events?]_
-- Watermark strategy: _[Fill in]_
-- Allowed lateness: _[Fill in]_
-- Trade-offs: _[Fill in]_
+- Window type: <span class="fill-in">[Fill in]</span>
+- Window size: <span class="fill-in">[Fill in]</span>
+- Slide interval: <span class="fill-in">[Fill in]</span>
+- Why this choice: <span class="fill-in">[Fill in]</span>
 
-State requirements: _[What state do you need?]_
-- Per-key state: _[Fill in]_
-- State backend: _[In-memory or RocksDB?]_
-- TTL: _[Fill in]_
+Late data handling: <span class="fill-in">[How to handle 30s delayed mobile events?]</span>
+
+- Watermark strategy: <span class="fill-in">[Fill in]</span>
+- Allowed lateness: <span class="fill-in">[Fill in]</span>
+- Trade-offs: <span class="fill-in">[Fill in]</span>
+
+State requirements: <span class="fill-in">[What state do you need?]</span>
+
+- Per-key state: <span class="fill-in">[Fill in]</span>
+- State backend: <span class="fill-in">[In-memory or RocksDB?]</span>
+- TTL: <span class="fill-in">[Fill in]</span>
 
 ### Scenario 2: Fraud Detection System
 
@@ -2219,19 +2243,22 @@ State requirements: _[What state do you need?]_
 
 **Your design:**
 
-Pattern detection: _[How to detect patterns across events?]_
-- Windowing: _[Fill in]_
-- State needed: _[Fill in]_
-- Join strategy: _[Fill in]_
+Pattern detection: <span class="fill-in">[How to detect patterns across events?]</span>
 
-Consistency: _[At-most-once, at-least-once, or exactly-once?]_
-- Choice: _[Fill in]_
-- Why: _[Fill in]_
-- Implementation: _[Deduplication? Transactions?]_
+- Windowing: <span class="fill-in">[Fill in]</span>
+- State needed: <span class="fill-in">[Fill in]</span>
+- Join strategy: <span class="fill-in">[Fill in]</span>
 
-Latency: _[How to meet 2-second requirement?]_
-- Watermark strategy: _[Fill in]_
-- Trade-offs: _[Accuracy vs speed]_
+Consistency: <span class="fill-in">[At-most-once, at-least-once, or exactly-once?]</span>
+
+- Choice: <span class="fill-in">[Fill in]</span>
+- Why: <span class="fill-in">[Fill in]</span>
+- Implementation: <span class="fill-in">[Deduplication? Transactions?]</span>
+
+Latency: <span class="fill-in">[How to meet 2-second requirement?]</span>
+
+- Watermark strategy: <span class="fill-in">[Fill in]</span>
+- Trade-offs: <span class="fill-in">[Accuracy vs speed]</span>
 
 ### Scenario 3: IoT Sensor Aggregation
 
@@ -2245,24 +2272,28 @@ Latency: _[How to meet 2-second requirement?]_
 
 **Your design:**
 
-Windowing: _[Which type and why?]_
-- Window type: _[Fill in]_
-- Size: _[Fill in]_
-- Reasoning: _[Fill in]_
+Windowing: <span class="fill-in">[Which type and why?]</span>
 
-Late data: _[How to handle hours-late data?]_
-- Watermark strategy: _[Fill in]_
-- Allowed lateness: _[Fill in]_
-- Very late data: _[Drop or reprocess?]_
+- Window type: <span class="fill-in">[Fill in]</span>
+- Size: <span class="fill-in">[Fill in]</span>
+- Reasoning: <span class="fill-in">[Fill in]</span>
 
-State management: _[How to manage state for 10K sensors?]_
-- State size: _[Estimate per sensor]_
-- TTL: _[How long to keep state?]_
-- Cleanup: _[When to purge old state?]_
+Late data: <span class="fill-in">[How to handle hours-late data?]</span>
 
-Output: _[How to avoid duplicate writes to database?]_
-- Strategy: _[Idempotent writes? Deduplication? Transactions?]_
-- Implementation: _[Fill in]_
+- Watermark strategy: <span class="fill-in">[Fill in]</span>
+- Allowed lateness: <span class="fill-in">[Fill in]</span>
+- Very late data: <span class="fill-in">[Drop or reprocess?]</span>
+
+State management: <span class="fill-in">[How to manage state for 10K sensors?]</span>
+
+- State size: <span class="fill-in">[Estimate per sensor]</span>
+- TTL: <span class="fill-in">[How long to keep state?]</span>
+- Cleanup: <span class="fill-in">[When to purge old state?]</span>
+
+Output: <span class="fill-in">[How to avoid duplicate writes to database?]</span>
+
+- Strategy: <span class="fill-in">[Idempotent writes? Deduplication? Transactions?]</span>
+- Implementation: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -2325,23 +2356,23 @@ Before moving to the next topic:
 
 > "Stream processing is..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **Follow-up questions they ask:**
 
 **Q1: "What's the difference between a tumbling window and a sliding window?"**
 
-Your answer: _[Fill in - use an analogy]_
+Your answer: <span class="fill-in">[Fill in - use an analogy]</span>
 
 **Q2: "Why do we need watermarks? Can't we just process events as they arrive?"**
 
-Your answer: _[Fill in - explain the late data problem]_
+Your answer: <span class="fill-in">[Fill in - explain the late data problem]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by a non-technical person? _[Yes/No]_
-- Did you use analogies or real-world examples? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
+- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -2362,16 +2393,17 @@ Timeline: 0 ─────── 3000 ─────── 6000 ────�
                                [Window 6000-9000ms]
 
 Event assignments:
-- Event@1000ms → Window _[Fill in start-end]_
-- Event@2500ms → Window _[Fill in start-end]_
-- Event@3000ms → Window _[Fill in start-end]_
-- Event@5500ms → Window _[Fill in start-end]_
-- Event@6000ms → Window _[Fill in start-end]_
-- Event@8000ms → Window _[Fill in start-end]_
 
-Window 0-3000: Count = ___
-Window 3000-6000: Count = ___
-Window 6000-9000: Count = ___
+- Event@1000ms → Window <span class="fill-in">[Fill in start-end]</span>
+- Event@2500ms → Window <span class="fill-in">[Fill in start-end]</span>
+- Event@3000ms → Window <span class="fill-in">[Fill in start-end]</span>
+- Event@5500ms → Window <span class="fill-in">[Fill in start-end]</span>
+- Event@6000ms → Window <span class="fill-in">[Fill in start-end]</span>
+- Event@8000ms → Window <span class="fill-in">[Fill in start-end]</span>
+
+Window 0-3000: Count = <span class="fill-in">___</span>
+Window 3000-6000: Count = <span class="fill-in">___</span>
+Window 6000-9000: Count = <span class="fill-in">___</span>
 ```
 
 **Sliding Window (size=3000ms, slide=2000ms):**
@@ -2384,8 +2416,8 @@ Timeline: 0 ─── 2000 ─── 4000 ─── 6000 ─── 8000 ──�
                                    [W4: 6000-9000]
                                             [W5: 8000-11000]
 
-Event@2500ms appears in which windows? _[Fill in]_
-How many total window assignments for all 6 events? _[Calculate]_
+Event@2500ms appears in which windows? <span class="fill-in">[Fill in]</span>
+How many total window assignments for all 6 events? <span class="fill-in">[Calculate]</span>
 ```
 
 **Verification:**
@@ -2411,28 +2443,32 @@ How many total window assignments for all 6 events? _[Calculate]_
 
 **Q1: What watermark delay should you use?**
 
-Your answer: _[Fill in with reasoning]_
-- Too small: _[What happens?]_
-- Too large: _[What happens?]_
-- Your choice: _[Fill in]_ seconds
+Your answer: <span class="fill-in">[Fill in with reasoning]</span>
+
+- Too small: <span class="fill-in">[What happens?]</span>
+- Too large: <span class="fill-in">[What happens?]</span>
+- Your choice: <span class="fill-in">[Fill in]</span> seconds
 
 **Q2: What allowed lateness should you configure?**
 
-Your answer: _[Fill in with reasoning]_
-- Calculation: _[Show your work]_
+Your answer: <span class="fill-in">[Fill in with reasoning]</span>
+
+- Calculation: <span class="fill-in">[Show your work]</span>
 
 **Q3: When does a window [0-60000ms] close?**
 
 Given watermark = 65000ms, allowedLateness = 30000ms:
-- Window closes at: _[Calculate]_
-- Can accept event@50000ms? _[Yes/No - Why?]_
-- Can accept event@30000ms? _[Yes/No - Why?]_
+
+- Window closes at: <span class="fill-in">[Calculate]</span>
+- Can accept event@50000ms? <span class="fill-in">[Yes/No - Why?]</span>
+- Can accept event@30000ms? <span class="fill-in">[Yes/No - Why?]</span>
 
 **Q4: Memory implications**
 
 With windowSize=60s, allowedLateness=30s:
-- How many concurrent windows in memory? _[Calculate]_
-- If processing 10K events/sec, memory usage: _[Estimate]_
+
+- How many concurrent windows in memory? <span class="fill-in">[Calculate]</span>
+- If processing 10K events/sec, memory usage: <span class="fill-in">[Estimate]</span>
 
 **Verification:**
 
@@ -2449,27 +2485,28 @@ With windowSize=60s, allowedLateness=30s:
 
 | State Type | When to Use | Space Complexity | TTL Required? |
 |------------|-------------|------------------|---------------|
-| Value State | _[Fill in]_ | O(?) per key | _[Yes/No]_ |
-| List State | _[Fill in]_ | O(?) per key | _[Yes/No]_ |
-| Map State | _[Fill in]_ | O(?) per key | _[Yes/No]_ |
+| Value State | <span class="fill-in">[Fill in]</span> | O(?) per key | <span class="fill-in">[Yes/No]</span> |
+| List State | <span class="fill-in">[Fill in]</span> | O(?) per key | <span class="fill-in">[Yes/No]</span> |
+| Map State | <span class="fill-in">[Fill in]</span> | O(?) per key | <span class="fill-in">[Yes/No]</span> |
 
 **Scenario:** User session tracking for 1M active users
 
 You need to store:
+
 - Last 10 events per user
 - Session start time
 - Event count
 
 **Your design:**
 
-- State type: _[Value/List/Map?]_
-- TTL: _[How long?]_
-- Memory estimate: _[Calculate]_
-- Cleanup strategy: _[Fill in]_
+- State type: <span class="fill-in">[Value/List/Map?]</span>
+- TTL: <span class="fill-in">[How long?]</span>
+- Memory estimate: <span class="fill-in">[Calculate]</span>
+- Cleanup strategy: <span class="fill-in">[Fill in]</span>
 
 **Deep question:** Why does state need TTL in stream processing but not in batch processing?
 
-Your answer: _[Fill in - explain the fundamental difference]_
+Your answer: <span class="fill-in">[Fill in - explain the fundamental difference]</span>
 
 ---
 
@@ -2479,12 +2516,12 @@ Your answer: _[Fill in - explain the fundamental difference]_
 
 | Scenario | Window Type | Watermark Strategy | State Needed? | Why? |
 |----------|-------------|-------------------|---------------|------|
-| Hourly sales reports | _[Fill in]_ | _[Fill in]_ | _[Yes/No]_ | _[Explain]_ |
-| Fraud detection: 3 failed logins in 5 min | _[Fill in]_ | _[Fill in]_ | _[Yes/No]_ | _[Explain]_ |
-| User browsing sessions | _[Fill in]_ | _[Fill in]_ | _[Yes/No]_ | _[Explain]_ |
-| Real-time dashboard (update every 10s) | _[Fill in]_ | _[Fill in]_ | _[Yes/No]_ | _[Explain]_ |
-| IoT sensors with spotty connectivity | _[Fill in]_ | _[Fill in]_ | _[Yes/No]_ | _[Explain]_ |
-| Stream-stream join (correlate orders + shipments) | _[Fill in]_ | _[Fill in]_ | _[Yes/No]_ | _[Explain]_ |
+| Hourly sales reports | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| Fraud detection: 3 failed logins in 5 min | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| User browsing sessions | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| Real-time dashboard (update every 10s) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| IoT sensors with spotty connectivity | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| Stream-stream join (correlate orders + shipments) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -2512,33 +2549,35 @@ If you scored below 5/6, review the patterns and try again.
 - [ ] At-least-once (may duplicate)
 - [ ] Exactly-once (guaranteed)
 
-Your choice: _[Fill in]_
+Your choice: <span class="fill-in">[Fill in]</span>
 
 **Q2: Why that choice?**
 
-Your reasoning: _[Fill in - consider business impact]_
+Your reasoning: <span class="fill-in">[Fill in - consider business impact]</span>
 
 **Q3: Implementation approach:**
 
 For exactly-once, which techniques will you use?
+
 - [ ] Idempotent operations
 - [ ] Deduplication with state
 - [ ] Transactional sinks
 - [ ] Checkpointing
 
-Explain each choice: _[Fill in]_
+Explain each choice: <span class="fill-in">[Fill in]</span>
 
 **Q4: Trade-offs:**
 
 What does exactly-once cost you?
-- Latency impact: _[Estimate]_
-- Throughput impact: _[Estimate]_
-- Complexity: _[High/Medium/Low]_
-- Worth it? _[Yes/No - Why?]_
+
+- Latency impact: <span class="fill-in">[Estimate]</span>
+- Throughput impact: <span class="fill-in">[Estimate]</span>
+- Complexity: <span class="fill-in">[High/Medium/Low]</span>
+- Worth it? <span class="fill-in">[Yes/No - Why?]</span>
 
 **Alternative scenario:** Website click analytics
 
-Would you change your consistency level? _[Yes/No - Why?]_
+Would you change your consistency level? <span class="fill-in">[Yes/No - Why?]</span>
 
 ---
 
@@ -2555,10 +2594,10 @@ Would you change your consistency level? _[Yes/No - Why?]_
 
 **Your debugging steps:**
 
-1. **First thing to check:** _[Fill in]_
-2. **Most likely cause:** _[Fill in]_
-3. **How to verify:** _[Fill in]_
-4. **Fix:** _[Fill in]_
+1. **First thing to check:** <span class="fill-in">[Fill in]</span>
+2. **Most likely cause:** <span class="fill-in">[Fill in]</span>
+3. **How to verify:** <span class="fill-in">[Fill in]</span>
+4. **Fix:** <span class="fill-in">[Fill in]</span>
 
 **Possible root causes (rank by likelihood):**
 
@@ -2568,12 +2607,13 @@ Would you change your consistency level? _[Yes/No - Why?]_
 - [ ] Window closing logic bug
 - [ ] State backend failure
 
-Explain your ranking: _[Fill in]_
+Explain your ranking: <span class="fill-in">[Fill in]</span>
 
 **Prevention:** What monitoring would catch this early?
-- Metric 1: _[Fill in]_
-- Metric 2: _[Fill in]_
-- Metric 3: _[Fill in]_
+
+- Metric 1: <span class="fill-in">[Fill in]</span>
+- Metric 2: <span class="fill-in">[Fill in]</span>
+- Metric 3: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -2638,9 +2678,9 @@ public class WatermarkProcessor {
 
 **Expected behavior:**
 
-- Event@500ms arriving late: _[Accepted or dropped?]_
-- Window [0-1000ms] count: _[How many?]_
-- Window [1000-2000ms] count: _[How many?]_
+- Event@500ms arriving late: <span class="fill-in">[Accepted or dropped?]</span>
+- Window [0-1000ms] count: <span class="fill-in">[How many?]</span>
+- Window [1000-2000ms] count: <span class="fill-in">[How many?]</span>
 
 **Verification:**
 
@@ -2662,7 +2702,7 @@ Your explanation:
 
 > "Event time is better than processing time because..."
 >
-> _[Fill in - use an example scenario where processing time fails]_
+> <span class="fill-in">[Fill in - use an example scenario where processing time fails]</span>
 
 **Task 2: Explain when NOT to use stream processing.**
 
@@ -2670,13 +2710,13 @@ Your explanation:
 
 > "You should NOT use stream processing when..."
 >
-> _[Fill in - list 3-4 scenarios and explain why batch is better]_
+> <span class="fill-in">[Fill in - list 3-4 scenarios and explain why batch is better]</span>
 
 **Examples of when stream processing is overkill:**
 
-1. _[Scenario where batch works fine]_
-2. _[Scenario where cost outweighs benefit]_
-3. _[Scenario where simpler solution exists]_
+1. <span class="fill-in">[Scenario where batch works fine]</span>
+2. <span class="fill-in">[Scenario where cost outweighs benefit]</span>
+3. <span class="fill-in">[Scenario where simpler solution exists]</span>
 
 ---
 
@@ -2699,33 +2739,33 @@ Your explanation:
 **Your complete design:**
 
 1. **Window strategy:**
-    - Type: _[Tumbling/Sliding/Session?]_
-    - Size: _[Fill in]_
-    - Slide: _[If sliding]_
-    - Reasoning: _[Why this choice?]_
+    - Type: <span class="fill-in">[Tumbling/Sliding/Session?]</span>
+    - Size: <span class="fill-in">[Fill in]</span>
+    - Slide: <span class="fill-in">[If sliding]</span>
+    - Reasoning: <span class="fill-in">[Why this choice?]</span>
 
 2. **Watermark configuration:**
-    - Delay: _[Fill in]_
-    - Allowed lateness: _[Fill in]_
-    - Reasoning: _[Why these values?]_
+    - Delay: <span class="fill-in">[Fill in]</span>
+    - Allowed lateness: <span class="fill-in">[Fill in]</span>
+    - Reasoning: <span class="fill-in">[Why these values?]</span>
 
 3. **State management:**
-    - What state: _[Fill in]_
-    - TTL: _[Fill in]_
-    - Backend: _[In-memory or RocksDB?]_
+    - What state: <span class="fill-in">[Fill in]</span>
+    - TTL: <span class="fill-in">[Fill in]</span>
+    - Backend: <span class="fill-in">[In-memory or RocksDB?]</span>
 
 4. **Stream join strategy:**
-    - How to join 3 streams: _[Fill in approach]_
-    - Join window: _[Fill in]_
+    - How to join 3 streams: <span class="fill-in">[Fill in approach]</span>
+    - Join window: <span class="fill-in">[Fill in]</span>
 
 5. **Exactly-once for purchases:**
-    - Approach: _[Deduplication? Transactions?]_
-    - Implementation: _[Fill in details]_
+    - Approach: <span class="fill-in">[Deduplication? Transactions?]</span>
+    - Implementation: <span class="fill-in">[Fill in details]</span>
 
 6. **Performance estimates:**
-    - Memory per key: _[Calculate]_
-    - Total memory: _[Estimate]_
-    - Latency: _[Estimate end-to-end]_
+    - Memory per key: <span class="fill-in">[Calculate]</span>
+    - Total memory: <span class="fill-in">[Estimate]</span>
+    - Latency: <span class="fill-in">[Estimate end-to-end]</span>
 
 **Draw your pipeline architecture:**
 ```

@@ -6,87 +6,94 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing different message queue patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is a message queue in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **Why do we need message queues?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy for simple queue:**
     - Example: "A simple queue is like a line at a store where..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **What is the producer-consumer pattern in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 5. **How is pub-sub different from producer-consumer?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 6. **Real-world analogy for pub-sub:**
     - Example: "Pub-sub is like a newsletter subscription where..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 7. **What is a priority queue in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 8. **When would you use a dead letter queue?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Synchronous API call to process 100 tasks:**
-    - Time if each task takes 1 second: _[Your guess: ?]_
-    - Verified after learning: _[Actual: ?]_
+    - Time if each task takes 1 second: <span class="fill-in">[Your guess: ?]</span>
+    - Verified after learning: <span class="fill-in">[Actual: ?]</span>
 
 2. **Message queue with 3 workers processing 100 tasks:**
-    - Time if each task takes 1 second: _[Your guess: ?]_
-    - Speedup factor: _[Your guess: ?x faster]_
-    - Verified: _[Actual]_
+    - Time if each task takes 1 second: <span class="fill-in">[Your guess: ?]</span>
+    - Speedup factor: <span class="fill-in">[Your guess: ?x faster]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **Memory usage prediction:**
-    - Simple queue with 1000 messages: _[Your guess: O(?)]_
-    - Pub-sub with 5 subscribers and 100 messages: _[Your guess: O(?)]_
-    - Verified: _[Actual]_
+    - Simple queue with 1000 messages: <span class="fill-in">[Your guess: O(?)]</span>
+    - Pub-sub with 5 subscribers and 100 messages: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 ### Scenario Predictions
 
 **Scenario 1:** Image upload service - users upload photos that need resizing
 
-- **Should you use message queue?** _[Yes/No - Why?]_
-- **Pattern to use:** _[Simple queue/Producer-consumer/Pub-sub/Priority]_
-- **Why that pattern?** _[Fill in your reasoning]_
-- **What happens without queue?** _[Fill in]_
+- **Should you use message queue?** <span class="fill-in">[Yes/No - Why?]</span>
+- **Pattern to use:** <span class="fill-in">[Simple queue/Producer-consumer/Pub-sub/Priority]</span>
+- **Why that pattern?** <span class="fill-in">[Fill in your reasoning]</span>
+- **What happens without queue?** <span class="fill-in">[Fill in]</span>
 
 **Scenario 2:** Notification system - send email AND SMS AND push notification
 
-- **Should you use message queue?** _[Yes/No - Why?]_
-- **Pattern to use:** _[Simple queue/Producer-consumer/Pub-sub/Priority]_
-- **Why that pattern?** _[Fill in your reasoning]_
-- **How many times is each message delivered?** _[Fill in]_
+- **Should you use message queue?** <span class="fill-in">[Yes/No - Why?]</span>
+- **Pattern to use:** <span class="fill-in">[Simple queue/Producer-consumer/Pub-sub/Priority]</span>
+- **Why that pattern?** <span class="fill-in">[Fill in your reasoning]</span>
+- **How many times is each message delivered?** <span class="fill-in">[Fill in]</span>
 
 **Scenario 3:** Payment processing - some customers are VIP, need faster processing
 
-- **Should you use message queue?** _[Yes/No - Why?]_
-- **Pattern to use:** _[Simple queue/Producer-consumer/Pub-sub/Priority]_
-- **Why that pattern?** _[Fill in your reasoning]_
-- **How do you prevent low-priority starvation?** _[Fill in]_
+- **Should you use message queue?** <span class="fill-in">[Yes/No - Why?]</span>
+- **Pattern to use:** <span class="fill-in">[Simple queue/Producer-consumer/Pub-sub/Priority]</span>
+- **Why that pattern?** <span class="fill-in">[Fill in your reasoning]</span>
+- **How do you prevent low-priority starvation?** <span class="fill-in">[Fill in]</span>
 
 ### Trade-off Quiz
 
 **Question:** When is a message queue WORSE than direct synchronous calls?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** What's the MAIN difference between a queue and pub-sub?
 
@@ -95,18 +102,21 @@
 - [ ] Queue delivers to one consumer, pub-sub to many
 - [ ] Queue supports priorities
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 **Question:** What does "at-least-once delivery" mean?
 
-- Your answer: _[Fill in before implementation]_
-- What problem does it cause? _[Fill in]_
-- Verified: _[Actual answer after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- What problem does it cause? <span class="fill-in">[Fill in]</span>
+- Verified: <span class="fill-in">[Actual answer after learning]</span>
 
 **Question:** When should you use a dead letter queue?
 
-- Your answer: _[Fill in before implementation]_
-- Verified: _[Fill in after implementation]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified: <span class="fill-in">[Fill in after implementation]</span>
+
+
+</div>
 
 ---
 
@@ -227,9 +237,10 @@ public class PubSubImageService {
 | Pub-Sub | <100ms | ~200 sec (3 min) | Excellent | Per-service retry |
 
 **Your calculation:** For 1,000 uploads with 10 workers:
-- Synchronous: _____ seconds
-- Queue: _____ seconds
-- Speedup: _____ times faster
+
+- Synchronous: <span class="fill-in">_____</span> seconds
+- Queue: <span class="fill-in">_____</span> seconds
+- Speedup: <span class="fill-in">_____</span> times faster
 
 #### Why Does Message Queue Work?
 
@@ -249,9 +260,13 @@ User → [Upload] → Response        (instant)
 
 **After implementing, explain in your own words:**
 
-- _[Why does async processing improve user experience?]_
-- _[What happens if a worker fails?]_
-- _[When would you NOT use a message queue?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does async processing improve user experience?]</span>
+- <span class="fill-in">[What happens if a worker fails?]</span>
+- <span class="fill-in">[When would you NOT use a message queue?]</span>
+
+</div>
 
 #### Queue vs Pub-Sub: When to Use Each
 
@@ -260,20 +275,24 @@ User → [Upload] → Response        (instant)
 - One consumer should process each message
 - Work distribution across workers
 - Task processing (jobs, background work)
-- Example: _[Fill in your example]_
+- Example: <span class="fill-in">[Fill in your example]</span>
 
 **Use Pub-Sub when:**
 
 - Multiple consumers need each message
 - Broadcasting events
 - Event-driven architecture
-- Example: _[Fill in your example]_
+- Example: <span class="fill-in">[Fill in your example]</span>
 
 **After implementing, explain the difference:**
 
-- _[How does message delivery differ?]_
-- _[Which one for image processing? Why?]_
-- _[Which one for notifications? Why?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[How does message delivery differ?]</span>
+- <span class="fill-in">[Which one for image processing? Why?]</span>
+- <span class="fill-in">[Which one for notifications? Why?]</span>
+
+</div>
 
 ---
 
@@ -1170,15 +1189,15 @@ public class BuggyMessageQueue {
 
 **Your debugging:**
 
-- **Bug 1 location:** _[Which line?]_
-- **Bug 1 explanation:** _[What goes wrong?]_
-- **Bug 1 fix:** _[How to fix?]_
-- **Scenario that exposes bug:** _[Fill in]_
+- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 1 explanation:** <span class="fill-in">[What goes wrong?]</span>
+- **Bug 1 fix:** <span class="fill-in">[How to fix?]</span>
+- **Scenario that exposes bug:** <span class="fill-in">[Fill in]</span>
 
-- **Bug 2 location:** _[Which line?]_
-- **Bug 2 explanation:** _[What's the problem?]_
-- **Bug 2 fix:** _[How to fix?]_
-- **Why does it lose messages?** _[Fill in]_
+- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 2 explanation:** <span class="fill-in">[What's the problem?]</span>
+- **Bug 2 fix:** <span class="fill-in">[How to fix?]</span>
+- **Why does it lose messages?** <span class="fill-in">[Fill in]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1253,11 +1272,11 @@ public class BuggyConsumer {
 
 **Your debugging:**
 
-- **Bug:** _[What's the problem with this pattern?]_
-- **At-least-once delivery issue:** _[Explain the problem]_
-- **Exactly-once challenge:** _[Why is this hard to solve?]_
-- **Fix option 1:** _[How to make it safe?]_
-- **Fix option 2:** _[Alternative approach?]_
+- **Bug:** <span class="fill-in">[What's the problem with this pattern?]</span>
+- **At-least-once delivery issue:** <span class="fill-in">[Explain the problem]</span>
+- **Exactly-once challenge:** <span class="fill-in">[Why is this hard to solve?]</span>
+- **Fix option 1:** <span class="fill-in">[How to make it safe?]</span>
+- **Fix option 2:** <span class="fill-in">[Alternative approach?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1266,6 +1285,7 @@ public class BuggyConsumer {
 
 **At-least-once delivery problem:**
 ```
+
 1. Receive message (removed from queue)
 2. Start processing
 3. Process fails halfway
@@ -1273,6 +1293,7 @@ public class BuggyConsumer {
 ```
 
 **Exactly-once challenge:** Very hard to guarantee. You need:
+
 - Idempotent processing (safe to process twice)
 - Transactional processing
 - Deduplication mechanism
@@ -1350,11 +1371,11 @@ public class BuggyPubSub {
 
 **Your debugging:**
 
-- **Bug:** _[What causes out-of-order delivery?]_
-- **Example scenario:** _[When does this fail?]_
-- **Why is ordering important?** _[Give examples]_
-- **Fix for ordered delivery:** _[How to guarantee order?]_
-- **Trade-off:** _[What do you sacrifice?]_
+- **Bug:** <span class="fill-in">[What causes out-of-order delivery?]</span>
+- **Example scenario:** <span class="fill-in">[When does this fail?]</span>
+- **Why is ordering important?** <span class="fill-in">[Give examples]</span>
+- **Fix for ordered delivery:** <span class="fill-in">[How to guarantee order?]</span>
+- **Trade-off:** <span class="fill-in">[What do you sacrifice?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1461,19 +1482,19 @@ public class BuggyDLQ {
 
 **Your debugging:**
 
-- **Bug 1:** _[What's wrong with immediate retry?]_
-- **Bug 1 impact:** _[What happens to the system?]_
-- **Bug 1 fix:** _[How to fix?]_
+- **Bug 1:** <span class="fill-in">[What's wrong with immediate retry?]</span>
+- **Bug 1 impact:** <span class="fill-in">[What happens to the system?]</span>
+- **Bug 1 fix:** <span class="fill-in">[How to fix?]</span>
 
-- **Bug 2:** _[What if DLQ is full?]_
-- **Bug 2 impact:** _[Messages lost or blocked?]_
-- **Bug 2 fix:** _[How to handle full DLQ?]_
+- **Bug 2:** <span class="fill-in">[What if DLQ is full?]</span>
+- **Bug 2 impact:** <span class="fill-in">[Messages lost or blocked?]</span>
+- **Bug 2 fix:** <span class="fill-in">[How to handle full DLQ?]</span>
 
 **Additional questions:**
 
-- **Retry timing strategy:** _[Constant vs exponential backoff?]_
-- **When to stop retrying:** _[How to decide max retries?]_
-- **DLQ monitoring:** _[How to detect problems?]_
+- **Retry timing strategy:** <span class="fill-in">[Constant vs exponential backoff?]</span>
+- **When to stop retrying:** <span class="fill-in">[How to decide max retries?]</span>
+- **DLQ monitoring:** <span class="fill-in">[How to detect problems?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1557,17 +1578,17 @@ After finding and fixing all bugs:
 
 **Common mistakes you discovered:**
 
-1. _[List the patterns you noticed]_
-2. _[Fill in]_
-3. _[Fill in]_
-4. _[Fill in]_
+1. <span class="fill-in">[List the patterns you noticed]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
+4. <span class="fill-in">[Fill in]</span>
 
 **Key takeaways:**
 
-- **Concurrency:** _[What did you learn?]_
-- **Delivery guarantees:** _[What did you learn?]_
-- **Error handling:** _[What did you learn?]_
-- **Monitoring:** _[What did you learn?]_
+- **Concurrency:** <span class="fill-in">[What did you learn?]</span>
+- **Delivery guarantees:** <span class="fill-in">[What did you learn?]</span>
+- **Error handling:** <span class="fill-in">[What did you learn?]</span>
+- **Monitoring:** <span class="fill-in">[What did you learn?]</span>
 
 ---
 
@@ -1579,50 +1600,50 @@ After finding and fixing all bugs:
 
 **When to use Simple Queue?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 **When to use Producer-Consumer?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 **When to use Pub-Sub?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 **When to use Priority Queue?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 **When to use Dead Letter Queue?**
 
-- Your scenario: _[Fill in]_
-- Key factors: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key factors: <span class="fill-in">[Fill in]</span>
 
 ### 2. Trade-offs
 
 **Simple Queue:**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 **Producer-Consumer:**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 **Pub-Sub:**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 **Priority Queue:**
 
-- Pros: _[Fill in after understanding]_
-- Cons: _[Fill in after understanding]_
+- Pros: <span class="fill-in">[Fill in after understanding]</span>
+- Cons: <span class="fill-in">[Fill in after understanding]</span>
 
 ### 3. Your Decision Tree
 
@@ -1641,18 +1662,18 @@ What is your communication pattern?
 
 **Message Queues:**
 
-1. _[When do message queues fail? Fill in]_
-2. _[Another failure case]_
+1. <span class="fill-in">[When do message queues fail? Fill in]</span>
+2. <span class="fill-in">[Another failure case]</span>
 
 **Pub-Sub:**
 
-1. _[When does pub-sub fail? Fill in]_
-2. _[Another failure case]_
+1. <span class="fill-in">[When does pub-sub fail? Fill in]</span>
+2. <span class="fill-in">[Another failure case]</span>
 
 **Priority Queue:**
 
-1. _[When does priority queue fail? Fill in]_
-2. _[Another failure case]_
+1. <span class="fill-in">[When does priority queue fail? Fill in]</span>
+2. <span class="fill-in">[Another failure case]</span>
 
 ### 5. Rule of Three - Alternatives
 
@@ -1660,9 +1681,9 @@ For each scenario, identify alternatives and compare:
 
 **Scenario: Async task processing**
 
-1. Option A: _[Fill in]_
-2. Option B: _[Fill in]_
-3. Option C: _[Fill in]_
+1. Option A: <span class="fill-in">[Fill in]</span>
+2. Option B: <span class="fill-in">[Fill in]</span>
+3. Option C: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1680,10 +1701,10 @@ For each scenario, identify alternatives and compare:
 
 **Your design:**
 
-- Which pattern would you choose? _[Fill in]_
-- Why? _[Fill in]_
-- How many workers? _[Fill in]_
-- Failure handling strategy? _[Fill in]_
+- Which pattern would you choose? <span class="fill-in">[Fill in]</span>
+- Why? <span class="fill-in">[Fill in]</span>
+- How many workers? <span class="fill-in">[Fill in]</span>
+- Failure handling strategy? <span class="fill-in">[Fill in]</span>
 
 ### Scenario 2: Notification system
 
@@ -1697,10 +1718,10 @@ For each scenario, identify alternatives and compare:
 
 **Your design:**
 
-- Which pattern would you choose? _[Fill in]_
-- Why? _[Fill in]_
-- How to handle different channels? _[Fill in]_
-- Priority strategy? _[Fill in]_
+- Which pattern would you choose? <span class="fill-in">[Fill in]</span>
+- Why? <span class="fill-in">[Fill in]</span>
+- How to handle different channels? <span class="fill-in">[Fill in]</span>
+- Priority strategy? <span class="fill-in">[Fill in]</span>
 
 ### Scenario 3: Order processing system
 
@@ -1714,10 +1735,10 @@ For each scenario, identify alternatives and compare:
 
 **Your design:**
 
-- Which pattern would you choose? _[Fill in]_
-- Why? _[Fill in]_
-- How to handle priorities? _[Fill in]_
-- Retry strategy? _[Fill in]_
+- Which pattern would you choose? <span class="fill-in">[Fill in]</span>
+- Why? <span class="fill-in">[Fill in]</span>
+- How to handle priorities? <span class="fill-in">[Fill in]</span>
+- Retry strategy? <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1747,19 +1768,19 @@ For each scenario, identify alternatives and compare:
 
 > "A message queue is a system where..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **Now explain the difference between queue and pub-sub:**
 
 > "A queue delivers to one consumer, while pub-sub..."
 >
-> _[Fill in - explain the key difference]_
+> <span class="fill-in">[Fill in - explain the key difference]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by a non-technical person? _[Yes/No]_
-- Did you use analogies or real-world examples? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
+- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -1797,12 +1818,12 @@ What happens if Worker 2 fails?
 
 | Scenario | Pattern (Queue/Pub-Sub/Priority/DLQ) | Why? |
 |----------|--------------------------------------|------|
-| Image processing service | _[Fill in]_ | _[Explain]_ |
-| Notification system (email + SMS + push) | _[Fill in]_ | _[Explain]_ |
-| Order processing with VIP priority | _[Fill in]_ | _[Explain]_ |
-| Payment processing with retries | _[Fill in]_ | _[Explain]_ |
-| Event logging to multiple systems | _[Fill in]_ | _[Explain]_ |
-| Background job processing | _[Fill in]_ | _[Explain]_ |
+| Image processing service | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Notification system (email + SMS + push) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Order processing with VIP priority | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Payment processing with retries | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Event logging to multiple systems | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Background job processing | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1816,17 +1837,17 @@ If you scored below 5/6, review the patterns and try again.
 
 | Delivery Type | Description | Risk | Use When |
 |---------------|-------------|------|----------|
-| At-most-once | _[Fill in]_ | _[Fill in]_ | _[Fill in]_ |
-| At-least-once | _[Fill in]_ | _[Fill in]_ | _[Fill in]_ |
-| Exactly-once | _[Fill in]_ | _[Fill in]_ | _[Fill in]_ |
+| At-most-once | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| At-least-once | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| Exactly-once | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
 **Deep question:** Why is exactly-once delivery so hard to achieve?
 
-Your answer: _[Fill in - explain the fundamental challenge]_
+Your answer: <span class="fill-in">[Fill in - explain the fundamental challenge]</span>
 
 **Practical question:** How do you handle duplicate processing with at-least-once delivery?
 
-Your answer: _[Fill in - explain idempotency]_
+Your answer: <span class="fill-in">[Fill in - explain idempotency]</span>
 
 ---
 
@@ -1835,31 +1856,34 @@ Your answer: _[Fill in - explain idempotency]_
 **Scenario:** You're building an e-commerce order processing system with 1 million orders per day.
 
 **Option A:** Synchronous processing (process order immediately in API call)
-- Response time: _[Fill in estimate]_
-- Scalability: _[Fill in assessment]_
-- Failure handling: _[Fill in approach]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
+
+- Response time: <span class="fill-in">[Fill in estimate]</span>
+- Scalability: <span class="fill-in">[Fill in assessment]</span>
+- Failure handling: <span class="fill-in">[Fill in approach]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
 **Option B:** Message queue with workers (async processing)
-- Response time: _[Fill in estimate]_
-- Scalability: _[Fill in assessment]_
-- Failure handling: _[Fill in approach]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
 
-**Your decision:** I would choose _[A/B]_ because...
+- Response time: <span class="fill-in">[Fill in estimate]</span>
+- Scalability: <span class="fill-in">[Fill in assessment]</span>
+- Failure handling: <span class="fill-in">[Fill in approach]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
-_[Fill in your reasoning - consider throughput, latency, reliability]_
+**Your decision:** I would choose <span class="fill-in">[A/B]</span> because...
+
+<span class="fill-in">[Fill in your reasoning - consider throughput, latency, reliability]</span>
 
 **What would make you change your decision?**
 
-- _[Fill in - what constraints would flip your choice?]_
+- <span class="fill-in">[Fill in - what constraints would flip your choice?]</span>
 
 **Follow-up:** If you chose message queue, which pattern?
-- Simple queue? _[Why/Why not]_
-- Priority queue? _[Why/Why not]_
-- With DLQ? _[Why/Why not]_
+
+- Simple queue? <span class="fill-in">[Why/Why not]</span>
+- Priority queue? <span class="fill-in">[Why/Why not]</span>
+- With DLQ? <span class="fill-in">[Why/Why not]</span>
 
 ---
 
@@ -1892,10 +1916,10 @@ public class Consumer {
 
 **Your debugging:**
 
-- Bug location: _[Which line?]_
-- Bug explanation: _[What's wrong?]_
-- Bug fix: _[How to fix?]_
-- Related concept: _[Which delivery guarantee is violated?]_
+- Bug location: <span class="fill-in">[Which line?]</span>
+- Bug explanation: <span class="fill-in">[What's wrong?]</span>
+- Bug fix: <span class="fill-in">[How to fix?]</span>
+- Related concept: <span class="fill-in">[Which delivery guarantee is violated?]</span>
 
 **Verification:**
 
@@ -1911,6 +1935,7 @@ public class Consumer {
 **Task:** Design a message queue system for a real-world scenario.
 
 **Scenario:** Social media platform - when user posts, must:
+
 1. Save to database
 2. Update user's follower feeds (millions of followers for popular users)
 3. Send push notifications to active followers
@@ -1919,7 +1944,7 @@ public class Consumer {
 
 **Your design:**
 
-**Pattern choice:** _[Queue/Pub-Sub/Both - explain why]_
+**Pattern choice:** <span class="fill-in">[Queue/Pub-Sub/Both - explain why]</span>
 
 **Architecture diagram:**
 ```
@@ -1932,17 +1957,17 @@ public class Consumer {
 
 **Key decisions:**
 
-- Delivery guarantee: _[At-most/At-least/Exactly-once - why?]_
-- Priority handling: _[Needed? How?]_
-- Failure handling: _[Retry strategy? DLQ?]_
-- Scalability: _[How many workers? How to scale?]_
-- Ordering: _[Important? How to guarantee?]_
+- Delivery guarantee: <span class="fill-in">[At-most/At-least/Exactly-once - why?]</span>
+- Priority handling: <span class="fill-in">[Needed? How?]</span>
+- Failure handling: <span class="fill-in">[Retry strategy? DLQ?]</span>
+- Scalability: <span class="fill-in">[How many workers? How to scale?]</span>
+- Ordering: <span class="fill-in">[Important? How to guarantee?]</span>
 
 **Trade-offs you made:**
 
-1. _[Trade-off 1 and why]_
-2. _[Trade-off 2 and why]_
-3. _[Trade-off 3 and why]_
+1. <span class="fill-in">[Trade-off 1 and why]</span>
+2. <span class="fill-in">[Trade-off 2 and why]</span>
+3. <span class="fill-in">[Trade-off 3 and why]</span>
 
 ---
 
@@ -1956,20 +1981,20 @@ Your explanation:
 
 > "You should NOT use message queues when..."
 >
-> _[Fill in - list 3-4 scenarios and explain why]_
+> <span class="fill-in">[Fill in - list 3-4 scenarios and explain why]</span>
 
 **Examples where message queues fail:**
 
-1. _[Scenario where message queue adds unnecessary complexity]_
-2. _[Scenario where synchronous is better]_
-3. _[Scenario where message queue overhead is too high]_
-4. _[Fill in]_
+1. <span class="fill-in">[Scenario where message queue adds unnecessary complexity]</span>
+2. <span class="fill-in">[Scenario where synchronous is better]</span>
+3. <span class="fill-in">[Scenario where message queue overhead is too high]</span>
+4. <span class="fill-in">[Fill in]</span>
 
 **Anti-patterns to avoid:**
 
-1. _[Common mistake 1]_
-2. _[Common mistake 2]_
-3. _[Common mistake 3]_
+1. <span class="fill-in">[Common mistake 1]</span>
+2. <span class="fill-in">[Common mistake 2]</span>
+3. <span class="fill-in">[Common mistake 3]</span>
 
 ---
 
@@ -1980,25 +2005,25 @@ Your explanation:
 **Calculate:**
 
 1. **Synchronous processing:**
-    - Total time: _[Calculate]_
-    - Throughput: _[Tasks per second]_
+    - Total time: <span class="fill-in">[Calculate]</span>
+    - Throughput: <span class="fill-in">[Tasks per second]</span>
 
 2. **Queue with 10 workers:**
-    - Total time: _[Calculate]_
-    - Throughput: _[Tasks per second]_
-    - Speedup factor: _[Calculate]_
+    - Total time: <span class="fill-in">[Calculate]</span>
+    - Throughput: <span class="fill-in">[Tasks per second]</span>
+    - Speedup factor: <span class="fill-in">[Calculate]</span>
 
 3. **Queue with 100 workers:**
-    - Total time: _[Calculate]_
-    - Throughput: _[Tasks per second]_
-    - Why not infinite workers? _[Explain the limit]_
+    - Total time: <span class="fill-in">[Calculate]</span>
+    - Throughput: <span class="fill-in">[Tasks per second]</span>
+    - Why not infinite workers? <span class="fill-in">[Explain the limit]</span>
 
 **Real-world constraints:**
 
-- CPU bound tasks: _[How many workers?]_
-- I/O bound tasks: _[How many workers?]_
-- Memory considerations: _[What limits worker count?]_
-- Queue capacity: _[How to determine size?]_
+- CPU bound tasks: <span class="fill-in">[How many workers?]</span>
+- I/O bound tasks: <span class="fill-in">[How many workers?]</span>
+- Memory considerations: <span class="fill-in">[What limits worker count?]</span>
+- Queue capacity: <span class="fill-in">[How to determine size?]</span>
 
 ---
 
@@ -2021,11 +2046,11 @@ Your explanation:
 
 **Specific competencies:**
 
-- Pattern selection: ___/10
-- Concurrency understanding: ___/10
-- Delivery guarantees: ___/10
-- Error handling: ___/10
-- System design: ___/10
+- Pattern selection: <span class="fill-in">___</span>/10
+- Concurrency understanding: <span class="fill-in">___</span>/10
+- Delivery guarantees: <span class="fill-in">___</span>/10
+- Error handling: <span class="fill-in">___</span>/10
+- System design: <span class="fill-in">___</span>/10
 
 **If any score < 7:** Review the sections where you struggled, then retry this gate.
 

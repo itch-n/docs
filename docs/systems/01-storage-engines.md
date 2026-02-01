@@ -6,76 +6,82 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing and testing both storage engines, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is a B+Tree in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **Why do databases use B+Trees?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy for B+Tree:**
     - Example: "A B+Tree is like a filing cabinet where..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **What is an LSM Tree in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 5. **Why do write-heavy databases use LSM Trees?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 6. **Real-world analogy for LSM Tree:**
     - Example: "An LSM Tree is like a notebook where..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **B+Tree insert operation:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Verified after implementation: _[Actual: O(?)]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified after implementation: <span class="fill-in">[Actual: O(?)]</span>
 
 2. **LSM Tree write operation (to MemTable):**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity: _[Your guess: O(?)]_
-    - Verified: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **Performance calculation:**
-    - For 100,000 writes, B+Tree = _____ operations (if log base is 10)
-    - For 100,000 writes, LSM Tree = _____ operations (before flush)
-    - Speedup factor for writes: LSM is approximately _____ times faster
+    - For 100,000 writes, B+Tree = <span class="fill-in">_____</span> operations (if log base is 10)
+    - For 100,000 writes, LSM Tree = <span class="fill-in">_____</span> operations (before flush)
+    - Speedup factor for writes: LSM is approximately <span class="fill-in">_____</span> times faster
 
 ### Scenario Predictions
 
 **Scenario 1:** Time-series metrics database (1M writes/second, rare reads)
 
-- **Best storage engine?** _[B+Tree/LSM Tree - Why?]_
-- **Key consideration:** _[Write amplification/Read speed/Range queries?]_
-- **Why this choice?** _[Fill in your reasoning]_
+- **Best storage engine?** <span class="fill-in">[B+Tree/LSM Tree - Why?]</span>
+- **Key consideration:** <span class="fill-in">[Write amplification/Read speed/Range queries?]</span>
+- **Why this choice?** <span class="fill-in">[Fill in your reasoning]</span>
 
 **Scenario 2:** E-commerce inventory system (100k reads/sec, 5k writes/sec)
 
-- **Best storage engine?** _[B+Tree/LSM Tree - Why?]_
-- **What pattern benefits most?** _[Point lookups/Range scans/Random writes?]_
+- **Best storage engine?** <span class="fill-in">[B+Tree/LSM Tree - Why?]</span>
+- **What pattern benefits most?** <span class="fill-in">[Point lookups/Range scans/Random writes?]</span>
 
 **Scenario 3:** Social media analytics (read historical posts by date range)
 
-- **Which handles range queries better?** _[B+Tree/LSM Tree - Why?]_
-- **Key data structure feature:** _[Linked leaves/Sorted SSTables?]_
+- **Which handles range queries better?** <span class="fill-in">[B+Tree/LSM Tree - Why?]</span>
+- **Key data structure feature:** <span class="fill-in">[Linked leaves/Sorted SSTables?]</span>
 
 ### Trade-off Quiz
 
 **Question:** When would B+Tree be BETTER than LSM Tree despite slower writes?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after benchmarking]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after benchmarking]</span>
 
 **Question:** What's the MAIN advantage of LSM Trees for writes?
 
@@ -84,12 +90,14 @@
 - [ ] Faster range queries
 - [ ] Lower read amplification
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 **Question:** What happens if you never compact an LSM Tree?
 
-- Your prediction: _[What problem occurs?]_
-- Verified: _[Fill in after testing]_
+- Your prediction: <span class="fill-in">[What problem occurs?]</span>
+- Verified: <span class="fill-in">[Fill in after testing]</span>
+
+</div>
 
 ---
 
@@ -163,6 +171,7 @@ long duration = System.nanoTime() - start;
 B+Tree: Every insert = tree traversal + potential split
 ```
 Insert key=50:
+
 1. Traverse root → internal → leaf (3 disk seeks)
 2. Insert in leaf (sorted position)
 3. If leaf full, split node (expensive)
@@ -173,6 +182,7 @@ Result: 1 logical write = 4-5 physical writes (write amplification!)
 LSM Tree: Batched sequential writes
 ```
 Insert key=50:
+
 1. Insert into MemTable (in-memory TreeMap)
 2. When MemTable full, flush entire batch to SSTable
 3. Sequential write to disk (very fast)
@@ -181,9 +191,13 @@ Result: 1 logical write = 1 in-memory write (occasionally batched to disk)
 
 **After implementing, explain in your own words:**
 
-- _[Why does B+Tree require more writes per operation?]_
-- _[How does LSM Tree achieve better write throughput?]_
-- _[What's the trade-off for read performance?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does B+Tree require more writes per operation?]</span>
+- <span class="fill-in">[How does LSM Tree achieve better write throughput?]</span>
+- <span class="fill-in">[What's the trade-off for read performance?]</span>
+
+</div>
 
 ---
 
@@ -250,9 +264,13 @@ long duration = System.nanoTime() - start;
 
 **After benchmarking, fill in:**
 
-- _[What happens to LSM read performance as SSTables accumulate?]_
-- _[Why doesn't B+Tree have this problem?]_
-- _[How does compaction help LSM Trees?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[What happens to LSM read performance as SSTables accumulate?]</span>
+- <span class="fill-in">[Why doesn't B+Tree have this problem?]</span>
+- <span class="fill-in">[How does compaction help LSM Trees?]</span>
+
+</div>
 
 ---
 
@@ -830,19 +848,49 @@ public class StorageBenchmark {
 - [ ] Understand WHY each performs better in different scenarios
 
 **Your benchmark results:**
-```
-Write Performance:
-B+Tree:    ___ ms (___ writes/sec)
-LSM Tree:  ___ ms (___ writes/sec)
-Winner: ___
 
-Read Performance:
-B+Tree:    ___ ms (___ reads/sec)
-LSM Tree:  ___ ms (___ reads/sec)
-Winner: ___
+<table class="benchmark-table">
+<thead>
+  <tr>
+    <th>Metric</th>
+    <th>B+Tree</th>
+    <th>LSM Tree</th>
+    <th>Winner</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Write Performance (ms)</td>
+    <td class="blank">___ ms</td>
+    <td class="blank">___ ms</td>
+    <td class="blank">___</td>
+  </tr>
+  <tr>
+    <td>Write Throughput (ops/sec)</td>
+    <td class="blank">___ writes/sec</td>
+    <td class="blank">___ writes/sec</td>
+    <td class="blank">___</td>
+  </tr>
+  <tr>
+    <td>Read Performance (ms)</td>
+    <td class="blank">___ ms</td>
+    <td class="blank">___ ms</td>
+    <td class="blank">___</td>
+  </tr>
+  <tr>
+    <td>Read Throughput (ops/sec)</td>
+    <td class="blank">___ reads/sec</td>
+    <td class="blank">___ reads/sec</td>
+    <td class="blank">___</td>
+  </tr>
+</tbody>
+</table>
 
-Key insight: ___ [Fill in why this difference exists]
-```
+<div class="learner-section" markdown>
+
+**Key insight:** <span class="fill-in">[Fill in why this difference exists]</span>
+
+</div>
 
 ---
 
@@ -885,17 +933,17 @@ private void splitLeaf(LeafNode leaf) {
 
 **Your debugging:**
 
-- **Bug 1 location:** _[Which lines?]_
-- **Bug 1 explanation:** _[What happens when you remove while iterating?]_
-- **Bug 1 fix:** _[How to correctly remove elements?]_
+- **Bug 1 location:** <span class="fill-in">[Which lines?]</span>
+- **Bug 1 explanation:** <span class="fill-in">[What happens when you remove while iterating?]</span>
+- **Bug 1 fix:** <span class="fill-in">[How to correctly remove elements?]</span>
 
-- **Bug 2 location:** _[What's missing?]_
-- **Bug 2 explanation:** _[Why must leaf nodes be linked?]_
-- **Bug 2 fix:** _[Write the correct code]_
+- **Bug 2 location:** <span class="fill-in">[What's missing?]</span>
+- **Bug 2 explanation:** <span class="fill-in">[Why must leaf nodes be linked?]</span>
+- **Bug 2 fix:** <span class="fill-in">[Write the correct code]</span>
 
-- **Bug 3 location:** _[Which line?]_
-- **Bug 3 explanation:** _[What if leaf.parent is null?]_
-- **Bug 3 fix:** _[How to handle root split?]_
+- **Bug 3 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 3 explanation:** <span class="fill-in">[What if leaf.parent is null?]</span>
+- **Bug 3 fix:** <span class="fill-in">[How to handle root split?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -977,14 +1025,14 @@ public void compact() {
 
 **Your debugging:**
 
-- **Bug 1:** _[What's wrong with iterating newest to oldest?]_
-- **Bug 1 explanation:** _[Which value should win for duplicate keys?]_
+- **Bug 1:** <span class="fill-in">[What's wrong with iterating newest to oldest?]</span>
+- **Bug 1 explanation:** <span class="fill-in">[Which value should win for duplicate keys?]</span>
 - **Bug 1 test case:** Insert key=5 with "Old", then update to "New". After compaction, what do you get?
-- **Bug 1 fix:** _[Correct the iteration order]_
+- **Bug 1 fix:** <span class="fill-in">[Correct the iteration order]</span>
 
-- **Bug 2:** _[What's wrong with line 18?]_
-- **Bug 2 explanation:** _[What happens to old SSTables?]_
-- **Bug 2 fix:** _[Write the correct code]_
+- **Bug 2:** <span class="fill-in">[What's wrong with line 18?]</span>
+- **Bug 2 explanation:** <span class="fill-in">[What happens to old SSTables?]</span>
+- **Bug 2 fix:** <span class="fill-in">[Write the correct code]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1043,10 +1091,10 @@ private LeafNode findLeaf(K key) {
 
 **Your debugging:**
 
-- **Bug location:** _[Which lines?]_
-- **Bug explanation:** _[What happens with keys equal to internal node keys?]_
+- **Bug location:** <span class="fill-in">[Which lines?]</span>
+- **Bug explanation:** <span class="fill-in">[What happens with keys equal to internal node keys?]</span>
 - **Test case:** Tree has keys [10, 20, 30]. Search for key=20. Which child do you visit?
-- **Bug fix:** _[Should comparison be >= or >?]_
+- **Bug fix:** <span class="fill-in">[Should comparison be >= or >?]</span>
 
 **Trace through manually:**
 ```
@@ -1055,6 +1103,7 @@ ChildA contains: [10, 15]
 ChildB contains: [20, 25, 30]
 
 Search key=20:
+
 - Line 12: i=0, key(20) > keys[0](20)? NO
 - i stays 0
 - Visit children[0] = ChildA
@@ -1121,12 +1170,12 @@ public class LSMTree<K extends Comparable<K>, V> {
 
 **Your debugging:**
 
-- **Bug location:** _[What's missing in flush()?]_
-- **Bug explanation:** _[What happens to MemTable after flush?]_
+- **Bug location:** <span class="fill-in">[What's missing in flush()?]</span>
+- **Bug explanation:** <span class="fill-in">[What happens to MemTable after flush?]</span>
 - **Test case:** Insert 250 items. How many times does flush() run? How many items in memTable?
 - **Expected:** MemTable has 50 items after 250 inserts (flushed 200)
-- **Actual:** _[What really happens?]_
-- **Bug fix:** _[Write the missing code]_
+- **Actual:** <span class="fill-in">[What really happens?]</span>
+- **Bug fix:** <span class="fill-in">[Write the missing code]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1187,10 +1236,10 @@ public List<V> rangeQuery(K startKey, K endKey) {
 
 **Your debugging:**
 
-- **Bug location:** _[Which line?]_
-- **Bug explanation:** _[What's missing from the range check?]_
-- **Test case:** Tree has keys [1,3,5,7,9,11,13,15]. rangeQuery(5, 10). Expected: [5,7,9]. Actual: _[What?]_
-- **Bug fix:** _[Add missing condition]_
+- **Bug location:** <span class="fill-in">[Which line?]</span>
+- **Bug explanation:** <span class="fill-in">[What's missing from the range check?]</span>
+- **Test case:** Tree has keys [1,3,5,7,9,11,13,15]. rangeQuery(5, 10). Expected: [5,7,9]. Actual: <span class="fill-in">[What?]</span>
+- **Bug fix:** <span class="fill-in">[Add missing condition]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1244,11 +1293,11 @@ After finding and fixing all bugs:
 
 **Common mistakes you discovered:**
 
-1. _[Index manipulation while iterating]_
-2. _[Missing pointer updates in tree structures]_
-3. _[Wrong iteration order in merge operations]_
-4. _[Forgetting to clear/reset data structures]_
-5. _[Incomplete boundary checks in range queries]_
+1. <span class="fill-in">[Index manipulation while iterating]</span>
+2. <span class="fill-in">[Missing pointer updates in tree structures]</span>
+3. <span class="fill-in">[Wrong iteration order in merge operations]</span>
+4. <span class="fill-in">[Forgetting to clear/reset data structures]</span>
+5. <span class="fill-in">[Incomplete boundary checks in range queries]</span>
 
 ---
 
@@ -1259,23 +1308,26 @@ After finding and fixing all bugs:
 ### Question 1: Write-heavy or Read-heavy?
 
 Answer after implementing and benchmarking:
-- **My answer:** _[Fill in]_
-- **Why does this matter?** _[Fill in]_
-- **Performance difference I observed:** _[Fill in]_
+
+- **My answer:** <span class="fill-in">[Fill in]</span>
+- **Why does this matter?** <span class="fill-in">[Fill in]</span>
+- **Performance difference I observed:** <span class="fill-in">[Fill in]</span>
 
 ### Question 2: Need range queries?
 
 Answer:
-- **Do B+Trees support range queries?** _[Yes/No - explain how]_
-- **Do LSM Trees support range queries?** _[Yes/No - explain complexity]_
-- **Which is faster for range queries?** _[Fill in after testing]_
+
+- **Do B+Trees support range queries?** <span class="fill-in">[Yes/No - explain how]</span>
+- **Do LSM Trees support range queries?** <span class="fill-in">[Yes/No - explain complexity]</span>
+- **Which is faster for range queries?** <span class="fill-in">[Fill in after testing]</span>
 
 ### Question 3: Sequential or random writes?
 
 Answer:
-- **B+Tree with random writes:** _[What happens? Why is it slow?]_
-- **LSM Tree with random writes:** _[What happens? Why is it fast?]_
-- **Your observation from implementation:** _[Fill in]_
+
+- **B+Tree with random writes:** <span class="fill-in">[What happens? Why is it slow?]</span>
+- **LSM Tree with random writes:** <span class="fill-in">[What happens? Why is it fast?]</span>
+- **Your observation from implementation:** <span class="fill-in">[Fill in]</span>
 
 ### Your Decision Tree
 
@@ -1302,15 +1354,15 @@ Storage Engine Selection
 
 **Don't use B+Tree when:**
 
-1. _[Fill in]_
-2. _[Fill in]_
-3. _[Fill in]_
+1. <span class="fill-in">[Fill in]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 **Don't use LSM Tree when:**
 
-1. _[Fill in]_
-2. _[Fill in]_
-3. _[Fill in]_
+1. <span class="fill-in">[Fill in]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 ### The Rule of Three: Alternative Approaches
 
@@ -1318,20 +1370,21 @@ For any storage decision, consider:
 
 **Option 1: B+Tree**
 
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
-- Use when: _[Fill in]_
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
+- Use when: <span class="fill-in">[Fill in]</span>
 
 **Option 2: LSM Tree**
 
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
-- Use when: _[Fill in]_
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
+- Use when: <span class="fill-in">[Fill in]</span>
 
-**Option 3:** _[What's a third option? Hash index? Column store?]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
-- Use when: _[Fill in]_
+**Option 3:** <span class="fill-in">[What's a third option? Hash index? Column store?]</span>
+
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
+- Use when: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1359,17 +1412,19 @@ CREATE TABLE posts (
 
 **Your design:**
 
-Storage engine choice: _[B+Tree or LSM?]_
+Storage engine choice: <span class="fill-in">[B+Tree or LSM?]</span>
 
 Reasoning:
-- Write volume: _[Fill in]_
-- Read patterns: _[Fill in]_
-- Your choice: _[Fill in]_
+
+- Write volume: <span class="fill-in">[Fill in]</span>
+- Read patterns: <span class="fill-in">[Fill in]</span>
+- Your choice: <span class="fill-in">[Fill in]</span>
 
 Index design:
-1. _[What indexes would you create?]_
-2. _[Why these specific indexes?]_
-3. _[What's the column order and why?]_
+
+1. <span class="fill-in">[What indexes would you create?]</span>
+2. <span class="fill-in">[Why these specific indexes?]</span>
+3. <span class="fill-in">[What's the column order and why?]</span>
 
 ### Scenario 2: Time-Series Metrics
 
@@ -1393,12 +1448,13 @@ CREATE TABLE metrics (
 
 **Your design:**
 
-Storage engine: _[Fill in]_
+Storage engine: <span class="fill-in">[Fill in]</span>
 
 Why?
-1. _[Write characteristics]_
-2. _[Read characteristics]_
-3. _[Time-series specific considerations]_
+
+1. <span class="fill-in">[Write characteristics]</span>
+2. <span class="fill-in">[Read characteristics]</span>
+3. <span class="fill-in">[Time-series specific considerations]</span>
 
 ### Scenario 3: E-commerce Inventory
 
@@ -1419,12 +1475,13 @@ CREATE TABLE inventory (
 
 **Your design:**
 
-Storage engine: _[Fill in]_
+Storage engine: <span class="fill-in">[Fill in]</span>
 
 Trade-offs you considered:
-1. _[Fill in]_
-2. _[Fill in]_
-3. _[Fill in]_
+
+1. <span class="fill-in">[Fill in]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1469,13 +1526,13 @@ Before moving to the next topic:
 
 > "B+Trees and LSM Trees are two fundamental storage engine architectures..."
 >
-> _[Fill in your explanation in plain English - 4-5 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 4-5 sentences max]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation help someone make a real architectural decision? _[Yes/No]_
-- Did you explain the fundamental trade-off (write vs read performance)? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation help someone make a real architectural decision? <span class="fill-in">[Yes/No]</span>
+- Did you explain the fundamental trade-off (write vs read performance)? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -1525,12 +1582,12 @@ Step 3: [Show SSTable creation]
 
 | Workload | Best Engine (B+Tree/LSM) | Why? |
 |----------|-------------------------|------|
-| Time-series sensor data (high write rate) | _[Fill in]_ | _[Explain]_ |
-| Banking transactions (needs consistency) | _[Fill in]_ | _[Explain]_ |
-| Analytics with date range queries | _[Fill in]_ | _[Explain]_ |
-| Social media feeds (mostly recent reads) | _[Fill in]_ | _[Explain]_ |
-| Key-value cache (50/50 read/write) | _[Fill in]_ | _[Explain]_ |
-| Inventory system (read-heavy, occasional updates) | _[Fill in]_ | _[Explain]_ |
+| Time-series sensor data (high write rate) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Banking transactions (needs consistency) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Analytics with date range queries | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Social media feeds (mostly recent reads) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Key-value cache (50/50 read/write) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Inventory system (read-heavy, occasional updates) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1544,21 +1601,21 @@ If you scored below 5/6, review the decision framework and try again.
 
 | Operation | B+Tree | LSM Tree | Why Different? |
 |-----------|--------|----------|----------------|
-| Insert (single) | O(?) | O(?) | _[Explain]_ |
-| Search (single) | O(?) | O(?) | _[Explain]_ |
-| Range query | O(?) | O(?) | _[Explain]_ |
-| Compaction | N/A | O(?) | _[Explain why B+Tree doesn't need this]_ |
+| Insert (single) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Search (single) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Range query | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Compaction | N/A | O(?) | <span class="fill-in">[Explain why B+Tree doesn't need this]</span> |
 
 **Deep questions:**
 
 1. **Why is LSM Tree write O(log M) instead of O(log N)?**
-    - Your answer: _[Fill in - explain M vs N]_
+    - Your answer: <span class="fill-in">[Fill in - explain M vs N]</span>
 
 2. **What is "write amplification" and which engine has more?**
-    - Your answer: _[Fill in - define and compare]_
+    - Your answer: <span class="fill-in">[Fill in - define and compare]</span>
 
 3. **What is "read amplification" and which engine has more?**
-    - Your answer: _[Fill in - define and compare]_
+    - Your answer: <span class="fill-in">[Fill in - define and compare]</span>
 
 ---
 
@@ -1567,25 +1624,27 @@ If you scored below 5/6, review the decision framework and try again.
 **Scenario:** You're designing storage for a monitoring system that collects 1M metrics/second. Reads are infrequent (only for dashboards and alerts).
 
 **Option A:** B+Tree
-- Write cost: _[Fill in - operations per insert]_
-- Read cost: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
+
+- Write cost: <span class="fill-in">[Fill in - operations per insert]</span>
+- Read cost: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
 **Option B:** LSM Tree
-- Write cost: _[Fill in - operations per insert]_
-- Read cost: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
 
-**Your decision:** I would choose _[A/B]_ because...
+- Write cost: <span class="fill-in">[Fill in - operations per insert]</span>
+- Read cost: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
-_[Fill in your reasoning - consider write volume, read patterns, and compaction strategy]_
+**Your decision:** I would choose <span class="fill-in">[A/B]</span> because...
+
+<span class="fill-in">[Fill in your reasoning - consider write volume, read patterns, and compaction strategy]</span>
 
 **What would make you change your decision?**
 
-- Scenario change 1: _[Fill in - what if reads increased 100x?]_
-- Scenario change 2: _[Fill in - what if range queries became critical?]_
+- Scenario change 1: <span class="fill-in">[Fill in - what if reads increased 100x?]</span>
+- Scenario change 2: <span class="fill-in">[Fill in - what if range queries became critical?]</span>
 
 ---
 
@@ -1657,25 +1716,25 @@ Your design:
 ```
 Hybrid Storage Engine:
 
-Component 1: _[What would you use for writes?]_
-    - Structure: _[Describe]_
-    - Purpose: _[Why this choice?]_
+Component 1: <span class="fill-in">[What would you use for writes?]</span>
+    - Structure: <span class="fill-in">[Describe]</span>
+    - Purpose: <span class="fill-in">[Why this choice?]</span>
 
-Component 2: _[What would you use for reads?]_
-    - Structure: _[Describe]_
-    - Purpose: _[Why this choice?]_
+Component 2: <span class="fill-in">[What would you use for reads?]</span>
+    - Structure: <span class="fill-in">[Describe]</span>
+    - Purpose: <span class="fill-in">[Why this choice?]</span>
 
-Background Process: _[What maintains the system?]_
-    - Frequency: _[How often?]_
-    - Operation: _[What does it do?]_
+Background Process: <span class="fill-in">[What maintains the system?]</span>
+    - Frequency: <span class="fill-in">[How often?]</span>
+    - Operation: <span class="fill-in">[What does it do?]</span>
 
-Trade-offs: _[What did you sacrifice? What did you gain?]_
+Trade-offs: <span class="fill-in">[What did you sacrifice? What did you gain?]</span>
 ```
 
 **Real-world comparison:**
 
-- Does your design resemble any real database? _[Research: RocksDB, WiredTiger, LevelDB]_
-- What did you discover? _[Fill in after researching]_
+- Does your design resemble any real database? <span class="fill-in">[Research: RocksDB, WiredTiger, LevelDB]</span>
+- What did you discover? <span class="fill-in">[Fill in after researching]</span>
 
 ---
 
@@ -1685,22 +1744,22 @@ Trade-offs: _[What did you sacrifice? What did you gain?]_
 
 **B+Tree Implementation Checklist:**
 
-- [ ] _[Fill in - node split edge cases]_
-- [ ] _[Fill in - leaf linking]_
-- [ ] _[Fill in - boundary conditions in search]_
-- [ ] _[Fill in]_
+- [ ] <span class="fill-in">[Fill in - node split edge cases]</span>
+- [ ] <span class="fill-in">[Fill in - leaf linking]</span>
+- [ ] <span class="fill-in">[Fill in - boundary conditions in search]</span>
+- [ ] <span class="fill-in">[Fill in]</span>
 
 **LSM Tree Implementation Checklist:**
 
-- [ ] _[Fill in - MemTable clearing after flush]_
-- [ ] _[Fill in - SSTable iteration order in compaction]_
-- [ ] _[Fill in - read amplification mitigation]_
-- [ ] _[Fill in]_
+- [ ] <span class="fill-in">[Fill in - MemTable clearing after flush]</span>
+- [ ] <span class="fill-in">[Fill in - SSTable iteration order in compaction]</span>
+- [ ] <span class="fill-in">[Fill in - read amplification mitigation]</span>
+- [ ] <span class="fill-in">[Fill in]</span>
 
 **General Storage Engine Checklist:**
 
-- [ ] _[Fill in]_
-- [ ] _[Fill in]_
+- [ ] <span class="fill-in">[Fill in]</span>
+- [ ] <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1714,18 +1773,18 @@ Your explanation:
 
 > "Write amplification happens when..."
 >
-> _[Fill in - use an analogy, then explain the technical concept]_
+> <span class="fill-in">[Fill in - use an analogy, then explain the technical concept]</span>
 
 **Examples you would use:**
 
-1. _[Real-world analogy]_
-2. _[B+Tree example with numbers]_
-3. _[LSM Tree example with numbers]_
+1. <span class="fill-in">[Real-world analogy]</span>
+2. <span class="fill-in">[B+Tree example with numbers]</span>
+3. <span class="fill-in">[LSM Tree example with numbers]</span>
 
 **Why it matters:**
 
-- Impact on SSD lifetime: _[Explain]_
-- Impact on performance: _[Explain]_
+- Impact on SSD lifetime: <span class="fill-in">[Explain]</span>
+- Impact on performance: <span class="fill-in">[Explain]</span>
 
 ---
 
@@ -1746,9 +1805,9 @@ Your explanation:
 
 **Benchmark results completed:**
 
-- Write performance ratio (LSM vs B+Tree): ___x faster
-- Read performance ratio (B+Tree vs LSM): ___x faster
-- Understood why: _[Yes/No]_
+- Write performance ratio (LSM vs B+Tree): <span class="fill-in">___</span>x faster
+- Read performance ratio (B+Tree vs LSM): <span class="fill-in">___</span>x faster
+- Understood why: <span class="fill-in">[Yes/No]</span>
 
 **If score < 8:** Review the sections where you struggled, then retry this gate.
 

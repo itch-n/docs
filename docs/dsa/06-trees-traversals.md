@@ -6,47 +6,54 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing all patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What are tree traversals in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **Why do we need different traversal orders?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy:**
     - Example: "Tree traversals are like different ways to read a family tree..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **When does each traversal order matter?**
-    - Your answer: _[Fill in after solving problems]_
+    - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
 
 5. **What's the difference between iterative and recursive?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Visiting every node in a tree:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Verified after learning: _[Actual: O(?)]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
 
 2. **Recursive inorder traversal:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity: _[Your guess: O(?)]_
-    - Verified: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **Iterative vs Recursive space:**
-    - Recursive space usage: _[O(?) - what uses the space?]_
-    - Iterative space usage: _[O(?) - what data structure?]_
-    - Morris traversal space: _[O(?)]_
+    - Recursive space usage: <span class="fill-in">[O(?) - what uses the space?]</span>
+    - Iterative space usage: <span class="fill-in">[O(?) - what data structure?]</span>
+    - Morris traversal space: <span class="fill-in">[O(?)]</span>
 
 ### Scenario Predictions
 
@@ -60,30 +67,30 @@ Tree:     4
       1   3
 ```
 
-- **Inorder (Left, Root, Right):** _[Predict: ?, ?, ?, ?, ?]_
-- **Preorder (Root, Left, Right):** _[Predict: ?, ?, ?, ?, ?]_
-- **Postorder (Left, Right, Root):** _[Predict: ?, ?, ?, ?, ?]_
+- **Inorder (Left, Root, Right):** <span class="fill-in">[Predict: ?, ?, ?, ?, ?]</span>
+- **Preorder (Root, Left, Right):** <span class="fill-in">[Predict: ?, ?, ?, ?, ?]</span>
+- **Postorder (Left, Right, Root):** <span class="fill-in">[Predict: ?, ?, ?, ?, ?]</span>
 - **Level-order (BFS):** _[Predict: [[?], [?, ?], [?, ?]]]_
 
-**Verify after implementation:** Were your predictions correct? _[Yes/No]_
+**Verify after implementation:** Were your predictions correct? <span class="fill-in">[Yes/No]</span>
 
 **Scenario 2:** Why does inorder give sorted output for BST?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Scenario 3:** Which traversal to use for deleting a tree?
 
-- Your guess: _[Inorder/Preorder/Postorder/Level-order - Why?]_
-- Reasoning: _[Fill in your logic]_
-- Verified: _[After implementation]_
+- Your guess: <span class="fill-in">[Inorder/Preorder/Postorder/Level-order - Why?]</span>
+- Reasoning: <span class="fill-in">[Fill in your logic]</span>
+- Verified: <span class="fill-in">[After implementation]</span>
 
 ### Trade-off Quiz
 
 **Question:** When would iterative traversal be BETTER than recursive?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** What's the MAIN advantage of Morris traversal?
 
@@ -92,13 +99,16 @@ Tree:     4
 - [ ] Easier to implement
 - [ ] Works for all tree types
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 **Question:** Which traversal order matters for expression trees?
 
-- Infix notation uses: _[Which traversal?]_
-- Prefix notation uses: _[Which traversal?]_
-- Postfix notation uses: _[Which traversal?]_
+- Infix notation uses: <span class="fill-in">[Which traversal?]</span>
+- Prefix notation uses: <span class="fill-in">[Which traversal?]</span>
+- Postfix notation uses: <span class="fill-in">[Which traversal?]</span>
+
+
+</div>
 
 ---
 
@@ -240,26 +250,34 @@ For this tree:
 ```
 
 **Inorder (Left, Root, Right):** 1, 2, 3, 4, 6
+
 - Visits left child before parent
 - **Use case:** Get sorted values from BST
 
 **Preorder (Root, Left, Right):** 4, 2, 1, 3, 6
+
 - Visits parent before children
 - **Use case:** Copy tree structure, serialize tree
 
 **Postorder (Left, Right, Root):** 1, 3, 2, 6, 4
+
 - Visits children before parent
 - **Use case:** Delete tree (delete children first!)
 
 **Level-order (BFS):** [[4], [2, 6], [1, 3]]
+
 - Visits level by level
 - **Use case:** Find shortest path, level-wise processing
 
 **After implementing, explain in your own words:**
 
-- _[Why does postorder make sense for tree deletion?]_
-- _[Why does preorder make sense for copying a tree?]_
-- _[When would level-order be preferred over depth-first?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does postorder make sense for tree deletion?]</span>
+- <span class="fill-in">[Why does preorder make sense for copying a tree?]</span>
+- <span class="fill-in">[When would level-order be preferred over depth-first?]</span>
+
+</div>
 
 ---
 
@@ -784,19 +802,19 @@ public static List<Integer> inorderRecursive_Buggy(TreeNode root) {
 
 **Your debugging:**
 
-- **Bug 1 location:** _[Which lines?]_
-- **Bug 1 explanation:** _[What's wrong with the recursive calls?]_
-- **Bug 1 fix:** _[How to fix?]_
+- **Bug 1 location:** <span class="fill-in">[Which lines?]</span>
+- **Bug 1 explanation:** <span class="fill-in">[What's wrong with the recursive calls?]</span>
+- **Bug 1 fix:** <span class="fill-in">[How to fix?]</span>
 
-- **Bug 2 location:** _[Which line?]_
-- **Bug 2 explanation:** _[What gets returned? Why is the result empty?]_
-- **Bug 2 fix:** _[How should this work?]_
+- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 2 explanation:** <span class="fill-in">[What gets returned? Why is the result empty?]</span>
+- **Bug 2 fix:** <span class="fill-in">[How should this work?]</span>
 
 **Test case:**
 
 - Input: Tree with values 1, 2, 3
 - Expected: [1, 2, 3]
-- Actual with buggy code: _[What do you get?]_
+- Actual with buggy code: <span class="fill-in">[What do you get?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -854,20 +872,20 @@ public static List<Integer> inorderIterative_Buggy(TreeNode root) {
 
 **Your debugging:**
 
-- **Bug 1:** _[What's wrong with the while condition?]_
-- **Bug 1 effect:** _[What happens? When does loop start/stop?]_
-- **Bug 1 fix:** _[Correct condition]_
+- **Bug 1:** <span class="fill-in">[What's wrong with the while condition?]</span>
+- **Bug 1 effect:** <span class="fill-in">[What happens? When does loop start/stop?]</span>
+- **Bug 1 fix:** <span class="fill-in">[Correct condition]</span>
 
-- **Bug 2:** _[Which direction should curr move?]_
-- **Bug 2 effect:** _[What happens? Infinite loop? Wrong order?]_
-- **Bug 2 fix:** _[Fill in]_
+- **Bug 2:** <span class="fill-in">[Which direction should curr move?]</span>
+- **Bug 2 effect:** <span class="fill-in">[What happens? Infinite loop? Wrong order?]</span>
+- **Bug 2 fix:** <span class="fill-in">[Fill in]</span>
 
 **Trace through example:**
 
 - Input: Tree with values 1, 2, 3
 - Expected: [1, 2, 3]
-- With Bug 1: _[What happens?]_
-- With Bug 2: _[What happens?]_
+- With Bug 1: <span class="fill-in">[What happens?]</span>
+- With Bug 2: <span class="fill-in">[What happens?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -926,15 +944,15 @@ public static List<Integer> postorderIterative_Buggy(TreeNode root) {
 
 **Your debugging:**
 
-- **Bug location:** _[Which lines push to stack1?]_
-- **Bug explanation:** _[Why does order matter here?]_
-- **Expected order:** _[Postorder is Left, Right, Root - so what should we push first?]_
+- **Bug location:** <span class="fill-in">[Which lines push to stack1?]</span>
+- **Bug explanation:** <span class="fill-in">[Why does order matter here?]</span>
+- **Expected order:** <span class="fill-in">[Postorder is Left, Right, Root - so what should we push first?]</span>
 
 **Think through it:**
 
 - Postorder visits: Left, Right, Root
 - Stack2 reverses the order
-- So stack1 should create what order? _[Fill in your reasoning]_
+- So stack1 should create what order? <span class="fill-in">[Fill in your reasoning]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -988,9 +1006,9 @@ public static List<List<Integer>> levelOrder_Buggy(TreeNode root) {
 
 **Your debugging:**
 
-- **Bug location:** _[Which loop is wrong?]_
-- **Bug explanation:** _[What happens? Do all levels get mixed together?]_
-- **Bug fix:** _[How to track each level separately?]_
+- **Bug location:** <span class="fill-in">[Which loop is wrong?]</span>
+- **Bug explanation:** <span class="fill-in">[What happens? Do all levels get mixed together?]</span>
+- **Bug fix:** <span class="fill-in">[How to track each level separately?]</span>
 
 **Test case:**
 ```
@@ -1000,8 +1018,9 @@ Tree:     4
        /
       1
 ```
+
 - Expected: [[4], [2, 6], [1]]
-- Actual with buggy code: _[Trace through - what do you get?]_
+- Actual with buggy code: <span class="fill-in">[Trace through - what do you get?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1059,14 +1078,14 @@ public static List<Integer> traversal_Buggy(TreeNode root) {
 
 **Your debugging:**
 
-- **What traversal does this actually perform?** _[Hint: Stack = DFS, Queue = BFS]_
-- **What would the output be for a simple tree?** _[Trace through]_
-- **If we want level-order, what should we use?** _[Stack/Queue/Other?]_
+- **What traversal does this actually perform?** <span class="fill-in">[Hint: Stack = DFS, Queue = BFS]</span>
+- **What would the output be for a simple tree?** <span class="fill-in">[Trace through]</span>
+- **If we want level-order, what should we use?** <span class="fill-in">[Stack/Queue/Other?]</span>
 
 **Key insight to understand:**
 
-- Stack (LIFO) gives you: _[BFS/DFS - which one?]_
-- Queue (FIFO) gives you: _[BFS/DFS - which one?]_
+- Stack (LIFO) gives you: <span class="fill-in">[BFS/DFS - which one?]</span>
+- Queue (FIFO) gives you: <span class="fill-in">[BFS/DFS - which one?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1129,9 +1148,9 @@ public static List<Integer> morrisTraversal_Buggy(TreeNode root) {
 
 **Your debugging:**
 
-- **Bug:** _[What causes infinite loop?]_
-- **When does it happen?** _[When we revisit a threaded node]_
-- **Fix:** _[What condition should we check in the while loop?]_
+- **Bug:** <span class="fill-in">[What causes infinite loop?]</span>
+- **When does it happen?** <span class="fill-in">[When we revisit a threaded node]</span>
+- **Fix:** <span class="fill-in">[What condition should we check in the while loop?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1171,16 +1190,16 @@ After finding and fixing all bugs:
 
 **Common mistakes you discovered:**
 
-1. _[List the patterns you noticed]_
-2. _[Fill in]_
-3. _[Fill in]_
+1. <span class="fill-in">[List the patterns you noticed]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 **Key insights:**
 
-- Recursive traversals need: _[What pattern for combining results?]_
-- Iterative inorder needs: _[What loop condition?]_
-- Level-order needs: _[Stack or Queue?]_
-- Morris traversal needs: _[What check to avoid infinite loops?]_
+- Recursive traversals need: <span class="fill-in">[What pattern for combining results?]</span>
+- Iterative inorder needs: <span class="fill-in">[What loop condition?]</span>
+- Level-order needs: <span class="fill-in">[Stack or Queue?]</span>
+- Morris traversal needs: <span class="fill-in">[What check to avoid infinite loops?]</span>
 
 ---
 
@@ -1191,24 +1210,25 @@ After finding and fixing all bugs:
 ### Question 1: Which traversal order do you need?
 
 Answer after solving problems:
-- **Need sorted order from BST?** _[Use inorder]_
-- **Need to copy tree structure?** _[Use preorder]_
-- **Need to delete tree safely?** _[Use postorder]_
-- **Need level-by-level processing?** _[Use level-order]_
+
+- **Need sorted order from BST?** <span class="fill-in">[Use inorder]</span>
+- **Need to copy tree structure?** <span class="fill-in">[Use preorder]</span>
+- **Need to delete tree safely?** <span class="fill-in">[Use postorder]</span>
+- **Need level-by-level processing?** <span class="fill-in">[Use level-order]</span>
 
 ### Question 2: Recursive vs Iterative?
 
 **Recursive approach:**
 
-- Pros: _[Simpler code, cleaner logic]_
-- Cons: _[O(h) stack space, risk of stack overflow]_
-- Use when: _[Tree depth is reasonable]_
+- Pros: <span class="fill-in">[Simpler code, cleaner logic]</span>
+- Cons: <span class="fill-in">[O(h) stack space, risk of stack overflow]</span>
+- Use when: <span class="fill-in">[Tree depth is reasonable]</span>
 
 **Iterative approach:**
 
-- Pros: _[Explicit control, no stack overflow]_
-- Cons: _[More complex code, need explicit stack/queue]_
-- Use when: _[Deep trees, production code]_
+- Pros: <span class="fill-in">[Explicit control, no stack overflow]</span>
+- Cons: <span class="fill-in">[More complex code, need explicit stack/queue]</span>
+- Use when: <span class="fill-in">[Deep trees, production code]</span>
 
 ### Your Decision Tree
 
@@ -1238,30 +1258,30 @@ Tree Traversal Selection
 
 **Don't use when:**
 
-1. _[Need to search for specific value? Use BST search instead]_
-2. _[Tree is extremely deep? Risk stack overflow with recursion]_
-3. _[Need random access? Trees don't support O(1) access]_
-4. _[Need sorted iteration frequently? Store in array instead]_
+1. <span class="fill-in">[Need to search for specific value? Use BST search instead]</span>
+2. <span class="fill-in">[Tree is extremely deep? Risk stack overflow with recursion]</span>
+3. <span class="fill-in">[Need random access? Trees don't support O(1) access]</span>
+4. <span class="fill-in">[Need sorted iteration frequently? Store in array instead]</span>
 
 ### The Rule of Three: Alternatives
 
 **Option 1: Inorder Traversal**
 
-- Pros: _[Sorted order in BST, standard for iteration]_
-- Cons: _[Not useful for non-BST trees]_
-- Use when: _[Need sorted processing of BST]_
+- Pros: <span class="fill-in">[Sorted order in BST, standard for iteration]</span>
+- Cons: <span class="fill-in">[Not useful for non-BST trees]</span>
+- Use when: <span class="fill-in">[Need sorted processing of BST]</span>
 
 **Option 2: Level-Order Traversal**
 
-- Pros: _[Shortest path, level-wise processing]_
-- Cons: _[More memory for wide trees]_
-- Use when: _[BFS needed, level matters]_
+- Pros: <span class="fill-in">[Shortest path, level-wise processing]</span>
+- Cons: <span class="fill-in">[More memory for wide trees]</span>
+- Use when: <span class="fill-in">[BFS needed, level matters]</span>
 
 **Option 3: Preorder/Postorder**
 
-- Pros: _[Structural operations, serialization]_
-- Cons: _[No sorted order guarantee]_
-- Use when: _[Copy, serialize, or delete tree]_
+- Pros: <span class="fill-in">[Structural operations, serialization]</span>
+- Cons: <span class="fill-in">[No sorted order guarantee]</span>
+- Use when: <span class="fill-in">[Copy, serialize, or delete tree]</span>
 
 ---
 
@@ -1272,56 +1292,56 @@ Tree Traversal Selection
 **Easy (Complete all 4):**
 
 - [ ] [94. Binary Tree Inorder Traversal](https://leetcode.com/problems/binary-tree-inorder-traversal/)
-    - Pattern: _[Inorder - recursive/iterative/Morris]_
-    - Your solution time: ___
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Inorder - recursive/iterative/Morris]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [144. Binary Tree Preorder Traversal](https://leetcode.com/problems/binary-tree-preorder-traversal/)
-    - Pattern: _[Preorder]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Preorder]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [145. Binary Tree Postorder Traversal](https://leetcode.com/problems/binary-tree-postorder-traversal/)
-    - Pattern: _[Postorder]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Postorder]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [102. Binary Tree Level Order Traversal](https://leetcode.com/problems/binary-tree-level-order-traversal/)
-    - Pattern: _[Level-order BFS]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Level-order BFS]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Medium (Complete 3-4):**
 
 - [ ] [103. Binary Tree Zigzag Level Order Traversal](https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/)
-    - Pattern: _[Level-order with direction alternation]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Level-order with direction alternation]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [199. Binary Tree Right Side View](https://leetcode.com/problems/binary-tree-right-side-view/)
-    - Pattern: _[Level-order, track rightmost]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Level-order, track rightmost]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [107. Binary Tree Level Order Traversal II](https://leetcode.com/problems/binary-tree-level-order-traversal-ii/)
-    - Pattern: _[Level-order bottom-up]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Level-order bottom-up]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [230. Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst/)
-    - Pattern: _[Inorder with counter]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Inorder with counter]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Hard (Optional):**
 
 - [ ] [297. Serialize and Deserialize Binary Tree](https://leetcode.com/problems/serialize-and-deserialize-binary-tree/)
-    - Pattern: _[Preorder or level-order]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Preorder or level-order]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [987. Vertical Order Traversal of a Binary Tree](https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/)
-    - Pattern: _[Custom traversal with coordinates]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Custom traversal with coordinates]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 ---
 
@@ -1374,13 +1394,13 @@ Before moving to the next topic:
 
 > "Tree traversals are different ways to visit every node in a tree..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by a non-technical person? _[Yes/No]_
-- Did you use analogies or real-world examples? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
+- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -1410,7 +1430,7 @@ Step-by-step inorder visitation (Left, Root, Right):
 3. [Continue until all nodes visited]
    _________________________________
 
-Final order: _________________________________
+Final order: <span class="fill-in">_________________________________</span>
 ```
 
 **Verification:**
@@ -1428,12 +1448,12 @@ Final order: _________________________________
 
 | Problem | Which Traversal? | Why? |
 |---------|-----------------|------|
-| Get sorted values from BST | _[Fill in]_ | _[Explain]_ |
-| Copy a tree structure | _[Fill in]_ | _[Explain]_ |
-| Delete entire tree safely | _[Fill in]_ | _[Explain]_ |
-| Find shortest path in tree | _[Fill in]_ | _[Explain]_ |
-| Serialize tree for storage | _[Fill in]_ | _[Explain]_ |
-| Find kth smallest in BST | _[Fill in]_ | _[Explain]_ |
+| Get sorted values from BST | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Copy a tree structure | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Delete entire tree safely | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Find shortest path in tree | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Serialize tree for storage | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Find kth smallest in BST | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1447,19 +1467,19 @@ If you scored below 5/6, review the patterns and try again.
 
 | Traversal | Time Complexity | Space Complexity (Recursive) | Space Complexity (Iterative) | Why? |
 |-----------|----------------|------------------------------|------------------------------|------|
-| Inorder | O(?) | O(?) | O(?) | _[Explain]_ |
-| Preorder | O(?) | O(?) | O(?) | _[Explain]_ |
-| Postorder | O(?) | O(?) | O(?) | _[Explain]_ |
-| Level-order | O(?) | N/A | O(?) | _[Explain]_ |
-| Morris | O(?) | N/A | O(?) | _[Explain]_ |
+| Inorder | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Preorder | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Postorder | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Level-order | O(?) | N/A | O(?) | <span class="fill-in">[Explain]</span> |
+| Morris | O(?) | N/A | O(?) | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why is Morris traversal O(1) space even though we're "modifying" the tree?
 
-Your answer: _[Fill in - explain the threading technique]_
+Your answer: <span class="fill-in">[Fill in - explain the threading technique]</span>
 
 **Deep question 2:** For a balanced tree, what's the space difference between recursive and iterative?
 
-Your answer: _[Fill in - both are O(h) = O(log n), but why does it matter?]_
+Your answer: <span class="fill-in">[Fill in - both are O(h) = O(log n), but why does it matter?]</span>
 
 ---
 
@@ -1468,29 +1488,32 @@ Your answer: _[Fill in - both are O(h) = O(log n), but why does it matter?]_
 **Scenario:** You need to traverse a binary tree with 1 million nodes, but the tree is highly skewed (like a linked list).
 
 **Option A:** Recursive inorder
-- Stack depth: _[Fill in - how deep?]_
-- Risk: _[Fill in - what could go wrong?]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
+
+- Stack depth: <span class="fill-in">[Fill in - how deep?]</span>
+- Risk: <span class="fill-in">[Fill in - what could go wrong?]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
 **Option B:** Iterative inorder with explicit stack
-- Stack depth: _[Fill in - same as recursive?]_
-- Risk: _[Fill in - lower risk?]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
+
+- Stack depth: <span class="fill-in">[Fill in - same as recursive?]</span>
+- Risk: <span class="fill-in">[Fill in - lower risk?]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
 **Option C:** Morris traversal
-- Space complexity: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
 
-**Your decision:** I would choose _[A/B/C]_ because...
+- Space complexity: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
-_[Fill in your reasoning - consider stack overflow risk, code complexity, space constraints]_
+**Your decision:** I would choose <span class="fill-in">[A/B/C]</span> because...
+
+<span class="fill-in">[Fill in your reasoning - consider stack overflow risk, code complexity, space constraints]</span>
 
 **What would make you change your decision?**
 
-- _[Fill in - what constraints would flip your choice?]_
+- <span class="fill-in">[Fill in - what constraints would flip your choice?]</span>
 
 ---
 
@@ -1524,6 +1547,7 @@ Tree:     4
        / \
       1   3
 ```
+
 - Expected: [1, 2, 3, 4, 6]
 
 **Verification:**
@@ -1552,19 +1576,19 @@ Tree:        8
 **Your predictions:**
 
 1. **Inorder (Left, Root, Right):**
-    - Your answer: _[Fill in]_
+    - Your answer: <span class="fill-in">[Fill in]</span>
     - Verify: Should be sorted for BST
 
 2. **Preorder (Root, Left, Right):**
-    - Your answer: _[Fill in]_
+    - Your answer: <span class="fill-in">[Fill in]</span>
     - Verify: Root comes first
 
 3. **Postorder (Left, Right, Root):**
-    - Your answer: _[Fill in]_
+    - Your answer: <span class="fill-in">[Fill in]</span>
     - Verify: Root comes last
 
 4. **Level-order (BFS):**
-    - Your answer: _[Fill in by level]_
+    - Your answer: <span class="fill-in">[Fill in by level]</span>
     - Verify: [[8], [3, 10], [1, 6, 14], [4, 7, 13]]
 
 **Score:** ___/4 correct predictions
@@ -1583,26 +1607,26 @@ Your explanation:
 
 > **Inorder:** "Use inorder when..."
 >
-> _[Fill in - give clear use cases and why]_
+> <span class="fill-in">[Fill in - give clear use cases and why]</span>
 
 > **Preorder:** "Use preorder when..."
 >
-> _[Fill in - give clear use cases and why]_
+> <span class="fill-in">[Fill in - give clear use cases and why]</span>
 
 > **Postorder:** "Use postorder when..."
 >
-> _[Fill in - give clear use cases and why]_
+> <span class="fill-in">[Fill in - give clear use cases and why]</span>
 
 > **Level-order:** "Use level-order when..."
 >
-> _[Fill in - give clear use cases and why]_
+> <span class="fill-in">[Fill in - give clear use cases and why]</span>
 
 **Examples where each shines:**
 
-1. **Inorder use case:** _[Real example, e.g., "Finding kth smallest in BST"]_
-2. **Preorder use case:** _[Real example, e.g., "Creating a copy of tree"]_
-3. **Postorder use case:** _[Real example, e.g., "Calculating directory sizes"]_
-4. **Level-order use case:** _[Real example, e.g., "Finding shortest path"]_
+1. **Inorder use case:** <span class="fill-in">[Real example, e.g., "Finding kth smallest in BST"]</span>
+2. **Preorder use case:** <span class="fill-in">[Real example, e.g., "Creating a copy of tree"]</span>
+3. **Postorder use case:** <span class="fill-in">[Real example, e.g., "Calculating directory sizes"]</span>
+4. **Level-order use case:** <span class="fill-in">[Real example, e.g., "Finding shortest path"]</span>
 
 ---
 
@@ -1612,15 +1636,16 @@ Your explanation:
 
 **Question 1:** Why does level-order traversal use a Queue?
 
-Your answer: _[Fill in - explain FIFO and why it matters]_
+Your answer: <span class="fill-in">[Fill in - explain FIFO and why it matters]</span>
 
 **Question 2:** Why do iterative DFS traversals use a Stack?
 
-Your answer: _[Fill in - explain LIFO and why it matters]_
+Your answer: <span class="fill-in">[Fill in - explain LIFO and why it matters]</span>
 
 **Question 3:** What happens if you swap them?
-- Use Stack for level-order: _[What traversal do you get?]_
-- Use Queue for DFS: _[What traversal do you get?]_
+
+- Use Stack for level-order: <span class="fill-in">[What traversal do you get?]</span>
+- Use Queue for DFS: <span class="fill-in">[What traversal do you get?]</span>
 
 **Verification:**
 
@@ -1636,22 +1661,25 @@ Your answer: _[Fill in - explain LIFO and why it matters]_
 **Scenario-based questions:**
 
 **Scenario 1:** Binary tree with max depth of 10,000 (very skewed)
-- Would you use recursive or iterative? _[Fill in]_
-- Why? _[Fill in reasoning]_
+
+- Would you use recursive or iterative? <span class="fill-in">[Fill in]</span>
+- Why? <span class="fill-in">[Fill in reasoning]</span>
 
 **Scenario 2:** Balanced binary tree with 1,000 nodes (depth ~10)
-- Would you use recursive or iterative? _[Fill in]_
-- Why? _[Fill in reasoning]_
+
+- Would you use recursive or iterative? <span class="fill-in">[Fill in]</span>
+- Why? <span class="fill-in">[Fill in reasoning]</span>
 
 **Scenario 3:** You need O(1) space and can't use system stack
-- Which approach? _[Recursive/Iterative/Morris]_
-- Why? _[Fill in reasoning]_
+
+- Which approach? <span class="fill-in">[Recursive/Iterative/Morris]</span>
+- Why? <span class="fill-in">[Fill in reasoning]</span>
 
 **General rule you learned:**
 
-- Use recursive when: _[Fill in]_
-- Use iterative when: _[Fill in]_
-- Use Morris when: _[Fill in]_
+- Use recursive when: <span class="fill-in">[Fill in]</span>
+- Use iterative when: <span class="fill-in">[Fill in]</span>
+- Use Morris when: <span class="fill-in">[Fill in]</span>
 
 ---
 

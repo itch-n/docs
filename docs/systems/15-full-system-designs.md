@@ -6,104 +6,114 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing full system designs, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is a URL shortener in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **Why do we need URL shorteners?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy for URL shortening:**
     - Example: "URL shortening is like giving your house a nickname instead of..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **What is a Twitter feed in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 5. **How does Twitter handle millions of tweets?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 6. **Real-world analogy for news feed:**
     - Example: "A news feed is like a personalized newspaper where..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 7. **What is Pastebin in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 8. **When would you use Pastebin instead of email?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your system design intuition without looking at implementation details. Answer these, then verify after building the systems.
 
 ### Capacity Planning Predictions
 
 1. **URL Shortener with 100M URLs:**
-    - Storage per URL (approx): _[Your guess: __ bytes]_
-    - Total storage needed: _[Your guess: __ GB]_
-    - Verified after implementation: _[Actual: __]_
+    - Storage per URL (approx): <span class="fill-in">[Your guess: __ bytes]</span>
+    - Total storage needed: <span class="fill-in">[Your guess: __ GB]</span>
+    - Verified after implementation: <span class="fill-in">[Actual: __]</span>
 
 2. **Twitter with 100M daily active users:**
-    - Tweets per second (avg): _[Your guess: __]_
-    - Peak load multiplier: _[Your guess: __x average]_
-    - Read/Write ratio: _[Your guess: __ reads per write]_
-    - Verified: _[Actual]_
+    - Tweets per second (avg): <span class="fill-in">[Your guess: __]</span>
+    - Peak load multiplier: <span class="fill-in">[Your guess: __x average]</span>
+    - Read/Write ratio: <span class="fill-in">[Your guess: __ reads per write]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **Cache hit ratio calculation:**
     - If 80% cache hit rate, how many database queries per 1000 requests?
-    - Your answer: _[Fill in]_
-    - Verified: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in]</span>
+    - Verified: <span class="fill-in">[Fill in after implementation]</span>
 
 ### Architecture Predictions
 
 **Scenario 1:** URL Shortener design
 
-- **Database: SQL or NoSQL?** _[Your choice and why]_
-- **Sharding key:** _[What would you shard by?]_
-- **Cache strategy:** _[Write-through/Write-back/Cache-aside - which one?]_
-- **Bottleneck prediction:** _[Where will the bottleneck be?]_
+- **Database: SQL or NoSQL?** <span class="fill-in">[Your choice and why]</span>
+- **Sharding key:** <span class="fill-in">[What would you shard by?]</span>
+- **Cache strategy:** <span class="fill-in">[Write-through/Write-back/Cache-aside - which one?]</span>
+- **Bottleneck prediction:** <span class="fill-in">[Where will the bottleneck be?]</span>
 
 **Scenario 2:** Twitter Feed generation
 
-- **Fan-out approach for regular user (100 followers):** _[Push/Pull/Hybrid?]_
-- **Fan-out approach for celebrity (10M followers):** _[Push/Pull/Hybrid?]_
-- **Why different?** _[Fill in your reasoning]_
+- **Fan-out approach for regular user (100 followers):** <span class="fill-in">[Push/Pull/Hybrid?]</span>
+- **Fan-out approach for celebrity (10M followers):** <span class="fill-in">[Push/Pull/Hybrid?]</span>
+- **Why different?** <span class="fill-in">[Fill in your reasoning]</span>
 
 **Scenario 3:** Pastebin storage
 
-- **Store in database or object storage?** _[Your choice]_
-- **Why?** _[Fill in reasoning]_
-- **How to handle 10MB paste vs 100 byte paste?** _[Different strategies?]_
+- **Store in database or object storage?** <span class="fill-in">[Your choice]</span>
+- **Why?** <span class="fill-in">[Fill in reasoning]</span>
+- **How to handle 10MB paste vs 100 byte paste?** <span class="fill-in">[Different strategies?]</span>
 
 ### Trade-off Quiz
 
 **Question:** Which is more important for URL shortener: availability or consistency?
 
-- Your answer: _[Fill in before implementation]_
-- Reasoning: _[Why?]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Reasoning: <span class="fill-in">[Why?]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** For Twitter feed, what happens if you choose fan-out on write (push)?
 
-- Advantage: _[Fill in]_
-- Disadvantage: _[Fill in]_
-- When it breaks down: _[Fill in]_
+- Advantage: <span class="fill-in">[Fill in]</span>
+- Disadvantage: <span class="fill-in">[Fill in]</span>
+- When it breaks down: <span class="fill-in">[Fill in]</span>
 
 **Question:** What's the main bottleneck in each system?
 
 | System | Bottleneck (CPU/Memory/Disk/Network) | Why? |
 |--------|--------------------------------------|------|
-| URL Shortener | _[Your guess]_ | _[Explain]_ |
-| Twitter Feed | _[Your guess]_ | _[Explain]_ |
-| Pastebin | _[Your guess]_ | _[Explain]_ |
+| URL Shortener | <span class="fill-in">[Your guess]</span> | <span class="fill-in">[Explain]</span> |
+| Twitter Feed | <span class="fill-in">[Your guess]</span> | <span class="fill-in">[Explain]</span> |
+| Pastebin | <span class="fill-in">[Your guess]</span> | <span class="fill-in">[Explain]</span> |
 
-Verify after implementation: _[Were you correct?]_
+Verify after implementation: <span class="fill-in">[Were you correct?]</span>
+
+
+</div>
 
 ---
 
@@ -238,9 +248,13 @@ Verify after implementation: _[Were you correct?]_
 
 **After implementing, answer:**
 
-- _[Which principle had the biggest impact on performance?]_
-- _[Which principle was most complex to implement?]_
-- _[What trade-offs did distributed design introduce?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Which principle had the biggest impact on performance?]</span>
+- <span class="fill-in">[Which principle was most complex to implement?]</span>
+- <span class="fill-in">[What trade-offs did distributed design introduce?]</span>
+
+</div>
 
 ---
 
@@ -286,6 +300,7 @@ Verify after implementation: _[Were you correct?]_
 ```
 
 #### Requirements
+
 - Shorten long URLs to 7-character codes
 - Redirect short URL to original
 - Track click analytics
@@ -645,6 +660,7 @@ public class URLShortener {
 ```
 
 #### Requirements
+
 - Post tweets (140 chars)
 - Follow/unfollow users
 - View home timeline (tweets from followed users)
@@ -954,6 +970,7 @@ public class TwitterFeed {
 ```
 
 #### Requirements
+
 - Store text snippets (up to 10MB)
 - Generate unique URLs
 - Optional expiration
@@ -1311,14 +1328,14 @@ static class DatabaseShards {
 **Your debugging:**
 
 1. **What causes the cascade?**
-    - Root cause: _[Fill in]_
-    - Why it works at low load: _[Fill in]_
-    - Why it fails at high load: _[Fill in]_
+    - Root cause: <span class="fill-in">[Fill in]</span>
+    - Why it works at low load: <span class="fill-in">[Fill in]</span>
+    - Why it fails at high load: <span class="fill-in">[Fill in]</span>
 
 2. **Identify all failure points:**
-    - Failure point 1: _[Fill in]_
-    - Failure point 2: _[Fill in]_
-    - Failure point 3: _[Fill in]_
+    - Failure point 1: <span class="fill-in">[Fill in]</span>
+    - Failure point 2: <span class="fill-in">[Fill in]</span>
+    - Failure point 3: <span class="fill-in">[Fill in]</span>
 
 3. **Fix the cascade:**
    ```java
@@ -1329,14 +1346,15 @@ static class DatabaseShards {
    ```
 
 4. **Verification:**
-    - How to test the fix: _[Fill in]_
-    - Load test scenario: _[Fill in]_
-    - Expected behavior under load: _[Fill in]_
+    - How to test the fix: <span class="fill-in">[Fill in]</span>
+    - Load test scenario: <span class="fill-in">[Fill in]</span>
+    - Expected behavior under load: <span class="fill-in">[Fill in]</span>
 
 <details markdown>
 <summary>Click to see the solution</summary>
 
 **Root cause:** No resource limits cause cascading failure:
+
 1. Unbounded cache → OutOfMemoryError
 2. No connection pooling → connection exhaustion
 3. No rate limiting → traffic overwhelms system
@@ -1426,14 +1444,14 @@ public class TwitterFeed {
 **Your debugging:**
 
 1. **Identify the race conditions:**
-    - Race 1: _[Between follow and backfill]_
-    - Race 2: _[Between fanout operations]_
-    - Race 3: _[Fill in if you find more]_
+    - Race 1: <span class="fill-in">[Between follow and backfill]</span>
+    - Race 2: <span class="fill-in">[Between fanout operations]</span>
+    - Race 3: <span class="fill-in">[Fill in if you find more]</span>
 
 2. **Timeline consistency issues:**
-    - What order should tweets appear: _[Fill in]_
-    - Why are tweets missing: _[Fill in]_
-    - Why are tweets out of order: _[Fill in]_
+    - What order should tweets appear: <span class="fill-in">[Fill in]</span>
+    - Why are tweets missing: <span class="fill-in">[Fill in]</span>
+    - Why are tweets out of order: <span class="fill-in">[Fill in]</span>
 
 3. **Design fixes:**
    ```java
@@ -1444,9 +1462,9 @@ public class TwitterFeed {
    ```
 
 4. **Trade-off analysis:**
-    - Strong consistency cost: _[Fill in]_
-    - Eventual consistency risk: _[Fill in]_
-    - Your choice: _[Strong/Eventual - why?]_
+    - Strong consistency cost: <span class="fill-in">[Fill in]</span>
+    - Eventual consistency risk: <span class="fill-in">[Fill in]</span>
+    - Your choice: <span class="fill-in">[Strong/Eventual - why?]</span>
 
 <details markdown>
 <summary>Click to see the solution</summary>
@@ -1503,6 +1521,7 @@ class FanoutConsumer {
 ```
 
 **Trade-off chosen:** Eventual consistency with ordering guarantees
+
 - Accept slight delay (100-200ms)
 - Guarantee eventual delivery
 - Guarantee ordering per user
@@ -1557,19 +1576,19 @@ public class Pastebin {
 **Your debugging:**
 
 1. **Identify the bottleneck:**
-    - Primary bottleneck: _[Database/Memory/Network?]_
-    - Why small pastes are fast: _[Fill in]_
-    - Why large pastes are slow: _[Fill in]_
+    - Primary bottleneck: <span class="fill-in">[Database/Memory/Network?]</span>
+    - Why small pastes are fast: <span class="fill-in">[Fill in]</span>
+    - Why large pastes are slow: <span class="fill-in">[Fill in]</span>
 
 2. **Calculate the impact:**
-    - If 1M pastes, avg size 100KB, total storage: _[__ GB]_
-    - If 5% are 5MB, storage for large pastes: _[__ GB]_
-    - Database query time for 5MB row: _[Estimate]_
+    - If 1M pastes, avg size 100KB, total storage: <span class="fill-in">[__ GB]</span>
+    - If 5% are 5MB, storage for large pastes: <span class="fill-in">[__ GB]</span>
+    - Database query time for 5MB row: <span class="fill-in">[Estimate]</span>
 
 3. **Design the fix:**
-    - Where should large pastes go: _[Object storage/CDN/Other?]_
-    - Threshold for "large": _[Fill in]_
-    - Architecture change needed: _[Draw/describe]_
+    - Where should large pastes go: <span class="fill-in">[Object storage/CDN/Other?]</span>
+    - Threshold for "large": <span class="fill-in">[Fill in]</span>
+    - Architecture change needed: <span class="fill-in">[Draw/describe]</span>
 
 4. **Implementation:**
    ```java
@@ -1700,19 +1719,19 @@ public void trackClick(String shortCode) {
 **Your debugging:**
 
 1. **Identify data loss scenarios:**
-    - Loss scenario 1: _[Fill in]_
-    - Loss scenario 2: _[Fill in]_
-    - Loss scenario 3: _[Fill in]_
+    - Loss scenario 1: <span class="fill-in">[Fill in]</span>
+    - Loss scenario 2: <span class="fill-in">[Fill in]</span>
+    - Loss scenario 3: <span class="fill-in">[Fill in]</span>
 
 2. **Why counts diverge:**
-    - Root cause: _[Fill in]_
-    - Race condition: _[Fill in]_
-    - Network failure impact: _[Fill in]_
+    - Root cause: <span class="fill-in">[Fill in]</span>
+    - Race condition: <span class="fill-in">[Fill in]</span>
+    - Network failure impact: <span class="fill-in">[Fill in]</span>
 
 3. **Design a reliable solution:**
-    - Guarantee delivery: _[How?]_
-    - Exactly-once semantics: _[How?]_
-    - Durability: _[How?]_
+    - Guarantee delivery: <span class="fill-in">[How?]</span>
+    - Exactly-once semantics: <span class="fill-in">[How?]</span>
+    - Durability: <span class="fill-in">[How?]</span>
 
 **Implementation choices:**
 
@@ -1720,7 +1739,7 @@ public void trackClick(String shortCode) {
 -   [ ] Synchronous DB writes (slow but safe)
 -   [ ] Write-ahead log
 -   [ ] Distributed transactions
--   Your choice: _[Fill in and explain why]_
+-   Your choice: <span class="fill-in">[Fill in and explain why]</span>
 
 <details markdown>
 <summary>Click to see the solution</summary>
@@ -1810,10 +1829,10 @@ After working through these challenges:
 
 **System design lessons learned:**
 
-1. _[Most important lesson from Challenge 1]_
-2. _[Most important lesson from Challenge 2]_
-3. _[Most important lesson from Challenge 3]_
-4. _[Most important lesson from Challenge 4]_
+1. <span class="fill-in">[Most important lesson from Challenge 1]</span>
+2. <span class="fill-in">[Most important lesson from Challenge 2]</span>
+3. <span class="fill-in">[Most important lesson from Challenge 3]</span>
+4. <span class="fill-in">[Most important lesson from Challenge 4]</span>
 
 ---
 
@@ -1968,21 +1987,21 @@ public class FullSystemDesignsClient {
 
 **URL Shortener:**
 
-- Scale: _[How many URLs? Reads vs writes?]_
-- Latency: _[What's acceptable?]_
-- Consistency: _[Strong or eventual?]_
+- Scale: <span class="fill-in">[How many URLs? Reads vs writes?]</span>
+- Latency: <span class="fill-in">[What's acceptable?]</span>
+- Consistency: <span class="fill-in">[Strong or eventual?]</span>
 
 **Twitter Feed:**
 
-- Scale: _[Users, tweets per day?]_
-- Fan-out strategy: _[Push, pull, or hybrid?]_
-- Consistency: _[Can timeline have slight delay?]_
+- Scale: <span class="fill-in">[Users, tweets per day?]</span>
+- Fan-out strategy: <span class="fill-in">[Push, pull, or hybrid?]</span>
+- Consistency: <span class="fill-in">[Can timeline have slight delay?]</span>
 
 **Pastebin:**
 
-- Storage: _[How to store large pastes?]_
-- Expiration: _[How to clean up?]_
-- Access patterns: _[Read-heavy or write-heavy?]_
+- Storage: <span class="fill-in">[How to store large pastes?]</span>
+- Expiration: <span class="fill-in">[How to clean up?]</span>
+- Access patterns: <span class="fill-in">[Read-heavy or write-heavy?]</span>
 
 ### 2. Architecture Decisions
 
@@ -1990,18 +2009,18 @@ public class FullSystemDesignsClient {
 
 **Sharding:**
 
-- Your scenario: _[Fill in]_
-- Shard key: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Shard key: <span class="fill-in">[Fill in]</span>
 
 **Caching:**
 
-- Your scenario: _[Fill in]_
-- Cache strategy: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Cache strategy: <span class="fill-in">[Fill in]</span>
 
 **Message Queue:**
 
-- Your scenario: _[Fill in]_
-- Queue type: _[Fill in]_
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Queue type: <span class="fill-in">[Fill in]</span>
 
 ### 3. Your Decision Tree
 
@@ -2017,18 +2036,18 @@ What are you building?
 
 **Database:**
 
-- When to shard? _[Fill in]_
-- Shard key selection: _[Fill in]_
+- When to shard? <span class="fill-in">[Fill in]</span>
+- Shard key selection: <span class="fill-in">[Fill in]</span>
 
 **Cache:**
 
-- What to cache? _[Fill in]_
-- Eviction policy: _[Fill in]_
+- What to cache? <span class="fill-in">[Fill in]</span>
+- Eviction policy: <span class="fill-in">[Fill in]</span>
 
 **Load Balancing:**
 
-- Algorithm: _[Fill in]_
-- Session handling: _[Fill in]_
+- Algorithm: <span class="fill-in">[Fill in]</span>
+- Session handling: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -2046,10 +2065,10 @@ What are you building?
 
 **Your design:**
 
-- Architecture: _[Draw components]_
-- Storage strategy: _[Fill in]_
-- Feed generation: _[Fill in]_
-- Scalability: _[Fill in]_
+- Architecture: <span class="fill-in">[Draw components]</span>
+- Storage strategy: <span class="fill-in">[Fill in]</span>
+- Feed generation: <span class="fill-in">[Fill in]</span>
+- Scalability: <span class="fill-in">[Fill in]</span>
 
 ### Scenario 2: Design Dropbox
 
@@ -2063,10 +2082,10 @@ What are you building?
 
 **Your design:**
 
-- Architecture: _[Draw components]_
-- File storage: _[Fill in]_
-- Sync strategy: _[Fill in]_
-- Conflict resolution: _[Fill in]_
+- Architecture: <span class="fill-in">[Draw components]</span>
+- File storage: <span class="fill-in">[Fill in]</span>
+- Sync strategy: <span class="fill-in">[Fill in]</span>
+- Conflict resolution: <span class="fill-in">[Fill in]</span>
 
 ### Scenario 3: Design Netflix
 
@@ -2080,10 +2099,10 @@ What are you building?
 
 **Your design:**
 
-- Architecture: _[Draw components]_
-- CDN strategy: _[Fill in]_
-- Video encoding: _[Fill in]_
-- Recommendations: _[Fill in]_
+- Architecture: <span class="fill-in">[Draw components]</span>
+- CDN strategy: <span class="fill-in">[Fill in]</span>
+- Video encoding: <span class="fill-in">[Fill in]</span>
+- Recommendations: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -2111,13 +2130,13 @@ What are you building?
 
 > "For a system at this scale, the key trade-offs are..."
 >
-> _[Fill in - discuss consistency vs availability, latency vs throughput, cost vs performance - 4-5 sentences]_
+> <span class="fill-in">[Fill in - discuss consistency vs availability, latency vs throughput, cost vs performance - 4-5 sentences]</span>
 
 **Self-assessment:**
 
-- Trade-off clarity score (1-10): ___
-- Did you mention specific technologies (Redis, Kafka, etc.)? _[Yes/No]_
-- Did you quantify the trade-offs (e.g., "100ms latency increase for 99.99% availability")? _[Yes/No]_
+- Trade-off clarity score (1-10): <span class="fill-in">___</span>
+- Did you mention specific technologies (Redis, Kafka, etc.)? <span class="fill-in">[Yes/No]</span>
+- Did you quantify the trade-offs (e.g., "100ms latency increase for 99.99% availability")? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 8 or answered "No" to either question, revise your explanation.
 
@@ -2138,23 +2157,23 @@ If you scored below 8 or answered "No" to either question, revise your explanati
 **Calculate:**
 
 1. **Writes per second:**
-    - Average: _[Fill in calculation]_
-    - Peak: _[Fill in]_
+    - Average: <span class="fill-in">[Fill in calculation]</span>
+    - Peak: <span class="fill-in">[Fill in]</span>
 
 2. **Reads per second:**
-    - Average: _[Fill in calculation]_
-    - Peak: _[Fill in]_
+    - Average: <span class="fill-in">[Fill in calculation]</span>
+    - Peak: <span class="fill-in">[Fill in]</span>
 
 3. **Storage requirements:**
-    - Total per year: _[Fill in GB/TB]_
-    - With metadata (2x): _[Fill in]_
+    - Total per year: <span class="fill-in">[Fill in GB/TB]</span>
+    - With metadata (2x): <span class="fill-in">[Fill in]</span>
 
 4. **Cache memory:**
-    - URLs to cache: _[Fill in calculation]_
-    - Memory needed: _[Fill in GB]_
+    - URLs to cache: <span class="fill-in">[Fill in calculation]</span>
+    - Memory needed: <span class="fill-in">[Fill in GB]</span>
 
 5. **Database shards:**
-    - Assuming 10M URLs per shard: _[How many shards?]_
+    - Assuming 10M URLs per shard: <span class="fill-in">[How many shards?]</span>
 
 **Verification checklist:**
 
@@ -2182,6 +2201,7 @@ If you scored below 8 or answered "No" to either question, revise your explanati
 
 ```
 [Your architecture diagram here]
+
 - Include all major components
 - Show data flow
 - Label databases, caches, message queues
@@ -2194,30 +2214,31 @@ If you scored below 8 or answered "No" to either question, revise your explanati
 **Answer these about your design:**
 
 1. **Photo storage strategy:**
-    - Where: _[S3/CDN/Database?]_
-    - Why: _[Fill in]_
-    - Cost estimate: _[Rough calculation]_
+    - Where: <span class="fill-in">[S3/CDN/Database?]</span>
+    - Why: <span class="fill-in">[Fill in]</span>
+    - Cost estimate: <span class="fill-in">[Rough calculation]</span>
 
 2. **Feed generation approach:**
-    - Strategy: _[Push/Pull/Hybrid?]_
-    - Why: _[Explain your choice]_
-    - Bottleneck: _[What will fail first?]_
+    - Strategy: <span class="fill-in">[Push/Pull/Hybrid?]</span>
+    - Why: <span class="fill-in">[Explain your choice]</span>
+    - Bottleneck: <span class="fill-in">[What will fail first?]</span>
 
 3. **Sharding strategy:**
-    - What to shard: _[Users/Photos/Both?]_
-    - Shard key: _[Fill in]_
-    - Number of shards: _[Estimate]_
+    - What to shard: <span class="fill-in">[Users/Photos/Both?]</span>
+    - Shard key: <span class="fill-in">[Fill in]</span>
+    - Number of shards: <span class="fill-in">[Estimate]</span>
 
 4. **Caching layers:**
-    - Layer 1: _[What and why]_
-    - Layer 2: _[What and why]_
-    - Eviction policy: _[Fill in]_
+    - Layer 1: <span class="fill-in">[What and why]</span>
+    - Layer 2: <span class="fill-in">[What and why]</span>
+    - Eviction policy: <span class="fill-in">[Fill in]</span>
 
 ---
 
 ### Gate 4: Bottleneck Identification
 
 **Scenario:** Your URL shortener is deployed and working. After 6 months:
+
 - Database is at 80% CPU usage
 - Cache hit rate dropped from 90% to 40%
 - P99 latency increased from 50ms to 800ms
@@ -2226,24 +2247,24 @@ If you scored below 8 or answered "No" to either question, revise your explanati
 **Diagnose the problem:**
 
 1. **What's the root cause?**
-    - Your diagnosis: _[Fill in]_
-    - Why cache hit rate dropped: _[Fill in]_
-    - Why database is overloaded: _[Fill in]_
+    - Your diagnosis: <span class="fill-in">[Fill in]</span>
+    - Why cache hit rate dropped: <span class="fill-in">[Fill in]</span>
+    - Why database is overloaded: <span class="fill-in">[Fill in]</span>
 
 2. **Order of operations to fix (prioritize):**
-    - Step 1: _[What to fix first?]_
-    - Step 2: _[What to fix second?]_
-    - Step 3: _[What to fix third?]_
+    - Step 1: <span class="fill-in">[What to fix first?]</span>
+    - Step 2: <span class="fill-in">[What to fix second?]</span>
+    - Step 3: <span class="fill-in">[What to fix third?]</span>
 
 3. **Long-term solutions:**
-    - Architecture change 1: _[Fill in]_
-    - Architecture change 2: _[Fill in]_
-    - Monitoring to add: _[Fill in]_
+    - Architecture change 1: <span class="fill-in">[Fill in]</span>
+    - Architecture change 2: <span class="fill-in">[Fill in]</span>
+    - Monitoring to add: <span class="fill-in">[Fill in]</span>
 
 4. **Validation plan:**
-    - Metric to track: _[Fill in]_
-    - Success criteria: _[Fill in]_
-    - Rollback plan: _[Fill in]_
+    - Metric to track: <span class="fill-in">[Fill in]</span>
+    - Success criteria: <span class="fill-in">[Fill in]</span>
+    - Rollback plan: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -2253,20 +2274,20 @@ If you scored below 8 or answered "No" to either question, revise your explanati
 
 | Challenge | Primary Pattern(s) | Why? |
 |-----------|-------------------|------|
-| News feed with 1M posts/day | _[Fill in]_ | _[Explain]_ |
-| Distributed rate limiter | _[Fill in]_ | _[Explain]_ |
-| Global leaderboard (real-time) | _[Fill in]_ | _[Explain]_ |
-| File sync across devices | _[Fill in]_ | _[Explain]_ |
-| Chat system with 100M users | _[Fill in]_ | _[Explain]_ |
-| Search autocomplete | _[Fill in]_ | _[Explain]_ |
+| News feed with 1M posts/day | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Distributed rate limiter | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Global leaderboard (real-time) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| File sync across devices | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Chat system with 100M users | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Search autocomplete | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
 **For each, also identify:**
 
-- Main bottleneck: _[Fill in]_
-- Database choice: _[SQL/NoSQL/Both]_
-- Caching strategy: _[Yes/No, what to cache?]_
+- Main bottleneck: <span class="fill-in">[Fill in]</span>
+- Database choice: <span class="fill-in">[SQL/NoSQL/Both]</span>
+- Caching strategy: <span class="fill-in">[Yes/No, what to cache?]</span>
 
 ---
 
@@ -2289,13 +2310,13 @@ If you scored below 8 or answered "No" to either question, revise your explanati
 
 **Step 1: Requirements Clarification (5 min)**
 
-- Questions you would ask: _[List 5-7 questions]_
+- Questions you would ask: <span class="fill-in">[List 5-7 questions]</span>
 
 **Step 2: Capacity Estimation (5 min)**
 
-- Requests per second: _[Calculate]_
-- Storage requirements: _[Calculate]_
-- Bandwidth: _[Calculate]_
+- Requests per second: <span class="fill-in">[Calculate]</span>
+- Storage requirements: <span class="fill-in">[Calculate]</span>
+- Bandwidth: <span class="fill-in">[Calculate]</span>
 
 **Step 3: High-Level Design (10 min)**
 ```
@@ -2308,23 +2329,23 @@ If you scored below 8 or answered "No" to either question, revise your explanati
 
 **Step 4: Deep Dive - Location Tracking (10 min)**
 
-- How to store driver locations: _[Data structure?]_
-- How to find nearby drivers: _[Algorithm?]_
-- Update frequency: _[How often?]_
-- Database choice: _[What and why?]_
+- How to store driver locations: <span class="fill-in">[Data structure?]</span>
+- How to find nearby drivers: <span class="fill-in">[Algorithm?]</span>
+- Update frequency: <span class="fill-in">[How often?]</span>
+- Database choice: <span class="fill-in">[What and why?]</span>
 
 **Step 5: Deep Dive - Matching Algorithm (10 min)**
 
-- Matching criteria: _[List factors]_
-- Real-time updates: _[How?]_
-- Fairness: _[How to ensure?]_
-- Failure handling: _[What if driver rejects?]_
+- Matching criteria: <span class="fill-in">[List factors]</span>
+- Real-time updates: <span class="fill-in">[How?]</span>
+- Fairness: <span class="fill-in">[How to ensure?]</span>
+- Failure handling: <span class="fill-in">[What if driver rejects?]</span>
 
 **Step 6: Bottlenecks and Scaling (5 min)**
 
-- Bottleneck 1: _[What and how to fix]_
-- Bottleneck 2: _[What and how to fix]_
-- Bottleneck 3: _[What and how to fix]_
+- Bottleneck 1: <span class="fill-in">[What and how to fix]</span>
+- Bottleneck 2: <span class="fill-in">[What and how to fix]</span>
+- Bottleneck 3: <span class="fill-in">[What and how to fix]</span>
 
 **Self-grading rubric:**
 
@@ -2353,23 +2374,23 @@ Your explanation:
 
 > "Push vs pull is a fundamental trade-off in system design..."
 >
-> _[Fill in - explain both approaches, when to use each, with concrete examples - 6-8 sentences]_
+> <span class="fill-in">[Fill in - explain both approaches, when to use each, with concrete examples - 6-8 sentences]</span>
 
 **Include in your explanation:**
 
-- What push means: _[Fill in]_
-- What pull means: _[Fill in]_
-- Push advantage: _[Fill in]_
-- Push disadvantage: _[Fill in]_
-- Pull advantage: _[Fill in]_
-- Pull disadvantage: _[Fill in]_
-- When to use hybrid: _[Fill in]_
+- What push means: <span class="fill-in">[Fill in]</span>
+- What pull means: <span class="fill-in">[Fill in]</span>
+- Push advantage: <span class="fill-in">[Fill in]</span>
+- Push disadvantage: <span class="fill-in">[Fill in]</span>
+- Pull advantage: <span class="fill-in">[Fill in]</span>
+- Pull disadvantage: <span class="fill-in">[Fill in]</span>
+- When to use hybrid: <span class="fill-in">[Fill in]</span>
 
 **Real-world examples:**
 
-- Twitter uses _[Push/Pull/Hybrid]_ because _[Fill in]_
-- Instagram uses _[Push/Pull/Hybrid]_ because _[Fill in]_
-- LinkedIn uses _[Push/Pull/Hybrid]_ because _[Fill in]_
+- Twitter uses <span class="fill-in">[Push/Pull/Hybrid]</span> because <span class="fill-in">[Fill in]</span>
+- Instagram uses <span class="fill-in">[Push/Pull/Hybrid]</span> because <span class="fill-in">[Fill in]</span>
+- LinkedIn uses <span class="fill-in">[Push/Pull/Hybrid]</span> because <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -2379,15 +2400,15 @@ Your explanation:
 
 | System Requirement | Consistency | Availability | Partition Tolerance | Your Choice | Why? |
 |-------------------|-------------|--------------|---------------------|-------------|------|
-| Bank transactions | _[Priority 1-3]_ | _[Priority 1-3]_ | _[Priority 1-3]_ | _[Fill in]_ | _[Explain]_ |
-| Social media feed | _[Priority 1-3]_ | _[Priority 1-3]_ | _[Priority 1-3]_ | _[Fill in]_ | _[Explain]_ |
-| URL shortener | _[Priority 1-3]_ | _[Priority 1-3]_ | _[Priority 1-3]_ | _[Fill in]_ | _[Explain]_ |
-| Chat messages | _[Priority 1-3]_ | _[Priority 1-3]_ | _[Priority 1-3]_ | _[Fill in]_ | _[Explain]_ |
-| E-commerce inventory | _[Priority 1-3]_ | _[Priority 1-3]_ | _[Priority 1-3]_ | _[Fill in]_ | _[Explain]_ |
+| Bank transactions | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Social media feed | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| URL shortener | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Chat messages | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| E-commerce inventory | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Given the CAP theorem, explain why you can't have perfect C, A, and P simultaneously.
 
-Your answer: _[Fill in - explain in plain English with an example]_
+Your answer: <span class="fill-in">[Fill in - explain in plain English with an example]</span>
 
 ---
 
@@ -2396,29 +2417,33 @@ Your answer: _[Fill in - explain in plain English with an example]_
 **For each scenario, describe what happens and how to mitigate:**
 
 **Scenario 1:** Your primary database in the URL shortener crashes.
-- Immediate impact: _[Fill in]_
-- User experience: _[Fill in]_
-- Detection method: _[Fill in]_
-- Mitigation: _[Fill in]_
-- Prevention: _[Fill in]_
+
+- Immediate impact: <span class="fill-in">[Fill in]</span>
+- User experience: <span class="fill-in">[Fill in]</span>
+- Detection method: <span class="fill-in">[Fill in]</span>
+- Mitigation: <span class="fill-in">[Fill in]</span>
+- Prevention: <span class="fill-in">[Fill in]</span>
 
 **Scenario 2:** Cache servers lose all data (Redis cluster restart).
-- Immediate impact: _[Fill in]_
-- Database load spike: _[Estimate: __x normal]_
-- Mitigation: _[Fill in]_
-- Cache warming strategy: _[Fill in]_
+
+- Immediate impact: <span class="fill-in">[Fill in]</span>
+- Database load spike: <span class="fill-in">[Estimate: __x normal]</span>
+- Mitigation: <span class="fill-in">[Fill in]</span>
+- Cache warming strategy: <span class="fill-in">[Fill in]</span>
 
 **Scenario 3:** Message queue (Kafka) has 2-hour delay due to traffic spike.
-- Affected systems: _[Fill in]_
-- Data consistency issues: _[Fill in]_
-- User-visible impact: _[Fill in]_
-- Mitigation: _[Fill in]_
+
+- Affected systems: <span class="fill-in">[Fill in]</span>
+- Data consistency issues: <span class="fill-in">[Fill in]</span>
+- User-visible impact: <span class="fill-in">[Fill in]</span>
+- Mitigation: <span class="fill-in">[Fill in]</span>
 
 **Scenario 4:** CDN goes down in US region.
-- Affected users: _[Fill in]_
-- Fallback mechanism: _[Fill in]_
-- Performance degradation: _[Fill in]_
-- Mitigation: _[Fill in]_
+
+- Affected users: <span class="fill-in">[Fill in]</span>
+- Fallback mechanism: <span class="fill-in">[Fill in]</span>
+- Performance degradation: <span class="fill-in">[Fill in]</span>
+- Mitigation: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -2461,28 +2486,28 @@ public class TwitterFeed {
 **Identify problems:**
 
 1. **Problem 1 (Cache):**
-    - Issue: _[Fill in]_
-    - Impact at scale: _[Fill in]_
-    - Fix: _[Fill in]_
+    - Issue: <span class="fill-in">[Fill in]</span>
+    - Impact at scale: <span class="fill-in">[Fill in]</span>
+    - Fix: <span class="fill-in">[Fill in]</span>
 
 2. **Problem 2 (Database queries):**
-    - Issue: _[Fill in]_
-    - Impact at scale: _[Fill in]_
-    - Fix: _[Fill in]_
+    - Issue: <span class="fill-in">[Fill in]</span>
+    - Impact at scale: <span class="fill-in">[Fill in]</span>
+    - Fix: <span class="fill-in">[Fill in]</span>
 
 3. **Problem 3 (Sorting):**
-    - Issue: _[Fill in]_
-    - Impact at scale: _[Fill in]_
-    - Fix: _[Fill in]_
+    - Issue: <span class="fill-in">[Fill in]</span>
+    - Impact at scale: <span class="fill-in">[Fill in]</span>
+    - Fix: <span class="fill-in">[Fill in]</span>
 
 4. **Problem 4 (Cache update):**
-    - Issue: _[Fill in]_
-    - Impact at scale: _[Fill in]_
-    - Fix: _[Fill in]_
+    - Issue: <span class="fill-in">[Fill in]</span>
+    - Impact at scale: <span class="fill-in">[Fill in]</span>
+    - Fix: <span class="fill-in">[Fill in]</span>
 
 **Additional problems you spotted:**
-5. _[Fill in if you found more]_
-6. _[Fill in if you found more]_
+5. <span class="fill-in">[Fill in if you found more]</span>
+6. <span class="fill-in">[Fill in if you found more]</span>
 
 **Your production-ready rewrite:**
 ```java

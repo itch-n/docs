@@ -6,75 +6,82 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing all patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is the sliding window pattern in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **How is it different from two pointers?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy:**
     - Example: "Sliding window is like a camera viewfinder moving across a scene..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **When does this pattern work?**
-    - Your answer: _[Fill in after solving problems]_
+    - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
 
 5. **When does this pattern fail?**
-    - Your answer: _[Fill in after trying non-contiguous problems]_
+    - Your answer: <span class="fill-in">[Fill in after trying non-contiguous problems]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Two nested loops finding max sum of k elements:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Verified after learning: _[Actual: O(?)]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
 
 2. **Sliding window finding max sum of k elements:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity: _[Your guess: O(?)]_
-    - Verified: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **Speedup calculation:**
-    - If n = 1,000 and k = 100, nested loops = n × k = _____ operations
-    - Sliding window = n = _____ operations
-    - Speedup factor: _____ times faster
+    - If n = 1,000 and k = 100, nested loops = n × k = <span class="fill-in">_____</span> operations
+    - Sliding window = n = <span class="fill-in">_____</span> operations
+    - Speedup factor: <span class="fill-in">_____</span> times faster
 
 ### Scenario Predictions
 
 **Scenario 1:** Find maximum sum of 3 consecutive elements in `[1, 4, 2, 10, 2, 3, 1, 0, 20]`
 
-- **Can you use sliding window?** _[Yes/No - Why?]_
-- **Window type:** _[Fixed/Dynamic - Why?]_
-- **What do you track in the window?** _[Sum? Elements? Other?]_
-- **When you slide from index 0-2 to 1-3, what changes?** _[Fill in]_
+- **Can you use sliding window?** <span class="fill-in">[Yes/No - Why?]</span>
+- **Window type:** <span class="fill-in">[Fixed/Dynamic - Why?]</span>
+- **What do you track in the window?** <span class="fill-in">[Sum? Elements? Other?]</span>
+- **When you slide from index 0-2 to 1-3, what changes?** <span class="fill-in">[Fill in]</span>
 
 **Scenario 2:** Find longest substring without repeating characters in `"abcabcbb"`
 
-- **Can you use sliding window?** _[Yes/No - Why?]_
-- **Window type:** _[Fixed/Dynamic - Why?]_
-- **What happens when you encounter a duplicate?** _[Expand/Shrink window?]_
-- **What data structure tracks window state?** _[Fill in]_
+- **Can you use sliding window?** <span class="fill-in">[Yes/No - Why?]</span>
+- **Window type:** <span class="fill-in">[Fixed/Dynamic - Why?]</span>
+- **What happens when you encounter a duplicate?** <span class="fill-in">[Expand/Shrink window?]</span>
+- **What data structure tracks window state?** <span class="fill-in">[Fill in]</span>
 
 **Scenario 3:** Find subarray with sum = 10 in `[1, 2, 3, 7, 5]` (can be non-contiguous)
 
-- **Can you use sliding window?** _[Yes/No - Why?]_
-- **What's the key requirement that breaks sliding window?** _[Fill in]_
+- **Can you use sliding window?** <span class="fill-in">[Yes/No - Why?]</span>
+- **What's the key requirement that breaks sliding window?** <span class="fill-in">[Fill in]</span>
 
 ### Trade-off Quiz
 
 **Question:** When would brute force be SIMPLER than sliding window for max sum of k elements?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** What's the MAIN requirement for sliding window to work?
 
@@ -83,12 +90,15 @@
 - [ ] Window size must be constant
 - [ ] Array must contain positive integers
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 **Question:** Fixed vs Dynamic window - which applies when?
 
-- **Fixed window when:** _[Fill in]_
-- **Dynamic window when:** _[Fill in]_
+- **Fixed window when:** <span class="fill-in">[Fill in]</span>
+- **Dynamic window when:** <span class="fill-in">[Fill in]</span>
+
+
+</div>
 
 ---
 
@@ -202,9 +212,13 @@ Sliding window: Previous sum (7) - 1 + 10 = 16 (2 operations)
 
 **After implementing, explain in your own words:**
 
-- _[Why does the window "slide" instead of "jump"?]_
-- _[What would happen if the window wasn't contiguous?]_
-- _[How is this different from two pointers?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does the window "slide" instead of "jump"?]</span>
+- <span class="fill-in">[What would happen if the window wasn't contiguous?]</span>
+- <span class="fill-in">[How is this different from two pointers?]</span>
+
+</div>
 
 ---
 
@@ -743,19 +757,19 @@ public static double maxAverage_Buggy(int[] nums, int k) {
 
 **Your debugging:**
 
-- **Bug 1 location:** _[Which line?]_
-- **Bug 1 explanation:** _[What's wrong with the loop condition?]_
-- **Bug 1 fix:** _[What should it be?]_
+- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 1 explanation:** <span class="fill-in">[What's wrong with the loop condition?]</span>
+- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
 
-- **Bug 2 location:** _[Which line?]_
-- **Bug 2 explanation:** _[What type mismatch causes incorrect results?]_
-- **Bug 2 fix:** _[How to ensure correct division?]_
+- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 2 explanation:** <span class="fill-in">[What type mismatch causes incorrect results?]</span>
+- **Bug 2 fix:** <span class="fill-in">[How to ensure correct division?]</span>
 
 **Test case to expose bugs:**
 
 - Input: `nums = [1, 12, -5, -6, 50, 3]`, `k = 4`
 - Expected: Maximum average should be `12.75` (for subarray `[12, -5, -6, 50]`)
-- Actual with bugs: _[Trace through manually]_
+- Actual with bugs: <span class="fill-in">[Trace through manually]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -809,15 +823,15 @@ public static int longestSubstring_Buggy(String s) {
 
 **Your debugging:**
 
-- **Bug location:** _[Which line has the logic error?]_
-- **Bug explanation:** _[Why is window.size() not always correct?]_
-- **Bug fix:** _[What should the calculation be?]_
+- **Bug location:** <span class="fill-in">[Which line has the logic error?]</span>
+- **Bug explanation:** <span class="fill-in">[Why is window.size() not always correct?]</span>
+- **Bug fix:** <span class="fill-in">[What should the calculation be?]</span>
 
 **Trace through example:**
 
 - Input: `"abcabcbb"`
 - Expected: `3` (substring "abc")
-- Trace the window and maxLen calculation at each step: _[Fill in]_
+- Trace the window and maxLen calculation at each step: <span class="fill-in">[Fill in]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -862,15 +876,15 @@ public static int minSubArrayLen_Buggy(int target, int[] nums) {
 
 **Your debugging:**
 
-- **Bug location:** _[What's wrong with the condition?]_
-- **Bug explanation:** _[Why does IF fail but WHILE works?]_
-- **Bug impact:** _[What kind of results do you get?]_
+- **Bug location:** <span class="fill-in">[What's wrong with the condition?]</span>
+- **Bug explanation:** <span class="fill-in">[Why does IF fail but WHILE works?]</span>
+- **Bug impact:** <span class="fill-in">[What kind of results do you get?]</span>
 
 **Test case to expose bug:**
 
 - Input: `nums = [2, 3, 1, 2, 4, 3]`, `target = 7`
 - Expected: `2` (subarray `[4, 3]`)
-- Actual with buggy code: _[Trace through and predict]_
+- Actual with buggy code: <span class="fill-in">[Trace through and predict]</span>
 
 **Trace manually:**
 ```
@@ -934,15 +948,15 @@ public static int longestKDistinct_Buggy(String s, int k) {
 
 **Your debugging:**
 
-- **Bug 1:** _[Why is checking size > k once not enough?]_
-- **Bug 2:** _[What happens if frequency becomes 0?]_
-- **Fixes:** _[Fill in both fixes]_
+- **Bug 1:** <span class="fill-in">[Why is checking size > k once not enough?]</span>
+- **Bug 2:** <span class="fill-in">[What happens if frequency becomes 0?]</span>
+- **Fixes:** <span class="fill-in">[Fill in both fixes]</span>
 
 **Example to trace:**
 
 - Input: `s = "eceba"`, `k = 2`
 - Expected: `3` (substring "ece" or "eba")
-- Trace window map state at each step: _[Fill in]_
+- Trace window map state at each step: <span class="fill-in">[Fill in]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -981,11 +995,11 @@ After finding and fixing all bugs:
 
 **Common mistakes you discovered:**
 
-1. **Off-by-one errors:** _[In loop bounds, especially building first window]_
-2. **Using IF instead of WHILE for shrinking:** _[Window doesn't shrink enough]_
-3. **Not removing from HashMap when frequency = 0:** _[Window size never decreases]_
-4. **Integer division errors:** _[Forgetting to cast to double for averages]_
-5. _[Add any other patterns you noticed]_
+1. **Off-by-one errors:** <span class="fill-in">[In loop bounds, especially building first window]</span>
+2. **Using IF instead of WHILE for shrinking:** <span class="fill-in">[Window doesn't shrink enough]</span>
+3. **Not removing from HashMap when frequency = 0:** <span class="fill-in">[Window size never decreases]</span>
+4. **Integer division errors:** <span class="fill-in">[Forgetting to cast to double for averages]</span>
+5. <span class="fill-in">[Add any other patterns you noticed]</span>
 
 ---
 
@@ -996,9 +1010,10 @@ After finding and fixing all bugs:
 ### Question 1: Is the subarray/substring contiguous?
 
 Answer after solving problems:
-- **Why contiguous matters?** _[Sliding window only works on contiguous data]_
-- **Can sliding window work on non-contiguous?** _[No - need other techniques]_
-- **Your observation:** _[Fill in based on testing]_
+
+- **Why contiguous matters?** <span class="fill-in">[Sliding window only works on contiguous data]</span>
+- **Can sliding window work on non-contiguous?** <span class="fill-in">[No - need other techniques]</span>
+- **Your observation:** <span class="fill-in">[Fill in based on testing]</span>
 
 ### Question 2: Fixed vs Dynamic window?
 
@@ -1006,15 +1021,15 @@ Answer for each pattern:
 
 **Fixed window when:**
 
-- Window size: _[Known constant k]_
-- Movement rule: _[Always move both pointers together]_
-- Example problems: _[Max average, nearby duplicate]_
+- Window size: <span class="fill-in">[Known constant k]</span>
+- Movement rule: <span class="fill-in">[Always move both pointers together]</span>
+- Example problems: <span class="fill-in">[Max average, nearby duplicate]</span>
 
 **Dynamic window when:**
 
-- Window size: _[Varies based on constraint]_
-- Movement rule: _[Expand right, shrink left when needed]_
-- Example problems: _[Longest substring, min subarray sum]_
+- Window size: <span class="fill-in">[Varies based on constraint]</span>
+- Movement rule: <span class="fill-in">[Expand right, shrink left when needed]</span>
+- Example problems: <span class="fill-in">[Longest substring, min subarray sum]</span>
 
 ### Question 3: What state to track?
 
@@ -1022,18 +1037,18 @@ Answer for different scenarios:
 
 **For sum/count problems:**
 
-- Track: _[Running sum, count]_
-- Data structure: _[Variables, no extra space]_
+- Track: <span class="fill-in">[Running sum, count]</span>
+- Data structure: <span class="fill-in">[Variables, no extra space]</span>
 
 **For unique elements:**
 
-- Track: _[Set of current elements]_
-- Data structure: _[HashSet]_
+- Track: <span class="fill-in">[Set of current elements]</span>
+- Data structure: <span class="fill-in">[HashSet]</span>
 
 **For frequency:**
 
-- Track: _[Count of each element]_
-- Data structure: _[HashMap or frequency array]_
+- Track: <span class="fill-in">[Count of each element]</span>
+- Data structure: <span class="fill-in">[HashMap or frequency array]</span>
 
 ### Your Decision Tree
 
@@ -1065,30 +1080,30 @@ Sliding Window Pattern Selection
 
 **Don't use sliding window when:**
 
-1. _[Need non-contiguous elements - use DP instead]_
-2. _[Need all subsets/permutations - use backtracking]_
-3. _[Data not linear (trees, graphs) - use DFS/BFS]_
-4. _[No concept of "window" or "range" in problem]_
+1. <span class="fill-in">[Need non-contiguous elements - use DP instead]</span>
+2. <span class="fill-in">[Need all subsets/permutations - use backtracking]</span>
+3. <span class="fill-in">[Data not linear (trees, graphs) - use DFS/BFS]</span>
+4. <span class="fill-in">[No concept of "window" or "range" in problem]</span>
 
 ### The Rule of Three: Alternatives
 
 **Option 1: Sliding Window**
 
-- Pros: _[O(n) time, elegant solution]_
-- Cons: _[Only works on contiguous subarrays]_
-- Use when: _[Subarray/substring optimization problem]_
+- Pros: <span class="fill-in">[O(n) time, elegant solution]</span>
+- Cons: <span class="fill-in">[Only works on contiguous subarrays]</span>
+- Use when: <span class="fill-in">[Subarray/substring optimization problem]</span>
 
 **Option 2: Two Pointers (no window)**
 
-- Pros: _[More flexible, works on sorted arrays]_
-- Cons: _[May not track window state efficiently]_
-- Use when: _[Pair finding, partitioning, sorted data]_
+- Pros: <span class="fill-in">[More flexible, works on sorted arrays]</span>
+- Cons: <span class="fill-in">[May not track window state efficiently]</span>
+- Use when: <span class="fill-in">[Pair finding, partitioning, sorted data]</span>
 
 **Option 3: Brute Force (nested loops)**
 
-- Pros: _[Simple, works for any constraint]_
-- Cons: _[O(n²) or O(n³) time complexity]_
-- Use when: _[Very small input, one-time calculation]_
+- Pros: <span class="fill-in">[Simple, works for any constraint]</span>
+- Cons: <span class="fill-in">[O(n²) or O(n³) time complexity]</span>
+- Use when: <span class="fill-in">[Very small input, one-time calculation]</span>
 
 ---
 
@@ -1099,56 +1114,56 @@ Sliding Window Pattern Selection
 **Easy (Complete all 4):**
 
 - [ ] [643. Maximum Average Subarray I](https://leetcode.com/problems/maximum-average-subarray-i/)
-    - Pattern: _[Fixed window]_
-    - Your solution time: ___
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Fixed window]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [219. Contains Duplicate II](https://leetcode.com/problems/contains-duplicate-ii/)
-    - Pattern: _[Fixed window with HashSet]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Fixed window with HashSet]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [1876. Substrings of Size Three with Distinct Characters](https://leetcode.com/problems/substrings-of-size-three-with-distinct-characters/)
-    - Pattern: _[Fixed window]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Fixed window]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [1456. Maximum Number of Vowels](https://leetcode.com/problems/maximum-number-of-vowels-in-a-substring-of-given-length/)
-    - Pattern: _[Fixed window]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Fixed window]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Medium (Complete 3-4):**
 
 - [ ] [3. Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/)
-    - Pattern: _[Dynamic window]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
-    - Mistake made: _[Fill in if any]_
+    - Pattern: <span class="fill-in">[Dynamic window]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
+    - Mistake made: <span class="fill-in">[Fill in if any]</span>
 
 - [ ] [424. Longest Repeating Character Replacement](https://leetcode.com/problems/longest-repeating-character-replacement/)
-    - Pattern: _[Dynamic window with replacement]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Dynamic window with replacement]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [438. Find All Anagrams in a String](https://leetcode.com/problems/find-all-anagrams-in-a-string/)
-    - Pattern: _[Fixed window with frequency]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Fixed window with frequency]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [567. Permutation in String](https://leetcode.com/problems/permutation-in-string/)
-    - Pattern: _[Fixed window with frequency]_
-    - Comparison to 438: _[How similar?]_
+    - Pattern: <span class="fill-in">[Fixed window with frequency]</span>
+    - Comparison to 438: <span class="fill-in">[How similar?]</span>
 
 **Hard (Optional):**
 
 - [ ] [76. Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/)
-    - Pattern: _[Dynamic window with frequency]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Dynamic window with frequency]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)
-    - Pattern: _[Fixed window with deque]_
-    - Key insight: _[Monotonic deque technique]_
+    - Pattern: <span class="fill-in">[Fixed window with deque]</span>
+    - Key insight: <span class="fill-in">[Monotonic deque technique]</span>
 
 ---
 
@@ -1201,14 +1216,14 @@ Before moving to the next topic:
 
 > "Sliding window is a pattern where..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by a non-technical person? _[Yes/No]_
-- Did you use analogies or real-world examples? _[Yes/No]_
-- Did you explain the difference from two pointers? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
+- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
+- Did you explain the difference from two pointers? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to any question, revise your explanation.
 
@@ -1252,12 +1267,12 @@ Window 4: [Final window]
 
 | Problem | Fixed or Dynamic Window? | What to Track? | Why? |
 |---------|--------------------------|----------------|------|
-| Max sum of k consecutive elements | _[Fill in]_ | _[Fill in]_ | _[Explain]_ |
-| Longest substring with unique chars | _[Fill in]_ | _[Fill in]_ | _[Explain]_ |
-| Contains duplicate within k distance | _[Fill in]_ | _[Fill in]_ | _[Explain]_ |
-| Min subarray with sum >= target | _[Fill in]_ | _[Fill in]_ | _[Explain]_ |
-| Find all anagrams in string | _[Fill in]_ | _[Fill in]_ | _[Explain]_ |
-| Longest k distinct characters | _[Fill in]_ | _[Fill in]_ | _[Explain]_ |
+| Max sum of k consecutive elements | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Longest substring with unique chars | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Contains duplicate within k distance | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Min subarray with sum >= target | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Find all anagrams in string | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Longest k distinct characters | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1271,14 +1286,14 @@ If you scored below 5/6, review the patterns and try again.
 
 | Window Type | Time Complexity | Space Complexity | Why? |
 |-------------|----------------|------------------|------|
-| Fixed Window (track sum) | O(?) | O(?) | _[Explain]_ |
-| Fixed Window (track max with deque) | O(?) | O(?) | _[Explain]_ |
-| Dynamic Window (HashSet) | O(?) | O(?) | _[Explain]_ |
-| Dynamic Window (HashMap) | O(?) | O(?) | _[Explain]_ |
+| Fixed Window (track sum) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Fixed Window (track max with deque) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Dynamic Window (HashSet) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Dynamic Window (HashMap) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why is sliding window O(n) even though there's a nested loop with `while (shrink condition)`?
 
-Your answer: _[Fill in - explain why left pointer only moves n times total]_
+Your answer: <span class="fill-in">[Fill in - explain why left pointer only moves n times total]</span>
 
 ---
 
@@ -1287,24 +1302,26 @@ Your answer: _[Fill in - explain why left pointer only moves n times total]_
 **Scenario:** Find longest substring without repeating characters in a string of 1 million characters.
 
 **Option A:** Brute force - Check all substrings
-- Time complexity: _[Fill in]_
-- Space complexity: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
+
+- Time complexity: <span class="fill-in">[Fill in]</span>
+- Space complexity: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
 **Option B:** Sliding window with HashSet
-- Time complexity: _[Fill in]_
-- Space complexity: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
 
-**Your decision:** I would choose _[A/B]_ because...
+- Time complexity: <span class="fill-in">[Fill in]</span>
+- Space complexity: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
-_[Fill in your reasoning - consider time, space, and implementation complexity]_
+**Your decision:** I would choose <span class="fill-in">[A/B]</span> because...
+
+<span class="fill-in">[Fill in your reasoning - consider time, space, and implementation complexity]</span>
 
 **When would you choose the other option?**
 
-- _[Fill in - what constraints would change your choice?]_
+- <span class="fill-in">[Fill in - what constraints would change your choice?]</span>
 
 ---
 
@@ -1351,21 +1368,21 @@ Your explanation:
 
 > "Use FIXED window when..."
 >
-> _[Fill in - describe scenarios, give examples]_
+> <span class="fill-in">[Fill in - describe scenarios, give examples]</span>
 
 > "Use DYNAMIC window when..."
 >
-> _[Fill in - describe scenarios, give examples]_
+> <span class="fill-in">[Fill in - describe scenarios, give examples]</span>
 
 > "Do NOT use sliding window when..."
 >
-> _[Fill in - list 3-4 scenarios and explain why]_
+> <span class="fill-in">[Fill in - list 3-4 scenarios and explain why]</span>
 
 **Examples of when sliding window fails:**
 
-1. _[Scenario where sliding window doesn't work - explain why]_
-2. _[Scenario where another approach is better]_
-3. _[Fill in]_
+1. <span class="fill-in">[Scenario where sliding window doesn't work - explain why]</span>
+2. <span class="fill-in">[Scenario where another approach is better]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 ---
 
