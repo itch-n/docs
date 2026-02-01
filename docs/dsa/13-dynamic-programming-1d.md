@@ -6,81 +6,88 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing all patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is dynamic programming in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **How is DP different from regular recursion?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy:**
     - Example: "DP is like saving your homework answers so you don't have to recalculate the same problems..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **When does this pattern work?**
-    - Your answer: _[Fill in after solving problems]_
+    - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
 
 5. **What's the difference between top-down and bottom-up?**
-    - Your answer: _[Fill in after learning both approaches]_
+    - Your answer: <span class="fill-in">[Fill in after learning both approaches]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Pure recursive Fibonacci (no memoization):**
-    - Time complexity: _[Your guess: O(?)]_
-    - Verified after learning: _[Actual: O(?)]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
 
 2. **Fibonacci with memoization (top-down DP):**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity: _[Your guess: O(?)]_
-    - Verified: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **Fibonacci with bottom-up DP:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity with array: _[Your guess: O(?)]_
-    - Space complexity optimized: _[Your guess: O(?)]_
-    - Verified: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity with array: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity optimized: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 4. **Speedup calculation for Fibonacci(40):**
-    - Recursive (no memo) = 2^40 = _____ operations
-    - With memoization = 40 = _____ operations
-    - Speedup factor: _____ times faster
+    - Recursive (no memo) = 2^40 = <span class="fill-in">_____</span> operations
+    - With memoization = 40 = <span class="fill-in">_____</span> operations
+    - Speedup factor: <span class="fill-in">_____</span> times faster
 
 ### Scenario Predictions
 
 **Scenario 1:** Climbing stairs - 1 or 2 steps at a time to reach step 5
 
-- **How many ways without computing?** _[Your guess: ____]_
-- **Can you see the Fibonacci pattern?** _[Yes/No - Why?]_
-- **Recurrence relation:** ways(n) = _[Fill in formula]_
-- **Why does memoization help here?** _[Fill in]_
+- **How many ways without computing?** <span class="fill-in">[Your guess: <span class="fill-in">___</span>_]</span>
+- **Can you see the Fibonacci pattern?** <span class="fill-in">[Yes/No - Why?]</span>
+- **Recurrence relation:** ways(n) = <span class="fill-in">[Fill in formula]</span>
+- **Why does memoization help here?** <span class="fill-in">[Fill in]</span>
 
 **Scenario 2:** Coin change - coins [1, 2, 5], amount = 11
 
-- **Minimum coins needed:** _[Your guess: ____]_
-- **What makes this a DP problem?** _[Fill in]_
-- **What are the overlapping subproblems?** _[Fill in]_
+- **Minimum coins needed:** <span class="fill-in">[Your guess: <span class="fill-in">___</span>_]</span>
+- **What makes this a DP problem?** <span class="fill-in">[Fill in]</span>
+- **What are the overlapping subproblems?** <span class="fill-in">[Fill in]</span>
 
 **Scenario 3:** House robber - houses [2, 7, 9, 3, 1]
 
-- **Maximum money without adjacents:** _[Your guess: ____]_
-- **Which pattern applies?** _[Fibonacci-style/Decision/String/Stock]_
-- **Recurrence relation:** rob(i) = _[Fill in formula]_
+- **Maximum money without adjacents:** <span class="fill-in">[Your guess: <span class="fill-in">___</span>_]</span>
+- **Which pattern applies?** <span class="fill-in">[Fibonacci-style/Decision/String/Stock]</span>
+- **Recurrence relation:** rob(i) = <span class="fill-in">[Fill in formula]</span>
 
 ### Trade-off Quiz
 
 **Question:** When would recursive with memoization be BETTER than bottom-up DP?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** What's the MAIN requirement for dynamic programming to work?
 
@@ -90,12 +97,15 @@
 - [ ] Both optimal substructure AND overlapping subproblems
 - [ ] Must be solvable recursively
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 **Question:** Space optimization - when can you reduce O(n) to O(1)?
 
-- Your answer: _[Fill in - what's the pattern?]_
-- Verified: _[Fill in after learning Fibonacci-style problems]_
+- Your answer: <span class="fill-in">[Fill in - what's the pattern?]</span>
+- Verified: <span class="fill-in">[Fill in after learning Fibonacci-style problems]</span>
+
+
+</div>
 
 ---
 
@@ -291,9 +301,13 @@ public static int coinChange_DP(int[] coins, int amount) {
 
 **After implementing, explain in your own words:**
 
-- _[Why does caching subproblem results help?]_
-- _[What's the difference between top-down and bottom-up?]_
-- _[When would you choose one approach over the other?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does caching subproblem results help?]</span>
+- <span class="fill-in">[What's the difference between top-down and bottom-up?]</span>
+- <span class="fill-in">[When would you choose one approach over the other?]</span>
+
+</div>
 
 ---
 
@@ -835,19 +849,19 @@ public static int climbStairs_Buggy(int n) {
 
 **Your debugging:**
 
-- **Bug 1 location:** _[Which line?]_
-- **Bug 1 explanation:** _[What's wrong with array size?]_
-- **Bug 1 fix:** _[What should it be?]_
+- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 1 explanation:** <span class="fill-in">[What's wrong with array size?]</span>
+- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
 
-- **Bug 2 location:** _[Which line?]_
-- **Bug 2 explanation:** _[What error will occur?]_
-- **Bug 2 fix:** _[How to fix loop or return?]_
+- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 2 explanation:** <span class="fill-in">[What error will occur?]</span>
+- **Bug 2 fix:** <span class="fill-in">[How to fix loop or return?]</span>
 
 **Test case to expose:**
 
 - Input: `n = 5`
 - Expected: `8` ways
-- What happens: _[Trace through - where does it crash?]_
+- What happens: <span class="fill-in">[Trace through - where does it crash?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -918,19 +932,19 @@ public static int coinChange_Buggy(int[] coins, int amount) {
 
 **Your debugging:**
 
-- **Bug 1:** _[Loop should be `i < amount` or `i <= amount`? Why?]_
+- **Bug 1:** <span class="fill-in">[Loop should be `i < amount` or `i <= amount`? Why?]</span>
 - **Bug 2:** _[Is the recurrence relation correct? What if dp[i] is MAX_VALUE?]_
 
 **Test case:**
 
 - coins = `[2]`, amount = `3`
 - Expected: `-1` (impossible)
-- With buggy code: _[What do you get?]_
+- With buggy code: <span class="fill-in">[What do you get?]</span>
 
 **Trace through manually:**
 
 - i=0: dp[0]=0, trying coin=2 → dp[2] = min(MAX, 0+1) = 1
-- i=1: dp[1]=MAX, trying coin=2 → _[What happens here?]_
+- i=1: dp[1]=MAX, trying coin=2 → <span class="fill-in">[What happens here?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -988,7 +1002,7 @@ public static int rob_Buggy(int[] nums) {
 
 **Your debugging:**
 
-- **Bug location:** _[Which line has the wrong base case?]_
+- **Bug location:** <span class="fill-in">[Which line has the wrong base case?]</span>
 - **Bug explanation:** _[Why is dp[1] = nums[1] wrong?]_
 - **Bug fix:** _[What should dp[1] be?]_
 
@@ -996,7 +1010,7 @@ public static int rob_Buggy(int[] nums) {
 
 - Input: `[2, 1, 1, 2]`
 - Expected: `4` (rob houses 0 and 3)
-- Buggy output: _[Trace through - what do you get?]_
+- Buggy output: <span class="fill-in">[Trace through - what do you get?]</span>
 
 **Manual trace with buggy code:**
 
@@ -1080,19 +1094,19 @@ public static boolean wordBreak_Buggy(String s, List<String> wordDict) {
 
 **Your debugging:**
 
-- **Bug 1:** _[Is the inner loop direction correct?]_
-- **Bug 2:** _[Is the break statement causing missed solutions?]_
+- **Bug 1:** <span class="fill-in">[Is the inner loop direction correct?]</span>
+- **Bug 2:** <span class="fill-in">[Is the break statement causing missed solutions?]</span>
 
 **Test case:**
 
 - s = `"leetcode"`, dict = `["leet", "code"]`
 - Expected: `true`
-- Trace manually: _[Does it find the solution?]_
+- Trace manually: <span class="fill-in">[Does it find the solution?]</span>
 
 **Actually... is this code correct?**
 
-- _[Carefully trace through the logic]_
-- _[Check: does it explore all possible segmentations?]_
+- <span class="fill-in">[Carefully trace through the logic]</span>
+- <span class="fill-in">[Check: does it explore all possible segmentations?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1160,15 +1174,15 @@ public static int change_Buggy(int amount, int[] coins) {
 
 **Your debugging:**
 
-- **Bug:** _[Why does loop order matter here?]_
-- **What does this code actually count?** _[Permutations or combinations?]_
-- **How to fix:** _[Swap loop order? Why?]_
+- **Bug:** <span class="fill-in">[Why does loop order matter here?]</span>
+- **What does this code actually count?** <span class="fill-in">[Permutations or combinations?]</span>
+- **How to fix:** <span class="fill-in">[Swap loop order? Why?]</span>
 
 **Test case:**
 
 - amount = `4`, coins = `[1, 2]`
 - Expected: `3` ways (1+1+1+1, 1+1+2, 2+2)
-- Buggy output: _[What do you get? Why?]_
+- Buggy output: <span class="fill-in">[What do you get? Why?]</span>
 
 **Think:** This buggy version counts `[1,1,2]` and `[1,2,1]` and `[2,1,1]` as different. Should they be?
 
@@ -1219,17 +1233,17 @@ After finding and fixing all bugs:
 
 **Common DP mistakes you discovered:**
 
-1. **Off-by-one errors:** _[Array size, loop bounds]_
-2. **Wrong base cases:** _[Initial dp values affect everything]_
-3. **Overflow issues:** _[Using Integer.MAX_VALUE in arithmetic]_
-4. **Wrong recurrence relation:** _[Not considering all choices correctly]_
-5. **Wrong iteration order:** _[Matters for combination vs permutation counting]_
+1. **Off-by-one errors:** <span class="fill-in">[Array size, loop bounds]</span>
+2. **Wrong base cases:** <span class="fill-in">[Initial dp values affect everything]</span>
+3. **Overflow issues:** <span class="fill-in">[Using Integer.MAX_VALUE in arithmetic]</span>
+4. **Wrong recurrence relation:** <span class="fill-in">[Not considering all choices correctly]</span>
+5. **Wrong iteration order:** <span class="fill-in">[Matters for combination vs permutation counting]</span>
 
 **Your key learnings:**
 
-- _[What was the most surprising bug?]_
-- _[Which bug was hardest to spot?]_
-- _[What will you always check now when writing DP code?]_
+- <span class="fill-in">[What was the most surprising bug?]</span>
+- <span class="fill-in">[Which bug was hardest to spot?]</span>
+- <span class="fill-in">[What will you always check now when writing DP code?]</span>
 
 ---
 
@@ -1240,28 +1254,30 @@ After finding and fixing all bugs:
 ### Question 1: What defines a state?
 
 Answer after solving problems:
-- **Single index?** _[1D DP array]_
-- **Two indices?** _[2D DP - next topic]_
-- **Additional state (holding/not)?** _[Multiple DP arrays or states]_
-- **Your observation:** _[Fill in]_
+
+- **Single index?** <span class="fill-in">[1D DP array]</span>
+- **Two indices?** <span class="fill-in">[2D DP - next topic]</span>
+- **Additional state (holding/not)?** <span class="fill-in">[Multiple DP arrays or states]</span>
+- **Your observation:** <span class="fill-in">[Fill in]</span>
 
 ### Question 2: Top-down or bottom-up?
 
 **Top-down (Memoization):**
 
-- Pros: _[Natural recursion, only compute needed states]_
-- Cons: _[Stack space, slightly slower]_
-- Use when: _[Complex recurrence, not all states needed]_
+- Pros: <span class="fill-in">[Natural recursion, only compute needed states]</span>
+- Cons: <span class="fill-in">[Stack space, slightly slower]</span>
+- Use when: <span class="fill-in">[Complex recurrence, not all states needed]</span>
 
 **Bottom-up (Tabulation):**
 
-- Pros: _[No stack, often faster, space optimization]_
-- Cons: _[Must compute all states]_
-- Use when: _[Simple iteration order, need all states]_
+- Pros: <span class="fill-in">[No stack, often faster, space optimization]</span>
+- Cons: <span class="fill-in">[Must compute all states]</span>
+- Use when: <span class="fill-in">[Simple iteration order, need all states]</span>
 
 ### Your Decision Tree
 
 ```
+
 1D DP Pattern Selection
 │
 ├─ Depends on previous 1-2 states?
@@ -1286,30 +1302,30 @@ Answer after solving problems:
 
 **Don't use when:**
 
-1. _[Need 2D state - use 2D DP]_
-2. _[Greedy works - simpler and faster]_
-3. _[Can use math formula - O(1)]_
-4. _[State space too large - need optimization]_
+1. <span class="fill-in">[Need 2D state - use 2D DP]</span>
+2. <span class="fill-in">[Greedy works - simpler and faster]</span>
+3. <span class="fill-in">[Can use math formula - O(1)]</span>
+4. <span class="fill-in">[State space too large - need optimization]</span>
 
 ### The Rule of Three: Alternatives
 
 **Option 1: Dynamic Programming**
 
-- Pros: _[Optimal solution, polynomial time]_
-- Cons: _[Need optimal substructure]_
-- Use when: _[Overlapping subproblems]_
+- Pros: <span class="fill-in">[Optimal solution, polynomial time]</span>
+- Cons: <span class="fill-in">[Need optimal substructure]</span>
+- Use when: <span class="fill-in">[Overlapping subproblems]</span>
 
 **Option 2: Greedy**
 
-- Pros: _[Simpler, faster]_
-- Cons: _[Doesn't always work]_
-- Use when: _[Greedy choice property holds]_
+- Pros: <span class="fill-in">[Simpler, faster]</span>
+- Cons: <span class="fill-in">[Doesn't always work]</span>
+- Use when: <span class="fill-in">[Greedy choice property holds]</span>
 
 **Option 3: Recursion with Memoization**
 
-- Pros: _[More intuitive]_
-- Cons: _[Stack overhead]_
-- Use when: _[Complex recurrence]_
+- Pros: <span class="fill-in">[More intuitive]</span>
+- Cons: <span class="fill-in">[Stack overhead]</span>
+- Use when: <span class="fill-in">[Complex recurrence]</span>
 
 ---
 
@@ -1320,56 +1336,56 @@ Answer after solving problems:
 **Easy (Complete all 3):**
 
 - [ ] [70. Climbing Stairs](https://leetcode.com/problems/climbing-stairs/)
-    - Pattern: _[Fibonacci-style]_
-    - Your solution time: ___
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Fibonacci-style]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [746. Min Cost Climbing Stairs](https://leetcode.com/problems/min-cost-climbing-stairs/)
-    - Pattern: _[Fibonacci with cost]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Fibonacci with cost]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [121. Best Time to Buy and Sell Stock](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/)
-    - Pattern: _[Single transaction]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Single transaction]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Medium (Complete 4-5):**
 
 - [ ] [198. House Robber](https://leetcode.com/problems/house-robber/)
-    - Pattern: _[Fibonacci-style decision]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Fibonacci-style decision]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [322. Coin Change](https://leetcode.com/problems/coin-change/)
-    - Pattern: _[Decision DP]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Decision DP]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [139. Word Break](https://leetcode.com/problems/word-break/)
-    - Pattern: _[String DP]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[String DP]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [300. Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence/)
-    - Pattern: _[Sequence DP]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Sequence DP]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [91. Decode Ways](https://leetcode.com/problems/decode-ways/)
-    - Pattern: _[String DP]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[String DP]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Hard (Optional):**
 
 - [ ] [152. Maximum Product Subarray](https://leetcode.com/problems/maximum-product-subarray/)
-    - Pattern: _[Track min and max]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Track min and max]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [132. Palindrome Partitioning II](https://leetcode.com/problems/palindrome-partitioning-ii/)
-    - Pattern: _[String DP with cut optimization]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[String DP with cut optimization]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 ---
 
@@ -1422,13 +1438,13 @@ Before moving to the next topic:
 
 > "Dynamic programming is..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by a non-technical person? _[Yes/No]_
-- Did you explain both optimal substructure AND overlapping subproblems? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
+- Did you explain both optimal substructure AND overlapping subproblems? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -1443,14 +1459,16 @@ If you scored below 7 or answered "No" to either question, revise your explanati
 ```
 Problem: climbStairs(5) - ways to climb 5 stairs (1 or 2 steps at a time)
 
-Recurrence: ways(n) = ___________________
+Recurrence: ways(n) = <span class="fill-in">___________________</span>
 
 Base cases:
-- ways(1) = ___
-- ways(2) = ___
+
+- ways(1) = <span class="fill-in">___</span>
+- ways(2) = <span class="fill-in">___</span>
 
 Fill in the table:
 n    | 0 | 1 | 2 | 3 | 4 | 5 |
+
 -----|---|---|---|---|---|---|
 ways |   |   |   |   |   |   |
 
@@ -1463,7 +1481,7 @@ _________________________________
 Show your work for ways(5):
 _________________________________
 
-Final answer: ways(5) = ___
+Final answer: ways(5) = <span class="fill-in">___</span>
 ```
 
 **Verification:**
@@ -1481,12 +1499,12 @@ Final answer: ways(5) = ___
 
 | Problem | Pattern | Recurrence Relation | Base Case |
 |---------|---------|---------------------|-----------|
-| Fibonacci(n) | _[Fill in]_ | F(n) = _[Fill in]_ | F(0)=___, F(1)=___ |
-| Climbing stairs (1 or 2 steps) | _[Fill in]_ | ways(n) = _[Fill in]_ | _[Fill in]_ |
-| House robber | _[Fill in]_ | rob(i) = _[Fill in]_ | _[Fill in]_ |
-| Coin change (min coins) | _[Fill in]_ | dp[i] = _[Fill in]_ | dp[0] = ___ |
-| Word break | _[Fill in]_ | dp[i] = _[Fill in]_ | dp[0] = ___ |
-| Longest increasing subsequence | _[Fill in]_ | dp[i] = _[Fill in]_ | dp[i] = ___ |
+| Fibonacci(n) | <span class="fill-in">[Fill in]</span> | F(n) = <span class="fill-in">[Fill in]</span> | F(0)=___, F(1)=___ |
+| Climbing stairs (1 or 2 steps) | <span class="fill-in">[Fill in]</span> | ways(n) = <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| House robber | <span class="fill-in">[Fill in]</span> | rob(i) = <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| Coin change (min coins) | <span class="fill-in">[Fill in]</span> | dp[i] = <span class="fill-in">[Fill in]</span> | dp[0] = <span class="fill-in">___</span> |
+| Word break | <span class="fill-in">[Fill in]</span> | dp[i] = <span class="fill-in">[Fill in]</span> | dp[0] = <span class="fill-in">___</span> |
+| Longest increasing subsequence | <span class="fill-in">[Fill in]</span> | dp[i] = <span class="fill-in">[Fill in]</span> | dp[i] = <span class="fill-in">___</span> |
 
 **Score:** ___/6 correct
 
@@ -1500,11 +1518,11 @@ If you scored below 5/6, review the patterns and try again.
 
 **Question 1:** Why is recursive Fibonacci O(2^n)?
 
-Your answer: _[Explain the branching factor]_
+Your answer: <span class="fill-in">[Explain the branching factor]</span>
 
 **Question 2:** Why does memoization make it O(n)?
 
-Your answer: _[Explain what changes]_
+Your answer: <span class="fill-in">[Explain what changes]</span>
 
 **Question 3:** Coin change with amount=100, coins=[1,2,5]
 
@@ -1515,7 +1533,7 @@ Your answer: _[Explain what changes]_
 
 **Question 4:** When can you optimize from O(n) space to O(1)?
 
-Your answer: _[Explain the pattern and why]_
+Your answer: <span class="fill-in">[Explain the pattern and why]</span>
 
 ---
 
@@ -1525,26 +1543,26 @@ Your answer: _[Explain the pattern and why]_
 
 **Problem: Maximum sum subarray (contiguous elements)**
 
-- Has optimal substructure? _[Yes/No - explain]_
-- Has overlapping subproblems? _[Yes/No - explain]_
-- Can use DP? _[Yes/No - which approach?]_
-- OR use Greedy? _[Would Kadane's algorithm work better?]_
+- Has optimal substructure? <span class="fill-in">[Yes/No - explain]</span>
+- Has overlapping subproblems? <span class="fill-in">[Yes/No - explain]</span>
+- Can use DP? <span class="fill-in">[Yes/No - which approach?]</span>
+- OR use Greedy? <span class="fill-in">[Would Kadane's algorithm work better?]</span>
 
 **Problem: Traveling salesman (visit all cities, minimum distance)**
 
-- Has optimal substructure? _[Yes/No - explain]_
-- Has overlapping subproblems? _[Yes/No - explain]_
-- Can use 1D DP? _[Yes/No - why or why not?]_
-- What's needed? _[2D DP? Bitmask DP? Other?]_
+- Has optimal substructure? <span class="fill-in">[Yes/No - explain]</span>
+- Has overlapping subproblems? <span class="fill-in">[Yes/No - explain]</span>
+- Can use 1D DP? <span class="fill-in">[Yes/No - why or why not?]</span>
+- What's needed? <span class="fill-in">[2D DP? Bitmask DP? Other?]</span>
 
 **Problem: Finding maximum element in array**
 
-- Has optimal substructure? _[Yes/No - explain]_
-- Has overlapping subproblems? _[Yes/No - explain]_
-- Can use DP? _[Yes/No - is it overkill?]_
-- Better approach? _[Fill in]_
+- Has optimal substructure? <span class="fill-in">[Yes/No - explain]</span>
+- Has overlapping subproblems? <span class="fill-in">[Yes/No - explain]</span>
+- Can use DP? <span class="fill-in">[Yes/No - is it overkill?]</span>
+- Better approach? <span class="fill-in">[Fill in]</span>
 
-**Your key insight:** _[When should you NOT use DP?]_
+**Your key insight:** <span class="fill-in">[When should you NOT use DP?]</span>
 
 ---
 
@@ -1576,28 +1594,28 @@ public static int rob(int[] nums) {
 Input: [2, 7, 9, 3, 1]
 
 Initial:
-prev2 = ___
-prev1 = ___
+prev2 = <span class="fill-in">___</span>
+prev1 = <span class="fill-in">___</span>
 
 Iteration i=2 (nums[i]=9):
-current = max(___, ___ + ___) = ___
-prev2 = ___
-prev1 = ___
+current = max(___, ___ + ___) = <span class="fill-in">___</span>
+prev2 = <span class="fill-in">___</span>
+prev1 = <span class="fill-in">___</span>
 
 Iteration i=3 (nums[i]=3):
-current = max(___, ___ + ___) = ___
-prev2 = ___
-prev1 = ___
+current = max(___, ___ + ___) = <span class="fill-in">___</span>
+prev2 = <span class="fill-in">___</span>
+prev1 = <span class="fill-in">___</span>
 
 Iteration i=4 (nums[i]=1):
-current = max(___, ___ + ___) = ___
-prev2 = ___
-prev1 = ___
+current = max(___, ___ + ___) = <span class="fill-in">___</span>
+prev2 = <span class="fill-in">___</span>
+prev1 = <span class="fill-in">___</span>
 
-Final return: ___
+Final return: <span class="fill-in">___</span>
 
 Explanation of result:
-_[Which houses were robbed and why?]_
+<span class="fill-in">[Which houses were robbed and why?]</span>
 ```
 
 **Verification:**
@@ -1614,28 +1632,28 @@ _[Which houses were robbed and why?]_
 
 **Scenario 1:** Computing Fibonacci(50)
 
-- **Top-down (memoization):** Pros _[Fill in]_, Cons _[Fill in]_
-- **Bottom-up (tabulation):** Pros _[Fill in]_, Cons _[Fill in]_
-- **Your choice:** _[Which and why?]_
+- **Top-down (memoization):** Pros <span class="fill-in">[Fill in]</span>, Cons <span class="fill-in">[Fill in]</span>
+- **Bottom-up (tabulation):** Pros <span class="fill-in">[Fill in]</span>, Cons <span class="fill-in">[Fill in]</span>
+- **Your choice:** <span class="fill-in">[Which and why?]</span>
 
 **Scenario 2:** Word break with large dictionary and short string
 
-- **Top-down (memoization):** Pros _[Fill in]_, Cons _[Fill in]_
-- **Bottom-up (tabulation):** Pros _[Fill in]_, Cons _[Fill in]_
-- **Your choice:** _[Which and why?]_
+- **Top-down (memoization):** Pros <span class="fill-in">[Fill in]</span>, Cons <span class="fill-in">[Fill in]</span>
+- **Bottom-up (tabulation):** Pros <span class="fill-in">[Fill in]</span>, Cons <span class="fill-in">[Fill in]</span>
+- **Your choice:** <span class="fill-in">[Which and why?]</span>
 
 **Scenario 3:** House robber with 1 million houses
 
-- **Top-down (memoization):** Pros _[Fill in]_, Cons _[Fill in]_
-- **Bottom-up (tabulation):** Pros _[Fill in]_, Cons _[Fill in]_
-- **Space-optimized bottom-up:** Pros _[Fill in]_
-- **Your choice:** _[Which and why?]_
+- **Top-down (memoization):** Pros <span class="fill-in">[Fill in]</span>, Cons <span class="fill-in">[Fill in]</span>
+- **Bottom-up (tabulation):** Pros <span class="fill-in">[Fill in]</span>, Cons <span class="fill-in">[Fill in]</span>
+- **Space-optimized bottom-up:** Pros <span class="fill-in">[Fill in]</span>
+- **Your choice:** <span class="fill-in">[Which and why?]</span>
 
 **General rule you learned:**
 
-- _[When to prefer top-down?]_
-- _[When to prefer bottom-up?]_
-- _[When to space-optimize?]_
+- <span class="fill-in">[When to prefer top-down?]</span>
+- <span class="fill-in">[When to prefer bottom-up?]</span>
+- <span class="fill-in">[When to space-optimize?]</span>
 
 ---
 
@@ -1695,16 +1713,19 @@ public static int rob(int[] nums) {
 **After implementing, test with:**
 
 Test 1: climbStairs(5)
+
 - Expected: `8`
-- Your output: ___
+- Your output: <span class="fill-in">___</span>
 
 Test 2: coinChange([1,2,5], 11)
+
 - Expected: `3`
-- Your output: ___
+- Your output: <span class="fill-in">___</span>
 
 Test 3: rob([2,7,9,3,1])
+
 - Expected: `12`
-- Your output: ___
+- Your output: <span class="fill-in">___</span>
 
 **Verification:**
 
@@ -1740,9 +1761,9 @@ public static int coinChange(int[] coins, int amount) {
 
 **Your bug findings:**
 
-1. **Bug 1:** _[Line ___, Issue: ___, Fix: ___]_
-2. **Bug 2:** _[Line ___, Issue: ___, Fix: ___]_
-3. **Bug 3:** _[Line ___, Issue: ___, Fix: ___]_
+1. **Bug 1:** <span class="fill-in">[Line ___, Issue: <span class="fill-in">___</span>, Fix: <span class="fill-in">___</span>]</span>
+2. **Bug 2:** <span class="fill-in">[Line ___, Issue: <span class="fill-in">___</span>, Fix: <span class="fill-in">___</span>]</span>
+3. **Bug 3:** <span class="fill-in">[Line ___, Issue: <span class="fill-in">___</span>, Fix: <span class="fill-in">___</span>]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1767,23 +1788,23 @@ All three bugs are related to the array bounds issue!
 **Question 1:** "Why is plain recursion so slow for Fibonacci?"
 
 Your teaching explanation:
-> _[Write your explanation - use analogies, be clear, 3-4 sentences]_
+> <span class="fill-in">[Write your explanation - use analogies, be clear, 3-4 sentences]</span>
 
 **Question 2:** "How does memoization make it fast?"
 
 Your teaching explanation:
-> _[Write your explanation - contrast with recursion, 3-4 sentences]_
+> <span class="fill-in">[Write your explanation - contrast with recursion, 3-4 sentences]</span>
 
 **Question 3:** "When should I use DP instead of greedy or divide-and-conquer?"
 
 Your teaching explanation:
-> _[Write your explanation - give clear criteria, 3-4 sentences]_
+> <span class="fill-in">[Write your explanation - give clear criteria, 3-4 sentences]</span>
 
 **Self-assessment:**
 
-- Would a beginner understand your explanations? _[Yes/No]_
-- Did you avoid jargon or explain technical terms? _[Yes/No]_
-- Could you draw pictures to support your explanations? _[Yes/No]_
+- Would a beginner understand your explanations? <span class="fill-in">[Yes/No]</span>
+- Did you avoid jargon or explain technical terms? <span class="fill-in">[Yes/No]</span>
+- Could you draw pictures to support your explanations? <span class="fill-in">[Yes/No]</span>
 
 ---
 
@@ -1811,13 +1832,13 @@ Your teaching explanation:
 **Final Reflection Questions:**
 
 1. **What was your biggest "aha!" moment with DP?**
-    - _[Fill in]_
+    - <span class="fill-in">[Fill in]</span>
 
 2. **Which problem was hardest and why?**
-    - _[Fill in]_
+    - <span class="fill-in">[Fill in]</span>
 
 3. **What's the #1 thing you'll remember about DP?**
-    - _[Fill in]_
+    - <span class="fill-in">[Fill in]</span>
 
 4. **How would you explain DP in ONE sentence?**
-    - _[Fill in - this is your elevator pitch]_
+    - <span class="fill-in">[Fill in - this is your elevator pitch]</span>

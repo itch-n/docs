@@ -6,77 +6,84 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing all patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is a linked list in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **Why can't we use array indices?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy:**
     - Example: "Linked lists are like a treasure hunt where each clue leads to the next..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **When does this pattern work?**
-    - Your answer: _[Fill in after solving problems]_
+    - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
 
 5. **What's the key difference between singly and doubly linked lists?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Reversing a linked list iteratively:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity: _[Your guess: O(?)]_
-    - Verified after learning: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified after learning: <span class="fill-in">[Actual]</span>
 
 2. **Reversing a linked list recursively:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity: _[Your guess: O(?)]_
-    - Verified: _[Actual - why different from iterative?]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual - why different from iterative?]</span>
 
 3. **Finding middle of linked list:**
-    - If you traverse once to count, then again to middle: _[O(?)]_
-    - Using slow/fast pointers: _[O(?)]_
-    - Speedup: _[How much better?]_
+    - If you traverse once to count, then again to middle: <span class="fill-in">[O(?)]</span>
+    - Using slow/fast pointers: <span class="fill-in">[O(?)]</span>
+    - Speedup: <span class="fill-in">[How much better?]</span>
 
 ### Scenario Predictions
 
 **Scenario 1:** Reverse list `1 -> 2 -> 3 -> 4 -> 5`
 
-- **How many pointers needed?** _[Fill in: prev, curr, next - why each?]_
-- **Initial state:** prev = ___, curr = ___, next = ___
-- **After first iteration:** List becomes _[Draw it: ? -> ? -> ? -> ?]_
-- **What's the new head?** _[Which pointer points to it?]_
+- **How many pointers needed?** <span class="fill-in">[Fill in: prev, curr, next - why each?]</span>
+- **Initial state:** prev = <span class="fill-in">___</span>, curr = <span class="fill-in">___</span>, next = <span class="fill-in">___</span>
+- **After first iteration:** List becomes <span class="fill-in">[Draw it: ? -> ? -> ? -> ?]</span>
+- **What's the new head?** <span class="fill-in">[Which pointer points to it?]</span>
 
 **Scenario 2:** Detect cycle in `1 -> 2 -> 3 -> 4 -> 2` (cycle back to 2)
 
-- **Can you use fast/slow pointers?** _[Yes/No - Why?]_
-- **Starting positions:** slow = ___, fast = ___
-- **Will they ever meet?** _[Yes/No - Why/Why not?]_
-- **Where will they meet?** _[At which node?]_
+- **Can you use fast/slow pointers?** <span class="fill-in">[Yes/No - Why?]</span>
+- **Starting positions:** slow = <span class="fill-in">___</span>, fast = <span class="fill-in">___</span>
+- **Will they ever meet?** <span class="fill-in">[Yes/No - Why/Why not?]</span>
+- **Where will they meet?** <span class="fill-in">[At which node?]</span>
 
 **Scenario 3:** Remove 2nd node from end in `1 -> 2 -> 3 -> 4 -> 5`
 
-- **Which pattern applies?** _[Two pointers with gap - why?]_
-- **Gap size needed:** _[How far apart should pointers be?]_
-- **Result should be:** _[Which nodes remain?]_
+- **Which pattern applies?** <span class="fill-in">[Two pointers with gap - why?]</span>
+- **Gap size needed:** <span class="fill-in">[How far apart should pointers be?]</span>
+- **Result should be:** <span class="fill-in">[Which nodes remain?]</span>
 
 ### Trade-off Quiz
 
 **Question:** When would recursion be WORSE than iteration for reversing?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning - consider stack space]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning - consider stack space]</span>
 
 **Question:** What's the MAIN advantage of linked lists over arrays?
 
@@ -85,7 +92,10 @@
 - [ ] O(1) insertion/deletion at known position
 - [ ] Better cache locality
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
+
+
+</div>
 
 ---
 
@@ -275,9 +285,13 @@ Step 3: Continue
 
 **After implementing, explain in your own words:**
 
-- _[Why do we need three pointers (prev, curr, next)?]_
-- _[What happens if we skip saving 'next'?]_
-- _[Why does prev end up as the new head?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why do we need three pointers (prev, curr, next)?]</span>
+- <span class="fill-in">[What happens if we skip saving 'next'?]</span>
+- <span class="fill-in">[Why does prev end up as the new head?]</span>
+
+</div>
 
 ---
 
@@ -868,19 +882,19 @@ public static ListNode reverseList_Buggy(ListNode head) {
 
 **Your debugging:**
 
-- **Bug 1 location:** _[Which line?]_
-- **Bug 1 explanation:** _[What pointer update is missing?]_
-- **Bug 1 fix:** _[What should be added?]_
+- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 1 explanation:** <span class="fill-in">[What pointer update is missing?]</span>
+- **Bug 1 fix:** <span class="fill-in">[What should be added?]</span>
 
-- **Bug 2 location:** _[Which line?]_
-- **Bug 2 explanation:** _[What does curr point to at the end?]_
-- **Bug 2 fix:** _[What should we return instead?]_
+- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 2 explanation:** <span class="fill-in">[What does curr point to at the end?]</span>
+- **Bug 2 fix:** <span class="fill-in">[What should we return instead?]</span>
 
 **Trace through example:**
 
 - Input: `1 -> 2 -> 3 -> null`
 - Expected: `3 -> 2 -> 1 -> null`
-- With bugs: _[What happens? Where does it fail?]_
+- With bugs: <span class="fill-in">[What happens? Where does it fail?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -937,15 +951,15 @@ public static ListNode detectCycle_Buggy(ListNode head) {
 
 **Your debugging:**
 
-- **Bug location:** _[Which line?]_
-- **Bug explanation:** _[Why does this cause NullPointerException?]_
-- **Bug fix:** _[How should fast move in the second phase?]_
+- **Bug location:** <span class="fill-in">[Which line?]</span>
+- **Bug explanation:** <span class="fill-in">[Why does this cause NullPointerException?]</span>
+- **Bug fix:** <span class="fill-in">[How should fast move in the second phase?]</span>
 
 **Trace through example:**
 
 - List with cycle: `1 -> 2 -> 3 -> 4 -> 2` (cycle back to 2)
 - Expected: Return node 2
-- With bug: _[What happens in second while loop?]_
+- With bug: <span class="fill-in">[What happens in second while loop?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1000,16 +1014,16 @@ public static ListNode mergeTwoLists_Buggy(ListNode l1, ListNode l2) {
 
 **Your debugging:**
 
-- **Bug location:** _[What's missing in the while loop?]_
-- **Bug explanation:** _[What happens to curr? Why does this cause problems?]_
-- **Bug fix:** _[What statement should be added?]_
+- **Bug location:** <span class="fill-in">[What's missing in the while loop?]</span>
+- **Bug explanation:** <span class="fill-in">[What happens to curr? Why does this cause problems?]</span>
+- **Bug fix:** <span class="fill-in">[What statement should be added?]</span>
 
 **Trace through example:**
 
 - l1: `1 -> 3 -> 5`
 - l2: `2 -> 4 -> 6`
 - Expected: `1 -> 2 -> 3 -> 4 -> 5 -> 6`
-- With bug: _[What does curr point to throughout?]_
+- With bug: <span class="fill-in">[What does curr point to throughout?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1069,14 +1083,14 @@ public static ListNode removeNthFromEnd_Buggy(ListNode head, int n) {
 
 **Your debugging:**
 
-- **Bug 1:** _[Should loop run n times or n+1 times? Why?]_
-- **Bug 2:** _[Should we check `fast != null` or `fast.next != null`? Why?]_
+- **Bug 1:** <span class="fill-in">[Should loop run n times or n+1 times? Why?]</span>
+- **Bug 2:** <span class="fill-in">[Should we check `fast != null` or `fast.next != null`? Why?]</span>
 
 **Test case:**
 
 - Input: `1 -> 2 -> 3 -> 4 -> 5`, n = 2
 - Expected: `1 -> 2 -> 3 -> 5` (remove 4)
-- With bugs: _[Which node gets removed?]_
+- With bugs: <span class="fill-in">[Which node gets removed?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1143,15 +1157,15 @@ public static ListNode reverseFirstK_Buggy(ListNode head, int k) {
 
 **Your debugging:**
 
-- **Bug location:** _[Which line creates the cycle?]_
-- **Bug explanation:** _[Why does tail.next = curr create a cycle?]_
-- **Bug fix:** _[What's the issue and how to fix it?]_
+- **Bug location:** <span class="fill-in">[Which line creates the cycle?]</span>
+- **Bug explanation:** <span class="fill-in">[Why does tail.next = curr create a cycle?]</span>
+- **Bug fix:** <span class="fill-in">[What's the issue and how to fix it?]</span>
 
 **Trace through example:**
 
 - Input: `1 -> 2 -> 3 -> 4 -> 5`, k = 3
 - Expected: `3 -> 2 -> 1 -> 4 -> 5`
-- With bug: _[What cycle is created? Draw it]_
+- With bug: <span class="fill-in">[What cycle is created? Draw it]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1198,15 +1212,15 @@ public static ListNode findMiddle_Buggy(ListNode head) {
 
 **Your debugging:**
 
-- **Bug 1:** _[What happens if head is null?]_
-- **Bug 2:** _[What happens if list has even length?]_
-- **Bug fix:** _[What should the while condition be?]_
+- **Bug 1:** <span class="fill-in">[What happens if head is null?]</span>
+- **Bug 2:** <span class="fill-in">[What happens if list has even length?]</span>
+- **Bug fix:** <span class="fill-in">[What should the while condition be?]</span>
 
 **Test cases that expose bugs:**
 
-- Input: `null` → _[What error?]_
-- Input: `1 -> 2` → _[What error?]_
-- Input: `1 -> 2 -> 3` → _[Does this work?]_
+- Input: `null` → <span class="fill-in">[What error?]</span>
+- Input: `1 -> 2` → <span class="fill-in">[What error?]</span>
+- Input: `1 -> 2 -> 3` → <span class="fill-in">[Does this work?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1246,11 +1260,11 @@ After finding and fixing all bugs:
 
 **Common mistakes you discovered:**
 
-1. _[Forgetting to update pointers (prev, curr)]_
-2. _[Null pointer checks - always verify before accessing .next]_
-3. _[Off-by-one errors in two-pointer gap problems]_
-4. _[Missing curr = curr.next when building lists]_
-5. _[Fill in others you noticed]_
+1. <span class="fill-in">[Forgetting to update pointers (prev, curr)]</span>
+2. <span class="fill-in">[Null pointer checks - always verify before accessing .next]</span>
+3. <span class="fill-in">[Off-by-one errors in two-pointer gap problems]</span>
+4. <span class="fill-in">[Missing curr = curr.next when building lists]</span>
+5. <span class="fill-in">[Fill in others you noticed]</span>
 
 ---
 
@@ -1261,27 +1275,28 @@ After finding and fixing all bugs:
 ### Question 1: What operation do you need?
 
 Answer after solving problems:
-- **Reverse?** _[Iterative vs recursive - trade-offs?]_
-- **Detect cycle?** _[Why Floyd's algorithm?]_
-- **Merge?** _[Two lists vs K lists - approach difference?]_
-- **Remove node?** _[Why use dummy node?]_
+
+- **Reverse?** <span class="fill-in">[Iterative vs recursive - trade-offs?]</span>
+- **Detect cycle?** <span class="fill-in">[Why Floyd's algorithm?]</span>
+- **Merge?** <span class="fill-in">[Two lists vs K lists - approach difference?]</span>
+- **Remove node?** <span class="fill-in">[Why use dummy node?]</span>
 
 ### Question 2: Pointer patterns
 
 **Reversal pattern:**
 
 - Three pointers: prev, curr, next
-- Use cases: _[List problems you solved]_
+- Use cases: <span class="fill-in">[List problems you solved]</span>
 
 **Cycle detection pattern:**
 
 - Slow/fast pointers
-- Use cases: _[List problems you solved]_
+- Use cases: <span class="fill-in">[List problems you solved]</span>
 
 **Two pointer with gap:**
 
 - Maintain fixed distance
-- Use cases: _[List problems you solved]_
+- Use cases: <span class="fill-in">[List problems you solved]</span>
 
 ### Your Decision Tree
 
@@ -1309,30 +1324,30 @@ Linked List Pattern Selection
 
 **Don't use linked lists when:**
 
-1. _[Need random access? Use array instead?]_
-2. _[Memory overhead matters? Each node has pointer overhead]_
-3. _[Cache locality important? Arrays are better]_
-4. _[Need to search frequently? O(n) is slow]_
+1. <span class="fill-in">[Need random access? Use array instead?]</span>
+2. <span class="fill-in">[Memory overhead matters? Each node has pointer overhead]</span>
+3. <span class="fill-in">[Cache locality important? Arrays are better]</span>
+4. <span class="fill-in">[Need to search frequently? O(n) is slow]</span>
 
 ### The Rule of Three: Alternatives
 
 **Option 1: Linked List**
 
-- Pros: _[O(1) insertion/deletion at known position]_
-- Cons: _[O(n) access, extra space for pointers]_
-- Use when: _[Frequent insertions/deletions]_
+- Pros: <span class="fill-in">[O(1) insertion/deletion at known position]</span>
+- Cons: <span class="fill-in">[O(n) access, extra space for pointers]</span>
+- Use when: <span class="fill-in">[Frequent insertions/deletions]</span>
 
 **Option 2: Dynamic Array (ArrayList)**
 
-- Pros: _[O(1) random access, cache friendly]_
-- Cons: _[O(n) insertion/deletion in middle]_
-- Use when: _[Frequent access, rare modifications]_
+- Pros: <span class="fill-in">[O(1) random access, cache friendly]</span>
+- Cons: <span class="fill-in">[O(n) insertion/deletion in middle]</span>
+- Use when: <span class="fill-in">[Frequent access, rare modifications]</span>
 
 **Option 3: Doubly Linked List**
 
-- Pros: _[Bidirectional traversal, O(1) deletion with node reference]_
-- Cons: _[Extra space for prev pointer]_
-- Use when: _[Need to traverse backwards]_
+- Pros: <span class="fill-in">[Bidirectional traversal, O(1) deletion with node reference]</span>
+- Cons: <span class="fill-in">[Extra space for prev pointer]</span>
+- Use when: <span class="fill-in">[Need to traverse backwards]</span>
 
 ---
 
@@ -1343,56 +1358,56 @@ Linked List Pattern Selection
 **Easy (Complete all 4):**
 
 - [ ] [206. Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/)
-    - Pattern: _[Which one?]_
-    - Your solution time: ___
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Which one?]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [141. Linked List Cycle](https://leetcode.com/problems/linked-list-cycle/)
-    - Pattern: _[Which one?]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Which one?]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [21. Merge Two Sorted Lists](https://leetcode.com/problems/merge-two-sorted-lists/)
-    - Pattern: _[Which one?]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Which one?]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [83. Remove Duplicates from Sorted List](https://leetcode.com/problems/remove-duplicates-from-sorted-list/)
-    - Pattern: _[Which one?]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Which one?]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Medium (Complete 3-4):**
 
 - [ ] [19. Remove Nth Node From End of List](https://leetcode.com/problems/remove-nth-node-from-end-of-list/)
-    - Pattern: _[Which one?]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Which one?]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [142. Linked List Cycle II](https://leetcode.com/problems/linked-list-cycle-ii/)
-    - Pattern: _[Which one?]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Why does Floyd's algorithm work?]_
+    - Pattern: <span class="fill-in">[Which one?]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Why does Floyd's algorithm work?]</span>
 
 - [ ] [2. Add Two Numbers](https://leetcode.com/problems/add-two-numbers/)
-    - Pattern: _[Which one?]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Which one?]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [143. Reorder List](https://leetcode.com/problems/reorder-list/)
-    - Pattern: _[Combination of which patterns?]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Combination of which patterns?]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Hard (Optional):**
 
 - [ ] [23. Merge k Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists/)
-    - Pattern: _[Min heap approach]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Min heap approach]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [25. Reverse Nodes in k-Group](https://leetcode.com/problems/reverse-nodes-in-k-group/)
-    - Pattern: _[Extension of reversal]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Extension of reversal]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 ---
 
@@ -1445,13 +1460,13 @@ Before moving to the next topic:
 
 > "Linked list operations work by..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by someone new to programming? _[Yes/No]_
-- Did you use analogies or visual examples? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by someone new to programming? <span class="fill-in">[Yes/No]</span>
+- Did you use analogies or visual examples? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -1494,12 +1509,12 @@ Final: [Your drawing - after all reversals]
 
 | Problem | Pattern (Reverse/Cycle/Merge/Remove) | Key Technique |
 |---------|--------------------------------------|---------------|
-| Reverse a linked list | _[Fill in]_ | _[3 pointers: prev, curr, next]_ |
-| Detect if list has a cycle | _[Fill in]_ | _[Fast/slow pointers]_ |
-| Find middle of linked list | _[Fill in]_ | _[Fast/slow pointers]_ |
-| Merge two sorted lists | _[Fill in]_ | _[Dummy node + pointer]_ |
-| Remove nth from end | _[Fill in]_ | _[Two pointers with gap]_ |
-| Find cycle start node | _[Fill in]_ | _[Fast/slow meet, then reset]_ |
+| Reverse a linked list | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[3 pointers: prev, curr, next]</span> |
+| Detect if list has a cycle | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fast/slow pointers]</span> |
+| Find middle of linked list | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fast/slow pointers]</span> |
+| Merge two sorted lists | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Dummy node + pointer]</span> |
+| Remove nth from end | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Two pointers with gap]</span> |
+| Find cycle start node | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fast/slow meet, then reset]</span> |
 
 **Score:** ___/6 correct
 
@@ -1513,15 +1528,15 @@ If you scored below 5/6, review the patterns and try again.
 
 | Operation | Time Complexity | Space Complexity | Why? |
 |-----------|----------------|------------------|------|
-| Reverse iteratively | O(?) | O(?) | _[Explain]_ |
-| Reverse recursively | O(?) | O(?) | _[Why different?]_ |
-| Detect cycle (Floyd's) | O(?) | O(?) | _[Explain]_ |
-| Merge two lists | O(?) | O(?) | _[Explain]_ |
-| Merge K lists (heap) | O(?) | O(?) | _[Explain]_ |
+| Reverse iteratively | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Reverse recursively | O(?) | O(?) | <span class="fill-in">[Why different?]</span> |
+| Detect cycle (Floyd's) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Merge two lists | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Merge K lists (heap) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why is recursive reversal O(n) space while iterative is O(1)?
 
-Your answer: _[Fill in - explain the stack frames]_
+Your answer: <span class="fill-in">[Fill in - explain the stack frames]</span>
 
 ---
 
@@ -1530,24 +1545,26 @@ Your answer: _[Fill in - explain the stack frames]_
 **Scenario:** You need to frequently insert elements and occasionally access the middle element.
 
 **Option A:** Use a linked list
-- Insertion: _[O(?)]_
-- Access middle: _[O(?)]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
+
+- Insertion: <span class="fill-in">[O(?)]</span>
+- Access middle: <span class="fill-in">[O(?)]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
 **Option B:** Use an array (ArrayList)
-- Insertion at beginning: _[O(?)]_
-- Access middle: _[O(?)]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
 
-**Your decision:** I would choose _[A/B]_ because...
+- Insertion at beginning: <span class="fill-in">[O(?)]</span>
+- Access middle: <span class="fill-in">[O(?)]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
-_[Fill in your reasoning - consider frequency of operations]_
+**Your decision:** I would choose <span class="fill-in">[A/B]</span> because...
+
+<span class="fill-in">[Fill in your reasoning - consider frequency of operations]</span>
 
 **What would make you change your decision?**
 
-- _[Fill in - what constraints would flip your choice?]_
+- <span class="fill-in">[Fill in - what constraints would flip your choice?]</span>
 
 ---
 
@@ -1613,9 +1630,9 @@ public static ListNode mergeTwoLists(ListNode l1, ListNode l2) {
 
 **Your analysis:**
 
-- Bug location: _[Which section?]_
-- Bug explanation: _[What's wrong?]_
-- Bug fix: _[Write the corrected code]_
+- Bug location: <span class="fill-in">[Which section?]</span>
+- Bug explanation: <span class="fill-in">[What's wrong?]</span>
+- Bug fix: <span class="fill-in">[Write the corrected code]</span>
 
 **If you found it in under 2 minutes:** Excellent debugging skills!
 
@@ -1641,15 +1658,19 @@ Your explanation:
 
 > "We use a dummy node because..."
 >
-> _[Fill in - explain the edge case it solves]_
+> <span class="fill-in">[Fill in - explain the edge case it solves]</span>
 
 **Example without dummy node:**
 
-- _[What problem occurs?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[What problem occurs?]</span>
+
+</div>
 
 **Example with dummy node:**
 
-- _[How does it solve the problem?]_
+- <span class="fill-in">[How does it solve the problem?]</span>
 
 ---
 
@@ -1661,13 +1682,13 @@ Your explanation:
 
 **Your approach (don't write code, just describe):**
 
-1. Step 1: _[Which pattern to find middle?]_
-2. Step 2: _[Which pattern to reverse second half?]_
-3. Step 3: _[Which pattern to merge?]_
+1. Step 1: <span class="fill-in">[Which pattern to find middle?]</span>
+2. Step 2: <span class="fill-in">[Which pattern to reverse second half?]</span>
+3. Step 3: <span class="fill-in">[Which pattern to merge?]</span>
 
-**Patterns used:** _[List all patterns involved]_
+**Patterns used:** <span class="fill-in">[List all patterns involved]</span>
 
-**Complexity:** _[Overall time and space]_
+**Complexity:** <span class="fill-in">[Overall time and space]</span>
 
 ---
 
@@ -1677,15 +1698,15 @@ Your explanation:
 
 **Your explanation:**
 
-- Why both checks? _[Fill in]_
-- What happens if we only check `fast != null`? _[Fill in]_
-- What happens if we only check `fast.next != null`? _[Fill in]_
+- Why both checks? <span class="fill-in">[Fill in]</span>
+- What happens if we only check `fast != null`? <span class="fill-in">[Fill in]</span>
+- What happens if we only check `fast.next != null`? <span class="fill-in">[Fill in]</span>
 
 **Example test cases:**
 
-- Empty list: _[Which check saves us?]_
-- Single node: _[Which check saves us?]_
-- Two nodes: _[Which check saves us?]_
+- Empty list: <span class="fill-in">[Which check saves us?]</span>
+- Single node: <span class="fill-in">[Which check saves us?]</span>
+- Two nodes: <span class="fill-in">[Which check saves us?]</span>
 
 ---
 
@@ -1722,12 +1743,15 @@ Your explanation:
 **Scenario:** You're implementing an undo feature for a text editor.
 
 **Question 1:** Would you use an array or linked list to store the history of changes?
-- Your answer: _[Fill in]_
-- Reasoning: _[Consider operations: add, remove from end, traverse]_
+
+- Your answer: <span class="fill-in">[Fill in]</span>
+- Reasoning: <span class="fill-in">[Consider operations: add, remove from end, traverse]</span>
 
 **Question 2:** If you used a doubly linked list, what advantage does that give?
-- Your answer: _[Fill in]_
+
+- Your answer: <span class="fill-in">[Fill in]</span>
 
 **Question 3:** What's the space trade-off?
-- Linked list overhead: _[Fill in - what extra space per node?]_
-- Worth it for this use case? _[Yes/No - Why?]_
+
+- Linked list overhead: <span class="fill-in">[Fill in - what extra space per node?]</span>
+- Worth it for this use case? <span class="fill-in">[Yes/No - Why?]</span>

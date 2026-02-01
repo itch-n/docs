@@ -6,75 +6,82 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing all patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is backtracking in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **How is backtracking different from brute force?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy:**
     - Example: "Backtracking is like solving a maze by trying each path and going back when you hit a dead end..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **When does this pattern work?**
-    - Your answer: _[Fill in after solving problems]_
+    - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
 
 5. **What makes a problem suitable for backtracking?**
-    - Your answer: _[Fill in after learning the pattern]_
+    - Your answer: <span class="fill-in">[Fill in after learning the pattern]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Brute force generating all permutations of n elements:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Verified after learning: _[Actual: O(?)]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
 
 2. **Backtracking to find N-Queens solutions:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity (excluding output): _[Your guess: O(?)]_
-    - Verified: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity (excluding output): <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **Speedup calculation:**
-    - For generating subsets, brute force with checking = _[Fill in]_
-    - Backtracking with early pruning = _[Fill in]_
-    - Pruning benefit: _[Fill in why it helps]_
+    - For generating subsets, brute force with checking = <span class="fill-in">[Fill in]</span>
+    - Backtracking with early pruning = <span class="fill-in">[Fill in]</span>
+    - Pruning benefit: <span class="fill-in">[Fill in why it helps]</span>
 
 ### Scenario Predictions
 
 **Scenario 1:** Generate all permutations of `[1, 2, 3]`
 
-- **How many permutations exist?** _[Your guess: ___]_
-- **First permutation:** _[Fill in]_
-- **When do you backtrack?** _[Fill in]_
-- **What state do you restore?** _[Fill in]_
+- **How many permutations exist?** <span class="fill-in">[Your guess: <span class="fill-in">___</span>]</span>
+- **First permutation:** <span class="fill-in">[Fill in]</span>
+- **When do you backtrack?** <span class="fill-in">[Fill in]</span>
+- **What state do you restore?** <span class="fill-in">[Fill in]</span>
 
 **Scenario 2:** Generate all subsets of `[1, 2, 3]`
 
-- **How many subsets exist?** _[Your guess: ___]_
-- **Formula for n elements:** _[Fill in]_
-- **How is this different from permutations?** _[Fill in]_
+- **How many subsets exist?** <span class="fill-in">[Your guess: <span class="fill-in">___</span>]</span>
+- **Formula for n elements:** <span class="fill-in">[Fill in]</span>
+- **How is this different from permutations?** <span class="fill-in">[Fill in]</span>
 
 **Scenario 3:** Place 4 queens on a 4x4 board
 
-- **Can you place 2 queens in same column?** _[Yes/No - Why?]_
-- **How do you track which columns are under attack?** _[Fill in your idea]_
-- **What about diagonals?** _[Fill in]_
+- **Can you place 2 queens in same column?** <span class="fill-in">[Yes/No - Why?]</span>
+- **How do you track which columns are under attack?** <span class="fill-in">[Fill in your idea]</span>
+- **What about diagonals?** <span class="fill-in">[Fill in]</span>
 
 ### Trade-off Quiz
 
 **Question:** When would iterative enumeration be BETTER than backtracking?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** What's the MAIN difference between permutations and combinations?
 
@@ -83,7 +90,10 @@
 - [ ] Permutations use recursion, combinations use iteration
 - [ ] Permutations allow duplicates, combinations don't
 
-Verify after implementation: _[Which one?]_
+Verify after implementation: <span class="fill-in">[Which one?]</span>
+
+
+</div>
 
 ---
 
@@ -196,9 +206,13 @@ Row 1: Try 4 positions
 
 **After implementing, explain in your own words:**
 
-- _[Why is backtracking better than brute force enumeration?]_
-- _[When does backtracking give the biggest advantage?]_
-- _[What problems are NOT improved by backtracking?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why is backtracking better than brute force enumeration?]</span>
+- <span class="fill-in">[When does backtracking give the biggest advantage?]</span>
+- <span class="fill-in">[What problems are NOT improved by backtracking?]</span>
+
+</div>
 
 ---
 
@@ -779,13 +793,13 @@ private static void backtrack(int[] nums, List<Integer> current,
 
 **Your debugging:**
 
-- **Bug 1 location:** _[Which line?]_
-- **Bug 1 explanation:** _[What's wrong?]_
-- **Bug 1 fix:** _[What should it be?]_
+- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 1 explanation:** <span class="fill-in">[What's wrong?]</span>
+- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
 
-- **Bug 2 location:** _[Which line?]_
-- **Bug 2 explanation:** _[What's missing?]_
-- **Bug 2 fix:** _[What code should be added?]_
+- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 2 explanation:** <span class="fill-in">[What's missing?]</span>
+- **Bug 2 fix:** <span class="fill-in">[What code should be added?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -833,17 +847,17 @@ private static void backtrack(int[] nums, int start,
 
 **Your debugging:**
 
-- **Bug 1:** _[What must be done to the array first?]_
-- **Bug 1 fix:** _[Fill in]_
+- **Bug 1:** <span class="fill-in">[What must be done to the array first?]</span>
+- **Bug 1 fix:** <span class="fill-in">[Fill in]</span>
 
-- **Bug 2:** _[What check is missing in the loop?]_
-- **Bug 2 fix:** _[Fill in the condition]_
+- **Bug 2:** <span class="fill-in">[What check is missing in the loop?]</span>
+- **Bug 2 fix:** <span class="fill-in">[Fill in the condition]</span>
 
 **Test case to expose the bug:**
 
 - Input: `[1, 2, 2]`
 - Expected: `[[], [1], [1,2], [1,2,2], [2], [2,2]]` (6 unique subsets)
-- Actual with buggy code: _[How many duplicates?]_
+- Actual with buggy code: <span class="fill-in">[How many duplicates?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -913,9 +927,9 @@ private static void backtrack(int row, int n, char[][] board,
 
 **Your debugging:**
 
-- **Bug location:** _[Which line or lines?]_
-- **Bug explanation:** _[What's missing?]_
-- **Bug fix:** _[Fill in the missing code]_
+- **Bug location:** <span class="fill-in">[Which line or lines?]</span>
+- **Bug explanation:** <span class="fill-in">[What's missing?]</span>
+- **Bug fix:** <span class="fill-in">[Fill in the missing code]</span>
 
 **Hint:** What happens after the recursive call?
 
@@ -972,9 +986,9 @@ private static void backtrack(int[] candidates, int target, int start,
 
 **Your debugging:**
 
-- **Bug:** _[Where should pruning happen?]_
-- **Why is it a problem?** _[What inefficiency does this cause?]_
-- **Fix:** _[Add the proper pruning condition]_
+- **Bug:** <span class="fill-in">[Where should pruning happen?]</span>
+- **Why is it a problem?** <span class="fill-in">[What inefficiency does this cause?]</span>
+- **Fix:** <span class="fill-in">[Add the proper pruning condition]</span>
 
 **Performance impact:**
 
@@ -1046,15 +1060,15 @@ private static void backtrack(int[] nums, List<Integer> current,
 
 **Your debugging:**
 
-- **Bug:** _[What check is missing?]_
-- **Why does this cause duplicates?** _[Explain the logic]_
-- **Fix:** _[Fill in the condition]_
+- **Bug:** <span class="fill-in">[What check is missing?]</span>
+- **Why does this cause duplicates?** <span class="fill-in">[Explain the logic]</span>
+- **Fix:** <span class="fill-in">[Fill in the condition]</span>
 
 **Test case:**
 
 - Input: `[1, 1, 2]`
 - Expected: `[[1,1,2], [1,2,1], [2,1,1]]` (3 unique)
-- Actual without fix: _[How many duplicates?]_
+- Actual without fix: <span class="fill-in">[How many duplicates?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1089,10 +1103,10 @@ After finding and fixing all bugs:
 
 **Common backtracking mistakes you discovered:**
 
-1. _[Fill in - e.g., forgetting to copy list when adding to result]_
-2. _[Fill in - e.g., missing backtrack cleanup]_
-3. _[Fill in - e.g., wrong pruning condition]_
-4. _[Fill in]_
+1. <span class="fill-in">[Fill in - e.g., forgetting to copy list when adding to result]</span>
+2. <span class="fill-in">[Fill in - e.g., missing backtrack cleanup]</span>
+3. <span class="fill-in">[Fill in - e.g., wrong pruning condition]</span>
+4. <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1103,32 +1117,33 @@ After finding and fixing all bugs:
 ### Question 1: What are you generating?
 
 Answer after solving problems:
-- **All permutations?** _[Use permutation backtracking]_
-- **All combinations/subsets?** _[Use combination backtracking]_
-- **Single valid solution?** _[Return early when found]_
-- **Count solutions?** _[Track count, don't store paths]_
+
+- **All permutations?** <span class="fill-in">[Use permutation backtracking]</span>
+- **All combinations/subsets?** <span class="fill-in">[Use combination backtracking]</span>
+- **Single valid solution?** <span class="fill-in">[Return early when found]</span>
+- **Count solutions?** <span class="fill-in">[Track count, don't store paths]</span>
 
 ### Question 2: What are the constraints?
 
 **No duplicates in input:**
 
-- Approach: _[Simple backtracking]_
+- Approach: <span class="fill-in">[Simple backtracking]</span>
 
 **Duplicates in input:**
 
-- Approach: _[Sort first, skip duplicates at same level]_
+- Approach: <span class="fill-in">[Sort first, skip duplicates at same level]</span>
 
 **Size constraint (k elements):**
 
-- Approach: _[Add base case for size]_
+- Approach: <span class="fill-in">[Add base case for size]</span>
 
 **Sum/product constraint:**
 
-- Approach: _[Track running sum/product, prune early]_
+- Approach: <span class="fill-in">[Track running sum/product, prune early]</span>
 
 **Grid constraints:**
 
-- Approach: _[Mark visited, unmark on backtrack]_
+- Approach: <span class="fill-in">[Mark visited, unmark on backtrack]</span>
 
 ### Your Decision Tree
 
@@ -1155,30 +1170,30 @@ Backtracking Pattern Selection
 
 **Don't use backtracking when:**
 
-1. _[Solution space too large without pruning]_
-2. _[Can solve with DP or greedy]_
-3. _[Only need one solution and can find it directly]_
-4. _[No way to validate partial solutions]_
+1. <span class="fill-in">[Solution space too large without pruning]</span>
+2. <span class="fill-in">[Can solve with DP or greedy]</span>
+3. <span class="fill-in">[Only need one solution and can find it directly]</span>
+4. <span class="fill-in">[No way to validate partial solutions]</span>
 
 ### The Rule of Three: Alternatives
 
 **Option 1: Backtracking**
 
-- Pros: _[Explores all solutions, can prune]_
-- Cons: _[Exponential time complexity]_
-- Use when: _[Need all solutions or constraint satisfaction]_
+- Pros: <span class="fill-in">[Explores all solutions, can prune]</span>
+- Cons: <span class="fill-in">[Exponential time complexity]</span>
+- Use when: <span class="fill-in">[Need all solutions or constraint satisfaction]</span>
 
 **Option 2: Dynamic Programming**
 
-- Pros: _[Polynomial time if applicable]_
-- Cons: _[Need optimal substructure]_
-- Use when: _[Counting or optimization, not enumeration]_
+- Pros: <span class="fill-in">[Polynomial time if applicable]</span>
+- Cons: <span class="fill-in">[Need optimal substructure]</span>
+- Use when: <span class="fill-in">[Counting or optimization, not enumeration]</span>
 
 **Option 3: Greedy**
 
-- Pros: _[Fast, simple]_
-- Cons: _[Doesn't work for all problems]_
-- Use when: _[Greedy choice property holds]_
+- Pros: <span class="fill-in">[Fast, simple]</span>
+- Cons: <span class="fill-in">[Doesn't work for all problems]</span>
+- Use when: <span class="fill-in">[Greedy choice property holds]</span>
 
 ---
 
@@ -1189,51 +1204,51 @@ Backtracking Pattern Selection
 **Easy (Complete all 2):**
 
 - [ ] [257. Binary Tree Paths](https://leetcode.com/problems/binary-tree-paths/)
-    - Pattern: _[Backtracking with path tracking]_
-    - Your solution time: ___
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Backtracking with path tracking]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [401. Binary Watch](https://leetcode.com/problems/binary-watch/)
-    - Pattern: _[Generate all combinations]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Generate all combinations]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Medium (Complete 4-5):**
 
 - [ ] [46. Permutations](https://leetcode.com/problems/permutations/)
-    - Pattern: _[Classic permutations]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Classic permutations]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [78. Subsets](https://leetcode.com/problems/subsets/)
-    - Pattern: _[Classic subsets]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Classic subsets]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [39. Combination Sum](https://leetcode.com/problems/combination-sum/)
-    - Pattern: _[Combinations with reuse]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Combinations with reuse]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [79. Word Search](https://leetcode.com/problems/word-search/)
-    - Pattern: _[Grid DFS with backtracking]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Grid DFS with backtracking]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [22. Generate Parentheses](https://leetcode.com/problems/generate-parentheses/)
-    - Pattern: _[Generate valid sequences]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Generate valid sequences]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Hard (Optional):**
 
 - [ ] [51. N-Queens](https://leetcode.com/problems/n-queens/)
-    - Pattern: _[Constraint satisfaction]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Constraint satisfaction]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [37. Sudoku Solver](https://leetcode.com/problems/sudoku-solver/)
-    - Pattern: _[Grid constraint satisfaction]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Grid constraint satisfaction]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 ---
 
@@ -1286,13 +1301,13 @@ Before moving to the next topic:
 
 > "Backtracking is a technique where..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by a non-technical person? _[Yes/No]_
-- Did you use analogies or real-world examples? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
+- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -1333,12 +1348,12 @@ Step 3: [Mark where backtracking happens]
 
 | Problem | Pattern (Permutation/Combination/Constraint/Grid) | Why? |
 |---------|---------------------------------------------------|------|
-| Generate all ways to pick 3 from 5 items | _[Fill in]_ | _[Explain]_ |
-| Generate all orderings of [A,B,C] | _[Fill in]_ | _[Explain]_ |
-| Place 8 queens on chessboard | _[Fill in]_ | _[Explain]_ |
-| Find word in 2D grid | _[Fill in]_ | _[Explain]_ |
-| Generate all subsets of array | _[Fill in]_ | _[Explain]_ |
-| Find combinations that sum to K | _[Fill in]_ | _[Explain]_ |
+| Generate all ways to pick 3 from 5 items | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Generate all orderings of [A,B,C] | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Place 8 queens on chessboard | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Find word in 2D grid | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Generate all subsets of array | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Find combinations that sum to K | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1352,14 +1367,14 @@ If you scored below 5/6, review the patterns and try again.
 
 | Pattern | Time Complexity | Space Complexity | Why? |
 |---------|----------------|------------------|------|
-| Permutations (n elements) | O(?) | O(?) | _[Explain]_ |
-| Subsets (n elements) | O(?) | O(?) | _[Explain]_ |
-| N-Queens (n×n board) | O(?) | O(?) | _[Explain]_ |
-| Combination Sum | O(?) | O(?) | _[Explain]_ |
+| Permutations (n elements) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Subsets (n elements) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| N-Queens (n×n board) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Combination Sum | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why does backtracking with pruning perform better than brute force enumeration?
 
-Your answer: _[Fill in - explain the fundamental difference]_
+Your answer: <span class="fill-in">[Fill in - explain the fundamental difference]</span>
 
 ---
 
@@ -1371,9 +1386,9 @@ Your answer: _[Fill in - explain the fundamental difference]_
 
 **Your explanation:**
 
-1. What state must be restored? _[Fill in]_
-2. Why must we restore it? _[Fill in]_
-3. What happens if you forget to backtrack? _[Fill in]_
+1. What state must be restored? <span class="fill-in">[Fill in]</span>
+2. Why must we restore it? <span class="fill-in">[Fill in]</span>
+3. What happens if you forget to backtrack? <span class="fill-in">[Fill in]</span>
 
 **Code identification:** Circle the backtrack steps in this code:
 
@@ -1389,9 +1404,9 @@ for (int i = 0; i < nums.length; i++) {
 }
 ```
 
-Which steps are "making a choice"? _[Fill in: Step ___]_
-Which steps are "backtracking"? _[Fill in: Step ___]_
-Which step explores further? _[Fill in: Step ___]_
+Which steps are "making a choice"? <span class="fill-in">[Fill in: Step ___]</span>
+Which steps are "backtracking"? <span class="fill-in">[Fill in: Step ___]</span>
+Which step explores further? <span class="fill-in">[Fill in: Step ___]</span>
 
 ---
 
@@ -1401,18 +1416,18 @@ Which step explores further? _[Fill in: Step ___]_
 
 **Without pruning:**
 
-- How many recursive calls? _[Estimate]_
-- Which branches are wasted? _[Identify]_
+- How many recursive calls? <span class="fill-in">[Estimate]</span>
+- Which branches are wasted? <span class="fill-in">[Identify]</span>
 
 **With pruning (sorted array, early termination):**
 
-- How many recursive calls? _[Estimate]_
-- What condition allows pruning? _[Fill in]_
+- How many recursive calls? <span class="fill-in">[Estimate]</span>
+- What condition allows pruning? <span class="fill-in">[Fill in]</span>
 
 **General principle:**
 
-- Pruning works when: _[Fill in your understanding]_
-- Pruning doesn't help when: _[Fill in]_
+- Pruning works when: <span class="fill-in">[Fill in your understanding]</span>
+- Pruning doesn't help when: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1422,23 +1437,23 @@ Which step explores further? _[Fill in: Step ___]_
 
 **Problem 1: Permutations**
 
-- Base case: _[When do you stop recursing?]_
-- Action: _[What do you do at base case?]_
+- Base case: <span class="fill-in">[When do you stop recursing?]</span>
+- Action: <span class="fill-in">[What do you do at base case?]</span>
 
 **Problem 2: Subsets**
 
-- Base case: _[Trick question - is there one?]_
-- When do you add to result? _[Fill in]_
+- Base case: <span class="fill-in">[Trick question - is there one?]</span>
+- When do you add to result? <span class="fill-in">[Fill in]</span>
 
 **Problem 3: N-Queens**
 
-- Base case: _[When do you know you've found a solution?]_
-- Invalid case: _[When do you stop exploring early?]_
+- Base case: <span class="fill-in">[When do you know you've found a solution?]</span>
+- Invalid case: <span class="fill-in">[When do you stop exploring early?]</span>
 
 **Problem 4: Word Search**
 
-- Success case: _[When have you found the word?]_
-- Failure case: _[When should you stop searching?]_
+- Success case: <span class="fill-in">[When have you found the word?]</span>
+- Failure case: <span class="fill-in">[When should you stop searching?]</span>
 
 ---
 
@@ -1507,10 +1522,10 @@ private static void backtrack(int[] nums, List<Integer> current,
 
 **Questions:**
 
-1. Will this code compile? _[Yes/No]_
-2. Will it produce correct output? _[Yes/No]_
-3. What's the bug? _[Fill in]_
-4. How to fix it? _[Fill in]_
+1. Will this code compile? <span class="fill-in">[Yes/No]</span>
+2. Will it produce correct output? <span class="fill-in">[Yes/No]</span>
+3. What's the bug? <span class="fill-in">[Fill in]</span>
+4. How to fix it? <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1519,27 +1534,30 @@ private static void backtrack(int[] nums, List<Integer> current,
 **Scenario:** You need to solve a constraint satisfaction problem with 20 variables and complex constraints.
 
 **Option A:** Backtracking with constraint checking
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
-- Best when: _[Fill in]_
+
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
+- Best when: <span class="fill-in">[Fill in]</span>
 
 **Option B:** Brute force enumeration with validation
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
-- Best when: _[Fill in]_
+
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
+- Best when: <span class="fill-in">[Fill in]</span>
 
 **Option C:** Dynamic programming
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
-- Best when: _[Fill in]_
 
-**Your decision:** I would choose _[A/B/C]_ because...
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
+- Best when: <span class="fill-in">[Fill in]</span>
 
-_[Fill in your reasoning - consider time, space, and constraints]_
+**Your decision:** I would choose <span class="fill-in">[A/B/C]</span> because...
+
+<span class="fill-in">[Fill in your reasoning - consider time, space, and constraints]</span>
 
 **What would make you change your decision?**
 
-- _[Fill in - what constraints would flip your choice?]_
+- <span class="fill-in">[Fill in - what constraints would flip your choice?]</span>
 
 ---
 

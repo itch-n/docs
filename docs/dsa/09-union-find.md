@@ -6,76 +6,83 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing all patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is union-find in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **What do "union" and "find" operations do?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy:**
     - Example: "Union-Find is like organizing people into groups where you can quickly check if two people are in the same group..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **When does this pattern work?**
-    - Your answer: _[Fill in after solving problems]_
+    - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
 
 5. **What makes union-find fast?**
-    - Your answer: _[Fill in after learning optimizations]_
+    - Your answer: <span class="fill-in">[Fill in after learning optimizations]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Naive connectivity check using DFS/BFS:**
-    - Time complexity per query: _[Your guess: O(?)]_
-    - Verified after learning: _[Actual: O(?)]_
+    - Time complexity per query: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
 
 2. **Union-Find with optimizations (path compression + union by rank):**
-    - Time complexity per operation: _[Your guess: O(?)]_
-    - Space complexity: _[Your guess: O(?)]_
-    - Verified: _[Actual]_
+    - Time complexity per operation: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **Speedup calculation:**
     - If n = 10,000 nodes with 1,000 connectivity queries
-    - DFS approach: _____ operations
-    - Union-Find: _____ operations
-    - Speedup factor: _____ times faster
+    - DFS approach: <span class="fill-in">_____</span> operations
+    - Union-Find: <span class="fill-in">_____</span> operations
+    - Speedup factor: <span class="fill-in">_____</span> times faster
 
 ### Scenario Predictions
 
 **Scenario 1:** You have nodes {0, 1, 2, 3, 4}. Perform: union(0,1), union(2,3), union(1,2)
 
-- **After these operations, which nodes are connected?** _[Fill in]_
-- **How many disjoint components remain?** _[Your guess]_
-- **Are nodes 0 and 3 connected?** _[Yes/No - Why?]_
-- **What happens if we call union(0,3) now?** _[Fill in]_
+- **After these operations, which nodes are connected?** <span class="fill-in">[Fill in]</span>
+- **How many disjoint components remain?** <span class="fill-in">[Your guess]</span>
+- **Are nodes 0 and 3 connected?** <span class="fill-in">[Yes/No - Why?]</span>
+- **What happens if we call union(0,3) now?** <span class="fill-in">[Fill in]</span>
 
 **Scenario 2:** Graph edges: [(0,1), (1,2), (2,3), (3,0)]
 
-- **Can you detect a cycle using union-find?** _[Yes/No - How?]_
-- **Which edge creates the cycle?** _[Fill in your reasoning]_
-- **What does find(x) return after path compression?** _[Fill in]_
+- **Can you detect a cycle using union-find?** <span class="fill-in">[Yes/No - How?]</span>
+- **Which edge creates the cycle?** <span class="fill-in">[Fill in your reasoning]</span>
+- **What does find(x) return after path compression?** <span class="fill-in">[Fill in]</span>
 
 **Scenario 3:** Why path compression?
 
-- **Without path compression:** Finding root of deeply nested node costs _[O(?)]_
-- **With path compression:** Amortized cost becomes _[O(?)]_
-- **Draw a tree before and after path compression:** _[Sketch after implementation]_
+- **Without path compression:** Finding root of deeply nested node costs <span class="fill-in">[O(?)]</span>
+- **With path compression:** Amortized cost becomes <span class="fill-in">[O(?)]</span>
+- **Draw a tree before and after path compression:** <span class="fill-in">[Sketch after implementation]</span>
 
 ### Trade-off Quiz
 
 **Question:** When would DFS/BFS be BETTER than union-find for connectivity?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** What's the MAIN benefit of union by rank?
 
@@ -84,12 +91,15 @@
 - [ ] Keeps tree height balanced
 - [ ] Makes find operation faster initially
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 **Question:** Can union-find split a component into smaller components?
 
-- Your answer: _[Yes/No - Why or why not?]_
-- Implication: _[When does this limitation matter?]_
+- Your answer: <span class="fill-in">[Yes/No - Why or why not?]</span>
+- Implication: <span class="fill-in">[When does this limitation matter?]</span>
+
+
+</div>
 
 ---
 
@@ -255,9 +265,13 @@ After find(3):  3 → 0      (directly points to root)
 
 **After implementing, explain in your own words:**
 
-- _[Why does union by rank keep trees balanced?]_
-- _[How does path compression improve future finds?]_
-- _[What's the inverse Ackermann function and why does it matter?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does union by rank keep trees balanced?]</span>
+- <span class="fill-in">[How does path compression improve future finds?]</span>
+- <span class="fill-in">[What's the inverse Ackermann function and why does it matter?]</span>
+
+</div>
 
 ---
 
@@ -867,10 +881,10 @@ public int find_Buggy(int x) {
 
 **Your debugging:**
 
-- **Bug location:** _[Which line?]_
-- **Bug explanation:** _[What optimization is missing?]_
-- **Bug impact:** _[How does this affect performance?]_
-- **Bug fix:** _[What should the code be?]_
+- **Bug location:** <span class="fill-in">[Which line?]</span>
+- **Bug explanation:** <span class="fill-in">[What optimization is missing?]</span>
+- **Bug impact:** <span class="fill-in">[How does this affect performance?]</span>
+- **Bug fix:** <span class="fill-in">[What should the code be?]</span>
 
 **Test case to measure impact:**
 
@@ -929,8 +943,8 @@ public boolean union_Buggy(int x, int y) {
 
 - **Bug 1:** _[What's wrong with `parent[x] = rootY`?]_
 - **Bug 2:** _[What's wrong with `parent[y] = rootX`?]_
-- **Why this breaks union by rank:** _[Explain the impact]_
-- **Correct code:** _[What should it be?]_
+- **Why this breaks union by rank:** <span class="fill-in">[Explain the impact]</span>
+- **Correct code:** <span class="fill-in">[What should it be?]</span>
 
 **Trace through example:**
 
@@ -939,7 +953,7 @@ public boolean union_Buggy(int x, int y) {
 - union(2, 3) → Works fine
 - union(0, 2) with buggy code
 - Expected: Attach one root under the other
-- Actual: _[What happens?]_
+- Actual: <span class="fill-in">[What happens?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -988,15 +1002,15 @@ public boolean hasCycle_Buggy(int n, int[][] edges) {
 
 **Your debugging:**
 
-- **Bug:** _[What's the logic error?]_
-- **Bug explanation:** _[Why is this incorrect?]_
-- **Correct approach:** _[What should happen when find(u) == find(v)?]_
+- **Bug:** <span class="fill-in">[What's the logic error?]</span>
+- **Bug explanation:** <span class="fill-in">[Why is this incorrect?]</span>
+- **Correct approach:** <span class="fill-in">[What should happen when find(u) == find(v)?]</span>
 
 **Test case:**
 
 - Graph edges: [(0,1), (1,2), (2,0)]
 - Expected: Detect cycle at edge (2,0)
-- Actual with buggy code: _[What happens?]_
+- Actual with buggy code: <span class="fill-in">[What happens?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1065,15 +1079,15 @@ public class UnionFind_Buggy {
 
 **Your debugging:**
 
-- **Bug:** _[What's missing in union()?]_
-- **Impact:** _[How does this affect getComponents()?]_
-- **Fix:** _[What line should be added?]_
+- **Bug:** <span class="fill-in">[What's missing in union()?]</span>
+- **Impact:** <span class="fill-in">[How does this affect getComponents()?]</span>
+- **Fix:** <span class="fill-in">[What line should be added?]</span>
 
 **Test case:**
 
 - Initialize with 5 nodes (components = 5)
-- union(0, 1) → Expected components: 4, Actual: ___
-- union(2, 3) → Expected components: 3, Actual: ___
+- union(0, 1) → Expected components: 4, Actual: <span class="fill-in">___</span>
+- union(2, 3) → Expected components: 3, Actual: <span class="fill-in">___</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1125,10 +1139,10 @@ public boolean union_Buggy(int x, int y) {
 
 **Your debugging:**
 
-- **Bug 1:** _[Should we increment rank when rootY is taller?]_
-- **Bug 2:** _[Should we increment rank when rootX is taller?]_
-- **When should rank be incremented?** _[Fill in the rule]_
-- **Why rank matters:** _[Explain the purpose of rank]_
+- **Bug 1:** <span class="fill-in">[Should we increment rank when rootY is taller?]</span>
+- **Bug 2:** <span class="fill-in">[Should we increment rank when rootX is taller?]</span>
+- **When should rank be incremented?** <span class="fill-in">[Fill in the rule]</span>
+- **Why rank matters:** <span class="fill-in">[Explain the purpose of rank]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1197,9 +1211,9 @@ public int find_ActualBuggy(int x) {
 
 **Your debugging:**
 
-- **Bug:** _[What's wrong with the compression loop condition?]_
-- **What happens:** _[Trace through with chain: 0 → 1 → 2]_
-- **Correct version:** _[How to fix it?]_
+- **Bug:** <span class="fill-in">[What's wrong with the compression loop condition?]</span>
+- **What happens:** <span class="fill-in">[Trace through with chain: 0 → 1 → 2]</span>
+- **Correct version:** <span class="fill-in">[How to fix it?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1231,12 +1245,12 @@ After finding and fixing all bugs:
 
 **Common mistakes you discovered:**
 
-1. _[Forgetting path compression in find]_
-2. _[Attaching node instead of root in union]_
-3. _[Incorrectly updating rank]_
-4. _[Missing component count decrement]_
-5. _[Calling union when cycle detected]_
-6. _[Path compression iteration bugs]_
+1. <span class="fill-in">[Forgetting path compression in find]</span>
+2. <span class="fill-in">[Attaching node instead of root in union]</span>
+3. <span class="fill-in">[Incorrectly updating rank]</span>
+4. <span class="fill-in">[Missing component count decrement]</span>
+5. <span class="fill-in">[Calling union when cycle detected]</span>
+6. <span class="fill-in">[Path compression iteration bugs]</span>
 
 ---
 
@@ -1247,23 +1261,24 @@ After finding and fixing all bugs:
 ### Question 1: What do you need to track?
 
 Answer after solving problems:
-- **Connected components?** _[Basic union-find]_
-- **Cycles in graph?** _[Union-find with cycle detection]_
-- **Dynamic connectivity?** _[Union-find with online queries]_
-- **Weighted relationships?** _[Weighted union-find]_
+
+- **Connected components?** <span class="fill-in">[Basic union-find]</span>
+- **Cycles in graph?** <span class="fill-in">[Union-find with cycle detection]</span>
+- **Dynamic connectivity?** <span class="fill-in">[Union-find with online queries]</span>
+- **Weighted relationships?** <span class="fill-in">[Weighted union-find]</span>
 
 ### Question 2: What optimizations do you need?
 
 **Always use:**
 
-- Path compression: _[Makes find nearly O(1)]_
-- Union by rank/size: _[Keeps tree balanced]_
+- Path compression: <span class="fill-in">[Makes find nearly O(1)]</span>
+- Union by rank/size: <span class="fill-in">[Keeps tree balanced]</span>
 
 **Additional data:**
 
-- Component size: _[Track in size array]_
-- Component count: _[Decrement on union]_
-- Weights/ratios: _[For transitive relationships]_
+- Component size: <span class="fill-in">[Track in size array]</span>
+- Component count: <span class="fill-in">[Decrement on union]</span>
+- Weights/ratios: <span class="fill-in">[For transitive relationships]</span>
 
 ### Your Decision Tree
 
@@ -1292,30 +1307,30 @@ Union-Find Pattern Selection
 
 **Don't use union-find when:**
 
-1. _[Need to split components - UF only merges]_
-2. _[Need path information - use DFS/BFS]_
-3. _[Directed graph cycles - use DFS]_
-4. _[Need intermediate nodes - use graph traversal]_
+1. <span class="fill-in">[Need to split components - UF only merges]</span>
+2. <span class="fill-in">[Need path information - use DFS/BFS]</span>
+3. <span class="fill-in">[Directed graph cycles - use DFS]</span>
+4. <span class="fill-in">[Need intermediate nodes - use graph traversal]</span>
 
 ### The Rule of Three: Alternatives
 
 **Option 1: Union-Find**
 
-- Pros: _[Near O(1) operations, simple for connectivity]_
-- Cons: _[Can't split, no path info]_
-- Use when: _[Dynamic connectivity, no splits]_
+- Pros: <span class="fill-in">[Near O(1) operations, simple for connectivity]</span>
+- Cons: <span class="fill-in">[Can't split, no path info]</span>
+- Use when: <span class="fill-in">[Dynamic connectivity, no splits]</span>
 
 **Option 2: DFS/BFS**
 
-- Pros: _[More flexible, path info]_
-- Cons: _[O(V+E) per query]_
-- Use when: _[Static graph, need paths]_
+- Pros: <span class="fill-in">[More flexible, path info]</span>
+- Cons: <span class="fill-in">[O(V+E) per query]</span>
+- Use when: <span class="fill-in">[Static graph, need paths]</span>
 
 **Option 3: Adjacency List**
 
-- Pros: _[Most flexible]_
-- Cons: _[Slower connectivity checks]_
-- Use when: _[Need full graph operations]_
+- Pros: <span class="fill-in">[Most flexible]</span>
+- Cons: <span class="fill-in">[Slower connectivity checks]</span>
+- Use when: <span class="fill-in">[Need full graph operations]</span>
 
 ---
 
@@ -1326,46 +1341,46 @@ Union-Find Pattern Selection
 **Easy (Complete all 2):**
 
 - [ ] [547. Number of Provinces](https://leetcode.com/problems/number-of-provinces/)
-    - Pattern: _[Connected components]_
-    - Your solution time: ___
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Connected components]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [990. Satisfiability of Equality Equations](https://leetcode.com/problems/satisfiability-of-equality-equations/)
-    - Pattern: _[Constraint checking]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Constraint checking]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Medium (Complete 3-4):**
 
 - [ ] [200. Number of Islands](https://leetcode.com/problems/number-of-islands/)
-    - Pattern: _[Connected components in grid]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Connected components in grid]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [684. Redundant Connection](https://leetcode.com/problems/redundant-connection/)
-    - Pattern: _[Cycle detection]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Cycle detection]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [721. Accounts Merge](https://leetcode.com/problems/accounts-merge/)
-    - Pattern: _[Grouping with union-find]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Grouping with union-find]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [1202. Smallest String With Swaps](https://leetcode.com/problems/smallest-string-with-swaps/)
-    - Pattern: _[Components with optimization]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Components with optimization]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Hard (Optional):**
 
 - [ ] [685. Redundant Connection II](https://leetcode.com/problems/redundant-connection-ii/)
-    - Pattern: _[Directed graph cycle]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Directed graph cycle]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [399. Evaluate Division](https://leetcode.com/problems/evaluate-division/)
-    - Pattern: _[Weighted union-find]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Weighted union-find]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 ---
 
@@ -1418,14 +1433,14 @@ Before moving to the next topic:
 
 > "Union-Find is a data structure that..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by a non-technical person? _[Yes/No]_
-- Did you explain both "union" and "find" operations? _[Yes/No]_
-- Did you mention why it's fast? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
+- Did you explain both "union" and "find" operations? <span class="fill-in">[Yes/No]</span>
+- Did you mention why it's fast? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to any question, revise your explanation.
 
@@ -1472,14 +1487,14 @@ After find(3) with path compression:
 
 | Problem | Use Union-Find? | Why / Why Not? |
 |---------|----------------|----------------|
-| Check if two nodes are connected | _[Yes/No]_ | _[Explain]_ |
-| Find shortest path between nodes | _[Yes/No]_ | _[Explain]_ |
-| Detect cycle in undirected graph | _[Yes/No]_ | _[Explain]_ |
-| Count connected components | _[Yes/No]_ | _[Explain]_ |
-| Find all paths from A to B | _[Yes/No]_ | _[Explain]_ |
-| Detect cycle in directed graph | _[Yes/No]_ | _[Explain]_ |
-| Merge groups of connected items | _[Yes/No]_ | _[Explain]_ |
-| Split a component into two parts | _[Yes/No]_ | _[Explain]_ |
+| Check if two nodes are connected | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| Find shortest path between nodes | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| Detect cycle in undirected graph | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| Count connected components | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| Find all paths from A to B | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| Detect cycle in directed graph | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| Merge groups of connected items | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| Split a component into two parts | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/8 correct
 
@@ -1500,15 +1515,15 @@ If you scored below 7/8, review the decision framework and try again.
 **Deep questions:**
 
 1. **What is the inverse Ackermann function α(n)?**
-    - Your answer: _[Fill in]_
-    - Why does it matter: _[Fill in]_
+    - Your answer: <span class="fill-in">[Fill in]</span>
+    - Why does it matter: <span class="fill-in">[Fill in]</span>
 
 2. **In practice, what's the value of α(n) for realistic inputs?**
-    - Your answer: _[Fill in]_
-    - Implication: _[What does this mean for performance?]_
+    - Your answer: <span class="fill-in">[Fill in]</span>
+    - Implication: <span class="fill-in">[What does this mean for performance?]</span>
 
 3. **Why is path compression safe (doesn't break correctness)?**
-    - Your answer: _[Explain why flattening preserves connectivity]_
+    - Your answer: <span class="fill-in">[Explain why flattening preserves connectivity]</span>
 
 ---
 
@@ -1518,17 +1533,17 @@ If you scored below 7/8, review the decision framework and try again.
 
 **Path Compression:**
 
-- **What does it do?** _[Fill in]_
-- **When does it happen?** _[During find/union/both?]_
-- **Draw before/after:** _[Sketch a tree before and after path compression]_
-- **Why doesn't it break anything?** _[Explain correctness]_
+- **What does it do?** <span class="fill-in">[Fill in]</span>
+- **When does it happen?** <span class="fill-in">[During find/union/both?]</span>
+- **Draw before/after:** <span class="fill-in">[Sketch a tree before and after path compression]</span>
+- **Why doesn't it break anything?** <span class="fill-in">[Explain correctness]</span>
 
 **Union by Rank:**
 
-- **What does "rank" represent?** _[Fill in]_
-- **When is rank incremented?** _[Fill in the exact condition]_
-- **Why attach smaller under larger?** _[Explain the benefit]_
-- **Union by size vs union by rank:** _[What's the difference?]_
+- **What does "rank" represent?** <span class="fill-in">[Fill in]</span>
+- **When is rank incremented?** <span class="fill-in">[Fill in the exact condition]</span>
+- **Why attach smaller under larger?** <span class="fill-in">[Explain the benefit]</span>
+- **Union by size vs union by rank:** <span class="fill-in">[What's the difference?]</span>
 
 **Can you use just one optimization?**
 
@@ -1649,20 +1664,20 @@ Your explanation:
 
 > "Imagine you have a social network where friendships are constantly being added..."
 >
-> _[Continue the explanation - use an analogy, explain the trade-offs, show why UF wins]_
+> <span class="fill-in">[Continue the explanation - use an analogy, explain the trade-offs, show why UF wins]</span>
 
 **Specific points to cover:**
 
-1. What "dynamic" means: _[Fill in]_
-2. Cost of repeated DFS: _[Fill in]_
-3. How union-find is better: _[Fill in]_
-4. When DFS would be better: _[Fill in]_
+1. What "dynamic" means: <span class="fill-in">[Fill in]</span>
+2. Cost of repeated DFS: <span class="fill-in">[Fill in]</span>
+3. How union-find is better: <span class="fill-in">[Fill in]</span>
+4. When DFS would be better: <span class="fill-in">[Fill in]</span>
 
 **Examples of when union-find is NOT the best choice:**
 
-1. _[Scenario 1]_
-2. _[Scenario 2]_
-3. _[Scenario 3]_
+1. <span class="fill-in">[Scenario 1]</span>
+2. <span class="fill-in">[Scenario 2]</span>
+3. <span class="fill-in">[Scenario 3]</span>
 
 ---
 
@@ -1683,9 +1698,9 @@ Your explanation:
 >
 > "With path compression:"
 > - First find(5) traverses ___ nodes, but then...
-> - _[Explain what changes]_
+> - <span class="fill-in">[Explain what changes]</span>
 > - Second find(5) traverses ___ nodes
-> - _[Explain why it's faster]_
+> - <span class="fill-in">[Explain why it's faster]</span>
 
 **Draw the transformation:**
 ```
@@ -1717,6 +1732,6 @@ After first find(5) with path compression:  [Draw flattened tree]
 
 **Reflection:**
 
-- What was the hardest part to understand? _[Fill in]_
-- What clicked for you? _[Fill in]_
-- How would you explain this to your past self before learning it? _[Fill in]_
+- What was the hardest part to understand? <span class="fill-in">[Fill in]</span>
+- What clicked for you? <span class="fill-in">[Fill in]</span>
+- How would you explain this to your past self before learning it? <span class="fill-in">[Fill in]</span>

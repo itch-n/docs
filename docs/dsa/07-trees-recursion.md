@@ -6,48 +6,55 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing all patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is tree recursion in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **Why is recursion natural for trees?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy:**
     - Example: "Tree recursion is like solving a puzzle by breaking it into smaller identical puzzles..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **When does recursion work well for trees?**
-    - Your answer: _[Fill in after solving problems]_
+    - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
 
 5. **What's the base case pattern for tree recursion?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Iterative tree height using level-order traversal:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity: _[Your guess: O(?)]_
-    - Verified after learning: _[Actual: O(?)]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
 
 2. **Recursive tree height:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity: _[Your guess: O(?)]_
-    - Verified: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **Space usage comparison:**
-    - For a balanced tree with n = 1,000 nodes, height h = _____
-    - Recursive call stack depth = _____
-    - Level-order queue max size = _____
+    - For a balanced tree with n = 1,000 nodes, height h = <span class="fill-in">_____</span>
+    - Recursive call stack depth = <span class="fill-in">_____</span>
+    - Level-order queue max size = <span class="fill-in">_____</span>
 
 ### Scenario Predictions
 
@@ -60,22 +67,22 @@
    1       9
 ```
 
-- **Base case returns:** _[What value for null nodes?]_
-- **Left subtree height:** _[Calculate]_
-- **Right subtree height:** _[Calculate]_
-- **Total height:** _[What formula combines them?]_
+- **Base case returns:** <span class="fill-in">[What value for null nodes?]</span>
+- **Left subtree height:** <span class="fill-in">[Calculate]</span>
+- **Right subtree height:** <span class="fill-in">[Calculate]</span>
+- **Total height:** <span class="fill-in">[What formula combines them?]</span>
 
 **Scenario 2:** Find LCA of nodes 1 and 9 in the above tree
 
-- **Which subtrees contain each node?** _[Fill in]_
-- **Where will LCA be found?** _[Node 5, 3, 8, or other?]_
-- **Why?** _[Explain your reasoning]_
+- **Which subtrees contain each node?** <span class="fill-in">[Fill in]</span>
+- **Where will LCA be found?** <span class="fill-in">[Node 5, 3, 8, or other?]</span>
+- **Why?** <span class="fill-in">[Explain your reasoning]</span>
 
 **Scenario 3:** Calculate diameter of the same tree
 
-- **What is diameter?** _[Define in your words]_
-- **Diameter through root?** _[Left height + right height = ?]_
-- **Could diameter be in a subtree?** _[Yes/No - Why?]_
+- **What is diameter?** <span class="fill-in">[Define in your words]</span>
+- **Diameter through root?** <span class="fill-in">[Left height + right height = ?]</span>
+- **Could diameter be in a subtree?** <span class="fill-in">[Yes/No - Why?]</span>
 
 ### Base Case Quiz
 
@@ -86,19 +93,19 @@
 - [ ] return -1 when root is null
 - [ ] return 0 when root is a leaf
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 **Question:** For path sum, what makes a valid path?
 
-- Your answer: _[Root to leaf? Any path? Fill in]_
-- When is targetSum considered found? _[At leaf node? Any node?]_
+- Your answer: <span class="fill-in">[Root to leaf? Any path? Fill in]</span>
+- When is targetSum considered found? <span class="fill-in">[At leaf node? Any node?]</span>
 
 ### Recursion Flow Quiz
 
 **Question:** In tree diameter calculation, why do we need both height AND diameter?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** What's the MAIN difference between tree recursion and array recursion?
 
@@ -107,7 +114,10 @@ Verify after implementation: _[Which one(s)?]_
 - [ ] Trees use divide-and-conquer, arrays use iteration
 - [ ] Trees always return values up, arrays modify in-place
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
+
+
+</div>
 
 ---
 
@@ -178,17 +188,23 @@ public static int height_Recursive(TreeNode root) {
 **Key insight to understand:**
 
 Trees are inherently recursive structures:
+
 - A tree is either empty (null) OR
 - A root node with left subtree and right subtree
 
 This natural recursion makes problems like height trivial:
+
 1. Height of empty tree = 0 (base case)
 2. Height of tree = 1 + max(left height, right height)
 
 **After implementing, explain in your own words:**
 
-- _[Why is recursion more natural for trees?]_
-- _[When would iterative be better?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why is recursion more natural for trees?]</span>
+- <span class="fill-in">[When would iterative be better?]</span>
+
+</div>
 
 ---
 
@@ -271,8 +287,12 @@ private static int calculateHeight(TreeNode root, int[] maxDiameter) {
 
 **After implementing, explain in your own words:**
 
-- _[Why does the optimized version avoid recalculation?]_
-- _[What pattern do you see in combining calculations?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does the optimized version avoid recalculation?]</span>
+- <span class="fill-in">[What pattern do you see in combining calculations?]</span>
+
+</div>
 
 ---
 
@@ -353,8 +373,12 @@ public static boolean hasPathSum_Optimized(TreeNode root, int targetSum) {
 
 **After implementing, explain in your own words:**
 
-- _[When should you check conditions during recursion vs after?]_
-- _[What's the benefit of reducing the target while recursing?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[When should you check conditions during recursion vs after?]</span>
+- <span class="fill-in">[What's the benefit of reducing the target while recursing?]</span>
+
+</div>
 
 ---
 
@@ -842,19 +866,19 @@ public static int height_Buggy(TreeNode root) {
 
 **Your debugging:**
 
-- **Bug 1 location:** _[Which line is missing?]_
-- **Bug 1 explanation:** _[What happens when root is null?]_
-- **Bug 1 fix:** _[What should be added?]_
+- **Bug 1 location:** <span class="fill-in">[Which line is missing?]</span>
+- **Bug 1 explanation:** <span class="fill-in">[What happens when root is null?]</span>
+- **Bug 1 fix:** <span class="fill-in">[What should be added?]</span>
 
-- **Bug 2 location:** _[Line 9 - what's wrong?]_
-- **Bug 2 explanation:** _[Why is the height calculation incorrect?]_
-- **Bug 2 fix:** _[What should the return statement be?]_
+- **Bug 2 location:** <span class="fill-in">[Line 9 - what's wrong?]</span>
+- **Bug 2 explanation:** <span class="fill-in">[Why is the height calculation incorrect?]</span>
+- **Bug 2 fix:** <span class="fill-in">[What should the return statement be?]</span>
 
 **Test case to expose bugs:**
 
 - Tree: Single node (value = 5)
 - Expected height: 1
-- Actual with bugs: _[What do you get? Trace through]_
+- Actual with bugs: <span class="fill-in">[What do you get? Trace through]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -906,7 +930,7 @@ private static int height(TreeNode root) {
 
 **Your debugging:**
 
-- **Bug explanation:** _[What case is this code missing?]_
+- **Bug explanation:** <span class="fill-in">[What case is this code missing?]</span>
 - **Example that breaks it:**
 ```
     Tree:     1
@@ -915,10 +939,11 @@ private static int height(TreeNode root) {
            / \
           3   4
 ```
-- Expected diameter: _[What is it? Count the edges]_
-- Actual with bug: _[What does the buggy code return?]_
 
-**Bug fix:** _[What must we also check?]_
+- Expected diameter: <span class="fill-in">[What is it? Count the edges]</span>
+- Actual with bug: <span class="fill-in">[What does the buggy code return?]</span>
+
+**Bug fix:** <span class="fill-in">[What must we also check?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -983,11 +1008,11 @@ public static boolean hasPathSum_Buggy(TreeNode root, int targetSum) {
 
 **Your debugging:**
 
-- **Bug 1:** _[What's wrong with the leaf check?]_
-- **Bug 1 fix:** _[How should we check if a node is a leaf?]_
+- **Bug 1:** <span class="fill-in">[What's wrong with the leaf check?]</span>
+- **Bug 1 fix:** <span class="fill-in">[How should we check if a node is a leaf?]</span>
 
-- **Bug 2:** _[Should we use && or ||? Why?]_
-- **Bug 2 fix:** _[Fill in the correct operator]_
+- **Bug 2:** <span class="fill-in">[Should we use && or ||? Why?]</span>
+- **Bug 2 fix:** <span class="fill-in">[Fill in the correct operator]</span>
 
 **Test case:**
 ```
@@ -1000,7 +1025,7 @@ Tree:     5
 Target: 9 (path 5 → 4, but 4 is not a leaf!)
 
 - Expected: false (no root-to-leaf path sums to 9)
-- Actual with bugs: _[What happens?]_
+- Actual with bugs: <span class="fill-in">[What happens?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1055,8 +1080,8 @@ public static TreeNode lowestCommonAncestor_Buggy(TreeNode root,
 
 **Your debugging:**
 
-- **Bug location:** _[What's missing in the base case?]_
-- **Bug explanation:** _[What should happen when root equals p or q?]_
+- **Bug location:** <span class="fill-in">[What's missing in the base case?]</span>
+- **Bug explanation:** <span class="fill-in">[What should happen when root equals p or q?]</span>
 
 **Test case:**
 ```
@@ -1070,9 +1095,9 @@ p = node 5, q = node 1
 ```
 
 - Expected LCA: node 3
-- Actual with bug: _[Trace through - what happens?]_
+- Actual with bug: <span class="fill-in">[Trace through - what happens?]</span>
 
-**Bug fix:** _[What condition should be added?]_
+**Bug fix:** <span class="fill-in">[What condition should be added?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1138,11 +1163,11 @@ private static int height(TreeNode root) {
 
 **Your debugging:**
 
-- **Bug type:** _[Correctness or efficiency?]_
-- **Time complexity:** _[What is it? O(n)? O(n²)? O(n log n)?]_
-- **Bug explanation:** _[Why is it inefficient?]_
+- **Bug type:** <span class="fill-in">[Correctness or efficiency?]</span>
+- **Time complexity:** <span class="fill-in">[What is it? O(n)? O(n²)? O(n log n)?]</span>
+- **Bug explanation:** <span class="fill-in">[Why is it inefficient?]</span>
 
-**Better approach:** _[How can we check balance while calculating height in one pass?]_
+**Better approach:** <span class="fill-in">[How can we check balance while calculating height in one pass?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1201,7 +1226,7 @@ public static int minDepth_Buggy(TreeNode root) {
 
 **Your debugging:**
 
-- **Edge case that breaks:** _[What kind of tree structure fails?]_
+- **Edge case that breaks:** <span class="fill-in">[What kind of tree structure fails?]</span>
 
 **Test case:**
 ```
@@ -1213,11 +1238,11 @@ Tree:     1
 ```
 
 - Expected min depth: 3 (only path is 1 → 2 → 3)
-- Actual with bug: _[What does the buggy code return?]_
+- Actual with bug: <span class="fill-in">[What does the buggy code return?]</span>
 
-**Bug explanation:** _[Why does it return the wrong value?]_
+**Bug explanation:** <span class="fill-in">[Why does it return the wrong value?]</span>
 
-**Bug fix:** _[What special case must we handle?]_
+**Bug fix:** <span class="fill-in">[What special case must we handle?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1273,11 +1298,11 @@ After finding and fixing all bugs:
 
 **Common recursion mistakes you discovered:**
 
-1. _[Missing base cases]_
-2. _[Forgetting to add current node in calculation]_
-3. _[Using && instead of || (or vice versa)]_
-4. _[Not considering all cases (diameter in subtrees, single-child nodes)]_
-5. _[Recalculating values inefficiently]_
+1. <span class="fill-in">[Missing base cases]</span>
+2. <span class="fill-in">[Forgetting to add current node in calculation]</span>
+3. <span class="fill-in">[Using && instead of || (or vice versa)]</span>
+4. <span class="fill-in">[Not considering all cases (diameter in subtrees, single-child nodes)]</span>
+5. <span class="fill-in">[Recalculating values inefficiently]</span>
 
 ---
 
@@ -1288,27 +1313,28 @@ After finding and fixing all bugs:
 ### Question 1: What information flows up the tree?
 
 Answer after solving problems:
-- **Single value (height, count)?** _[Simple recursion]_
-- **Multiple values (balanced + height)?** _[Use array or class]_
-- **Path information?** _[Use backtracking]_
-- **Global state?** _[Use instance variable]_
+
+- **Single value (height, count)?** <span class="fill-in">[Simple recursion]</span>
+- **Multiple values (balanced + height)?** <span class="fill-in">[Use array or class]</span>
+- **Path information?** <span class="fill-in">[Use backtracking]</span>
+- **Global state?** <span class="fill-in">[Use instance variable]</span>
 
 ### Question 2: When to use helper functions?
 
 **Direct recursion:**
 
-- Use when: _[Single return value, no extra state]_
-- Example: _[Height calculation]_
+- Use when: <span class="fill-in">[Single return value, no extra state]</span>
+- Example: <span class="fill-in">[Height calculation]</span>
 
 **Helper with extra parameters:**
 
-- Use when: _[Need to track state, indices, ranges]_
-- Example: _[Tree construction from arrays]_
+- Use when: <span class="fill-in">[Need to track state, indices, ranges]</span>
+- Example: <span class="fill-in">[Tree construction from arrays]</span>
 
 **Helper with global variables:**
 
-- Use when: _[Need to update global max/min]_
-- Example: _[Diameter, max path sum]_
+- Use when: <span class="fill-in">[Need to update global max/min]</span>
+- Example: <span class="fill-in">[Diameter, max path sum]</span>
 
 ### Your Decision Tree
 
@@ -1339,30 +1365,30 @@ Tree Recursion Pattern Selection
 
 **Don't use recursion when:**
 
-1. _[Tree is very deep? Risk stack overflow]_
-2. _[Need iterative control? Use explicit stack]_
-3. _[Performance critical? Recursion has overhead]_
-4. _[Tail recursion not optimized? Use iteration]_
+1. <span class="fill-in">[Tree is very deep? Risk stack overflow]</span>
+2. <span class="fill-in">[Need iterative control? Use explicit stack]</span>
+3. <span class="fill-in">[Performance critical? Recursion has overhead]</span>
+4. <span class="fill-in">[Tail recursion not optimized? Use iteration]</span>
 
 ### The Rule of Three: Alternatives
 
 **Option 1: Pure Recursion**
 
-- Pros: _[Clean code, natural for trees]_
-- Cons: _[Stack space, potential overflow]_
-- Use when: _[Reasonable depth, clarity matters]_
+- Pros: <span class="fill-in">[Clean code, natural for trees]</span>
+- Cons: <span class="fill-in">[Stack space, potential overflow]</span>
+- Use when: <span class="fill-in">[Reasonable depth, clarity matters]</span>
 
 **Option 2: Recursion with Memoization**
 
-- Pros: _[Avoid recomputation, faster]_
-- Cons: _[Extra space, added complexity]_
-- Use when: _[Overlapping subproblems]_
+- Pros: <span class="fill-in">[Avoid recomputation, faster]</span>
+- Cons: <span class="fill-in">[Extra space, added complexity]</span>
+- Use when: <span class="fill-in">[Overlapping subproblems]</span>
 
 **Option 3: Iterative with Stack**
 
-- Pros: _[No stack overflow, explicit control]_
-- Cons: _[More complex code]_
-- Use when: _[Deep trees, production code]_
+- Pros: <span class="fill-in">[No stack overflow, explicit control]</span>
+- Cons: <span class="fill-in">[More complex code]</span>
+- Use when: <span class="fill-in">[Deep trees, production code]</span>
 
 ---
 
@@ -1373,56 +1399,56 @@ Tree Recursion Pattern Selection
 **Easy (Complete all 4):**
 
 - [ ] [104. Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/)
-    - Pattern: _[Height calculation]_
-    - Your solution time: ___
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Height calculation]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [110. Balanced Binary Tree](https://leetcode.com/problems/balanced-binary-tree/)
-    - Pattern: _[Balance check]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Balance check]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [111. Minimum Depth of Binary Tree](https://leetcode.com/problems/minimum-depth-of-binary-tree/)
-    - Pattern: _[Min depth]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Min depth]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [112. Path Sum](https://leetcode.com/problems/path-sum/)
-    - Pattern: _[Path recursion]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Path recursion]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Medium (Complete 3-4):**
 
 - [ ] [543. Diameter of Binary Tree](https://leetcode.com/problems/diameter-of-binary-tree/)
-    - Pattern: _[Diameter calculation]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Diameter calculation]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [236. Lowest Common Ancestor of a Binary Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/)
-    - Pattern: _[LCA]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[LCA]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [105. Construct Binary Tree from Preorder and Inorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
-    - Pattern: _[Tree construction]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Tree construction]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [113. Path Sum II](https://leetcode.com/problems/path-sum-ii/)
-    - Pattern: _[Backtracking paths]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Backtracking paths]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Hard (Optional):**
 
 - [ ] [124. Binary Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/)
-    - Pattern: _[Global max tracking]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Global max tracking]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [297. Serialize and Deserialize Binary Tree](https://leetcode.com/problems/serialize-and-deserialize-binary-tree/)
-    - Pattern: _[Construction/serialization]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Construction/serialization]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 ---
 
@@ -1475,13 +1501,13 @@ Before moving to the next topic:
 
 > "Tree recursion is a pattern where..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by someone new to trees? _[Yes/No]_
-- Did you use analogies or real-world examples? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by someone new to trees? <span class="fill-in">[Yes/No]</span>
+- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -1493,11 +1519,11 @@ If you scored below 7 or answered "No" to either question, revise your explanati
 
 | Problem | Base Case | Why? |
 |---------|-----------|------|
-| Tree Height | `if (root == null) return ___` | _[Explain]_ |
-| Path Sum | `if (root == null) return ___` | _[Explain]_ |
-| LCA | `if (root == null || ...) return ___` | _[Explain]_ |
-| Min Depth | `if (root == null) return ___` | _[Explain]_ |
-| Is Balanced | `if (root == null) return ___` | _[Explain]_ |
+| Tree Height | `if (root == null) return ___` | <span class="fill-in">[Explain]</span> |
+| Path Sum | `if (root == null) return ___` | <span class="fill-in">[Explain]</span> |
+| LCA | `if (root == null || ...) return ___` | <span class="fill-in">[Explain]</span> |
+| Min Depth | `if (root == null) return ___` | <span class="fill-in">[Explain]</span> |
+| Is Balanced | `if (root == null) return ___` | <span class="fill-in">[Explain]</span> |
 
 **Verification:**
 
@@ -1525,16 +1551,16 @@ height(5) calls...
     │   ├── height(1) calls...
     │   │   ├── height(null) returns ___
     │   │   └── height(null) returns ___
-    │   │   returns: ___
+    │   │   returns: <span class="fill-in">___</span>
     │   └── height(null) returns ___
-    │   returns: ___
+    │   returns: <span class="fill-in">___</span>
     └── height(7) calls...
         ├── height(null) returns ___
         └── height(null) returns ___
-        returns: ___
-    returns: ___
+        returns: <span class="fill-in">___</span>
+    returns: <span class="fill-in">___</span>
 
-Final result: ___
+Final result: <span class="fill-in">___</span>
 ```
 
 **Verification:**
@@ -1552,12 +1578,12 @@ Final result: ___
 
 | Problem | Pattern (Height/Diameter/LCA/Path/Construction) | Key Insight |
 |---------|------------------------------------------------|-------------|
-| Max depth of binary tree | _[Fill in]_ | _[Why this pattern?]_ |
-| Diameter of binary tree | _[Fill in]_ | _[What makes it tricky?]_ |
-| Path Sum II (all paths) | _[Fill in]_ | _[What technique needed?]_ |
-| Lowest Common Ancestor | _[Fill in]_ | _[What signals LCA?]_ |
-| Build tree from traversals | _[Fill in]_ | _[Key insight?]_ |
-| Balanced binary tree | _[Fill in]_ | _[What to track?]_ |
+| Max depth of binary tree | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Why this pattern?]</span> |
+| Diameter of binary tree | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[What makes it tricky?]</span> |
+| Path Sum II (all paths) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[What technique needed?]</span> |
+| Lowest Common Ancestor | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[What signals LCA?]</span> |
+| Build tree from traversals | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Key insight?]</span> |
+| Balanced binary tree | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[What to track?]</span> |
 
 **Score:** ___/6 correct
 
@@ -1571,16 +1597,16 @@ If you scored below 5/6, review the patterns and try again.
 
 | Problem | Time | Space (recursion stack) | Why this complexity? |
 |---------|------|-------------------------|----------------------|
-| Height | O(?) | O(?) | _[Explain]_ |
-| Diameter (naive) | O(?) | O(?) | _[Explain]_ |
-| Diameter (optimized) | O(?) | O(?) | _[Explain]_ |
-| Path Sum | O(?) | O(?) | _[Explain]_ |
-| LCA | O(?) | O(?) | _[Explain]_ |
-| Tree Construction | O(?) | O(?) | _[Explain]_ |
+| Height | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Diameter (naive) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Diameter (optimized) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Path Sum | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| LCA | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Tree Construction | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why is the naive diameter O(n²) but the optimized version O(n)?
 
-Your answer: _[Fill in - explain the fundamental difference]_
+Your answer: <span class="fill-in">[Fill in - explain the fundamental difference]</span>
 
 ---
 
@@ -1589,21 +1615,24 @@ Your answer: _[Fill in - explain the fundamental difference]_
 **Scenario 1:** Very deep tree (height = 100,000 nodes in a chain)
 
 **Question:** Will recursive height calculation work?
-- Your answer: _[Yes/No - Why?]_
-- Alternative: _[What approach would work?]_
+
+- Your answer: <span class="fill-in">[Yes/No - Why?]</span>
+- Alternative: <span class="fill-in">[What approach would work?]</span>
 
 **Scenario 2:** Finding diameter of a tree with 1 million nodes
 
 **Question:** Would the O(n²) naive approach be acceptable?
-- Your answer: _[Yes/No - Why?]_
-- Calculation: n² = ___ operations
-- Alternative: _[How to optimize?]_
+
+- Your answer: <span class="fill-in">[Yes/No - Why?]</span>
+- Calculation: n² = <span class="fill-in">___</span> operations
+- Alternative: <span class="fill-in">[How to optimize?]</span>
 
 **Scenario 3:** Tree construction from arrays with duplicate values
 
 **Question:** Will the standard algorithm work?
-- Your answer: _[Yes/No - Why?]_
-- Fix: _[How to handle duplicates?]_
+
+- Your answer: <span class="fill-in">[Yes/No - Why?]</span>
+- Fix: <span class="fill-in">[How to handle duplicates?]</span>
 
 ---
 
@@ -1613,11 +1642,11 @@ Your answer: _[Fill in - explain the fundamental difference]_
 
 | Bug Description | Category | How to Prevent? |
 |----------------|----------|-----------------|
-| Forgot `if (root == null) return 0;` | _[Fill in]_ | _[Prevention strategy]_ |
-| Used `\|\|` instead of `&&` for leaf check | _[Fill in]_ | _[Prevention strategy]_ |
-| Forgot `+ 1` in height calculation | _[Fill in]_ | _[Prevention strategy]_ |
-| Only checked diameter through root | _[Fill in]_ | _[Prevention strategy]_ |
-| Recalculated height at every node | _[Fill in]_ | _[Prevention strategy]_ |
+| Forgot `if (root == null) return 0;` | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Prevention strategy]</span> |
+| Used `\|\|` instead of `&&` for leaf check | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Prevention strategy]</span> |
+| Forgot `+ 1` in height calculation | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Prevention strategy]</span> |
+| Only checked diameter through root | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Prevention strategy]</span> |
+| Recalculated height at every node | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Prevention strategy]</span> |
 
 **Verification:**
 
@@ -1702,23 +1731,23 @@ public static TreeNode lowestCommonAncestor(TreeNode root,
 
 **Option A:**
 
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
-- When to use: _[Fill in]_
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
+- When to use: <span class="fill-in">[Fill in]</span>
 
 **Option B:**
 
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
-- When to use: _[Fill in]_
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
+- When to use: <span class="fill-in">[Fill in]</span>
 
-**Your decision:** I would choose _[A/B]_ because...
+**Your decision:** I would choose <span class="fill-in">[A/B]</span> because...
 
-_[Fill in your reasoning]_
+<span class="fill-in">[Fill in your reasoning]</span>
 
 **What would make you change your decision?**
 
-- _[Fill in - what constraints would flip your choice?]_
+- <span class="fill-in">[Fill in - what constraints would flip your choice?]</span>
 
 ---
 
@@ -1731,26 +1760,26 @@ _[Fill in your reasoning]_
 **Concept 1: Base Case**
 
 Your explanation:
-> _[Fill in - why is the base case critical?]_
+> <span class="fill-in">[Fill in - why is the base case critical?]</span>
 
 Example:
-> _[Give a concrete example]_
+> <span class="fill-in">[Give a concrete example]</span>
 
 **Concept 2: Combining Results**
 
 Your explanation:
-> _[Fill in - how do we combine left and right subtree results?]_
+> <span class="fill-in">[Fill in - how do we combine left and right subtree results?]</span>
 
 Example:
-> _[Give a concrete example]_
+> <span class="fill-in">[Give a concrete example]</span>
 
 **Concept 3: Information Flow**
 
 Your explanation:
-> _[Fill in - what information flows up/down the tree?]_
+> <span class="fill-in">[Fill in - what information flows up/down the tree?]</span>
 
 Example:
-> _[Give a concrete example]_
+> <span class="fill-in">[Give a concrete example]</span>
 
 ---
 
@@ -1760,10 +1789,10 @@ Example:
 
 | Problem | Pattern Needed | Why? |
 |---------|----------------|------|
-| Max path sum (any node to any node) | _[Global variable? Extra parameter? Return tuple?]_ | _[Explain]_ |
-| Count paths with sum k | _[Global? Backtracking? Map?]_ | _[Explain]_ |
-| Serialize/deserialize tree | _[What state to track?]_ | _[Explain]_ |
-| Verify BST | _[What to pass down/up?]_ | _[Explain]_ |
+| Max path sum (any node to any node) | <span class="fill-in">[Global variable? Extra parameter? Return tuple?]</span> | <span class="fill-in">[Explain]</span> |
+| Count paths with sum k | <span class="fill-in">[Global? Backtracking? Map?]</span> | <span class="fill-in">[Explain]</span> |
+| Serialize/deserialize tree | <span class="fill-in">[What state to track?]</span> | <span class="fill-in">[Explain]</span> |
+| Verify BST | <span class="fill-in">[What to pass down/up?]</span> | <span class="fill-in">[Explain]</span> |
 
 **Verification:**
 
@@ -1777,21 +1806,21 @@ Example:
 
 **List 4 scenarios where recursion is NOT the best choice for tree problems:**
 
-1. _[Scenario where recursion fails or is inefficient]_
-    - Why: _[Explain]_
-    - Alternative: _[What to use instead?]_
+1. <span class="fill-in">[Scenario where recursion fails or is inefficient]</span>
+    - Why: <span class="fill-in">[Explain]</span>
+    - Alternative: <span class="fill-in">[What to use instead?]</span>
 
-2. _[Scenario]_
-    - Why: _[Explain]_
-    - Alternative: _[Fill in]_
+2. <span class="fill-in">[Scenario]</span>
+    - Why: <span class="fill-in">[Explain]</span>
+    - Alternative: <span class="fill-in">[Fill in]</span>
 
-3. _[Scenario]_
-    - Why: _[Explain]_
-    - Alternative: _[Fill in]_
+3. <span class="fill-in">[Scenario]</span>
+    - Why: <span class="fill-in">[Explain]</span>
+    - Alternative: <span class="fill-in">[Fill in]</span>
 
-4. _[Scenario]_
-    - Why: _[Explain]_
-    - Alternative: _[Fill in]_
+4. <span class="fill-in">[Scenario]</span>
+    - Why: <span class="fill-in">[Explain]</span>
+    - Alternative: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1812,9 +1841,9 @@ Example:
 
 **What I still need to review:**
 
-1. _[Fill in if score < 8]_
-2. _[Fill in]_
-3. _[Fill in]_
+1. <span class="fill-in">[Fill in if score < 8]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 **If score < 8:** Review the weak areas, practice more problems, then retry this gate.
 

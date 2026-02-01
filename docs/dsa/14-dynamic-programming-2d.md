@@ -6,94 +6,106 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing all patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is 2D DP in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **How is 2D DP different from 1D DP?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy:**
     - Example: "2D DP is like filling out a grid where each cell depends on cells above and to the left..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **When does this pattern work?**
-    - Your answer: _[Fill in after solving problems]_
+    - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
 
 5. **How do you know when you need 2D instead of 1D?**
-    - Your answer: _[Fill in after learning the pattern]_
+    - Your answer: <span class="fill-in">[Fill in after learning the pattern]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Recursive solution for LCS (no memoization):**
-    - Time complexity: _[Your guess: O(?)]_
-    - Verified after learning: _[Actual: O(?)]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
 
 2. **2D DP table for LCS:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity: _[Your guess: O(?)]_
-    - Verified: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **Speedup calculation:**
     - If m = 100, n = 100, naive recursion ≈ _____ operations
-    - 2D DP table = m × n = _____ operations
-    - Speedup factor: _____ times faster
+    - 2D DP table = m × n = <span class="fill-in">_____</span> operations
+    - Speedup factor: <span class="fill-in">_____</span> times faster
 
 ### Scenario Predictions
 
 **Scenario 1:** Longest Common Subsequence of "abc" and "abc"
 
-- **What's the answer?** _[Fill in]_
-- **Size of DP table?** _[m+1 × n+1 or m × n?]_
-- **Why do we need +1 for dimensions?** _[Fill in - think about base cases]_
+- **What's the answer?** <span class="fill-in">[Fill in]</span>
+- **Size of DP table?** <span class="fill-in">[m+1 × n+1 or m × n?]</span>
+- **Why do we need +1 for dimensions?** <span class="fill-in">[Fill in - think about base cases]</span>
 
 **Scenario 2:** Edit distance from "cat" to "dog"
 
-- **Your guess for minimum edits:** _[Fill in]_
-- **What operations are allowed?** _[Fill in - insert, delete, replace?]_
-- **If characters match, what happens in DP?** _[Fill in]_
+- **Your guess for minimum edits:** <span class="fill-in">[Fill in]</span>
+- **What operations are allowed?** <span class="fill-in">[Fill in - insert, delete, replace?]</span>
+- **If characters match, what happens in DP?** <span class="fill-in">[Fill in]</span>
 
 **Scenario 3:** Unique paths in 3×3 grid (can only move right or down)
 
-- **Manual count:** _[Try to draw and count all paths]_
-- **DP recurrence:** dp[i][j] = _[Fill in formula]_
-- **Starting position value:** dp[0][0] = _[0 or 1?]_
+- **Manual count:** <span class="fill-in">[Try to draw and count all paths]</span>
+- **DP recurrence:** dp[i][j] = <span class="fill-in">[Fill in formula]</span>
+- **Starting position value:** dp[0][0] = <span class="fill-in">[0 or 1?]</span>
 
 ### Pattern Recognition Quiz
 
 **Question 1:** Which 2D DP pattern applies?
 
 Match each problem to its pattern:
-- [ ] Longest Common Subsequence → _[String/Grid/Knapsack/Interval?]_
-- [ ] Unique Paths → _[String/Grid/Knapsack/Interval?]_
-- [ ] 0/1 Knapsack → _[String/Grid/Knapsack/Interval?]_
-- [ ] Burst Balloons → _[String/Grid/Knapsack/Interval?]_
+
+- [ ] Longest Common Subsequence → <span class="fill-in">[String/Grid/Knapsack/Interval?]</span>
+- [ ] Unique Paths → <span class="fill-in">[String/Grid/Knapsack/Interval?]</span>
+- [ ] 0/1 Knapsack → <span class="fill-in">[String/Grid/Knapsack/Interval?]</span>
+- [ ] Burst Balloons → <span class="fill-in">[String/Grid/Knapsack/Interval?]</span>
 
 **Question 2:** When do you need 2D instead of 1D DP?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 ### State Design Quiz
 
 **For LCS of strings "abcde" and "ace":**
 
 What does dp[3][2] represent?
+
 - [ ] LCS length of "abc" and "ac"
 - [ ] LCS length of first 3 chars of s1 and first 2 chars of s2
 - [ ] LCS length including index 3 and 2
-- [ ] Something else: _[Fill in]_
+- [ ] Something else: <span class="fill-in">[Fill in]</span>
 
-Verify after implementation: _[Which one is correct?]_
+Verify after implementation: <span class="fill-in">[Which one is correct?]</span>
+
+
+</div>
 
 ---
 
@@ -195,12 +207,12 @@ Answer: dp[3][5] = 3 (LCS = "ace")
 
 **Why do we need the extra row/column of zeros?**
 
-- _[Fill in after understanding - what do they represent?]_
+- <span class="fill-in">[Fill in after understanding - what do they represent?]</span>
 
 **Why can we skip recomputation?**
 
-- Each cell depends only on: _[which cells?]_
-- We compute in order: _[top-to-bottom, left-to-right]_
+- Each cell depends only on: <span class="fill-in">[which cells?]</span>
+- We compute in order: <span class="fill-in">[top-to-bottom, left-to-right]</span>
 - So dependencies are always ready when needed!
 
 ---
@@ -286,8 +298,12 @@ Answer: dp[3][5] = 25 (take items 1 and 3)
 
 **After implementing, explain in your own words:**
 
-- _[Why does each cell represent "best value using first i items with capacity w"?]_
-- _[Why do we need to check both "take" and "skip" options?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does each cell represent "best value using first i items with capacity w"?]</span>
+- <span class="fill-in">[Why do we need to check both "take" and "skip" options?]</span>
+
+</div>
 
 ---
 
@@ -841,23 +857,23 @@ public static int lcs_Buggy(String s1, String s2) {
 
 **Your debugging:**
 
-- **Bug 1 location:** _[Which line?]_
-- **Bug 1 explanation:** _[Why will this fail?]_
-- **Bug 1 fix:** _[What should it be?]_
+- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 1 explanation:** <span class="fill-in">[Why will this fail?]</span>
+- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
 
-- **Bug 2 location:** _[Which line?]_
-- **Bug 2 explanation:** _[What error occurs?]_
-- **Bug 2 fix:** _[How to correct the index?]_
+- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 2 explanation:** <span class="fill-in">[What error occurs?]</span>
+- **Bug 2 fix:** <span class="fill-in">[How to correct the index?]</span>
 
-- **Bug 3 location:** _[Which line?]_
-- **Bug 3 explanation:** _[Why is this wrong?]_
-- **Bug 3 fix:** _[What should it be?]_
+- **Bug 3 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 3 explanation:** <span class="fill-in">[Why is this wrong?]</span>
+- **Bug 3 fix:** <span class="fill-in">[What should it be?]</span>
 
 **Test case to expose bugs:**
 
 - Input: s1 = "abc", s2 = "abc"
 - Expected: 3
-- Actual with buggy code: _[What happens? Crash or wrong answer?]_
+- Actual with buggy code: <span class="fill-in">[What happens? Crash or wrong answer?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -908,17 +924,17 @@ public static int editDistance_Buggy(String word1, String word2) {
 
 **Your debugging:**
 
-- **Bug 1:** _[What's wrong with charAt(i)?]_
-- **Bug 1 fix:** _[Correct index?]_
+- **Bug 1:** <span class="fill-in">[What's wrong with charAt(i)?]</span>
+- **Bug 1 fix:** <span class="fill-in">[Correct index?]</span>
 
-- **Bug 2:** _[What's missing in the min calculation?]_
-- **Bug 2 fix:** _[Fill in the correct formula]_
+- **Bug 2:** <span class="fill-in">[What's missing in the min calculation?]</span>
+- **Bug 2 fix:** <span class="fill-in">[Fill in the correct formula]</span>
 
 **Test case:**
 
 - Input: "horse" → "ros"
 - Expected: 3 (delete 'h', delete 'r', replace 'e' with 's')
-- Actual: _[Trace through manually - what do you get?]_
+- Actual: <span class="fill-in">[Trace through manually - what do you get?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -962,18 +978,18 @@ public static int uniquePaths_Buggy(int m, int n) {
 **Your debugging:**
 
 - **Bug 1:** _[Why is dp[i][0] = 0 wrong?]_
-- **Bug 1 explanation:** _[What should the first column represent?]_
-- **Bug 1 fix:** _[Correct value?]_
+- **Bug 1 explanation:** <span class="fill-in">[What should the first column represent?]</span>
+- **Bug 1 fix:** <span class="fill-in">[Correct value?]</span>
 
-- **Bug 2:** _[Why is multiplication wrong?]_
-- **Bug 2 explanation:** _[What's the correct recurrence?]_
-- **Bug 2 fix:** _[Should be...?]_
+- **Bug 2:** <span class="fill-in">[Why is multiplication wrong?]</span>
+- **Bug 2 explanation:** <span class="fill-in">[What's the correct recurrence?]</span>
+- **Bug 2 fix:** <span class="fill-in">[Should be...?]</span>
 
 **Test case:**
 
 - Input: m = 3, n = 3
 - Expected: 6 paths
-- Actual with buggy code: _[Calculate it]_
+- Actual with buggy code: <span class="fill-in">[Calculate it]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -983,6 +999,7 @@ public static int uniquePaths_Buggy(int m, int n) {
 **Bug 2 (Line 13):** Should be `dp[i][j] = dp[i-1][j] + dp[i][j-1]` (addition, not multiplication). We're COUNTING paths, not multiplying them.
 
 **Why addition?** The number of ways to reach cell (i,j) is the sum of:
+
 - Ways to reach (i-1,j) [coming from above]
 - Ways to reach (i,j-1) [coming from left]
 </details>
@@ -1019,21 +1036,21 @@ public static int knapsack_Buggy(int[] weights, int[] values, int capacity) {
 
 **Your debugging:**
 
-- **Bug 1:** _[Why might this cause issues?]_
-- **Bug 1 fix:** _[Correct dimensions?]_
+- **Bug 1:** <span class="fill-in">[Why might this cause issues?]</span>
+- **Bug 1 fix:** <span class="fill-in">[Correct dimensions?]</span>
 
-- **Bug 2:** _[What gets skipped?]_
-- **Bug 2 fix:** _[Should loop start at...?]_
+- **Bug 2:** <span class="fill-in">[What gets skipped?]</span>
+- **Bug 2 fix:** <span class="fill-in">[Should loop start at...?]</span>
 
-- **Bug 3:** _[Index mismatch between DP and arrays?]_
-- **Bug 3 explanation:** _[Fill in]_
-- **Bug 3 fix:** _[Correct index?]_
+- **Bug 3:** <span class="fill-in">[Index mismatch between DP and arrays?]</span>
+- **Bug 3 explanation:** <span class="fill-in">[Fill in]</span>
+- **Bug 3 fix:** <span class="fill-in">[Correct index?]</span>
 
 **Test case:**
 
 - weights = [1, 2, 3], values = [10, 5, 15], capacity = 5
 - Expected: 25 (items 1 and 3)
-- Actual: _[Trace through - what happens?]_
+- Actual: <span class="fill-in">[Trace through - what happens?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1099,10 +1116,10 @@ public static int uniquePathsWithObstacles_Buggy(int[][] obstacleGrid) {
 
 **Your debugging:**
 
-- **Bug location:** _[Lines 10 and 15]_
-- **Bug explanation:** _[What happens if first row/column has obstacle?]_
-- **Why is this critical?** _[Once blocked, all cells after it are unreachable]_
-- **Fix:** _[How to handle obstacles in initialization?]_
+- **Bug location:** <span class="fill-in">[Lines 10 and 15]</span>
+- **Bug explanation:** <span class="fill-in">[What happens if first row/column has obstacle?]</span>
+- **Why is this critical?** <span class="fill-in">[Once blocked, all cells after it are unreachable]</span>
+- **Fix:** <span class="fill-in">[How to handle obstacles in initialization?]</span>
 
 **Test case to expose:**
 ```
@@ -1112,7 +1129,7 @@ Grid:
 0 0 0
 
 Expected: 2 paths
-Buggy result: _[Fill in]_
+Buggy result: <span class="fill-in">[Fill in]</span>
 ```
 
 <details markdown>
@@ -1158,13 +1175,13 @@ After finding and fixing all bugs:
 
 **Common 2D DP mistakes you discovered:**
 
-1. **Off-by-one errors:** _[DP table size vs array size]_
-2. **Index mismatches:** _[1-based DP vs 0-based strings/arrays]_
-3. **Missing base cases:** _[Edge initialization forgotten]_
-4. **Wrong recurrence:** _[Addition vs multiplication, missing +1 cost]_
-5. **Edge case bugs:** _[Obstacles, empty strings, zero capacity]_
+1. **Off-by-one errors:** <span class="fill-in">[DP table size vs array size]</span>
+2. **Index mismatches:** <span class="fill-in">[1-based DP vs 0-based strings/arrays]</span>
+3. **Missing base cases:** <span class="fill-in">[Edge initialization forgotten]</span>
+4. **Wrong recurrence:** <span class="fill-in">[Addition vs multiplication, missing +1 cost]</span>
+5. **Edge case bugs:** <span class="fill-in">[Obstacles, empty strings, zero capacity]</span>
 
-**Your reflection:** Which bug was hardest to find? _[Fill in]_
+**Your reflection:** Which bug was hardest to find? <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1175,30 +1192,31 @@ After finding and fixing all bugs:
 ### Question 1: What are your two dimensions?
 
 Answer after solving problems:
-- **Two strings?** _[String matching DP]_
-- **Grid coordinates?** _[Path DP]_
-- **Range [i,j]?** _[Interval DP]_
-- **Items and capacity?** _[Knapsack DP]_
+
+- **Two strings?** <span class="fill-in">[String matching DP]</span>
+- **Grid coordinates?** <span class="fill-in">[Path DP]</span>
+- **Range [i,j]?** <span class="fill-in">[Interval DP]</span>
+- **Items and capacity?** <span class="fill-in">[Knapsack DP]</span>
 
 ### Question 2: What's the recurrence?
 
 **String matching:**
 
-- Match: _[Use both characters]_
-- Mismatch: _[Try alternatives]_
+- Match: <span class="fill-in">[Use both characters]</span>
+- Mismatch: <span class="fill-in">[Try alternatives]</span>
 
 **Grid paths:**
 
-- Current cell: _[Function of neighbors]_
-- Direction: _[Usually top/left]_
+- Current cell: <span class="fill-in">[Function of neighbors]</span>
+- Direction: <span class="fill-in">[Usually top/left]</span>
 
 **Interval DP:**
 
-- Try each split point: _[Combine subproblems]_
+- Try each split point: <span class="fill-in">[Combine subproblems]</span>
 
 **Knapsack:**
 
-- Take or skip: _[Compare options]_
+- Take or skip: <span class="fill-in">[Compare options]</span>
 
 ### Your Decision Tree
 
@@ -1228,30 +1246,30 @@ Answer after solving problems:
 
 **Don't use when:**
 
-1. _[Can reduce to 1D with tricks]_
-2. _[Greedy works - simpler]_
-3. _[Space is O(n²) and n is huge]_
-4. _[No clear recurrence relation]_
+1. <span class="fill-in">[Can reduce to 1D with tricks]</span>
+2. <span class="fill-in">[Greedy works - simpler]</span>
+3. <span class="fill-in">[Space is O(n²) and n is huge]</span>
+4. <span class="fill-in">[No clear recurrence relation]</span>
 
 ### The Rule of Three: Alternatives
 
 **Option 1: 2D DP**
 
-- Pros: _[Handles complex state]_
-- Cons: _[O(n²) space, slower]_
-- Use when: _[Two dimensions needed]_
+- Pros: <span class="fill-in">[Handles complex state]</span>
+- Cons: <span class="fill-in">[O(n²) space, slower]</span>
+- Use when: <span class="fill-in">[Two dimensions needed]</span>
 
 **Option 2: 1D DP**
 
-- Pros: _[Less space, faster]_
-- Cons: _[Not always possible]_
-- Use when: _[Can optimize space]_
+- Pros: <span class="fill-in">[Less space, faster]</span>
+- Cons: <span class="fill-in">[Not always possible]</span>
+- Use when: <span class="fill-in">[Can optimize space]</span>
 
 **Option 3: DFS with Memo**
 
-- Pros: _[More intuitive]_
-- Cons: _[Stack overhead]_
-- Use when: _[Complex recurrence]_
+- Pros: <span class="fill-in">[More intuitive]</span>
+- Cons: <span class="fill-in">[Stack overhead]</span>
+- Use when: <span class="fill-in">[Complex recurrence]</span>
 
 ---
 
@@ -1262,51 +1280,51 @@ Answer after solving problems:
 **Easy (Complete all 2):**
 
 - [ ] [62. Unique Paths](https://leetcode.com/problems/unique-paths/)
-    - Pattern: _[Grid path counting]_
-    - Your solution time: ___
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Grid path counting]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [64. Minimum Path Sum](https://leetcode.com/problems/minimum-path-sum/)
-    - Pattern: _[Grid min path]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Grid min path]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Medium (Complete 4-5):**
 
 - [ ] [1143. Longest Common Subsequence](https://leetcode.com/problems/longest-common-subsequence/)
-    - Pattern: _[String matching]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[String matching]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [72. Edit Distance](https://leetcode.com/problems/edit-distance/)
-    - Pattern: _[String transformation]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[String transformation]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [63. Unique Paths II](https://leetcode.com/problems/unique-paths-ii/)
-    - Pattern: _[Grid with obstacles]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Grid with obstacles]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [516. Longest Palindromic Subsequence](https://leetcode.com/problems/longest-palindromic-subsequence/)
-    - Pattern: _[Interval DP]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Interval DP]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [494. Target Sum](https://leetcode.com/problems/target-sum/)
-    - Pattern: _[Knapsack variant]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Knapsack variant]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Hard (Optional):**
 
 - [ ] [312. Burst Balloons](https://leetcode.com/problems/burst-balloons/)
-    - Pattern: _[Interval DP]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Interval DP]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [44. Wildcard Matching](https://leetcode.com/problems/wildcard-matching/)
-    - Pattern: _[String matching]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[String matching]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 ---
 
@@ -1359,19 +1377,19 @@ Before moving to the next topic:
 
 > "2D Dynamic Programming is..."
 >
-> _[Fill in your explanation in plain English - 4-5 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 4-5 sentences max]</span>
 
 **Follow-up: Explain when you need 2D instead of 1D:**
 
 > "You need 2D DP when..."
 >
-> _[Fill in - what makes a problem require two dimensions?]_
+> <span class="fill-in">[Fill in - what makes a problem require two dimensions?]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by someone who knows 1D DP? _[Yes/No]_
-- Did you use concrete examples? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by someone who knows 1D DP? <span class="fill-in">[Yes/No]</span>
+- Did you use concrete examples? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -1386,27 +1404,28 @@ If you scored below 7 or answered "No" to either question, revise your explanati
 **Your state design:**
 
 1. **What are the dimensions?**
-    - Dimension 1: _[What does it represent?]_
-    - Dimension 2: _[What does it represent? Or is this 1D?]_
+    - Dimension 1: <span class="fill-in">[What does it represent?]</span>
+    - Dimension 2: <span class="fill-in">[What does it represent? Or is this 1D?]</span>
 
 2. **What does dp[i][j] represent?** (Or dp[i] if 1D)
-    - Your answer: _[Fill in]_
+    - Your answer: <span class="fill-in">[Fill in]</span>
 
 3. **What's the recurrence relation?**
     - Your formula: _[Fill in - how to compute dp[i][j] from previous states?]_
 
 4. **What are the base cases?**
-    - Base case 1: _[Fill in]_
-    - Base case 2: _[Fill in]_
+    - Base case 1: <span class="fill-in">[Fill in]</span>
+    - Base case 2: <span class="fill-in">[Fill in]</span>
 
 5. **Is this 1D or 2D DP?**
-    - Your answer: _[1D or 2D?]_
-    - Why: _[Explain your reasoning]_
+    - Your answer: <span class="fill-in">[1D or 2D?]</span>
+    - Why: <span class="fill-in">[Explain your reasoning]</span>
 
 <details markdown>
 <summary>Click to verify your design</summary>
 
 **This is actually 1D DP!** You only need one dimension:
+
 - `dp[amount]` = minimum coins to make that amount
 - Recurrence: `dp[i] = min(dp[i - coin] + 1)` for each coin
 - Base: `dp[0] = 0`
@@ -1441,9 +1460,9 @@ If you scored below 7 or answered "No" to either question, revise your explanati
 **Questions to answer:**
 
 1. **What's the final LCS length?** _[Fill in: dp[4][4] = ?]_
-2. **Which cells used the "match" rule (both chars equal)?** _[List positions]_
-3. **How do you trace back to find the actual LCS string?** _[Describe the process]_
-4. **What is the actual LCS?** _[The string itself: "___"]_
+2. **Which cells used the "match" rule (both chars equal)?** <span class="fill-in">[List positions]</span>
+3. **How do you trace back to find the actual LCS string?** <span class="fill-in">[Describe the process]</span>
+4. **What is the actual LCS?** <span class="fill-in">[The string itself: "___"]</span>
 
 **Verification:**
 
@@ -1480,12 +1499,12 @@ If you scored below 7 or answered "No" to either question, revise your explanati
 
 | Problem | 1D or 2D? | Pattern Type | Why? |
 |---------|-----------|--------------|------|
-| Longest Increasing Subsequence | _[1D/2D?]_ | _[Grid/String/Knapsack/Interval?]_ | _[Explain]_ |
-| Edit Distance | _[1D/2D?]_ | _[Pattern?]_ | _[Explain]_ |
-| House Robber | _[1D/2D?]_ | _[Pattern?]_ | _[Explain]_ |
-| Unique Paths in Grid | _[1D/2D?]_ | _[Pattern?]_ | _[Explain]_ |
-| 0/1 Knapsack | _[1D/2D?]_ | _[Pattern?]_ | _[Explain]_ |
-| Coin Change (unlimited) | _[1D/2D?]_ | _[Pattern?]_ | _[Explain]_ |
+| Longest Increasing Subsequence | <span class="fill-in">[1D/2D?]</span> | <span class="fill-in">[Grid/String/Knapsack/Interval?]</span> | <span class="fill-in">[Explain]</span> |
+| Edit Distance | <span class="fill-in">[1D/2D?]</span> | <span class="fill-in">[Pattern?]</span> | <span class="fill-in">[Explain]</span> |
+| House Robber | <span class="fill-in">[1D/2D?]</span> | <span class="fill-in">[Pattern?]</span> | <span class="fill-in">[Explain]</span> |
+| Unique Paths in Grid | <span class="fill-in">[1D/2D?]</span> | <span class="fill-in">[Pattern?]</span> | <span class="fill-in">[Explain]</span> |
+| 0/1 Knapsack | <span class="fill-in">[1D/2D?]</span> | <span class="fill-in">[Pattern?]</span> | <span class="fill-in">[Explain]</span> |
+| Coin Change (unlimited) | <span class="fill-in">[1D/2D?]</span> | <span class="fill-in">[Pattern?]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1499,18 +1518,18 @@ If you scored below 5/6, review the patterns and try again.
 
 | Problem | Dimensions | Time | Space | Can optimize space? |
 |---------|-----------|------|-------|---------------------|
-| LCS (m, n) | _[Fill]_ | O(?) | O(?) | _[Yes/No - How?]_ |
-| Edit Distance | _[Fill]_ | O(?) | O(?) | _[Yes/No - How?]_ |
-| Unique Paths (m, n) | _[Fill]_ | O(?) | O(?) | _[Yes/No - How?]_ |
-| 0/1 Knapsack (n, capacity) | _[Fill]_ | O(?) | O(?) | _[Yes/No - How?]_ |
+| LCS (m, n) | <span class="fill-in">[Fill]</span> | O(?) | O(?) | <span class="fill-in">[Yes/No - How?]</span> |
+| Edit Distance | <span class="fill-in">[Fill]</span> | O(?) | O(?) | <span class="fill-in">[Yes/No - How?]</span> |
+| Unique Paths (m, n) | <span class="fill-in">[Fill]</span> | O(?) | O(?) | <span class="fill-in">[Yes/No - How?]</span> |
+| 0/1 Knapsack (n, capacity) | <span class="fill-in">[Fill]</span> | O(?) | O(?) | <span class="fill-in">[Yes/No - How?]</span> |
 
 **Deep question 1:** Why can many 2D DP problems be optimized to O(n) space?
 
-Your answer: _[Fill in - explain the key insight about dependencies]_
+Your answer: <span class="fill-in">[Fill in - explain the key insight about dependencies]</span>
 
 **Deep question 2:** When CAN'T you optimize 2D → 1D space?
 
-Your answer: _[Fill in - what prevents space optimization?]_
+Your answer: <span class="fill-in">[Fill in - what prevents space optimization?]</span>
 
 ---
 
@@ -1529,25 +1548,25 @@ Example:
 **Your task: Design the DP solution**
 
 1. **What are the dimensions?**
-    - Your answer: _[1D or 2D? What do they represent?]_
+    - Your answer: <span class="fill-in">[1D or 2D? What do they represent?]</span>
 
 2. **State definition: What does dp[i][j] mean?**
-    - Your answer: _[Fill in precisely]_
+    - Your answer: <span class="fill-in">[Fill in precisely]</span>
 
 3. **Recurrence relation:**
     - Your formula: _[How to compute dp[i][j]?]_
-    - Why this works: _[Explain the logic]_
+    - Why this works: <span class="fill-in">[Explain the logic]</span>
 
 4. **Base case:**
-    - Your answer: _[What to initialize?]_
+    - Your answer: <span class="fill-in">[What to initialize?]</span>
 
 5. **Final answer location:**
-    - Your answer: _[Where in the DP table?]_
+    - Your answer: <span class="fill-in">[Where in the DP table?]</span>
 
 6. **Complexity:**
-    - Time: _[Fill in]_
-    - Space: _[Fill in]_
-    - Can optimize space? _[Yes/No - How?]_
+    - Time: <span class="fill-in">[Fill in]</span>
+    - Space: <span class="fill-in">[Fill in]</span>
+    - Can optimize space? <span class="fill-in">[Yes/No - How?]</span>
 
 <details markdown>
 <summary>Click to verify your design</summary>
@@ -1573,6 +1592,7 @@ Example:
     - Space: O(n²) but can optimize to O(n) by only keeping previous row
 
 **Alternative: Bottom-up approach** (even cleaner!)
+
 - Start from bottom row
 - Work upward: `dp[i][j] = triangle[i][j] + min(dp[i+1][j], dp[i+1][j+1])`
 - Answer at `dp[0][0]`
@@ -1615,10 +1635,10 @@ public static int minPathSum(int[][] grid) {
 
 **Your findings:**
 
-1. Bug 1: _[What's wrong?]_ → Fix: _[What should it be?]_
-2. Bug 2: _[What's wrong?]_ → Fix: _[What should it be?]_
-3. Bug 3: _[What's wrong?]_ → Fix: _[What should it be?]_
-4. Bug 4: _[What's wrong?]_ → Fix: _[What should it be?]_
+1. Bug 1: <span class="fill-in">[What's wrong?]</span> → Fix: <span class="fill-in">[What should it be?]</span>
+2. Bug 2: <span class="fill-in">[What's wrong?]</span> → Fix: <span class="fill-in">[What should it be?]</span>
+3. Bug 3: <span class="fill-in">[What's wrong?]</span> → Fix: <span class="fill-in">[What should it be?]</span>
+4. Bug 4: <span class="fill-in">[What's wrong?]</span> → Fix: <span class="fill-in">[What should it be?]</span>
 
 **Time taken:** ___ minutes
 
@@ -1650,7 +1670,7 @@ public static int minPathSum(int[][] grid) {
 
 Your explanation:
 
-> _[Fill in - what's fundamentally different between these problems?]_
+> <span class="fill-in">[Fill in - what's fundamentally different between these problems?]</span>
 
 **Task 2:** Explain to someone the "+1" dimension trick (why dp[m+1][n+1] instead of dp[m][n]).
 
@@ -1658,13 +1678,13 @@ Your explanation:
 
 > "We add an extra row and column because..."
 >
-> _[Fill in - what does the extra dimension represent? Why is it helpful?]_
+> <span class="fill-in">[Fill in - what does the extra dimension represent? Why is it helpful?]</span>
 
 **Task 3:** When would you choose recursion + memoization over bottom-up tabulation for 2D DP?
 
 Your answer:
 
-> _[List 2-3 scenarios where top-down is better]_
+> <span class="fill-in">[List 2-3 scenarios where top-down is better]</span>
 
 ---
 

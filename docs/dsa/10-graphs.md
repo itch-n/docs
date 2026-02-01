@@ -6,63 +6,70 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing all patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is a graph in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **Why/when do we use graphs?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy:**
     - Example: "A graph is like a social network where people are nodes and friendships are edges..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **What's the difference between DFS and BFS?**
-    - Your answer: _[Fill in after solving problems]_
+    - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
 
 5. **When should you use DFS vs BFS?**
-    - Your answer: _[Fill in after practice]_
+    - Your answer: <span class="fill-in">[Fill in after practice]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **BFS to find shortest path in unweighted graph:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity: _[Your guess: O(?)]_
-    - Verified after learning: _[Actual: O(?)]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
 
 2. **DFS to explore all paths in graph:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity (recursion stack): _[Your guess: O(?)]_
-    - Verified: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity (recursion stack): <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **Dijkstra's Algorithm for weighted graph:**
-    - Time complexity with priority queue: _[Your guess: O(?)]_
-    - Why is it slower than BFS? _[Fill in]_
-    - Verified: _[Actual]_
+    - Time complexity with priority queue: <span class="fill-in">[Your guess: O(?)]</span>
+    - Why is it slower than BFS? <span class="fill-in">[Fill in]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 ### Scenario Predictions
 
 **Scenario 1:** Find shortest path from A to E in graph: A→B→E, A→C→D→E
 
-- **Which algorithm?** _[BFS/DFS/Dijkstra - Why?]_
-- **BFS will find path in how many steps?** _[Fill in]_
-- **DFS might find which path first?** _[Fill in]_
-- **Why does BFS guarantee shortest?** _[Explain]_
+- **Which algorithm?** <span class="fill-in">[BFS/DFS/Dijkstra - Why?]</span>
+- **BFS will find path in how many steps?** <span class="fill-in">[Fill in]</span>
+- **DFS might find which path first?** <span class="fill-in">[Fill in]</span>
+- **Why does BFS guarantee shortest?** <span class="fill-in">[Explain]</span>
 
 **Scenario 2:** Detect if course prerequisites have a circular dependency
 
-- **Which algorithm?** _[DFS/BFS/Topological Sort - Why?]_
-- **What data structure represents this?** _[Directed/Undirected graph]_
-- **How do you detect the cycle?** _[Fill in your approach]_
+- **Which algorithm?** <span class="fill-in">[DFS/BFS/Topological Sort - Why?]</span>
+- **What data structure represents this?** <span class="fill-in">[Directed/Undirected graph]</span>
+- **How do you detect the cycle?** <span class="fill-in">[Fill in your approach]</span>
 
 **Scenario 3:** Count number of islands in 2D grid
 
@@ -72,22 +79,22 @@
  ['0','0','1']]
 ```
 
-- **How many islands?** _[Your guess]_
-- **Which algorithm?** _[DFS/BFS - Why?]_
-- **What marks a cell as visited?** _[Fill in]_
+- **How many islands?** <span class="fill-in">[Your guess]</span>
+- **Which algorithm?** <span class="fill-in">[DFS/BFS - Why?]</span>
+- **What marks a cell as visited?** <span class="fill-in">[Fill in]</span>
 
 **Scenario 4:** Find shortest path in weighted graph with edges: (A,B,4), (A,C,2), (C,B,1)
 
-- **Path from A to B using BFS:** _[What would BFS find?]_
-- **Optimal path using Dijkstra:** _[What's the shortest?]_
-- **Why can't BFS find optimal path here?** _[Explain]_
+- **Path from A to B using BFS:** <span class="fill-in">[What would BFS find?]</span>
+- **Optimal path using Dijkstra:** <span class="fill-in">[What's the shortest?]</span>
+- **Why can't BFS find optimal path here?** <span class="fill-in">[Explain]</span>
 
 ### Trade-off Quiz
 
 **Question 1:** When would DFS be BETTER than BFS?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question 2:** What's the MAIN requirement for Topological Sort to work?
 
@@ -96,12 +103,12 @@
 - [ ] Graph must be weighted
 - [ ] Graph must be connected
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 **Question 3:** Adjacency Matrix vs Adjacency List - which is better for sparse graphs?
 
-- Your answer: _[Matrix/List - Why?]_
-- Space complexity comparison: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Matrix/List - Why?]</span>
+- Space complexity comparison: <span class="fill-in">[Fill in after learning]</span>
 
 ### Graph Representation Quiz
 
@@ -110,16 +117,19 @@ Given graph: 0→1, 0→2, 1→3, 2→3
 **Adjacency List representation:**
 ```
 Your answer:
-_[Draw/write the adjacency list structure]_
+<span class="fill-in">[Draw/write the adjacency list structure]</span>
 ```
 
 **Adjacency Matrix representation:**
 ```
 Your answer:
-_[Draw the 4x4 matrix]_
+<span class="fill-in">[Draw the 4x4 matrix]</span>
 ```
 
-**Which uses less space?** _[Fill in and explain why]_
+**Which uses less space?** <span class="fill-in">[Fill in and explain why]</span>
+
+
+</div>
 
 ---
 
@@ -236,8 +246,12 @@ DFS might go: A → B → D (found) but doesn't know if A → C → D is shorter
 
 **After implementing, explain in your own words:**
 
-- _[Why does level-order exploration matter?]_
-- _[When would DFS accidentally find shortest path?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does level-order exploration matter?]</span>
+- <span class="fill-in">[When would DFS accidentally find shortest path?]</span>
+
+</div>
 
 ---
 
@@ -345,8 +359,12 @@ public class GraphList {
 
 **After implementing, explain in your own words:**
 
-- _[Why does sparse vs dense matter?]_
-- _[What operations are faster with each representation?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does sparse vs dense matter?]</span>
+- <span class="fill-in">[What operations are faster with each representation?]</span>
+
+</div>
 
 ---
 
@@ -447,9 +465,13 @@ public static int shortestPath_Dijkstra(Map<Integer, List<int[]>> graph, int sta
 
 **After implementing, explain in your own words:**
 
-- _[Why does BFS fail on weighted graphs?]_
-- _[What does the priority queue do in Dijkstra?]_
-- _[When is BFS actually better than Dijkstra?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does BFS fail on weighted graphs?]</span>
+- <span class="fill-in">[What does the priority queue do in Dijkstra?]</span>
+- <span class="fill-in">[When is BFS actually better than Dijkstra?]</span>
+
+</div>
 
 ---
 
@@ -1302,19 +1324,19 @@ private static void dfs(Map<Integer, List<Integer>> graph, int node, boolean[] v
 
 **Your debugging:**
 
-- **Bug 1 location:** _[Which line?]_
-- **Bug 1 explanation:** _[What's the problem?]_
-- **Bug 1 fix:** _[What should it be?]_
+- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 1 explanation:** <span class="fill-in">[What's the problem?]</span>
+- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
 
-- **Bug 2 location:** _[Which line?]_
-- **Bug 2 explanation:** _[Why is count always 0?]_
-- **Bug 2 fix:** _[How to fix?]_
+- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 2 explanation:** <span class="fill-in">[Why is count always 0?]</span>
+- **Bug 2 fix:** <span class="fill-in">[How to fix?]</span>
 
 **Test case:**
 
 - Input: n = 5, edges = [[0,1], [1,2], [3,4]]
 - Expected: 2 components
-- Actual with buggy code: _[What do you get?]_
+- Actual with buggy code: <span class="fill-in">[What do you get?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1379,12 +1401,12 @@ public static int shortestPath_Buggy(Map<Integer, List<Integer>> graph, int star
 
 **Your debugging:**
 
-- **Bug 1:** _[What's missing after queue.offer(start)?]_
-- **Bug 2:** _[How should we process the queue by level?]_
-- **Why it fails:** _[Trace through with start=0, end=2, graph: 0→1, 1→2]_
+- **Bug 1:** <span class="fill-in">[What's missing after queue.offer(start)?]</span>
+- **Bug 2:** <span class="fill-in">[How should we process the queue by level?]</span>
+- **Why it fails:** <span class="fill-in">[Trace through with start=0, end=2, graph: 0→1, 1→2]</span>
 
 **Expected distance:** 2
-**Actual with buggy code:** _[What do you get?]_
+**Actual with buggy code:** <span class="fill-in">[What do you get?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1470,15 +1492,15 @@ private static boolean dfsTopSort(Map<Integer, List<Integer>> graph, int node,
 
 **Your debugging:**
 
-- **Bug location:** _[Which line in dfsTopSort?]_
-- **Bug explanation:** _[What happens if recursive call detects cycle?]_
-- **Bug fix:** _[What code is missing?]_
+- **Bug location:** <span class="fill-in">[Which line in dfsTopSort?]</span>
+- **Bug explanation:** <span class="fill-in">[What happens if recursive call detects cycle?]</span>
+- **Bug fix:** <span class="fill-in">[What code is missing?]</span>
 
 **Test case with cycle:**
 
 - Input: n = 3, edges = [[0,1], [1,2], [2,0]]
 - Expected: Empty list (cycle exists)
-- Actual with buggy code: _[Does it detect the cycle?]_
+- Actual with buggy code: <span class="fill-in">[Does it detect the cycle?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1551,15 +1573,15 @@ public static int dijkstra_Buggy(Map<Integer, List<int[]>> graph, int start, int
 
 **Your debugging:**
 
-- **Bug:** _[What check is missing after polling from pq?]_
-- **Why it matters:** _[What happens without this check?]_
-- **Performance impact:** _[How does this affect time complexity?]_
+- **Bug:** <span class="fill-in">[What check is missing after polling from pq?]</span>
+- **Why it matters:** <span class="fill-in">[What happens without this check?]</span>
+- **Performance impact:** <span class="fill-in">[How does this affect time complexity?]</span>
 
 **Test case:**
 
 - Graph: 0→1(weight=5), 0→1(weight=3), 1→2(weight=1)
-- Without fix: _[How many times do we process node 1?]_
-- With fix: _[How many times should we process node 1?]_
+- Without fix: <span class="fill-in">[How many times do we process node 1?]</span>
+- With fix: <span class="fill-in">[How many times should we process node 1?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1619,9 +1641,9 @@ public static Map<Integer, List<Integer>> buildGraph_Buggy(int n, int[][] edges)
 
 **Your debugging:**
 
-- **Bug:** _[What's missing for undirected graphs?]_
+- **Bug:** <span class="fill-in">[What's missing for undirected graphs?]</span>
 - **Test case:** edges = [[0,1], [1,2]], try to find path from 2 to 0
-- **What happens:** _[Can you find the path with buggy graph?]_
+- **What happens:** <span class="fill-in">[Can you find the path with buggy graph?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1677,9 +1699,9 @@ public static int primMST_Buggy(Map<Integer, List<int[]>> graph, int n) {
 
 **Your debugging:**
 
-- **Bug 1:** _[What's wrong with the while loop condition?]_
-- **Bug 2:** _[What check is missing after polling?]_
-- **Result:** _[What happens if we process same node twice?]_
+- **Bug 1:** <span class="fill-in">[What's wrong with the while loop condition?]</span>
+- **Bug 2:** <span class="fill-in">[What check is missing after polling?]</span>
+- **Result:** <span class="fill-in">[What happens if we process same node twice?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1716,12 +1738,12 @@ After finding and fixing all bugs:
 
 **Common graph mistakes you discovered:**
 
-1. _[Forgetting to mark start node as visited in BFS]_
-2. _[Not propagating cycle detection in recursive calls]_
-3. _[Missing distance check in Dijkstra after polling]_
-4. _[Not adding both directions for undirected graphs]_
-5. _[Processing queue/priority queue incorrectly]_
-6. _[Fill in more patterns you noticed]_
+1. <span class="fill-in">[Forgetting to mark start node as visited in BFS]</span>
+2. <span class="fill-in">[Not propagating cycle detection in recursive calls]</span>
+3. <span class="fill-in">[Missing distance check in Dijkstra after polling]</span>
+4. <span class="fill-in">[Not adding both directions for undirected graphs]</span>
+5. <span class="fill-in">[Processing queue/priority queue incorrectly]</span>
+6. <span class="fill-in">[Fill in more patterns you noticed]</span>
 
 ---
 
@@ -1735,15 +1757,15 @@ Answer after solving problems:
 
 **Use DFS when:**
 
-- Need to explore all paths: _[Backtracking, cycle detection]_
-- Memory is limited: _[DFS uses less space]_
-- Finding any path (not shortest): _[Fill in]_
+- Need to explore all paths: <span class="fill-in">[Backtracking, cycle detection]</span>
+- Memory is limited: <span class="fill-in">[DFS uses less space]</span>
+- Finding any path (not shortest): <span class="fill-in">[Fill in]</span>
 
 **Use BFS when:**
 
-- Need shortest path: _[Unweighted graphs]_
-- Level-order traversal: _[Process by distance from source]_
-- Multi-source problems: _[Fill in examples]_
+- Need shortest path: <span class="fill-in">[Unweighted graphs]</span>
+- Level-order traversal: <span class="fill-in">[Process by distance from source]</span>
+- Multi-source problems: <span class="fill-in">[Fill in examples]</span>
 
 ### Question 2: When to use Topological Sort?
 
@@ -1751,21 +1773,21 @@ Answer for different scenarios:
 
 **Use topological sort when:**
 
-- Have dependencies: _[Course prerequisites, build order]_
-- Need ordering: _[Task scheduling]_
-- Graph is DAG: _[Must be acyclic]_
+- Have dependencies: <span class="fill-in">[Course prerequisites, build order]</span>
+- Need ordering: <span class="fill-in">[Task scheduling]</span>
+- Graph is DAG: <span class="fill-in">[Must be acyclic]</span>
 
 ### Question 3: Graph representation?
 
 **Adjacency List:**
 
-- Use when: _[Sparse graphs, need to iterate neighbors]_
-- Space: _[O(V + E)]_
+- Use when: <span class="fill-in">[Sparse graphs, need to iterate neighbors]</span>
+- Space: <span class="fill-in">[O(V + E)]</span>
 
 **Adjacency Matrix:**
 
-- Use when: _[Dense graphs, need to check edge existence]_
-- Space: _[O(V²)]_
+- Use when: <span class="fill-in">[Dense graphs, need to check edge existence]</span>
+- Space: <span class="fill-in">[O(V²)]</span>
 
 ### Question 4: When to use Dijkstra's Algorithm?
 
@@ -1773,15 +1795,15 @@ Answer for different scenarios:
 
 **Use Dijkstra when:**
 
-- Need shortest path in weighted graph: _[Non-negative edge weights]_
-- Single-source shortest paths: _[From one node to all others]_
-- Optimal path finding: _[GPS navigation, network routing]_
+- Need shortest path in weighted graph: <span class="fill-in">[Non-negative edge weights]</span>
+- Single-source shortest paths: <span class="fill-in">[From one node to all others]</span>
+- Optimal path finding: <span class="fill-in">[GPS navigation, network routing]</span>
 
 **Don't use Dijkstra when:**
 
-- Negative edge weights exist: _[Use Bellman-Ford instead]_
-- Unweighted graph: _[BFS is simpler and faster]_
-- All-pairs shortest paths needed: _[Consider Floyd-Warshall]_
+- Negative edge weights exist: <span class="fill-in">[Use Bellman-Ford instead]</span>
+- Unweighted graph: <span class="fill-in">[BFS is simpler and faster]</span>
+- All-pairs shortest paths needed: <span class="fill-in">[Consider Floyd-Warshall]</span>
 
 ### Question 5: When to use Minimum Spanning Tree?
 
@@ -1789,14 +1811,14 @@ Answer for different scenarios:
 
 **Use MST when:**
 
-- Need to connect all nodes minimally: _[Network design, clustering]_
-- Minimize total edge cost: _[Infrastructure optimization]_
-- Graph is undirected and weighted: _[MST only for undirected graphs]_
+- Need to connect all nodes minimally: <span class="fill-in">[Network design, clustering]</span>
+- Minimize total edge cost: <span class="fill-in">[Infrastructure optimization]</span>
+- Graph is undirected and weighted: <span class="fill-in">[MST only for undirected graphs]</span>
 
 **MST Algorithm Choice:**
 
-- Prim's: _[Dense graphs, good with adjacency matrix]_
-- Kruskal's: _[Sparse graphs, uses Union-Find]_
+- Prim's: <span class="fill-in">[Dense graphs, good with adjacency matrix]</span>
+- Kruskal's: <span class="fill-in">[Sparse graphs, uses Union-Find]</span>
 
 ### Your Decision Tree
 
@@ -1831,50 +1853,50 @@ Graph Algorithm Selection
 
 **Don't use DFS when:**
 
-1. _[Need shortest path - use BFS instead]_
-2. _[Graph has cycles and you don't track visited - infinite loop]_
+1. <span class="fill-in">[Need shortest path - use BFS instead]</span>
+2. <span class="fill-in">[Graph has cycles and you don't track visited - infinite loop]</span>
 
 **Don't use BFS when:**
 
-1. _[Memory is very limited - DFS more space efficient]_
-2. _[Need to explore all paths - DFS better for backtracking]_
+1. <span class="fill-in">[Memory is very limited - DFS more space efficient]</span>
+2. <span class="fill-in">[Need to explore all paths - DFS better for backtracking]</span>
 
 **Don't use Topological Sort when:**
 
-1. _[Graph has cycles - no valid topological ordering]_
-2. _[Graph is undirected - topological sort only for DAGs]_
+1. <span class="fill-in">[Graph has cycles - no valid topological ordering]</span>
+2. <span class="fill-in">[Graph is undirected - topological sort only for DAGs]</span>
 
 **Don't use Dijkstra when:**
 
-1. _[Negative edge weights exist - use Bellman-Ford]_
-2. _[Unweighted graph - BFS is simpler and O(V+E)]_
-3. _[Need all-pairs shortest paths - use Floyd-Warshall]_
+1. <span class="fill-in">[Negative edge weights exist - use Bellman-Ford]</span>
+2. <span class="fill-in">[Unweighted graph - BFS is simpler and O(V+E)]</span>
+3. <span class="fill-in">[Need all-pairs shortest paths - use Floyd-Warshall]</span>
 
 **Don't use MST when:**
 
-1. _[Graph is directed - MST only for undirected graphs]_
-2. _[Don't need to connect all nodes - use shortest path instead]_
-3. _[Graph is disconnected - MST won't exist]_
+1. <span class="fill-in">[Graph is directed - MST only for undirected graphs]</span>
+2. <span class="fill-in">[Don't need to connect all nodes - use shortest path instead]</span>
+3. <span class="fill-in">[Graph is disconnected - MST won't exist]</span>
 
 ### The Rule of Three: Alternatives
 
 **Option 1: DFS**
 
-- Pros: _[Less memory, natural for recursion, backtracking]_
-- Cons: _[Not shortest path, stack overflow risk]_
-- Use when: _[Explore paths, detect cycles, connectivity]_
+- Pros: <span class="fill-in">[Less memory, natural for recursion, backtracking]</span>
+- Cons: <span class="fill-in">[Not shortest path, stack overflow risk]</span>
+- Use when: <span class="fill-in">[Explore paths, detect cycles, connectivity]</span>
 
 **Option 2: BFS**
 
-- Pros: _[Shortest path, level-order, no stack overflow]_
-- Cons: _[More memory (queue), not natural for backtracking]_
-- Use when: _[Shortest path, minimum steps, multi-source]_
+- Pros: <span class="fill-in">[Shortest path, level-order, no stack overflow]</span>
+- Cons: <span class="fill-in">[More memory (queue), not natural for backtracking]</span>
+- Use when: <span class="fill-in">[Shortest path, minimum steps, multi-source]</span>
 
 **Option 3: Union-Find**
 
-- Pros: _[Fast connectivity queries, dynamic]_
-- Cons: _[Only for undirected, no path info]_
-- Use when: _[Dynamic connectivity, MST, cycle detection]_
+- Pros: <span class="fill-in">[Fast connectivity queries, dynamic]</span>
+- Cons: <span class="fill-in">[Only for undirected, no path info]</span>
+- Use when: <span class="fill-in">[Dynamic connectivity, MST, cycle detection]</span>
 
 ---
 
@@ -1885,64 +1907,64 @@ Graph Algorithm Selection
 **Easy (Complete 2-3):**
 
 - [ ] [997. Find the Town Judge](https://leetcode.com/problems/find-the-town-judge/)
-    - Pattern: _[Graph properties]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Graph properties]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [1971. Find if Path Exists in Graph](https://leetcode.com/problems/find-if-path-exists-in-graph/)
-    - Pattern: _[DFS/BFS]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[DFS/BFS]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Medium (Complete 4-5):**
 
 - [ ] [200. Number of Islands](https://leetcode.com/problems/number-of-islands/)
-    - Pattern: _[DFS]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[DFS]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [133. Clone Graph](https://leetcode.com/problems/clone-graph/)
-    - Pattern: _[DFS/BFS]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[DFS/BFS]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [207. Course Schedule](https://leetcode.com/problems/course-schedule/)
-    - Pattern: _[Topological Sort]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Topological Sort]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [210. Course Schedule II](https://leetcode.com/problems/course-schedule-ii/)
-    - Pattern: _[Topological Sort]_
-    - Comparison to 207: _[How similar?]_
+    - Pattern: <span class="fill-in">[Topological Sort]</span>
+    - Comparison to 207: <span class="fill-in">[How similar?]</span>
 
 - [ ] [994. Rotting Oranges](https://leetcode.com/problems/rotting-oranges/)
-    - Pattern: _[Multi-source BFS]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Multi-source BFS]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [743. Network Delay Time](https://leetcode.com/problems/network-delay-time/)
-    - Pattern: _[Dijkstra's Algorithm]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Dijkstra's Algorithm]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [1584. Min Cost to Connect All Points](https://leetcode.com/problems/min-cost-to-connect-all-points/)
-    - Pattern: _[Minimum Spanning Tree (Prim's)]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Minimum Spanning Tree (Prim's)]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Hard (Optional):**
 
 - [ ] [127. Word Ladder](https://leetcode.com/problems/word-ladder/)
-    - Pattern: _[BFS]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[BFS]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [329. Longest Increasing Path in Matrix](https://leetcode.com/problems/longest-increasing-path-in-a-matrix/)
-    - Pattern: _[DFS + Memoization]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[DFS + Memoization]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [787. Cheapest Flights Within K Stops](https://leetcode.com/problems/cheapest-flights-within-k-stops/)
-    - Pattern: _[Dijkstra's Algorithm with constraints]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Dijkstra's Algorithm with constraints]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 ---
 
@@ -2001,21 +2023,21 @@ Before moving to the next topic:
 
 > "Graphs are used to represent relationships between entities. The main traversal algorithms are..."
 >
-> _[Fill in your explanation in plain English - 4-5 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 4-5 sentences max]</span>
 >
 > "Use DFS when..."
 >
-> _[Fill in]_
+> <span class="fill-in">[Fill in]</span>
 >
 > "Use BFS when..."
 >
-> _[Fill in]_
+> <span class="fill-in">[Fill in]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by a non-technical person? _[Yes/No]_
-- Did you explain when to use each algorithm? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
+- Did you explain when to use each algorithm? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -2035,17 +2057,17 @@ Graph:  0 → 1 → 3
 Find shortest path from 0 to 4
 
 Level 0: [Your drawing - initial queue state]
-         Queue: ___
-         Visited: ___
+         Queue: <span class="fill-in">___</span>
+         Visited: <span class="fill-in">___</span>
 
 Level 1: [After processing level 0]
-         Queue: ___
-         Visited: ___
+         Queue: <span class="fill-in">___</span>
+         Visited: <span class="fill-in">___</span>
 
 Level 2: [After processing level 1]
-         Queue: ___
-         Visited: ___
-         Found: ___
+         Queue: <span class="fill-in">___</span>
+         Visited: <span class="fill-in">___</span>
+         Found: <span class="fill-in">___</span>
 ```
 
 **Verification:**
@@ -2063,12 +2085,12 @@ Level 2: [After processing level 1]
 
 | Problem | Algorithm | Why? |
 |---------|-----------|------|
-| Find shortest path (unweighted) | _[Fill in]_ | _[Explain]_ |
-| Detect cycle in directed graph | _[Fill in]_ | _[Explain]_ |
-| Course prerequisite ordering | _[Fill in]_ | _[Explain]_ |
-| GPS navigation (weighted roads) | _[Fill in]_ | _[Explain]_ |
-| Connect cities with minimum cable | _[Fill in]_ | _[Explain]_ |
-| Count connected components | _[Fill in]_ | _[Explain]_ |
+| Find shortest path (unweighted) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Detect cycle in directed graph | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Course prerequisite ordering | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| GPS navigation (weighted roads) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Connect cities with minimum cable | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Count connected components | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -2082,15 +2104,15 @@ If you scored below 5/6, review the decision framework and try again.
 
 | Algorithm | Time Complexity | Space Complexity | Why? |
 |-----------|----------------|------------------|------|
-| DFS (recursive) | O(?) | O(?) | _[Explain]_ |
-| BFS | O(?) | O(?) | _[Explain]_ |
-| Topological Sort | O(?) | O(?) | _[Explain]_ |
-| Dijkstra (with PQ) | O(?) | O(?) | _[Explain]_ |
-| Prim's MST | O(?) | O(?) | _[Explain]_ |
+| DFS (recursive) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| BFS | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Topological Sort | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Dijkstra (with PQ) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Prim's MST | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why is Dijkstra O((V+E) log V) while BFS is O(V+E)?
 
-Your answer: _[Fill in - explain the fundamental difference]_
+Your answer: <span class="fill-in">[Fill in - explain the fundamental difference]</span>
 
 ---
 
@@ -2099,26 +2121,28 @@ Your answer: _[Fill in - explain the fundamental difference]_
 **Scenario:** You need to store a social network graph with 1 million users and 10 million friendships.
 
 **Option A:** Adjacency Matrix
-- Space complexity: _[Fill in with calculation]_
-- Add friendship: _[Time complexity]_
-- Check friendship: _[Time complexity]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
+
+- Space complexity: <span class="fill-in">[Fill in with calculation]</span>
+- Add friendship: <span class="fill-in">[Time complexity]</span>
+- Check friendship: <span class="fill-in">[Time complexity]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
 **Option B:** Adjacency List
-- Space complexity: _[Fill in with calculation]_
-- Add friendship: _[Time complexity]_
-- Check friendship: _[Time complexity]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
 
-**Your decision:** I would choose _[A/B]_ because...
+- Space complexity: <span class="fill-in">[Fill in with calculation]</span>
+- Add friendship: <span class="fill-in">[Time complexity]</span>
+- Check friendship: <span class="fill-in">[Time complexity]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
-_[Fill in your reasoning - consider time, space, and operations]_
+**Your decision:** I would choose <span class="fill-in">[A/B]</span> because...
+
+<span class="fill-in">[Fill in your reasoning - consider time, space, and operations]</span>
 
 **What if:** The graph was dense with 500 million friendships?
 
-- Would your decision change? _[Yes/No - Why?]_
+- Would your decision change? <span class="fill-in">[Yes/No - Why?]</span>
 
 ---
 
@@ -2128,19 +2152,19 @@ _[Fill in your reasoning - consider time, space, and operations]_
 
 **When to use DFS:**
 
-- Memory constraint: _[How much memory?]_
-- Path requirements: _[Any path vs shortest?]_
-- Graph structure: _[Deep vs wide?]_
+- Memory constraint: <span class="fill-in">[How much memory?]</span>
+- Path requirements: <span class="fill-in">[Any path vs shortest?]</span>
+- Graph structure: <span class="fill-in">[Deep vs wide?]</span>
 
 **When to use BFS:**
 
-- Need shortest path: _[Why does BFS guarantee this?]_
-- Level-order processing: _[Give example]_
-- Memory available: _[Queue size?]_
+- Need shortest path: <span class="fill-in">[Why does BFS guarantee this?]</span>
+- Level-order processing: <span class="fill-in">[Give example]</span>
+- Memory available: <span class="fill-in">[Queue size?]</span>
 
 **Your analysis:** For finding ANY path in a deep, narrow graph with limited memory, which algorithm and why?
 
-_[Fill in your reasoning]_
+<span class="fill-in">[Fill in your reasoning]</span>
 
 ---
 
@@ -2178,10 +2202,10 @@ public static int[] dijkstra(Map<Integer, List<int[]>> graph, int start, int n) 
 
 **Your debugging:**
 
-- Bug location: _[Which line or section?]_
-- Bug description: _[What's missing?]_
-- Fix: _[What code should be added?]_
-- Why it matters: _[What happens without the fix?]_
+- Bug location: <span class="fill-in">[Which line or section?]</span>
+- Bug description: <span class="fill-in">[What's missing?]</span>
+- Fix: <span class="fill-in">[What code should be added?]</span>
+- Why it matters: <span class="fill-in">[What happens without the fix?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -2248,21 +2272,21 @@ Your explanation:
 
 > "You should NOT use DFS when..."
 >
-> _[Fill in - 2-3 scenarios]_
+> <span class="fill-in">[Fill in - 2-3 scenarios]</span>
 
 > "You should NOT use BFS when..."
 >
-> _[Fill in - 2-3 scenarios]_
+> <span class="fill-in">[Fill in - 2-3 scenarios]</span>
 
 > "You should NOT use Dijkstra when..."
 >
-> _[Fill in - 2-3 scenarios]_
+> <span class="fill-in">[Fill in - 2-3 scenarios]</span>
 
 **Examples of failures:**
 
-1. _[Scenario where DFS fails/isn't optimal]_
-2. _[Scenario where BFS fails/isn't optimal]_
-3. _[Scenario where Dijkstra fails/isn't optimal]_
+1. <span class="fill-in">[Scenario where DFS fails/isn't optimal]</span>
+2. <span class="fill-in">[Scenario where BFS fails/isn't optimal]</span>
+3. <span class="fill-in">[Scenario where Dijkstra fails/isn't optimal]</span>
 
 ---
 
@@ -2275,7 +2299,7 @@ Edges: (0,1), (0,2), (1,3), (2,3)
 **Adjacency List:**
 ```
 Your drawing:
-_[Show the map/list structure]_
+<span class="fill-in">[Show the map/list structure]</span>
 ```
 
 **Adjacency Matrix:**
@@ -2283,6 +2307,7 @@ _[Show the map/list structure]_
 Your drawing:
   0 1 2 3
 0 [ ][ ][ ][ ]
+
 1 [ ][ ][ ][ ]
 2 [ ][ ][ ][ ]
 3 [ ][ ][ ][ ]
@@ -2290,9 +2315,9 @@ Your drawing:
 
 **Analysis:**
 
-- Space used by list: _[Calculate]_
-- Space used by matrix: _[Calculate]_
-- Which is better for this graph? _[Why?]_
+- Space used by list: <span class="fill-in">[Calculate]</span>
+- Space used by matrix: <span class="fill-in">[Calculate]</span>
+- Which is better for this graph? <span class="fill-in">[Why?]</span>
 
 ---
 
@@ -2301,20 +2326,20 @@ Your drawing:
 **Question:** Can you perform topological sort on these graphs?
 
 1. Graph with cycle: 0→1→2→0
-    - Can sort? _[Yes/No]_
-    - Why? _[Explain]_
+    - Can sort? <span class="fill-in">[Yes/No]</span>
+    - Why? <span class="fill-in">[Explain]</span>
 
 2. Undirected graph: 0—1—2
-    - Can sort? _[Yes/No]_
-    - Why? _[Explain]_
+    - Can sort? <span class="fill-in">[Yes/No]</span>
+    - Why? <span class="fill-in">[Explain]</span>
 
 3. DAG: 0→1, 0→2, 1→3, 2→3
-    - Can sort? _[Yes/No]_
-    - Possible orderings: _[List at least 2]_
+    - Can sort? <span class="fill-in">[Yes/No]</span>
+    - Possible orderings: <span class="fill-in">[List at least 2]</span>
 
 **Deep question:** What property makes topological sort possible?
 
-Your answer: _[Fill in]_
+Your answer: <span class="fill-in">[Fill in]</span>
 
 ---
 

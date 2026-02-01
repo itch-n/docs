@@ -6,46 +6,53 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing all patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is a heap in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **Why is it called a priority queue?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy:**
     - Example: "A heap is like a hospital emergency room where patients are seen by urgency..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **When does this pattern work?**
-    - Your answer: _[Fill in after solving problems]_
+    - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
 
 5. **What's the difference between min-heap and max-heap?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Finding Kth largest using sorting:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Verified after learning: _[Actual: O(?)]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
 
 2. **Finding Kth largest using min-heap of size K:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity: _[Your guess: O(?)]_
-    - Verified: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **Efficiency calculation:**
-    - If n = 100,000 and k = 10, sorting = n log n = _____ operations
-    - Heap approach = n log k = _____ operations
+    - If n = 100,000 and k = 10, sorting = n log n = <span class="fill-in">_____</span> operations
+    - Heap approach = n log k = <span class="fill-in">_____</span> operations
     - Speedup factor: approximately _____ times faster
 
 ### Scenario Predictions
@@ -53,30 +60,30 @@
 **Scenario 1:** Find 3rd largest in `[3, 2, 1, 5, 6, 4]`
 
 - **Using min-heap of size 3:**
-    - Which elements end up in the heap? _[Fill in]_
-    - What is at the top of the heap? _[Fill in - is this the answer?]_
-    - Why min-heap instead of max-heap? _[Fill in your reasoning]_
+    - Which elements end up in the heap? <span class="fill-in">[Fill in]</span>
+    - What is at the top of the heap? <span class="fill-in">[Fill in - is this the answer?]</span>
+    - Why min-heap instead of max-heap? <span class="fill-in">[Fill in your reasoning]</span>
 
 **Scenario 2:** Find median of stream `[5, 15, 1, 3]`
 
 - **Using two heaps:**
-    - After adding 5: maxHeap = ___, minHeap = ___, median = ___
-    - After adding 15: maxHeap = ___, minHeap = ___, median = ___
-    - After adding 1: maxHeap = ___, minHeap = ___, median = ___
-    - After adding 3: maxHeap = ___, minHeap = ___, median = ___
+    - After adding 5: maxHeap = <span class="fill-in">___</span>, minHeap = <span class="fill-in">___</span>, median = <span class="fill-in">___</span>
+    - After adding 15: maxHeap = <span class="fill-in">___</span>, minHeap = <span class="fill-in">___</span>, median = <span class="fill-in">___</span>
+    - After adding 1: maxHeap = <span class="fill-in">___</span>, minHeap = <span class="fill-in">___</span>, median = <span class="fill-in">___</span>
+    - After adding 3: maxHeap = <span class="fill-in">___</span>, minHeap = <span class="fill-in">___</span>, median = <span class="fill-in">___</span>
 
 **Scenario 3:** Merge 3 sorted lists: `[1,4,5]`, `[1,3,4]`, `[2,6]`
 
-- **Heap pattern applies?** _[Yes/No - Why?]_
-- **Initial heap state:** _[Which elements start in heap?]_
-- **After first extraction:** _[What gets removed? What gets added?]_
+- **Heap pattern applies?** <span class="fill-in">[Yes/No - Why?]</span>
+- **Initial heap state:** <span class="fill-in">[Which elements start in heap?]</span>
+- **After first extraction:** <span class="fill-in">[What gets removed? What gets added?]</span>
 
 ### Trade-off Quiz
 
 **Question:** When would sorting be BETTER than heap for finding Kth largest?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** What's the MAIN advantage of heap over Quick Select for Kth largest?
 
@@ -85,12 +92,15 @@
 - [ ] Heap uses less space
 - [ ] Heap is easier to implement
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 **Question:** For finding top K elements, why use heap of size K instead of size N?
 
-- Your answer: _[Fill in reasoning]_
-- Verified: _[Fill in after implementation]_
+- Your answer: <span class="fill-in">[Fill in reasoning]</span>
+- Verified: <span class="fill-in">[Fill in after implementation]</span>
+
+
+</div>
 
 ---
 
@@ -177,8 +187,12 @@ Answer: heap.peek() = 5 (2nd largest)
 
 **After implementing, explain in your own words:**
 
-- _[Why does removing the minimum preserve the K largest elements?]_
-- _[What would happen with a max-heap instead?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does removing the minimum preserve the K largest elements?]</span>
+- <span class="fill-in">[What would happen with a max-heap instead?]</span>
+
+</div>
 
 ---
 
@@ -285,8 +299,12 @@ Add 3:  maxHeap=[5,3,1], minHeap=[15] → rebalance → maxHeap=[5,3], minHeap=[
 
 **After implementing, explain in your own words:**
 
-- _[Why do we need both heaps instead of just sorting?]_
-- _[How does keeping them balanced help find median quickly?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why do we need both heaps instead of just sorting?]</span>
+- <span class="fill-in">[How does keeping them balanced help find median quickly?]</span>
+
+</div>
 
 ---
 
@@ -783,19 +801,19 @@ public static int findKthLargest_Buggy(int[] nums, int k) {
 
 **Your debugging:**
 
-- **Bug 1 location:** _[Which line?]_
-- **Bug 1 explanation:** _[Should we use max-heap or min-heap for Kth largest?]_
-- **Bug 1 fix:** _[What should it be?]_
+- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 1 explanation:** <span class="fill-in">[Should we use max-heap or min-heap for Kth largest?]</span>
+- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
 
-- **Bug 2 location:** _[Which line?]_
-- **Bug 2 explanation:** _[What gets removed? Is this what we want?]_
-- **Bug 2 impact:** _[What will the final answer be?]_
+- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 2 explanation:** <span class="fill-in">[What gets removed? Is this what we want?]</span>
+- **Bug 2 impact:** <span class="fill-in">[What will the final answer be?]</span>
 
 **Test case to expose the bug:**
 
 - Input: `nums = [3, 2, 1, 5, 6, 4]`, `k = 2`
 - Expected: `5` (2nd largest)
-- Actual with buggy code: _[Trace through manually]_
+- Actual with buggy code: <span class="fill-in">[Trace through manually]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -864,19 +882,19 @@ static class MedianFinder_Buggy {
 
 **Your debugging:**
 
-- **Bug 1:** _[What's missing after adding elements?]_
-- **Bug 1 explanation:** _[What happens if sizes become unbalanced?]_
-- **Bug 1 fix:** _[What code should be added?]_
+- **Bug 1:** <span class="fill-in">[What's missing after adding elements?]</span>
+- **Bug 1 explanation:** <span class="fill-in">[What happens if sizes become unbalanced?]</span>
+- **Bug 1 fix:** <span class="fill-in">[What code should be added?]</span>
 
-- **Bug 2:** _[Which heap should contain the median for even split?]_
-- **Bug 2 explanation:** _[Trace through example: add 1, 2, 3]_
-- **Bug 2 fix:** _[Fill in]_
+- **Bug 2:** <span class="fill-in">[Which heap should contain the median for even split?]</span>
+- **Bug 2 explanation:** <span class="fill-in">[Trace through example: add 1, 2, 3]</span>
+- **Bug 2 fix:** <span class="fill-in">[Fill in]</span>
 
 **Test case:**
 
 - Stream: `[1, 2, 3, 4, 5]`
 - Expected medians: `[1.0, 1.5, 2.0, 2.5, 3.0]`
-- Actual with buggy code: _[Trace through]_
+- Actual with buggy code: <span class="fill-in">[Trace through]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -964,22 +982,22 @@ static class MinHeap_Buggy {
 
 **Your debugging:**
 
-- **Bug 1:** _[What's the correct parent formula for 0-indexed array?]_
-- **Bug 2:** _[What's the correct leftChild formula?]_
-- **Bug 3:** _[What's the correct rightChild formula?]_
+- **Bug 1:** <span class="fill-in">[What's the correct parent formula for 0-indexed array?]</span>
+- **Bug 2:** <span class="fill-in">[What's the correct leftChild formula?]</span>
+- **Bug 3:** <span class="fill-in">[What's the correct rightChild formula?]</span>
 
 **Heap index formulas:**
 
 - For 0-indexed array:
-    - Parent of i: _[Your formula]_
-    - Left child of i: _[Your formula]_
-    - Right child of i: _[Your formula]_
+    - Parent of i: <span class="fill-in">[Your formula]</span>
+    - Left child of i: <span class="fill-in">[Your formula]</span>
+    - Right child of i: <span class="fill-in">[Your formula]</span>
 
 **Test case:**
 ```
 Insert: 5, 3, 7, 1
 Expected heap array: [1, 3, 7, 5] (min-heap property)
-Actual with buggy code: _[What happens?]_
+Actual with buggy code: <span class="fill-in">[What happens?]</span>
 ```
 
 <details markdown>
@@ -1061,23 +1079,23 @@ public static int[][] kClosest_Buggy(int[][] points, int k) {
 
 **Your debugging:**
 
-- **Bug location:** _[Which line?]_
-- **Bug explanation:** _[Why is min-heap wrong here?]_
-- **Bug fix:** _[What comparator should we use?]_
+- **Bug location:** <span class="fill-in">[Which line?]</span>
+- **Bug explanation:** <span class="fill-in">[Why is min-heap wrong here?]</span>
+- **Bug fix:** <span class="fill-in">[What comparator should we use?]</span>
 
 **Think about it:**
 
-- For K largest → Use _[min/max]_-heap
-- For K smallest → Use _[min/max]_-heap
-- For K closest → Same as K _[largest/smallest]_ distances
-- Therefore, use _[min/max]_-heap
+- For K largest → Use <span class="fill-in">[min/max]</span>-heap
+- For K smallest → Use <span class="fill-in">[min/max]</span>-heap
+- For K closest → Same as K <span class="fill-in">[largest/smallest]</span> distances
+- Therefore, use <span class="fill-in">[min/max]</span>-heap
 
 **Test case:**
 ```
 Points: [[1,3], [-2,2], [5,8], [0,1]], k=2
 Distances: [10, 8, 89, 1]
 Expected: [[0,1], [-2,2]] (distances 1 and 8)
-Actual with buggy code: _[What do you get?]_
+Actual with buggy code: <span class="fill-in">[What do you get?]</span>
 ```
 
 <details markdown>
@@ -1121,10 +1139,10 @@ After finding and fixing all bugs:
 
 **Common heap mistakes you discovered:**
 
-1. _[Min vs max confusion - when to use which?]_
-2. _[Index calculation errors in manual implementation]_
-3. _[Forgetting to rebalance in two-heap pattern]_
-4. _[Fill in - what other patterns did you notice?]_
+1. <span class="fill-in">[Min vs max confusion - when to use which?]</span>
+2. <span class="fill-in">[Index calculation errors in manual implementation]</span>
+3. <span class="fill-in">[Forgetting to rebalance in two-heap pattern]</span>
+4. <span class="fill-in">[Fill in - what other patterns did you notice?]</span>
 
 ---
 
@@ -1135,10 +1153,11 @@ After finding and fixing all bugs:
 ### Question 1: What do you need to track?
 
 Answer after solving problems:
-- **Need min/max element repeatedly?** _[Use heap]_
-- **Need Kth largest/smallest?** _[Use heap of size K]_
-- **Need median?** _[Use two heaps]_
-- **Your observation:** _[Fill in based on testing]_
+
+- **Need min/max element repeatedly?** <span class="fill-in">[Use heap]</span>
+- **Need Kth largest/smallest?** <span class="fill-in">[Use heap of size K]</span>
+- **Need median?** <span class="fill-in">[Use two heaps]</span>
+- **Your observation:** <span class="fill-in">[Fill in based on testing]</span>
 
 ### Question 2: What are the time/space trade-offs?
 
@@ -1146,27 +1165,27 @@ Answer for each pattern:
 
 **Basic heap operations:**
 
-- Time complexity: _[Insert? Extract? Peek?]_
-- Space complexity: _[How much space?]_
-- Best use cases: _[List problems you solved]_
+- Time complexity: <span class="fill-in">[Insert? Extract? Peek?]</span>
+- Space complexity: <span class="fill-in">[How much space?]</span>
+- Best use cases: <span class="fill-in">[List problems you solved]</span>
 
 **Merge K sorted:**
 
-- Time complexity: _[Compare to merge two at a time]_
-- Space complexity: _[Just heap or output too?]_
-- Best use cases: _[List problems you solved]_
+- Time complexity: <span class="fill-in">[Compare to merge two at a time]</span>
+- Space complexity: <span class="fill-in">[Just heap or output too?]</span>
+- Best use cases: <span class="fill-in">[List problems you solved]</span>
 
 **Top K frequent:**
 
-- Time complexity: _[Why log k not log n?]_
-- Space complexity: _[Frequency map + heap]_
-- Best use cases: _[List problems you solved]_
+- Time complexity: <span class="fill-in">[Why log k not log n?]</span>
+- Space complexity: <span class="fill-in">[Frequency map + heap]</span>
+- Best use cases: <span class="fill-in">[List problems you solved]</span>
 
 **Two heaps:**
 
-- Time complexity: _[Insert? Find median?]_
-- Space complexity: _[Both heaps needed?]_
-- Best use cases: _[List problems you solved]_
+- Time complexity: <span class="fill-in">[Insert? Find median?]</span>
+- Space complexity: <span class="fill-in">[Both heaps needed?]</span>
+- Best use cases: <span class="fill-in">[List problems you solved]</span>
 
 ### Your Decision Tree
 
@@ -1196,30 +1215,30 @@ Heap Pattern Selection
 
 **Don't use heaps when:**
 
-1. _[Need all elements in sorted order? Sort might be better]_
-2. _[K is very large? Different approach needed]_
-3. _[Need to find element by value? Use hash table]_
-4. _[Don't need priority access? Use array/list]_
+1. <span class="fill-in">[Need all elements in sorted order? Sort might be better]</span>
+2. <span class="fill-in">[K is very large? Different approach needed]</span>
+3. <span class="fill-in">[Need to find element by value? Use hash table]</span>
+4. <span class="fill-in">[Don't need priority access? Use array/list]</span>
 
 ### The Rule of Three: Alternatives
 
 **Option 1: Heap (Priority Queue)**
 
-- Pros: _[O(log n) insert/delete, O(1) peek]_
-- Cons: _[Not sorted, just maintains priority]_
-- Use when: _[Need repeated min/max access]_
+- Pros: <span class="fill-in">[O(log n) insert/delete, O(1) peek]</span>
+- Cons: <span class="fill-in">[Not sorted, just maintains priority]</span>
+- Use when: <span class="fill-in">[Need repeated min/max access]</span>
 
 **Option 2: Sorting**
 
-- Pros: _[All elements sorted]_
-- Cons: _[O(n log n) upfront, can't add efficiently]_
-- Use when: _[Need all sorted once]_
+- Pros: <span class="fill-in">[All elements sorted]</span>
+- Cons: <span class="fill-in">[O(n log n) upfront, can't add efficiently]</span>
+- Use when: <span class="fill-in">[Need all sorted once]</span>
 
 **Option 3: Quick Select**
 
-- Pros: _[O(n) average for Kth element]_
-- Cons: _[Modifies array, no repeated access]_
-- Use when: _[One-time Kth element query]_
+- Pros: <span class="fill-in">[O(n) average for Kth element]</span>
+- Cons: <span class="fill-in">[Modifies array, no repeated access]</span>
+- Use when: <span class="fill-in">[One-time Kth element query]</span>
 
 ---
 
@@ -1230,51 +1249,51 @@ Heap Pattern Selection
 **Easy (Complete all 3):**
 
 - [ ] [703. Kth Largest Element in a Stream](https://leetcode.com/problems/kth-largest-element-in-a-stream/)
-    - Pattern: _[Min-heap of size K]_
-    - Your solution time: ___
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Min-heap of size K]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [1046. Last Stone Weight](https://leetcode.com/problems/last-stone-weight/)
-    - Pattern: _[Max-heap simulation]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Max-heap simulation]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [1337. The K Weakest Rows in a Matrix](https://leetcode.com/problems/the-k-weakest-rows-in-a-matrix/)
-    - Pattern: _[Heap with custom comparator]_
-    - Your solution time: ___
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Heap with custom comparator]</span>
+    - Your solution time: <span class="fill-in">___</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Medium (Complete 3-4):**
 
 - [ ] [215. Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/)
-    - Pattern: _[Min-heap approach]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Min-heap approach]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [347. Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/)
-    - Pattern: _[Frequency + heap]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Frequency + heap]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [973. K Closest Points to Origin](https://leetcode.com/problems/k-closest-points-to-origin/)
-    - Pattern: _[Max-heap of size K]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Max-heap of size K]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 - [ ] [295. Find Median from Data Stream](https://leetcode.com/problems/find-median-from-data-stream/)
-    - Pattern: _[Two heaps]_
-    - Difficulty: _[Rate 1-10]_
-    - Key insight: _[Fill in]_
+    - Pattern: <span class="fill-in">[Two heaps]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Hard (Optional):**
 
 - [ ] [23. Merge k Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists/)
-    - Pattern: _[Min-heap with K nodes]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Min-heap with K nodes]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 - [ ] [480. Sliding Window Median](https://leetcode.com/problems/sliding-window-median/)
-    - Pattern: _[Two heaps with removal]_
-    - Key insight: _[Fill in after solving]_
+    - Pattern: <span class="fill-in">[Two heaps with removal]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 ---
 
@@ -1327,13 +1346,13 @@ Before moving to the next topic:
 
 > "A heap is a data structure that..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by a non-technical person? _[Yes/No]_
-- Did you use analogies or real-world examples? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
+- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -1345,11 +1364,11 @@ If you scored below 7 or answered "No" to either question, revise your explanati
 
 | Problem | Heap Type | Heap Size | Why? |
 |---------|-----------|-----------|------|
-| Find Kth largest element | _[min/max]_ | _[K/N]_ | _[Explain]_ |
-| Find Kth smallest element | _[min/max]_ | _[K/N]_ | _[Explain]_ |
-| Find K closest points | _[min/max]_ | _[K/N]_ | _[Explain]_ |
-| Find K most frequent | _[min/max]_ | _[K/N]_ | _[Explain]_ |
-| Merge K sorted lists | _[min/max]_ | _[K/N]_ | _[Explain]_ |
+| Find Kth largest element | <span class="fill-in">[min/max]</span> | <span class="fill-in">[K/N]</span> | <span class="fill-in">[Explain]</span> |
+| Find Kth smallest element | <span class="fill-in">[min/max]</span> | <span class="fill-in">[K/N]</span> | <span class="fill-in">[Explain]</span> |
+| Find K closest points | <span class="fill-in">[min/max]</span> | <span class="fill-in">[K/N]</span> | <span class="fill-in">[Explain]</span> |
+| Find K most frequent | <span class="fill-in">[min/max]</span> | <span class="fill-in">[K/N]</span> | <span class="fill-in">[Explain]</span> |
+| Merge K sorted lists | <span class="fill-in">[min/max]</span> | <span class="fill-in">[K/N]</span> | <span class="fill-in">[Explain]</span> |
 
 **Verification:**
 
@@ -1374,27 +1393,27 @@ If you scored below 4/5, review the patterns and try again.
 After adding 5:
   maxHeap (smaller half): [Your drawing]
   minHeap (larger half):  [Your drawing]
-  Median: ___
+  Median: <span class="fill-in">___</span>
 
 After adding 15:
   maxHeap: [Your drawing]
   minHeap: [Your drawing]
-  Median: ___
+  Median: <span class="fill-in">___</span>
 
 After adding 1:
   maxHeap: [Your drawing]
   minHeap: [Your drawing]
-  Median: ___
+  Median: <span class="fill-in">___</span>
 
 After adding 3:
   maxHeap: [Your drawing]
   minHeap: [Your drawing]
-  Median: ___
+  Median: <span class="fill-in">___</span>
 
 After adding 8:
   maxHeap: [Your drawing]
   minHeap: [Your drawing]
-  Median: ___
+  Median: <span class="fill-in">___</span>
 ```
 
 **Verification:**
@@ -1412,15 +1431,15 @@ After adding 8:
 
 | Operation | Min/Max Heap | Two Heaps (Median) | Heap of Size K | Why? |
 |-----------|--------------|-------------------|----------------|------|
-| Insert | O(?) | O(?) | O(?) | _[Explain]_ |
-| Delete/Extract | O(?) | O(?) | O(?) | _[Explain]_ |
-| Peek/Find | O(?) | O(?) | O(?) | _[Explain]_ |
-| Find Kth largest (total) | - | - | O(?) | _[Explain]_ |
-| Median of N elements (total) | - | O(?) | - | _[Explain]_ |
+| Insert | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Delete/Extract | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Peek/Find | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Find Kth largest (total) | - | - | O(?) | <span class="fill-in">[Explain]</span> |
+| Median of N elements (total) | - | O(?) | - | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why is finding Kth largest with heap O(n log k) instead of O(n log n)?
 
-Your answer: _[Fill in - explain the fundamental difference]_
+Your answer: <span class="fill-in">[Fill in - explain the fundamental difference]</span>
 
 ---
 
@@ -1430,12 +1449,12 @@ Your answer: _[Fill in - explain the fundamental difference]_
 
 | Problem | Pattern | Heap Type | Explanation |
 |---------|---------|-----------|-------------|
-| Find median from data stream | _[Fill in]_ | _[Fill in]_ | _[Explain]_ |
-| Merge K sorted arrays | _[Fill in]_ | _[Fill in]_ | _[Explain]_ |
-| Top K frequent elements | _[Fill in]_ | _[Fill in]_ | _[Explain]_ |
-| Kth largest in stream | _[Fill in]_ | _[Fill in]_ | _[Explain]_ |
-| Find K closest points | _[Fill in]_ | _[Fill in]_ | _[Explain]_ |
-| Last stone weight | _[Fill in]_ | _[Fill in]_ | _[Explain]_ |
+| Find median from data stream | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Merge K sorted arrays | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Top K frequent elements | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Kth largest in stream | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Find K closest points | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Last stone weight | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1448,30 +1467,33 @@ If you scored below 5/6, review the pattern implementations and try again.
 **Scenario:** You need to find the Kth largest element in a data stream (elements arrive one by one).
 
 **Option A:** Sort array each time a new element arrives
-- Time per insertion: _[Fill in]_
-- Time to find Kth: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
+
+- Time per insertion: <span class="fill-in">[Fill in]</span>
+- Time to find Kth: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
 **Option B:** Maintain min-heap of size K
-- Time per insertion: _[Fill in]_
-- Time to find Kth: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
+
+- Time per insertion: <span class="fill-in">[Fill in]</span>
+- Time to find Kth: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
 **Option C:** Use Quick Select on entire array
-- Time per insertion: _[Fill in]_
-- Time to find Kth: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
 
-**Your decision:** I would choose _[A/B/C]_ because...
+- Time per insertion: <span class="fill-in">[Fill in]</span>
+- Time to find Kth: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
-_[Fill in your reasoning - consider time, space, and streaming constraint]_
+**Your decision:** I would choose <span class="fill-in">[A/B/C]</span> because...
+
+<span class="fill-in">[Fill in your reasoning - consider time, space, and streaming constraint]</span>
 
 **What would make you change your decision?**
 
-- _[Fill in - what constraints would flip your choice?]_
+- <span class="fill-in">[Fill in - what constraints would flip your choice?]</span>
 
 ---
 
@@ -1529,16 +1551,16 @@ public static int findKthLargest(int[] nums, int k) {
 
 **Your analysis:**
 
-- Number of bugs: ___
-- Bug 1: _[What's wrong?]_
-- Bug 2: _[What else?]_
-- Fixed code: _[Write it below]_
+- Number of bugs: <span class="fill-in">___</span>
+- Bug 1: <span class="fill-in">[What's wrong?]</span>
+- Bug 2: <span class="fill-in">[What else?]</span>
+- Fixed code: <span class="fill-in">[Write it below]</span>
 
 **Why this fails:**
 
 - Test with `nums = [3,2,1,5,6,4]`, `k = 2`
 - Expected: `5`
-- Actual: _[What does buggy code return?]_
+- Actual: <span class="fill-in">[What does buggy code return?]</span>
 
 ---
 
@@ -1552,14 +1574,14 @@ Your explanation:
 
 > "You should NOT use heaps when..."
 >
-> _[Fill in - list 3-4 scenarios and explain why]_
+> <span class="fill-in">[Fill in - list 3-4 scenarios and explain why]</span>
 
 **Examples of when heaps fail or are suboptimal:**
 
-1. _[Scenario where heap doesn't work]_
-2. _[Scenario where another approach is better]_
-3. _[Scenario where heap is overkill]_
-4. _[Fill in]_
+1. <span class="fill-in">[Scenario where heap doesn't work]</span>
+2. <span class="fill-in">[Scenario where another approach is better]</span>
+3. <span class="fill-in">[Scenario where heap is overkill]</span>
+4. <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1571,13 +1593,13 @@ For a **0-indexed** array-based heap:
 
 ```java
 // Parent of element at index i:
-parent(i) = _______________
+parent(i) = <span class="fill-in">_______________</span>
 
 // Left child of element at index i:
-leftChild(i) = _______________
+leftChild(i) = <span class="fill-in">_______________</span>
 
 // Right child of element at index i:
-rightChild(i) = _______________
+rightChild(i) = <span class="fill-in">_______________</span>
 ```
 
 **Verify with example:**
@@ -1591,9 +1613,9 @@ Given heap array `[1, 3, 5, 7, 9, 10, 15]`:
    7  9 10 15
 ```
 
-- Parent of 9 (index 4): _[Your formula result]_
-- Left child of 3 (index 1): _[Your formula result]_
-- Right child of 5 (index 2): _[Your formula result]_
+- Parent of 9 (index 4): <span class="fill-in">[Your formula result]</span>
+- Left child of 3 (index 1): <span class="fill-in">[Your formula result]</span>
+- Right child of 5 (index 2): <span class="fill-in">[Your formula result]</span>
 
 **Verification:**
 

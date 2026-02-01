@@ -6,49 +6,56 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing all patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is caching in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **Why/when do we use caching?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy:**
     - Example: "A cache is like keeping your favorite books on your desk instead of walking to the library..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **What's the difference between LRU and LFU?**
-    - Your answer: _[Fill in after solving problems]_
+    - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
 
 5. **When should you use Write-Through vs Write-Back?**
-    - Your answer: _[Fill in after practice]_
+    - Your answer: <span class="fill-in">[Fill in after practice]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Direct database query for each request:**
-    - Time per request: _[Your guess: O(?)]_
+    - Time per request: <span class="fill-in">[Your guess: O(?)]</span>
     - If DB query takes 50ms, how many requests/sec can you handle? _____
-    - Verified after learning: _[Actual]_
+    - Verified after learning: <span class="fill-in">[Actual]</span>
 
 2. **Cache lookup + occasional DB query:**
-    - Cache hit time: _[Your guess: O(?)]_
-    - Cache miss time: _[Your guess: O(?)]_
-    - If 90% cache hit rate, average latency: _____ms
-    - Verified: _[Actual]_
+    - Cache hit time: <span class="fill-in">[Your guess: O(?)]</span>
+    - Cache miss time: <span class="fill-in">[Your guess: O(?)]</span>
+    - If 90% cache hit rate, average latency: <span class="fill-in">_____</span>ms
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **Hit rate calculation:**
     - 1000 requests, 900 cache hits, 100 misses
-    - Hit rate: _____%
-    - If cache saves 45ms per hit, total time saved: _____ms
+    - Hit rate: <span class="fill-in">_____</span>%
+    - If cache saves 45ms per hit, total time saved: <span class="fill-in">_____</span>ms
 
 ### Scenario Predictions
 
@@ -61,9 +68,9 @@ Product D: accessed 8 times
 Cache capacity: 2 items
 ```
 
-- **With LRU, which items remain after all accesses?** _[Fill in - trace manually]_
-- **With LFU, which items remain?** _[Fill in - trace manually]_
-- **Which is better for this pattern?** _[LRU/LFU - Why?]_
+- **With LRU, which items remain after all accesses?** <span class="fill-in">[Fill in - trace manually]</span>
+- **With LFU, which items remain?** <span class="fill-in">[Fill in - trace manually]</span>
+- **Which is better for this pattern?** <span class="fill-in">[LRU/LFU - Why?]</span>
 
 **Scenario 2:** User session cache (last access time matters)
 ```
@@ -73,8 +80,8 @@ Session C: last accessed 5 min ago
 Cache full, new session arrives
 ```
 
-- **Which eviction policy makes sense?** _[LRU/LFU - Why?]_
-- **Which session gets evicted?** _[Fill in]_
+- **Which eviction policy makes sense?** <span class="fill-in">[LRU/LFU - Why?]</span>
+- **Which session gets evicted?** <span class="fill-in">[Fill in]</span>
 
 **Scenario 3:** Write policies
 ```
@@ -85,15 +92,15 @@ Write-Back: Cache takes 1ms, DB flush happens later
 
 - **Write-Through total latency:** _____ms
 - **Write-Back perceived latency:** _____ms
-- **If DB fails during Write-Back flush, what happens?** _[Fill in]_
-- **Which is safer?** _[Fill in - Why?]_
+- **If DB fails during Write-Back flush, what happens?** <span class="fill-in">[Fill in]</span>
+- **Which is safer?** <span class="fill-in">[Fill in - Why?]</span>
 
 ### Trade-off Quiz
 
 **Question 1:** When would direct database queries be BETTER than caching?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question 2:** What's the MAIN benefit of caching?
 
@@ -102,12 +109,15 @@ Write-Back: Cache takes 1ms, DB flush happens later
 - [ ] Saves money
 - [ ] All of the above
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 **Question 3:** Cache hit rate drops from 90% to 50%. How does this affect performance?
 
-- Your calculation: _[Fill in]_
-- Verified impact: _[Fill in after implementation]_
+- Your calculation: <span class="fill-in">[Fill in]</span>
+- Verified impact: <span class="fill-in">[Fill in after implementation]</span>
+
+
+</div>
 
 ---
 
@@ -224,10 +234,11 @@ public static void benchmarkCached() {
 | **DB cost (estimate)** | $100/day | $2/day | **$98/day savings** |
 
 **Your calculation:** For 10,000 requests with 90% cache hit rate:
-- Cache hits: 10,000 × 0.9 = _____ requests × 1ms = _____ms
-- Cache misses: 10,000 × 0.1 = _____ requests × 50ms = _____ms
-- Total time: _____ + _____ = _____ms
-- Speedup vs direct DB: _____ times faster
+
+- Cache hits: 10,000 × 0.9 = <span class="fill-in">_____</span> requests × 1ms = <span class="fill-in">_____</span>ms
+- Cache misses: 10,000 × 0.1 = <span class="fill-in">_____</span> requests × 50ms = <span class="fill-in">_____</span>ms
+- Total time: <span class="fill-in">_____</span> + _____ = <span class="fill-in">_____</span>ms
+- Speedup vs direct DB: <span class="fill-in">_____</span> times faster
 
 #### Hit Rate Analysis
 
@@ -237,6 +248,7 @@ public static void benchmarkCached() {
 Cache Hit Rate Analysis (1000 requests)
 
 Hit Rate | Cache Hits | DB Queries | Total Time | Speedup
+
 ---------|------------|------------|------------|--------
    0%    |     0      |    1000    |  50,000ms  |   1x
   50%    |   500      |     500    |  25,500ms  |   2x
@@ -251,9 +263,13 @@ Hit Rate | Cache Hits | DB Queries | Total Time | Speedup
 
 **After implementing, explain in your own words:**
 
-- _[Why does caching provide such dramatic speedup?]_
-- _[What happens when hit rate drops below 50%?]_
-- _[When might caching not be worth it?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does caching provide such dramatic speedup?]</span>
+- <span class="fill-in">[What happens when hit rate drops below 50%?]</span>
+- <span class="fill-in">[When might caching not be worth it?]</span>
+
+</div>
 
 #### Write Policy Comparison
 
@@ -302,8 +318,9 @@ public void updateUserProfile_WriteBack(String userId, String newName) {
 | **Speedup** | **51x faster** | - | Trade-off | Trade-off |
 
 **Your analysis:** When would you choose each?
-- Write-Through: _[Fill in scenarios]_
-- Write-Back: _[Fill in scenarios]_
+
+- Write-Through: <span class="fill-in">[Fill in scenarios]</span>
+- Write-Back: <span class="fill-in">[Fill in scenarios]</span>
 
 ---
 
@@ -945,11 +962,11 @@ public class StampedeLRUCache<K, V> {
 
 **Your debugging:**
 
-- **Bug location:** _[Which lines?]_
-- **Bug explanation:** _[What happens with concurrent requests?]_
-- **Bug impact:** _[How does this affect database?]_
-- **Fix approach 1 (Locking):** _[How to fix with synchronized?]_
-- **Fix approach 2 (Better):** _[How to fix with double-checked locking or other pattern?]_
+- **Bug location:** <span class="fill-in">[Which lines?]</span>
+- **Bug explanation:** <span class="fill-in">[What happens with concurrent requests?]</span>
+- **Bug impact:** <span class="fill-in">[How does this affect database?]</span>
+- **Fix approach 1 (Locking):** <span class="fill-in">[How to fix with synchronized?]</span>
+- **Fix approach 2 (Better):** <span class="fill-in">[How to fix with double-checked locking or other pattern?]</span>
 
 **Test case to expose the bug:**
 ```java
@@ -959,7 +976,7 @@ for (int i = 0; i < 1000; i++) {
     executor.submit(() -> cache.get("popular-item"));
 }
 // Expected: 1 DB query
-// Actual with bug: _____ DB queries
+// Actual with bug: <span class="fill-in">_____</span> DB queries
 ```
 
 <details markdown>
@@ -1050,16 +1067,18 @@ public class StaleWriteBackCache<K, V> {
 
 **Your debugging:**
 
-- **Bug:** _[What's wrong with the get() logic?]_
+- **Bug:** <span class="fill-in">[What's wrong with the get() logic?]</span>
 - **Scenario that breaks:**
 ```
+
 1. put("key1", "value1") - goes to cache and dirty
 2. cache evicts key1 (capacity full)
 3. get("key1") - what do you get?
 ```
+
 - **Expected:** "value1" (from dirty entries)
-- **Actual:** _[What happens?]_
-- **Fix:** _[Correct the order of checks]_
+- **Actual:** <span class="fill-in">[What happens?]</span>
+- **Fix:** <span class="fill-in">[Correct the order of checks]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1140,17 +1159,19 @@ public class TTLCache<K, V> {
 
 **Your debugging:**
 
-- **Bug:** _[What causes thundering herd?]_
+- **Bug:** <span class="fill-in">[What causes thundering herd?]</span>
 - **Scenario:**
 ```
+
 10:00:00 - Cache is populated with 1000 items, all expire at 10:05:00
 10:05:00 - First request arrives
 What happens?
 ```
+
 - **Expected:** Smooth database load
-- **Actual:** _[What happens to database?]_
-- **Fix approach 1:** _[Add jitter to TTL]_
-- **Fix approach 2:** _[Implement probabilistic early expiration]_
+- **Actual:** <span class="fill-in">[What happens to database?]</span>
+- **Fix approach 1:** <span class="fill-in">[Add jitter to TTL]</span>
+- **Fix approach 2:** <span class="fill-in">[Implement probabilistic early expiration]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1269,8 +1290,8 @@ public class BuggyLFUCache<K, V> {
 
 **Your debugging:**
 
-- **Bug 1:** _[What happens to minFreq?]_
-- **Bug 2:** _[What about empty frequency lists?]_
+- **Bug 1:** <span class="fill-in">[What happens to minFreq?]</span>
+- **Bug 2:** <span class="fill-in">[What about empty frequency lists?]</span>
 - **Test case:**
 ```
 Cache capacity = 2
@@ -1279,7 +1300,8 @@ get("A")    - freq=2
 put("B", 2) - freq=1, minFreq should be?
 // At this point, what is minFreq? What should it be?
 ```
-- **Fix:** _[Complete the updateFrequency method]_
+
+- **Fix:** <span class="fill-in">[Complete the updateFrequency method]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1364,7 +1386,7 @@ public class InvalidationCache<K, V> {
 
 **Your debugging:**
 
-- **Bug:** _[What race condition exists?]_
+- **Bug:** <span class="fill-in">[What race condition exists?]</span>
 - **Scenario that fails:**
 ```
 T0: cache contains key="user:1" value="Alice"
@@ -1375,9 +1397,10 @@ T2: Thread 2 calls get("user:1")
 T3: Thread 1 invalidates cache
     - Too late! Thread 2 already returned stale data
 ```
-- **Fix approach 1:** _[Invalidate before write]_
-- **Fix approach 2:** _[Use versioning]_
-- **Fix approach 3:** _[Use cache-aside with write-through]_
+
+- **Fix approach 1:** <span class="fill-in">[Invalidate before write]</span>
+- **Fix approach 2:** <span class="fill-in">[Use versioning]</span>
+- **Fix approach 3:** <span class="fill-in">[Use cache-aside with write-through]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1461,9 +1484,9 @@ After finding and fixing all bugs:
 
 **Defensive caching patterns to remember:**
 
-- _[Fill in patterns you learned]_
-- _[Fill in]_
-- _[Fill in]_
+- <span class="fill-in">[Fill in patterns you learned]</span>
+- <span class="fill-in">[Fill in]</span>
+- <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1475,33 +1498,33 @@ After finding and fixing all bugs:
 
 **LRU Cache:**
 
-- When to use: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
-- Example scenarios: _[Fill in]_
+- When to use: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
+- Example scenarios: <span class="fill-in">[Fill in]</span>
 
 **LFU Cache:**
 
-- When to use: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
-- Example scenarios: _[Fill in]_
+- When to use: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
+- Example scenarios: <span class="fill-in">[Fill in]</span>
 
 ### 2. When to use Write-Through vs Write-Back?
 
 **Write-Through:**
 
-- When to use: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
-- Example scenarios: _[Fill in]_
+- When to use: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
+- Example scenarios: <span class="fill-in">[Fill in]</span>
 
 **Write-Back:**
 
-- When to use: _[Fill in]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
-- Example scenarios: _[Fill in]_
+- When to use: <span class="fill-in">[Fill in]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
+- Example scenarios: <span class="fill-in">[Fill in]</span>
 
 ### 3. Your Decision Tree
 
@@ -1528,11 +1551,11 @@ Should I use caching?
 
 ### The "Kill Switch" - Don't use caching when:
 
-1. _[When does caching hurt more than help?]_
-2. _[Fill in after understanding trade-offs]_
-3. _[Fill in after practice]_
-4. _[Fill in]_
-5. _[Fill in]_
+1. <span class="fill-in">[When does caching hurt more than help?]</span>
+2. <span class="fill-in">[Fill in after understanding trade-offs]</span>
+3. <span class="fill-in">[Fill in after practice]</span>
+4. <span class="fill-in">[Fill in]</span>
+5. <span class="fill-in">[Fill in]</span>
 
 ### The Rule of Three: Alternatives
 
@@ -1540,21 +1563,21 @@ For each scenario, compare three approaches:
 
 **Option 1: Caching**
 
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
-- Use when: _[Fill in]_
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
+- Use when: <span class="fill-in">[Fill in]</span>
 
 **Option 2: Database Indexing**
 
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
-- Use when: _[Fill in]_
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
+- Use when: <span class="fill-in">[Fill in]</span>
 
 **Option 3: Read Replicas**
 
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
-- Use when: _[Fill in]_
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
+- Use when: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1570,11 +1593,11 @@ For each scenario, compare three approaches:
 
 **Your cache design:**
 
-- Eviction policy: _[LRU or LFU? Why?]_
-- Write policy: _[Write-Through or Write-Back? Why?]_
-- Capacity: _[How much?]_
-- TTL: _[Time-to-live strategy?]_
-- Invalidation: _[When to invalidate?]_
+- Eviction policy: <span class="fill-in">[LRU or LFU? Why?]</span>
+- Write policy: <span class="fill-in">[Write-Through or Write-Back? Why?]</span>
+- Capacity: <span class="fill-in">[How much?]</span>
+- TTL: <span class="fill-in">[Time-to-live strategy?]</span>
+- Invalidation: <span class="fill-in">[When to invalidate?]</span>
 
 ### Scenario 2: Social Media Feed
 
@@ -1587,11 +1610,11 @@ For each scenario, compare three approaches:
 
 **Your cache design:**
 
-- Eviction policy: _[Fill in]_
-- Write policy: _[Fill in]_
-- Cache key structure: _[What to cache?]_
-- Invalidation strategy: _[Fill in]_
-- Capacity planning: _[Fill in]_
+- Eviction policy: <span class="fill-in">[Fill in]</span>
+- Write policy: <span class="fill-in">[Fill in]</span>
+- Cache key structure: <span class="fill-in">[What to cache?]</span>
+- Invalidation strategy: <span class="fill-in">[Fill in]</span>
+- Capacity planning: <span class="fill-in">[Fill in]</span>
 
 ### Scenario 3: Session Store
 
@@ -1604,10 +1627,10 @@ For each scenario, compare three approaches:
 
 **Your cache design:**
 
-- Eviction policy: _[Fill in]_
-- Write policy: _[Fill in]_
-- TTL strategy: _[Fill in]_
-- Persistence: _[How to ensure durability?]_
+- Eviction policy: <span class="fill-in">[Fill in]</span>
+- Write policy: <span class="fill-in">[Fill in]</span>
+- TTL strategy: <span class="fill-in">[Fill in]</span>
+- Persistence: <span class="fill-in">[How to ensure durability?]</span>
 
 ### LeetCode Problem
 
@@ -1617,9 +1640,9 @@ Design and implement a data structure for Least Recently Used (LRU) cache.
 
 **Your approach:**
 
-1. _[Data structures needed?]_
-2. _[How to achieve O(1) for both get and put?]_
-3. _[Edge cases to handle?]_
+1. <span class="fill-in">[Data structures needed?]</span>
+2. <span class="fill-in">[How to achieve O(1) for both get and put?]</span>
+3. <span class="fill-in">[Edge cases to handle?]</span>
 
 ---
 
@@ -1666,13 +1689,13 @@ Before moving to the next topic:
 
 > "Caching is a technique where..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by a non-technical person? _[Yes/No]_
-- Did you explain the trade-offs (not just benefits)? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
+- Did you explain the trade-offs (not just benefits)? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -1690,19 +1713,19 @@ Cache: [Empty]
 
 After put("A", 1):
 Most Recent → Least Recent
-[Your drawing: ________________]
+[Your drawing: <span class="fill-in">________________</span>]
 
 After put("B", 2):
-[Your drawing: ________________]
+[Your drawing: <span class="fill-in">________________</span>]
 
 After put("C", 3):
-[Your drawing: ________________]
+[Your drawing: <span class="fill-in">________________</span>]
 
 After get("A"):  // Accessing A makes it most recent
-[Your drawing: ________________]
+[Your drawing: <span class="fill-in">________________</span>]
 
 After put("D", 4):  // Cache full, evict LRU
-[Your drawing: ________________]
+[Your drawing: <span class="fill-in">________________</span>]
 Which item was evicted? _____
 Why? _____________________
 ```
@@ -1722,12 +1745,12 @@ Why? _____________________
 
 | Scenario | Best Cache Policy | Write Strategy | Why? |
 |----------|------------------|----------------|------|
-| User sessions (timeout-based) | _[LRU/LFU?]_ | _[Write-Through/Write-Back?]_ | _[Explain]_ |
-| Video streaming (popular content) | _[LRU/LFU?]_ | _[Read-only/Write?]_ | _[Explain]_ |
-| Shopping cart (consistency critical) | _[LRU/LFU?]_ | _[Write-Through/Write-Back?]_ | _[Explain]_ |
-| DNS resolution (hot domains) | _[LRU/LFU?]_ | _[TTL strategy?]_ | _[Explain]_ |
-| Real-time analytics (write-heavy) | _[Cache at all?]_ | _[Write-Back/No cache?]_ | _[Explain]_ |
-| Product catalog (read-heavy) | _[LRU/LFU?]_ | _[Write-Through/Write-Back?]_ | _[Explain]_ |
+| User sessions (timeout-based) | <span class="fill-in">[LRU/LFU?]</span> | <span class="fill-in">[Write-Through/Write-Back?]</span> | <span class="fill-in">[Explain]</span> |
+| Video streaming (popular content) | <span class="fill-in">[LRU/LFU?]</span> | <span class="fill-in">[Read-only/Write?]</span> | <span class="fill-in">[Explain]</span> |
+| Shopping cart (consistency critical) | <span class="fill-in">[LRU/LFU?]</span> | <span class="fill-in">[Write-Through/Write-Back?]</span> | <span class="fill-in">[Explain]</span> |
+| DNS resolution (hot domains) | <span class="fill-in">[LRU/LFU?]</span> | <span class="fill-in">[TTL strategy?]</span> | <span class="fill-in">[Explain]</span> |
+| Real-time analytics (write-heavy) | <span class="fill-in">[Cache at all?]</span> | <span class="fill-in">[Write-Back/No cache?]</span> | <span class="fill-in">[Explain]</span> |
+| Product catalog (read-heavy) | <span class="fill-in">[LRU/LFU?]</span> | <span class="fill-in">[Write-Through/Write-Back?]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1741,26 +1764,27 @@ If you scored below 5/6, review the decision framework and try again.
 
 | Operation | LRU Cache | LFU Cache | Direct DB | Why? |
 |-----------|-----------|-----------|-----------|------|
-| Get (hit) | O(?) | O(?) | O(?) | _[Explain]_ |
-| Get (miss) | O(?) | O(?) | O(?) | _[Explain]_ |
-| Put (no eviction) | O(?) | O(?) | O(?) | _[Explain]_ |
-| Put (with eviction) | O(?) | O(?) | O(?) | _[Explain]_ |
+| Get (hit) | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Get (miss) | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Put (no eviction) | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Put (with eviction) | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why is LRU O(1) but requires two data structures?
 
-Your answer: _[Fill in - explain HashMap + Doubly Linked List necessity]_
+Your answer: <span class="fill-in">[Fill in - explain HashMap + Doubly Linked List necessity]</span>
 
 **Cache hit rate impact:**
 
 - If hit rate = 90%, average latency = ?
 - If hit rate drops to 50%, average latency = ?
-- Calculate: _[Show your work]_
+- Calculate: <span class="fill-in">[Show your work]</span>
 
 ---
 
 ### Gate 5: Trade-off Decision
 
 **Scenario:** You're building a news feed API with these requirements:
+
 - 10M users
 - Each user has ~500 followers
 - Average 100 new posts/sec across all users
@@ -1771,8 +1795,8 @@ Your answer: _[Fill in - explain HashMap + Doubly Linked List necessity]_
 
 **1. Should you cache at all?**
 
-- Decision: _[Yes/No]_
-- Reasoning: _[Fill in - consider read/write ratio, data size, freshness]_
+- Decision: <span class="fill-in">[Yes/No]</span>
+- Reasoning: <span class="fill-in">[Fill in - consider read/write ratio, data size, freshness]</span>
 
 **2. What should you cache?**
 
@@ -1780,34 +1804,34 @@ Your answer: _[Fill in - explain HashMap + Doubly Linked List necessity]_
 - [ ] Individual posts
 - [ ] Pre-computed feeds
 - [ ] Follower lists
-- Explain choices: _[Fill in]_
+- Explain choices: <span class="fill-in">[Fill in]</span>
 
 **3. Eviction policy:**
 
-- Choice: _[LRU/LFU/TTL/Hybrid]_
-- Reasoning: _[Fill in - consider access pattern]_
+- Choice: <span class="fill-in">[LRU/LFU/TTL/Hybrid]</span>
+- Reasoning: <span class="fill-in">[Fill in - consider access pattern]</span>
 
 **4. Write policy:**
 
-- Choice: _[Write-Through/Write-Back/Cache-Aside]_
-- Reasoning: _[Fill in - consider consistency requirements]_
+- Choice: <span class="fill-in">[Write-Through/Write-Back/Cache-Aside]</span>
+- Reasoning: <span class="fill-in">[Fill in - consider consistency requirements]</span>
 
 **5. Cache capacity calculation:**
 
 - Average feed size: 100 posts × 1KB = 100KB
 - Active users: 10M × 20% (Pareto) = 2M
-- Cache size needed: _[Calculate]_
-- Per-server capacity (if 10 servers): _[Calculate]_
+- Cache size needed: <span class="fill-in">[Calculate]</span>
+- Per-server capacity (if 10 servers): <span class="fill-in">[Calculate]</span>
 
 **6. Invalidation strategy:**
 
-- When new post created: _[Invalidate? Update? Ignore?]_
-- When user unfollows: _[What to do?]_
-- Strategy: _[Fill in your approach]_
+- When new post created: <span class="fill-in">[Invalidate? Update? Ignore?]</span>
+- When user unfollows: <span class="fill-in">[What to do?]</span>
+- Strategy: <span class="fill-in">[Fill in your approach]</span>
 
 **What would make you change your decision?**
 
-- _[Fill in - what constraints would flip your choices?]_
+- <span class="fill-in">[Fill in - what constraints would flip your choices?]</span>
 
 ---
 
@@ -1891,10 +1915,10 @@ public class BuggyCache<K, V> {
 
 **Your analysis:**
 
-- **Bug identified:** _[What's wrong?]_
-- **Why it fails:** _[Explain the issue]_
-- **What gets evicted:** _[Random key or LRU?]_
-- **Fix:** _[How to make it truly LRU?]_
+- **Bug identified:** <span class="fill-in">[What's wrong?]</span>
+- **Why it fails:** <span class="fill-in">[Explain the issue]</span>
+- **What gets evicted:** <span class="fill-in">[Random key or LRU?]</span>
+- **Fix:** <span class="fill-in">[How to make it truly LRU?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1918,6 +1942,7 @@ private final Map<K, V> cache = new LinkedHashMap<>(capacity, 0.75f, true) {
 ### Gate 8: Performance Analysis
 
 **Scenario:** Your cache metrics show:
+
 - Hit rate: 60%
 - Average cache latency: 1ms
 - Average DB latency: 50ms
@@ -1926,23 +1951,23 @@ private final Map<K, V> cache = new LinkedHashMap<>(capacity, 0.75f, true) {
 **Calculate:**
 
 1. **Current average latency:**
-    - Calculation: _[Show work]_
-    - Result: _____ms
+    - Calculation: <span class="fill-in">[Show work]</span>
+    - Result: <span class="fill-in">_____</span>ms
 
 2. **Database queries/sec:**
-    - Calculation: _[Show work]_
-    - Result: _____
+    - Calculation: <span class="fill-in">[Show work]</span>
+    - Result: <span class="fill-in">_____</span>
 
 3. **If you improve hit rate to 90%:**
-    - New average latency: _____ms
-    - Improvement: _____x faster
-    - DB queries/sec reduced to: _____
+    - New average latency: <span class="fill-in">_____</span>ms
+    - Improvement: <span class="fill-in">_____</span>x faster
+    - DB queries/sec reduced to: <span class="fill-in">_____</span>
 
 4. **ROI analysis:**
     - Current DB cost: $1000/day
     - With 90% hit rate: $___/day
     - Savings: $___/day
-    - Is cache worth maintaining? _[Your decision]_
+    - Is cache worth maintaining? <span class="fill-in">[Your decision]</span>
 
 ---
 
@@ -1956,19 +1981,19 @@ Your explanation:
 
 > "The most important thing to understand about caching is..."
 >
-> _[Fill in - what's the ONE critical insight?]_
+> <span class="fill-in">[Fill in - what's the ONE critical insight?]</span>
 
 **Common pitfalls to warn them about:**
 
-1. _[Most common mistake?]_
-2. _[Second most common?]_
-3. _[Third most common?]_
+1. <span class="fill-in">[Most common mistake?]</span>
+2. <span class="fill-in">[Second most common?]</span>
+3. <span class="fill-in">[Third most common?]</span>
 
 **When NOT to use caching:**
 
-1. _[Scenario where caching hurts]_
-2. _[Another scenario]_
-3. _[Another scenario]_
+1. <span class="fill-in">[Scenario where caching hurts]</span>
+2. <span class="fill-in">[Another scenario]</span>
+3. <span class="fill-in">[Another scenario]</span>
 
 ---
 
@@ -1989,10 +2014,10 @@ Your explanation:
 
 **Real-world application:**
 
-- Have you used caching in a project? _[Yes/No]_
+- Have you used caching in a project? <span class="fill-in">[Yes/No]</span>
 - If yes, what was the hit rate? _____
-- What policy did you use? _[LRU/LFU/TTL/Other]_
-- What would you do differently now? _[Fill in]_
+- What policy did you use? <span class="fill-in">[LRU/LFU/TTL/Other]</span>
+- What would you do differently now? <span class="fill-in">[Fill in]</span>
 
 **If score < 8:** Review the sections where you struggled, then retry this gate.
 

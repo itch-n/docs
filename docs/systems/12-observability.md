@@ -6,80 +6,87 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing observability patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is observability in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **What are the three pillars of observability?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy for metrics:**
     - Example: "Metrics are like a car's dashboard showing speed, fuel, temperature..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **Real-world analogy for logs:**
     - Example: "Logs are like a detailed diary of everything that happened..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 5. **Real-world analogy for traces:**
     - Example: "Traces are like following a package through the postal system..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 6. **When should you add metrics vs logs vs traces?**
-    - Your answer: _[Fill in after practice]_
+    - Your answer: <span class="fill-in">[Fill in after practice]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Storing all request details in memory:**
-    - Space complexity: _[Your guess: O(?)]_
-    - Verified after learning: _[Actual: O(?)]_
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
 
 2. **Recording a metric counter increment:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity: _[Your guess: O(?)]_
-    - Verified: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **Cost calculation:**
-    - If you log every request at 10K req/sec = _____ logs/day
-    - If you sample traces at 1% = _____ traces/day
-    - Storage reduction factor: _____ times less
+    - If you log every request at 10K req/sec = <span class="fill-in">_____</span> logs/day
+    - If you sample traces at 1% = <span class="fill-in">_____</span> traces/day
+    - Storage reduction factor: <span class="fill-in">_____</span> times less
 
 ### Scenario Predictions
 
 **Scenario 1:** Your API has 99.5% success rate with a 99.9% SLO
 
-- **Is this within SLO?** _[Yes/No - Why?]_
-- **Error budget remaining:** _[Calculate]_
-- **Should you alert?** _[Yes/No - Why?]_
-- **How many more failures can you have?** _[Fill in]_
+- **Is this within SLO?** <span class="fill-in">[Yes/No - Why?]</span>
+- **Error budget remaining:** <span class="fill-in">[Calculate]</span>
+- **Should you alert?** <span class="fill-in">[Yes/No - Why?]</span>
+- **How many more failures can you have?** <span class="fill-in">[Fill in]</span>
 
 **Scenario 2:** Users report "slow checkout" but avg latency looks fine
 
-- **Which observability tool helps most?** _[Metrics/Logs/Traces - Why?]_
-- **What metric might you be missing?** _[Fill in]_
-- **What percentile should you check?** _[P50/P95/P99 - Why?]_
+- **Which observability tool helps most?** <span class="fill-in">[Metrics/Logs/Traces - Why?]</span>
+- **What metric might you be missing?** <span class="fill-in">[Fill in]</span>
+- **What percentile should you check?** <span class="fill-in">[P50/P95/P99 - Why?]</span>
 
 **Scenario 3:** Metric label has user_id with 1M unique values
 
-- **Is this a good metric label?** _[Yes/No - Why?]_
-- **What problem does this cause?** _[Fill in]_
-- **What should you do instead?** _[Fill in]_
+- **Is this a good metric label?** <span class="fill-in">[Yes/No - Why?]</span>
+- **What problem does this cause?** <span class="fill-in">[Fill in]</span>
+- **What should you do instead?** <span class="fill-in">[Fill in]</span>
 
 ### Trade-off Quiz
 
 **Question:** When would structured logs be BETTER than traces for debugging?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** What's the MAIN difference between metrics and logs?
 
@@ -88,12 +95,15 @@
 - [ ] Metrics are faster, logs are slower
 - [ ] Metrics are free, logs cost money
 
-Verify after implementation: _[Which one(s)?]_
+Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 **Question:** Why sample traces instead of capturing 100%?
 
-- Your answer: _[Fill in reasoning]_
-- Verified: _[Fill in after learning about performance impact]_
+- Your answer: <span class="fill-in">[Fill in reasoning]</span>
+- Verified: <span class="fill-in">[Fill in after learning about performance impact]</span>
+
+
+</div>
 
 ---
 
@@ -224,9 +234,11 @@ public class CheckoutService {
 **Key insight to understand:**
 
 Without observability, debugging is like:
+
 - Finding a needle in a haystack... blindfolded... in the dark
 
 With observability, you can:
+
 1. **Metrics:** Quickly identify that there IS a problem (P99 spike)
 2. **Logs:** Find specific failing requests (search by error, user_id, trace_id)
 3. **Traces:** See exactly where time is spent (payment span = 2.9s of 3s total)
@@ -251,9 +263,13 @@ With observability:
 
 **After implementing, explain in your own words:**
 
-- _[How do the three pillars work together?]_
-- _[What questions can you answer with each type?]_
-- _[Why is context propagation (trace_id) important?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[How do the three pillars work together?]</span>
+- <span class="fill-in">[What questions can you answer with each type?]</span>
+- <span class="fill-in">[Why is context propagation (trace_id) important?]</span>
+
+</div>
 
 ---
 
@@ -1818,22 +1834,23 @@ public class EndpointMetrics {
 
 **Your debugging:**
 
-- **Bug location:** _[Which line?]_
-- **Bug explanation:** _[What's the problem?]_
-- **Bug fix:** _[How should metrics be structured?]_
-- **Impact:** _[Why is this a problem in production?]_
+- **Bug location:** <span class="fill-in">[Which line?]</span>
+- **Bug explanation:** <span class="fill-in">[What's the problem?]</span>
+- **Bug fix:** <span class="fill-in">[How should metrics be structured?]</span>
+- **Impact:** <span class="fill-in">[Why is this a problem in production?]</span>
 
 **Test scenario:**
 
 - 100 requests to `/api/users` (GET)
 - 50 requests to `/api/orders` (POST)
 - 10 requests to `/api/users` (DELETE)
-- **What can you query?** _[Fill in what you can and can't learn]_
+- **What can you query?** <span class="fill-in">[Fill in what you can and can't learn]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
 
 **Bug:** No labels! All requests go into a single counter, so you can't distinguish:
+
 - Which endpoint is getting traffic
 - Which HTTP method is used
 - Which status codes are returned
@@ -1852,6 +1869,7 @@ public void recordRequest(String endpoint, String method, int statusCode) {
 ```
 
 **Impact:** Without labels, you can't:
+
 - Alert on specific endpoint errors
 - Identify which API is slow
 - Track SLOs per endpoint
@@ -1884,21 +1902,22 @@ public class CacheMetrics {
 
 **Your debugging:**
 
-- **Bug:** _[What's the high-cardinality problem?]_
-- **Memory impact:** _[How much memory with 1M users?]_
-- **Query impact:** _[Why do queries become slow?]_
-- **Fix:** _[What should you track instead?]_
+- **Bug:** <span class="fill-in">[What's the high-cardinality problem?]</span>
+- **Memory impact:** <span class="fill-in">[How much memory with 1M users?]</span>
+- **Query impact:** <span class="fill-in">[Why do queries become slow?]</span>
+- **Fix:** <span class="fill-in">[What should you track instead?]</span>
 
 **Cardinality calculation:**
 
 - If 1M users, you create _____ unique time series
-- If each series uses 10KB of memory = _____ GB total
+- If each series uses 10KB of memory = <span class="fill-in">_____</span> GB total
 - Query time grows from 10ms to _____ seconds
 
 <details markdown>
 <summary>Click to verify your answers</summary>
 
 **Bug:** `user_id` is a high-cardinality label (potentially millions of unique values). This causes:
+
 - **Memory explosion:** Each unique label combination = new time series
 - **Slow queries:** Database must scan millions of series
 - **Storage costs:** Unbounded growth
@@ -1958,22 +1977,23 @@ public class LatencyHistogram {
 
 **Your debugging:**
 
-- **Performance bug:** _[What operation is expensive?]_
-- **Complexity:** _[What's the time complexity?]_
-- **With 1M observations:** _[How long does getP99 take?]_
-- **Fix:** _[What data structure should you use?]_
+- **Performance bug:** <span class="fill-in">[What operation is expensive?]</span>
+- **Complexity:** <span class="fill-in">[What's the time complexity?]</span>
+- **With 1M observations:** <span class="fill-in">[How long does getP99 take?]</span>
+- **Fix:** <span class="fill-in">[What data structure should you use?]</span>
 
 **Performance impact:**
 
 - 1M observations in list
 - Calling getP99 100 times per second
-- Current: _____ ms per call
-- Fixed: _____ ms per call
+- Current: <span class="fill-in">_____</span> ms per call
+- Fixed: <span class="fill-in">_____</span> ms per call
 
 <details markdown>
 <summary>Click to verify your answers</summary>
 
 **Bug:** Sorting entire list on every query is O(n log n). With 1M observations:
+
 - 1M * log(1M) ≈ 20M operations
 - At 100 calls/sec = 2 billion operations/sec!
 
@@ -2045,22 +2065,23 @@ public Span startSpan(String operation) {
 
 **Your debugging:**
 
-- **Bug:** _[What's inconsistent about this sampling?]_
-- **Impact:** _[What happens to child spans?]_
-- **Trace visualization:** _[Why are traces incomplete?]_
-- **Fix:** _[How to ensure consistent sampling?]_
+- **Bug:** <span class="fill-in">[What's inconsistent about this sampling?]</span>
+- **Impact:** <span class="fill-in">[What happens to child spans?]</span>
+- **Trace visualization:** <span class="fill-in">[Why are traces incomplete?]</span>
+- **Fix:** <span class="fill-in">[How to ensure consistent sampling?]</span>
 
 **Test scenario:**
 
 - Parent span: API request (sampled = true)
 - Child span: Database query (sampled = ???)
 - Grandchild span: Cache lookup (sampled = ???)
-- **Problem:** _[What's broken about the trace?]_
+- **Problem:** <span class="fill-in">[What's broken about the trace?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
 
 **Bug:** Each span makes independent sampling decision! This causes:
+
 - Parent sampled but children dropped → incomplete traces
 - Children sampled but parent dropped → orphaned spans
 - Can't reconstruct full request flow
@@ -2127,15 +2148,16 @@ public class OrderService {
 
 **Your debugging:**
 
-- **Bug:** _[What's missing from every log?]_
-- **Debugging scenario:** _[How do you find logs for order #12345?]_
-- **Correlation:** _[How do you trace a request across services?]_
-- **Fix:** _[What fields should every log have?]_
+- **Bug:** <span class="fill-in">[What's missing from every log?]</span>
+- **Debugging scenario:** <span class="fill-in">[How do you find logs for order #12345?]</span>
+- **Correlation:** <span class="fill-in">[How do you trace a request across services?]</span>
+- **Fix:** <span class="fill-in">[What fields should every log have?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
 
 **Bug:** No context! Missing:
+
 - `order_id` - can't find logs for specific order
 - `trace_id` - can't correlate across services
 - `user_id` - can't find user's journey
@@ -2189,9 +2211,9 @@ After finding and fixing all bugs:
 
 **Common mistakes you discovered:**
 
-1. _[List the patterns you noticed]_
-2. _[Fill in]_
-3. _[Fill in]_
+1. <span class="fill-in">[List the patterns you noticed]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -2205,58 +2227,58 @@ Answer after implementation:
 
 **Use Metrics when:**
 
-- Aggregated data: _[Count of requests, average latency]_
-- Alerting: _[Need to trigger alerts on thresholds]_
-- Dashboards: _[Time-series graphs and trends]_
-- Low overhead: _[Constant memory usage]_
+- Aggregated data: <span class="fill-in">[Count of requests, average latency]</span>
+- Alerting: <span class="fill-in">[Need to trigger alerts on thresholds]</span>
+- Dashboards: <span class="fill-in">[Time-series graphs and trends]</span>
+- Low overhead: <span class="fill-in">[Constant memory usage]</span>
 
 **Use Logs when:**
 
-- Debugging: _[Need full context of what happened]_
-- Audit trail: _[Who did what and when]_
-- Irregular events: _[Errors, exceptions, business events]_
-- Flexible queries: _[Search by any field]_
+- Debugging: <span class="fill-in">[Need full context of what happened]</span>
+- Audit trail: <span class="fill-in">[Who did what and when]</span>
+- Irregular events: <span class="fill-in">[Errors, exceptions, business events]</span>
+- Flexible queries: <span class="fill-in">[Search by any field]</span>
 
 **Use Traces when:**
 
-- Distributed systems: _[Request flows across services]_
-- Performance analysis: _[Find bottlenecks in request path]_
-- Dependencies: _[Understand service relationships]_
-- Latency debugging: _[Which service is slow]_
+- Distributed systems: <span class="fill-in">[Request flows across services]</span>
+- Performance analysis: <span class="fill-in">[Find bottlenecks in request path]</span>
+- Dependencies: <span class="fill-in">[Understand service relationships]</span>
+- Latency debugging: <span class="fill-in">[Which service is slow]</span>
 
 ### Question 2: When to add observability?
 
 **During development:**
 
-- Add metrics: _[Core business operations, API endpoints]_
-- Add logs: _[Error paths, state changes, important decisions]_
-- Add traces: _[Service boundaries, external calls]_
+- Add metrics: <span class="fill-in">[Core business operations, API endpoints]</span>
+- Add logs: <span class="fill-in">[Error paths, state changes, important decisions]</span>
+- Add traces: <span class="fill-in">[Service boundaries, external calls]</span>
 
 **During incidents:**
 
-- Add metrics: _[Missing visibility into problem area]_
-- Add logs: _[Need more context for debugging]_
-- Add traces: _[Don't understand request flow]_
+- Add metrics: <span class="fill-in">[Missing visibility into problem area]</span>
+- Add logs: <span class="fill-in">[Need more context for debugging]</span>
+- Add traces: <span class="fill-in">[Don't understand request flow]</span>
 
 ### Question 3: How much is too much?
 
 **Metrics:**
 
-- Too few: _[Can't understand system health]_
-- Too many: _[Storage costs, query performance]_
-- Sweet spot: _[RED/USE for each service, key business metrics]_
+- Too few: <span class="fill-in">[Can't understand system health]</span>
+- Too many: <span class="fill-in">[Storage costs, query performance]</span>
+- Sweet spot: <span class="fill-in">[RED/USE for each service, key business metrics]</span>
 
 **Logs:**
 
-- Too few: _[Can't debug issues]_
-- Too many: _[Storage costs, signal-to-noise ratio]_
-- Sweet spot: _[WARN+ always, INFO for business events, DEBUG on-demand]_
+- Too few: <span class="fill-in">[Can't debug issues]</span>
+- Too many: <span class="fill-in">[Storage costs, signal-to-noise ratio]</span>
+- Sweet spot: <span class="fill-in">[WARN+ always, INFO for business events, DEBUG on-demand]</span>
 
 **Traces:**
 
-- Too few: _[Can't understand distributed requests]_
-- Too many: _[Storage costs, performance impact]_
-- Sweet spot: _[Sample based on traffic volume (1-10%)]_
+- Too few: <span class="fill-in">[Can't understand distributed requests]</span>
+- Too many: <span class="fill-in">[Storage costs, performance impact]</span>
+- Sweet spot: <span class="fill-in">[Sample based on traffic volume (1-10%)]</span>
 
 ### Your Decision Tree
 
@@ -2293,33 +2315,33 @@ Observability Pattern Selection
 
 **Don't do this:**
 
-1. **Log everything at DEBUG level in production** - _[Massive costs, poor signal-to-noise]_
-2. **No sampling on high-traffic traces** - _[Storage explosion, performance impact]_
-3. **High-cardinality metric labels** - _[Metric explosion, query slowness]_
-4. **No retention policy** - _[Infinite storage costs]_
-5. **Logging PII/secrets** - _[Security/compliance violations]_
-6. **No structured logging** - _[Can't parse or aggregate logs]_
-7. **Alerting on everything** - _[Alert fatigue, ignored pages]_
+1. **Log everything at DEBUG level in production** - <span class="fill-in">[Massive costs, poor signal-to-noise]</span>
+2. **No sampling on high-traffic traces** - <span class="fill-in">[Storage explosion, performance impact]</span>
+3. **High-cardinality metric labels** - <span class="fill-in">[Metric explosion, query slowness]</span>
+4. **No retention policy** - <span class="fill-in">[Infinite storage costs]</span>
+5. **Logging PII/secrets** - <span class="fill-in">[Security/compliance violations]</span>
+6. **No structured logging** - <span class="fill-in">[Can't parse or aggregate logs]</span>
+7. **Alerting on everything** - <span class="fill-in">[Alert fatigue, ignored pages]</span>
 
 ### The Rule of Three: Alternatives
 
 **Option 1: Push-based (Prometheus)**
 
-- Pros: _[Service discovery, powerful queries, free/open-source]_
-- Cons: _[Pull model requires firewall changes, single point of failure]_
-- Use when: _[Kubernetes, microservices, cost-conscious]_
+- Pros: <span class="fill-in">[Service discovery, powerful queries, free/open-source]</span>
+- Cons: <span class="fill-in">[Pull model requires firewall changes, single point of failure]</span>
+- Use when: <span class="fill-in">[Kubernetes, microservices, cost-conscious]</span>
 
 **Option 2: Agent-based (Datadog, New Relic)**
 
-- Pros: _[Unified metrics/logs/traces, powerful UI, managed service]_
-- Cons: _[Cost scales with usage, vendor lock-in]_
-- Use when: _[Need full-featured platform, willing to pay]_
+- Pros: <span class="fill-in">[Unified metrics/logs/traces, powerful UI, managed service]</span>
+- Cons: <span class="fill-in">[Cost scales with usage, vendor lock-in]</span>
+- Use when: <span class="fill-in">[Need full-featured platform, willing to pay]</span>
 
 **Option 3: Cloud-native (CloudWatch, Azure Monitor)**
 
-- Pros: _[Integrated with cloud, auto-instrumentation, pay-per-use]_
-- Cons: _[Vendor lock-in, limited cross-cloud]_
-- Use when: _[Single cloud provider, tight cloud integration]_
+- Pros: <span class="fill-in">[Integrated with cloud, auto-instrumentation, pay-per-use]</span>
+- Cons: <span class="fill-in">[Vendor lock-in, limited cross-cloud]</span>
+- Use when: <span class="fill-in">[Single cloud provider, tight cloud integration]</span>
 
 ---
 
@@ -2337,24 +2359,28 @@ Observability Pattern Selection
 **Your observability design:**
 
 Metrics to collect:
-1. _[What RED metrics for each endpoint?]_
-2. _[What USE metrics for infrastructure?]_
-3. _[What business metrics (orders, revenue)?]_
+
+1. <span class="fill-in">[What RED metrics for each endpoint?]</span>
+2. <span class="fill-in">[What USE metrics for infrastructure?]</span>
+3. <span class="fill-in">[What business metrics (orders, revenue)?]</span>
 
 Logs to capture:
-1. _[What should be logged at each level?]_
-2. _[How to add trace IDs to logs?]_
-3. _[What fields in structured logs?]_
+
+1. <span class="fill-in">[What should be logged at each level?]</span>
+2. <span class="fill-in">[How to add trace IDs to logs?]</span>
+3. <span class="fill-in">[What fields in structured logs?]</span>
 
 Traces to implement:
-1. _[Where to start/end spans?]_
-2. _[What sampling rate?]_
-3. _[What tags on spans?]_
+
+1. <span class="fill-in">[Where to start/end spans?]</span>
+2. <span class="fill-in">[What sampling rate?]</span>
+3. <span class="fill-in">[What tags on spans?]</span>
 
 Alerts to configure:
-1. _[SLO violation alerts?]_
-2. _[Error budget alerts?]_
-3. _[Runbook for each alert?]_
+
+1. <span class="fill-in">[SLO violation alerts?]</span>
+2. <span class="fill-in">[Error budget alerts?]</span>
+3. <span class="fill-in">[Runbook for each alert?]</span>
 
 ### Scenario 2: Debug Distributed Payment System
 
@@ -2368,24 +2394,28 @@ Alerts to configure:
 **Your debugging approach:**
 
 Using traces:
-1. _[What would you look for first?]_
-2. _[How to find the slow requests?]_
-3. _[How to identify which service is slow?]_
+
+1. <span class="fill-in">[What would you look for first?]</span>
+2. <span class="fill-in">[How to find the slow requests?]</span>
+3. <span class="fill-in">[How to identify which service is slow?]</span>
 
 Using logs:
-1. _[What log queries would you run?]_
-2. _[How to correlate logs across services?]_
-3. _[What might you be missing?]_
+
+1. <span class="fill-in">[What log queries would you run?]</span>
+2. <span class="fill-in">[How to correlate logs across services?]</span>
+3. <span class="fill-in">[What might you be missing?]</span>
 
 Using metrics:
-1. _[What metrics would show the problem?]_
-2. _[How to narrow down the time window?]_
-3. _[What percentiles to examine?]_
+
+1. <span class="fill-in">[What metrics would show the problem?]</span>
+2. <span class="fill-in">[How to narrow down the time window?]</span>
+3. <span class="fill-in">[What percentiles to examine?]</span>
 
 Root cause:
-- _[How would you prove your hypothesis?]_
-- _[What would you change to fix it?]_
-- _[What observability would you add?]_
+
+- <span class="fill-in">[How would you prove your hypothesis?]</span>
+- <span class="fill-in">[What would you change to fix it?]</span>
+- <span class="fill-in">[What observability would you add?]</span>
 
 ### Scenario 3: Capacity Planning for Growth
 
@@ -2398,19 +2428,22 @@ Root cause:
 **Your analysis approach:**
 
 Metrics analysis:
-1. _[What metrics show current capacity?]_
-2. _[How to extrapolate to 10x load?]_
-3. _[What are the bottlenecks?]_
+
+1. <span class="fill-in">[What metrics show current capacity?]</span>
+2. <span class="fill-in">[How to extrapolate to 10x load?]</span>
+3. <span class="fill-in">[What are the bottlenecks?]</span>
 
 Load testing:
-1. _[What metrics to collect during load test?]_
-2. _[How to identify breaking points?]_
-3. _[What percentiles matter most?]_
+
+1. <span class="fill-in">[What metrics to collect during load test?]</span>
+2. <span class="fill-in">[How to identify breaking points?]</span>
+3. <span class="fill-in">[What percentiles matter most?]</span>
 
 Planning:
-1. _[When will current capacity be exceeded?]_
-2. _[What needs to be scaled (compute, db, cache)?]_
-3. _[What are the cost implications?]_
+
+1. <span class="fill-in">[When will current capacity be exceeded?]</span>
+2. <span class="fill-in">[What needs to be scaled (compute, db, cache)?]</span>
+3. <span class="fill-in">[What are the cost implications?]</span>
 
 ---
 
@@ -2463,13 +2496,13 @@ Before moving to the next topic:
 
 > "Observability is..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation be understood by a non-technical person? _[Yes/No]_
-- Did you explain all three pillars (metrics, logs, traces)? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
+- Did you explain all three pillars (metrics, logs, traces)? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -2485,24 +2518,28 @@ If you scored below 7 or answered "No" to either question, revise your explanati
 
 ```
 Metrics to add:
-1. _[What RED metrics?]_
-2. _[What labels on each metric?]_
-3. _[What business metrics?]_
+
+1. <span class="fill-in">[What RED metrics?]</span>
+2. <span class="fill-in">[What labels on each metric?]</span>
+3. <span class="fill-in">[What business metrics?]</span>
 
 Logs to add:
-1. _[What at INFO level?]_
-2. _[What at ERROR level?]_
-3. _[What context fields?]_
+
+1. <span class="fill-in">[What at INFO level?]</span>
+2. <span class="fill-in">[What at ERROR level?]</span>
+3. <span class="fill-in">[What context fields?]</span>
 
 Traces to add:
-1. _[Root span name?]_
-2. _[Child span names?]_
-3. _[What tags on spans?]_
+
+1. <span class="fill-in">[Root span name?]</span>
+2. <span class="fill-in">[Child span names?]</span>
+3. <span class="fill-in">[What tags on spans?]</span>
 
 SLO to define:
-- Target: _[e.g., 99.9% success]_
-- Measurement: _[How to measure?]_
-- Alert threshold: _[When to page?]_
+
+- Target: <span class="fill-in">[e.g., 99.9% success]</span>
+- Measurement: <span class="fill-in">[How to measure?]</span>
+- Alert threshold: <span class="fill-in">[When to page?]</span>
 ```
 
 **Verification:**
@@ -2521,12 +2558,12 @@ SLO to define:
 
 | Problem | Use Metrics/Logs/Traces | Why? |
 |---------|------------------------|------|
-| Find average latency over time | _[Fill in]_ | _[Explain]_ |
-| Debug why order #12345 failed | _[Fill in]_ | _[Explain]_ |
-| See which service is slow in request | _[Fill in]_ | _[Explain]_ |
-| Alert when error rate > 1% | _[Fill in]_ | _[Explain]_ |
-| Find all requests by user_123 | _[Fill in]_ | _[Explain]_ |
-| Track SLO compliance | _[Fill in]_ | _[Explain]_ |
+| Find average latency over time | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Debug why order #12345 failed | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| See which service is slow in request | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Alert when error rate > 1% | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Find all requests by user_123 | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Track SLO compliance | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -2540,14 +2577,14 @@ If you scored below 5/6, review the patterns and try again.
 
 | Operation | Time Complexity | Space Complexity | Why? |
 |-----------|----------------|------------------|------|
-| Counter increment | O(?) | O(?) | _[Explain]_ |
-| Histogram observe | O(?) | O(?) | _[Explain]_ |
-| Structured log write | O(?) | O(?) | _[Explain]_ |
-| Trace span creation | O(?) | O(?) | _[Explain]_ |
+| Counter increment | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Histogram observe | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Structured log write | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Trace span creation | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why do we sample traces but not metrics?
 
-Your answer: _[Fill in - explain the fundamental difference]_
+Your answer: <span class="fill-in">[Fill in - explain the fundamental difference]</span>
 
 ---
 
@@ -2557,29 +2594,29 @@ Your answer: _[Fill in - explain the fundamental difference]_
 
 **Metrics:**
 
-- What to collect: _[Fill in]_
-- Cardinality concerns: _[What labels to avoid?]_
-- Storage estimate: _[How much data/day?]_
+- What to collect: <span class="fill-in">[Fill in]</span>
+- Cardinality concerns: <span class="fill-in">[What labels to avoid?]</span>
+- Storage estimate: <span class="fill-in">[How much data/day?]</span>
 
 **Logs:**
 
-- Log level in production: _[DEBUG/INFO/WARN/ERROR - Why?]_
-- What NOT to log: _[Fill in]_
-- Retention policy: _[How long to keep?]_
+- Log level in production: <span class="fill-in">[DEBUG/INFO/WARN/ERROR - Why?]</span>
+- What NOT to log: <span class="fill-in">[Fill in]</span>
+- Retention policy: <span class="fill-in">[How long to keep?]</span>
 
 **Traces:**
 
-- Sampling rate: _[1%/10%/100% - Why?]_
-- When to sample 100%: _[Fill in scenarios]_
-- Storage estimate: _[How much data/day?]_
+- Sampling rate: <span class="fill-in">[1%/10%/100% - Why?]</span>
+- When to sample 100%: <span class="fill-in">[Fill in scenarios]</span>
+- Storage estimate: <span class="fill-in">[How much data/day?]</span>
 
 **Your decision:** I would configure observability as...
 
-_[Fill in your complete strategy with reasoning]_
+<span class="fill-in">[Fill in your complete strategy with reasoning]</span>
 
 **What constraints would change your decision?**
 
-- _[Fill in - what would make you sample more/less?]_
+- <span class="fill-in">[Fill in - what would make you sample more/less?]</span>
 
 ---
 
@@ -2591,16 +2628,19 @@ _[Fill in your complete strategy with reasoning]_
 
 ```
 Metrics:
+
 - http_requests_total{endpoint="/checkout"} = 10K/hour
 - http_errors_total{endpoint="/checkout"} = 50/hour (0.5% error rate)
 - http_request_duration_p50{endpoint="/checkout"} = 100ms
 - http_request_duration_p99{endpoint="/checkout"} = 5000ms
 
 Logs:
+
 - 45 error logs: "Payment gateway timeout after 5s"
 - 5 error logs: "Database connection pool exhausted"
 
 Traces (sample of slow requests):
+
 - checkout span: 5200ms total
     - validate_cart: 10ms
     - charge_payment: 5000ms (timeout!)
@@ -2611,19 +2651,19 @@ Traces (sample of slow requests):
 **Your debugging process:**
 
 1. **What's the problem?**
-    - _[Fill in based on data above]_
+    - <span class="fill-in">[Fill in based on data above]</span>
 
 2. **Why isn't it visible in average latency?**
-    - _[Fill in - why is P50 fine but P99 bad?]_
+    - <span class="fill-in">[Fill in - why is P50 fine but P99 bad?]</span>
 
 3. **Root cause:**
-    - _[Fill in your diagnosis]_
+    - <span class="fill-in">[Fill in your diagnosis]</span>
 
 4. **How would you fix it?**
-    - _[Fill in solution]_
+    - <span class="fill-in">[Fill in solution]</span>
 
 5. **What observability would you add?**
-    - _[Fill in - what's missing?]_
+    - <span class="fill-in">[Fill in - what's missing?]</span>
 
 **Verification:**
 
@@ -2650,21 +2690,21 @@ Counter requests = new Counter("http_requests_total", Map.of(
 **Your review:**
 
 1. **What's wrong with this?**
-    - _[Explain the cardinality explosion]_
+    - <span class="fill-in">[Explain the cardinality explosion]</span>
 
 2. **Calculate the problem:**
-    - Unique metric series = 50 × 1M × 10M × ∞ = _____
-    - Memory impact: _____
-    - Query impact: _____
+    - Unique metric series = 50 × 1M × 10M × ∞ = <span class="fill-in">_____</span>
+    - Memory impact: <span class="fill-in">_____</span>
+    - Query impact: <span class="fill-in">_____</span>
 
 3. **What should they do instead?**
-    - Metrics: _[What labels are OK?]_
-    - Logs: _[What should go in logs?]_
-    - Traces: _[What should go in traces?]_
+    - Metrics: <span class="fill-in">[What labels are OK?]</span>
+    - Logs: <span class="fill-in">[What should go in logs?]</span>
+    - Traces: <span class="fill-in">[What should go in traces?]</span>
 
 4. **General rule:**
-    - Label cardinality limit: _____
-    - How to handle high-cardinality data: _____
+    - Label cardinality limit: <span class="fill-in">_____</span>
+    - How to handle high-cardinality data: <span class="fill-in">_____</span>
 
 **Verification:**
 
@@ -2691,25 +2731,31 @@ Counter requests = new Counter("http_requests_total", Map.of(
 Service: Checkout API
 
 SLI (what to measure):
-- _[Fill in - availability? latency? both?]_
+
+- <span class="fill-in">[Fill in - availability? latency? both?]</span>
 
 SLO (target):
-- _[Fill in - e.g., 99.9% of requests succeed in < 500ms]_
+
+- <span class="fill-in">[Fill in - e.g., 99.9% of requests succeed in < 500ms]</span>
 
 Time window:
-- _[Fill in - 30 days? 7 days?]_
+
+- <span class="fill-in">[Fill in - 30 days? 7 days?]</span>
 
 Error budget:
-- Allowed failures: _[Calculate based on SLO]_
+
+- Allowed failures: <span class="fill-in">[Calculate based on SLO]</span>
 - That's _____ failed requests per month
 - Or _____ minutes of downtime per month
 
 Alert thresholds:
-- Warning: _[e.g., 50% error budget consumed]_
-- Critical: _[e.g., 90% error budget consumed]_
+
+- Warning: <span class="fill-in">[e.g., 50% error budget consumed]</span>
+- Critical: <span class="fill-in">[e.g., 90% error budget consumed]</span>
 
 Measurement method:
-- _[How to calculate from metrics?]_
+
+- <span class="fill-in">[How to calculate from metrics?]</span>
 ```
 
 **Verification:**

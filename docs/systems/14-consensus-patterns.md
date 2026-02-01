@@ -6,79 +6,86 @@
 
 ## ELI5: Explain Like I'm 5
 
+<div class="learner-section" markdown>
+
 **Your task:** After implementing consensus patterns, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is consensus in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **Why do distributed systems need consensus?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy for leader election:**
     - Example: "Leader election is like choosing a class president where..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **What is the split-brain problem in one sentence?**
-    - Your answer: _[Fill in after implementation]_
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 5. **Real-world analogy for distributed locks:**
     - Example: "A distributed lock is like a bathroom key that..."
-    - Your analogy: _[Fill in]_
+    - Your analogy: <span class="fill-in">[Fill in]</span>
 
 6. **Why do we need quorums?**
-    - Your answer: _[Fill in after practice]_
+    - Your answer: <span class="fill-in">[Fill in after practice]</span>
+
+
+</div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+<div class="learner-section" markdown>
 
 **Your task:** Test your intuition about distributed consensus without looking at code. Answer these, then verify after implementation.
 
 ### Complexity Predictions
 
 1. **Leader election with N nodes (Bully algorithm):**
-    - Time complexity: _[Your guess: O(?)]_
-    - Message complexity: _[How many messages?]_
-    - Verified after learning: _[Actual: O(?)]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Message complexity: <span class="fill-in">[How many messages?]</span>
+    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
 
 2. **Raft log replication to majority of N nodes:**
-    - Time complexity: _[Your guess: O(?)]_
-    - When is an entry committed: _[Your guess]_
-    - Verified: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - When is an entry committed: <span class="fill-in">[Your guess]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 3. **Quorum read with R nodes, N total nodes:**
-    - Time complexity: _[Your guess: O(?)]_
-    - Space complexity per node: _[Your guess: O(?)]_
-    - Verified: _[Actual]_
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity per node: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual]</span>
 
 ### Scenario Predictions
 
 **Scenario 1:** 5-node cluster, leader fails during log replication
 
-- **What happens to uncommitted entries?** _[Lost/Preserved - Why?]_
-- **How long until new leader elected?** _[Depends on what?]_
-- **Can clients write during election?** _[Yes/No - Why?]_
+- **What happens to uncommitted entries?** <span class="fill-in">[Lost/Preserved - Why?]</span>
+- **How long until new leader elected?** <span class="fill-in">[Depends on what?]</span>
+- **Can clients write during election?** <span class="fill-in">[Yes/No - Why?]</span>
 
 **Scenario 2:** Network partition splits 5 nodes into {3 nodes, 2 nodes}
 
-- **Which partition can elect a leader?** _[3-node/2-node/Both - Why?]_
-- **What happens to writes in minority partition?** _[Fill in]_
-- **Is this a split-brain scenario?** _[Yes/No - Why?]_
+- **Which partition can elect a leader?** <span class="fill-in">[3-node/2-node/Both - Why?]</span>
+- **What happens to writes in minority partition?** <span class="fill-in">[Fill in]</span>
+- **Is this a split-brain scenario?** <span class="fill-in">[Yes/No - Why?]</span>
 
 **Scenario 3:** Distributed lock with 30-second TTL, holder crashes after 10 seconds
 
-- **When can another process acquire the lock?** _[Immediately/After 20s/Never]_
-- **Why that timing?** _[Fill in your reasoning]_
-- **What could go wrong?** _[Fill in]_
+- **When can another process acquire the lock?** <span class="fill-in">[Immediately/After 20s/Never]</span>
+- **Why that timing?** <span class="fill-in">[Fill in your reasoning]</span>
+- **What could go wrong?** <span class="fill-in">[Fill in]</span>
 
 ### Trade-off Quiz
 
 **Question:** When would leaderless (quorum) be BETTER than Raft for consensus?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after learning]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 **Question:** What's the MAIN requirement for achieving strong consistency with quorums?
 
@@ -87,12 +94,15 @@
 -   [ ] R = W = majority
 -   [ ] R = N, W = 1
 
-Verify after implementation: _[Which one(s)? Why?]_
+Verify after implementation: <span class="fill-in">[Which one(s)? Why?]</span>
 
 **Question:** Why use fencing tokens with distributed locks?
 
-- Your answer: _[Fill in before implementation]_
-- Verified answer: _[Fill in after implementing Pattern 3]_
+- Your answer: <span class="fill-in">[Fill in before implementation]</span>
+- Verified answer: <span class="fill-in">[Fill in after implementing Pattern 3]</span>
+
+
+</div>
 
 ---
 
@@ -146,6 +156,7 @@ Partition B thinks: Node 5 is leader (highest visible)
 SPLIT-BRAIN: Two leaders accepting writes simultaneously!
 
 Result:
+
 - Data divergence (inconsistent state)
 - Lost updates when partition heals
 - Violated uniqueness guarantee
@@ -200,16 +211,19 @@ Partition A: [Node 1, Node 2, Node 3] - 3 nodes, majority = 2
 Partition B: [Node 4, Node 5]         - 2 nodes, majority = 2
 
 Partition A attempts election:
+
 - Node 3 requests votes from Node 1, Node 2 (both visible)
 - Node 3 gets 3 votes total → SUCCESS (3 ≥ 2 majority)
 - Node 3 becomes leader ✓
 
 Partition B attempts election:
+
 - Node 5 requests votes from Node 4 (only visible node)
 - Node 5 gets 2 votes total → FAIL (2 < 3 majority of 5 total)
 - No leader elected ✗
 
 Result:
+
 - Only ONE leader (Node 3)
 - Partition B cannot accept writes (no leader)
 - Partition A continues operating safely
@@ -239,6 +253,7 @@ Result:
 **Key insight: The Majority Principle**
 
 With 5 nodes, majority = 3:
+
 - Any two majorities must overlap by at least 1 node
 - That overlapping node prevents conflicting decisions
 - Example: {Node 1, 2, 3} and {Node 3, 4, 5} both contain Node 3
@@ -255,9 +270,13 @@ Term 3: When partition heals, Node 5 sees Node 3 has higher term → steps down
 
 **After implementing, explain in your own words:**
 
-- _[Why does majority prevent split-brain?]_
-- _[What's the trade-off between safety and availability?]_
-- _[Why can't the minority partition elect a leader?]_
+<div class="learner-section" markdown>
+
+- <span class="fill-in">[Why does majority prevent split-brain?]</span>
+- <span class="fill-in">[What's the trade-off between safety and availability?]</span>
+- <span class="fill-in">[Why can't the minority partition elect a leader?]</span>
+
+</div>
 
 ### Real-World Impact
 
@@ -274,9 +293,10 @@ Term 3: When partition heals, Node 5 sees Node 3 has higher term → steps down
 - Recovery time: Seconds (automatic election)
 
 **Your calculation:** For a 7-node cluster with network partition into {4, 3}:
-- Naive approach: _____ leaders elected (how many?)
-- Raft consensus: _____ leader(s) elected (in which partition?)
-- Which partition can serve writes: _____
+
+- Naive approach: <span class="fill-in">_____</span> leaders elected (how many?)
+- Raft consensus: <span class="fill-in">_____</span> leader(s) elected (in which partition?)
+- Which partition can serve writes: <span class="fill-in">_____</span>
 
 ---
 
@@ -1801,13 +1821,13 @@ public class BuggyLeaderElection {
 
 **Your debugging:**
 
-- **Bug 1 location:** _[Which line?]_
-- **Bug 1 explanation:** _[What happens when vote is denied?]_
-- **Bug 1 fix:** _[How to fix?]_
+- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 1 explanation:** <span class="fill-in">[What happens when vote is denied?]</span>
+- **Bug 1 fix:** <span class="fill-in">[How to fix?]</span>
 
-- **Bug 2 location:** _[Which line?]_
-- **Bug 2 explanation:** _[When does > fail vs >= ?]_
-- **Bug 2 fix:** _[Which operator is correct?]_
+- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
+- **Bug 2 explanation:** <span class="fill-in">[When does > fail vs >= ?]</span>
+- **Bug 2 fix:** <span class="fill-in">[Which operator is correct?]</span>
 
 **Split-brain scenario:**
 
@@ -1815,8 +1835,8 @@ public class BuggyLeaderElection {
 - Network partition: {1, 2} and {3, 4, 5}
 - Node 1 starts election, gets vote from Node 2
 - Node 3 starts election, gets votes from 4, 5
-- With bugs: _[How many leaders? Why?]_
-- After fixes: _[How many leaders? Why?]_
+- With bugs: <span class="fill-in">[How many leaders? Why?]</span>
+- After fixes: <span class="fill-in">[How many leaders? Why?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1884,9 +1904,9 @@ public class BuggyRaftReplication {
 
 **Your debugging:**
 
-- **Bug location:** _[Which line?]_
-- **Bug explanation:** _[Why can commits be lost?]_
-- **Bug fix:** _[What should the count start at?]_
+- **Bug location:** <span class="fill-in">[Which line?]</span>
+- **Bug explanation:** <span class="fill-in">[Why can commits be lost?]</span>
+- **Bug fix:** <span class="fill-in">[What should the count start at?]</span>
 
 **Failure scenario:**
 
@@ -1896,7 +1916,7 @@ public class BuggyRaftReplication {
 - Bug: replicatedCount = 2 < 3 majority → NOT committed
 - Leader crashes before replicating to Node 4
 - With bug: Entry lost (never committed)
-- Trace through: _[Step by step, what happens?]_
+- Trace through: <span class="fill-in">[Step by step, what happens?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1949,9 +1969,9 @@ public class BuggyRequestVote {
 
 **Your debugging:**
 
-- **Bug location:** _[Which lines?]_
-- **Bug explanation:** _[What state is not reset?]_
-- **Bug fix:** _[What's missing after term update?]_
+- **Bug location:** <span class="fill-in">[Which lines?]</span>
+- **Bug explanation:** <span class="fill-in">[What state is not reset?]</span>
+- **Bug fix:** <span class="fill-in">[What's missing after term update?]</span>
 
 **Failure scenario:**
 
@@ -1960,7 +1980,7 @@ public class BuggyRequestVote {
 - Node 3's state: currentTerm=1, votedFor=5
 - Node 1's term: currentTerm=2
 - With bug: What happens to Node 3's votedFor?
-- Expected: _[Should vote be granted? Why?]_
+- Expected: <span class="fill-in">[Should vote be granted? Why?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -2016,17 +2036,17 @@ public class BuggyAppendEntries {
 
 **Your debugging:**
 
-- **Bug location:** _[What's missing?]_
-- **Bug explanation:** _[What log inconsistency can occur?]_
-- **Bug fix:** _[What check is needed?]_
+- **Bug location:** <span class="fill-in">[What's missing?]</span>
+- **Bug explanation:** <span class="fill-in">[What log inconsistency can occur?]</span>
+- **Bug fix:** <span class="fill-in">[What check is needed?]</span>
 
 **Failure scenario:**
 
 - Leader log: [e1(term=1), e2(term=1), e3(term=2)]
 - Follower log: [e1(term=1), e2(term=2)] (e2 has wrong term!)
 - Leader sends: prevLogIndex=2, prevLogTerm=1, entries=[e3]
-- With bug: _[What happens?]_
-- Expected behavior: _[Should append be accepted?]_
+- With bug: <span class="fill-in">[What happens?]</span>
+- Expected behavior: <span class="fill-in">[Should append be accepted?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -2084,17 +2104,17 @@ public class BuggyDistributedLock {
 
 **Your debugging:**
 
-- **Bug location:** _[Which line?]_
-- **Bug explanation:** _[When does deadlock occur?]_
-- **Bug fix:** _[What check is missing?]_
+- **Bug location:** <span class="fill-in">[Which line?]</span>
+- **Bug explanation:** <span class="fill-in">[When does deadlock occur?]</span>
+- **Bug fix:** <span class="fill-in">[What check is missing?]</span>
 
 **Failure scenario:**
 
 - Client A acquires lock with 30s TTL
 - Client A crashes after 5 seconds (doesn't release)
 - Client B tries to acquire lock after 40 seconds
-- With bug: _[Can Client B acquire lock? Why?]_
-- Expected: _[Should lock be available?]_
+- With bug: <span class="fill-in">[Can Client B acquire lock? Why?]</span>
+- Expected: <span class="fill-in">[Should lock be available?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -2154,9 +2174,9 @@ public class BuggyQuorumRead {
 
 **Your debugging:**
 
-- **Bug location:** _[Which line?]_
-- **Bug explanation:** _[Why can this return stale data?]_
-- **Bug fix:** _[What should be returned instead?]_
+- **Bug location:** <span class="fill-in">[Which line?]</span>
+- **Bug explanation:** <span class="fill-in">[Why can this return stale data?]</span>
+- **Bug fix:** <span class="fill-in">[What should be returned instead?]</span>
 
 **Inconsistency scenario:**
 
@@ -2165,8 +2185,8 @@ public class BuggyQuorumRead {
 - Node 2: value="v2" (version=2, latest)
 - Node 3: value="v2" (version=2)
 - Read from Node 1, Node 2 (in that order)
-- With bug: _[What value is returned?]_
-- Expected: _[What should be returned?]_
+- With bug: <span class="fill-in">[What value is returned?]</span>
+- Expected: <span class="fill-in">[What should be returned?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -2211,15 +2231,15 @@ After finding and fixing all bugs:
 
 **Common consensus bugs you discovered:**
 
-1. _[List patterns: vote counting, term handling, etc.]_
-2. _[Fill in]_
-3. _[Fill in]_
+1. <span class="fill-in">[List patterns: vote counting, term handling, etc.]</span>
+2. <span class="fill-in">[Fill in]</span>
+3. <span class="fill-in">[Fill in]</span>
 
 **Safety properties that bugs violated:**
 
-- **Agreement:** _[Which bugs caused nodes to disagree?]_
-- **Validity:** _[Which bugs caused invalid states?]_
-- **Termination:** _[Which bugs caused deadlock/livelock?]_
+- **Agreement:** <span class="fill-in">[Which bugs caused nodes to disagree?]</span>
+- **Validity:** <span class="fill-in">[Which bugs caused invalid states?]</span>
+- **Termination:** <span class="fill-in">[Which bugs caused deadlock/livelock?]</span>
 
 ---
 
@@ -2233,45 +2253,45 @@ Answer after implementation:
 
 **Use Leader Election when:**
 
-- Single coordinator needed: _[One node must make decisions]_
-- Simplify operations: _[Leader handles all writes]_
-- Strong consistency: _[Leader ensures ordering]_
-- Examples: _[Master-worker, coordinator services]_
+- Single coordinator needed: <span class="fill-in">[One node must make decisions]</span>
+- Simplify operations: <span class="fill-in">[Leader handles all writes]</span>
+- Strong consistency: <span class="fill-in">[Leader ensures ordering]</span>
+- Examples: <span class="fill-in">[Master-worker, coordinator services]</span>
 
 **Use Leaderless (Quorum) when:**
 
-- High availability: _[No single point of failure]_
-- Multi-datacenter: _[Local writes in each DC]_
-- Read/write balance: _[Tune R/W for workload]_
-- Examples: _[Cassandra, DynamoDB]_
+- High availability: <span class="fill-in">[No single point of failure]</span>
+- Multi-datacenter: <span class="fill-in">[Local writes in each DC]</span>
+- Read/write balance: <span class="fill-in">[Tune R/W for workload]</span>
+- Examples: <span class="fill-in">[Cassandra, DynamoDB]</span>
 
 ### Question 2: When to use Raft vs Paxos?
 
 **Raft when:**
 
-- Understandability: _[Easier to implement and reason about]_
-- Log replication: _[Need ordered log of operations]_
-- Modern systems: _[etcd, Consul use Raft]_
+- Understandability: <span class="fill-in">[Easier to implement and reason about]</span>
+- Log replication: <span class="fill-in">[Need ordered log of operations]</span>
+- Modern systems: <span class="fill-in">[etcd, Consul use Raft]</span>
 
 **Paxos when:**
 
-- Proven formal correctness: _[Mathematically proven]_
-- Legacy systems: _[Google Chubby uses Paxos]_
-- Academic interest: _[Understanding distributed consensus theory]_
+- Proven formal correctness: <span class="fill-in">[Mathematically proven]</span>
+- Legacy systems: <span class="fill-in">[Google Chubby uses Paxos]</span>
+- Academic interest: <span class="fill-in">[Understanding distributed consensus theory]</span>
 
 ### Question 3: When to use distributed locks?
 
 **Use distributed locks when:**
 
-- Mutual exclusion: _[Only one process should access resource]_
-- Job scheduling: _[Prevent duplicate job execution]_
-- Leader election: _[Simple leader election mechanism]_
+- Mutual exclusion: <span class="fill-in">[Only one process should access resource]</span>
+- Job scheduling: <span class="fill-in">[Prevent duplicate job execution]</span>
+- Leader election: <span class="fill-in">[Simple leader election mechanism]</span>
 
 **Avoid distributed locks when:**
 
-- Performance critical: _[Locks add latency]_
-- Can use optimistic locking: _[Version-based concurrency control]_
-- Idempotent operations: _[Can safely retry without lock]_
+- Performance critical: <span class="fill-in">[Locks add latency]</span>
+- Can use optimistic locking: <span class="fill-in">[Version-based concurrency control]</span>
+- Idempotent operations: <span class="fill-in">[Can safely retry without lock]</span>
 
 ### Your Decision Tree
 
@@ -2307,47 +2327,47 @@ Consensus Pattern Selection
 
 **Don't use Leader Election when:**
 
-1. _[High write throughput needed - leader bottleneck]_
-2. _[Multi-region writes - leader far from writers]_
-3. _[Can tolerate temporary inconsistency]_
+1. <span class="fill-in">[High write throughput needed - leader bottleneck]</span>
+2. <span class="fill-in">[Multi-region writes - leader far from writers]</span>
+3. <span class="fill-in">[Can tolerate temporary inconsistency]</span>
 
 **Don't use Raft when:**
 
-1. _[Very large clusters (>7 nodes) - election overhead]_
-2. _[Don't need ordered log - simpler consensus works]_
-3. _[Network partitions common - may have availability issues]_
+1. <span class="fill-in">[Very large clusters (>7 nodes) - election overhead]</span>
+2. <span class="fill-in">[Don't need ordered log - simpler consensus works]</span>
+3. <span class="fill-in">[Network partitions common - may have availability issues]</span>
 
 **Don't use Distributed Locks when:**
 
-1. _[Lock holder crashes - deadlock risk]_
-2. _[Network delays unpredictable - lock expiry issues]_
-3. _[Operations are idempotent - don't need lock]_
+1. <span class="fill-in">[Lock holder crashes - deadlock risk]</span>
+2. <span class="fill-in">[Network delays unpredictable - lock expiry issues]</span>
+3. <span class="fill-in">[Operations are idempotent - don't need lock]</span>
 
 **Don't use Quorum when:**
 
-1. _[Small cluster (< 3 nodes) - can't form majority]_
-2. _[Read latency critical - quorum reads slower]_
-3. _[Strong consistency with single writer - just use leader]_
+1. <span class="fill-in">[Small cluster (< 3 nodes) - can't form majority]</span>
+2. <span class="fill-in">[Read latency critical - quorum reads slower]</span>
+3. <span class="fill-in">[Strong consistency with single writer - just use leader]</span>
 
 ### The Rule of Three: Alternatives
 
 **Option 1: Raft (Leader-based)**
 
-- Pros: _[Strong consistency, ordered log, understandable]_
-- Cons: _[Leader bottleneck, election downtime, complex implementation]_
-- Use when: _[Configuration management, log replication]_
+- Pros: <span class="fill-in">[Strong consistency, ordered log, understandable]</span>
+- Cons: <span class="fill-in">[Leader bottleneck, election downtime, complex implementation]</span>
+- Use when: <span class="fill-in">[Configuration management, log replication]</span>
 
 **Option 2: Quorum (Leaderless)**
 
-- Pros: _[High availability, tunable consistency, multi-datacenter]_
-- Cons: _[Conflict resolution needed, read repair overhead, eventual consistency by default]_
-- Use when: _[Distributed databases, high throughput]_
+- Pros: <span class="fill-in">[High availability, tunable consistency, multi-datacenter]</span>
+- Cons: <span class="fill-in">[Conflict resolution needed, read repair overhead, eventual consistency by default]</span>
+- Use when: <span class="fill-in">[Distributed databases, high throughput]</span>
 
 **Option 3: Distributed Locks (Coordination)**
 
-- Pros: _[Simple mutual exclusion, works across services, fencing prevents errors]_
-- Cons: _[Deadlock risk, latency overhead, requires lock service]_
-- Use when: _[Job scheduling, leader election, resource allocation]_
+- Pros: <span class="fill-in">[Simple mutual exclusion, works across services, fencing prevents errors]</span>
+- Cons: <span class="fill-in">[Deadlock risk, latency overhead, requires lock service]</span>
+- Use when: <span class="fill-in">[Job scheduling, leader election, resource allocation]</span>
 
 ---
 
@@ -2365,17 +2385,19 @@ Consensus Pattern Selection
 
 **Your design:**
 
-Leader election algorithm: _[Raft or Bully? Why?]_
+Leader election algorithm: <span class="fill-in">[Raft or Bully? Why?]</span>
 
 Reasoning:
-- Election speed: _[Fill in]_
-- Split-brain prevention: _[How?]_
-- Failure detection: _[Heartbeat timeout?]_
+
+- Election speed: <span class="fill-in">[Fill in]</span>
+- Split-brain prevention: <span class="fill-in">[How?]</span>
+- Failure detection: <span class="fill-in">[Heartbeat timeout?]</span>
 
 Implementation details:
-1. _[Heartbeat interval and timeout values]_
-2. _[How to handle network partition]_
-3. _[Fencing mechanism to prevent dual-primary]_
+
+1. <span class="fill-in">[Heartbeat interval and timeout values]</span>
+2. <span class="fill-in">[How to handle network partition]</span>
+3. <span class="fill-in">[Fencing mechanism to prevent dual-primary]</span>
 
 ### Scenario 2: Distributed Job Scheduler
 
@@ -2389,17 +2411,19 @@ Implementation details:
 
 **Your design:**
 
-Lock mechanism: _[Distributed locks or leader election?]_
+Lock mechanism: <span class="fill-in">[Distributed locks or leader election?]</span>
 
 Why?
-1. _[Exactly-once execution guarantee]_
-2. _[How to handle lock holder crash]_
-3. _[Lock timeout calculation]_
+
+1. <span class="fill-in">[Exactly-once execution guarantee]</span>
+2. <span class="fill-in">[How to handle lock holder crash]</span>
+3. <span class="fill-in">[Lock timeout calculation]</span>
 
 Lock implementation:
-- TTL: _[How long?]_
-- Renewal: _[When and how often?]_
-- Fencing: _[Prevent duplicate execution how?]_
+
+- TTL: <span class="fill-in">[How long?]</span>
+- Renewal: <span class="fill-in">[When and how often?]</span>
+- Fencing: <span class="fill-in">[Prevent duplicate execution how?]</span>
 
 ### Scenario 3: Multi-Region Key-Value Store
 
@@ -2413,18 +2437,20 @@ Lock implementation:
 
 **Your design:**
 
-Consensus approach: _[Quorum or leader?]_
+Consensus approach: <span class="fill-in">[Quorum or leader?]</span>
 
 Quorum configuration:
-- Replication factor: _[How many DCs?]_
-- Read quorum: _[R = ?]_
-- Write quorum: _[W = ?]_
-- Reasoning: _[R + W > N?]_
+
+- Replication factor: <span class="fill-in">[How many DCs?]</span>
+- Read quorum: <span class="fill-in">[R = ?]</span>
+- Write quorum: <span class="fill-in">[W = ?]</span>
+- Reasoning: <span class="fill-in">[R + W > N?]</span>
 
 Trade-offs:
-1. _[Consistency vs availability]_
-2. _[Cross-DC write latency]_
-3. _[Conflict resolution strategy]_
+
+1. <span class="fill-in">[Consistency vs availability]</span>
+2. <span class="fill-in">[Cross-DC write latency]</span>
+3. <span class="fill-in">[Conflict resolution strategy]</span>
 
 ---
 
@@ -2480,27 +2506,27 @@ Before moving to the next topic:
 
 > "Distributed consensus is..."
 >
-> _[Fill in your explanation in plain English - 3-4 sentences max]_
+> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
 
 **When to use each pattern:**
 
 > "Use leader election when..."
 >
-> _[Fill in - 1 sentence]_
+> <span class="fill-in">[Fill in - 1 sentence]</span>
 
 > "Use Raft when..."
 >
-> _[Fill in - 1 sentence]_
+> <span class="fill-in">[Fill in - 1 sentence]</span>
 
 > "Use quorum consensus when..."
 >
-> _[Fill in - 1 sentence]_
+> <span class="fill-in">[Fill in - 1 sentence]</span>
 
 **Self-assessment:**
 
-- Clarity score (1-10): ___
-- Could your explanation convince someone to use Raft vs Paxos? _[Yes/No]_
-- Did you explain the split-brain problem? _[Yes/No]_
+- Clarity score (1-10): <span class="fill-in">___</span>
+- Could your explanation convince someone to use Raft vs Paxos? <span class="fill-in">[Yes/No]</span>
+- Did you explain the split-brain problem? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
 
@@ -2546,12 +2572,12 @@ Step 4: [What happens to writes in each partition?]
 
 | Scenario | Pattern | Why? |
 |----------|---------|------|
-| Need single coordinator for database writes | _[Fill in]_ | _[Explain]_ |
-| Multi-datacenter database with high availability | _[Fill in]_ | _[Explain]_ |
-| Prevent duplicate job execution across workers | _[Fill in]_ | _[Explain]_ |
-| Configuration store (like etcd/ZooKeeper) | _[Fill in]_ | _[Explain]_ |
-| Globally distributed key-value store | _[Fill in]_ | _[Explain]_ |
-| Coordination service with strong consistency | _[Fill in]_ | _[Explain]_ |
+| Need single coordinator for database writes | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Multi-datacenter database with high availability | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Prevent duplicate job execution across workers | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Configuration store (like etcd/ZooKeeper) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Globally distributed key-value store | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Coordination service with strong consistency | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -2565,18 +2591,18 @@ If you scored below 5/6, review the decision framework and try again.
 
 | Failure Scenario | Leader Election | Raft | Quorum | Why? |
 |------------------|----------------|------|--------|------|
-| Network partition | _[Impact?]_ | _[Impact?]_ | _[Impact?]_ | _[Explain]_ |
-| Leader crashes | _[Impact?]_ | _[Impact?]_ | _[Impact?]_ | _[Explain]_ |
-| Minority nodes fail | _[Impact?]_ | _[Impact?]_ | _[Impact?]_ | _[Explain]_ |
-| Clock skew | _[Impact?]_ | _[Impact?]_ | _[Impact?]_ | _[Explain]_ |
+| Network partition | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Explain]</span> |
+| Leader crashes | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Explain]</span> |
+| Minority nodes fail | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Explain]</span> |
+| Clock skew | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** How does Raft prevent split-brain during network partition?
 
-Your answer: _[Fill in - explain the majority principle]_
+Your answer: <span class="fill-in">[Fill in - explain the majority principle]</span>
 
 **Deep question:** What does R + W > N guarantee in quorum systems?
 
-Your answer: _[Fill in - explain consistency guarantee]_
+Your answer: <span class="fill-in">[Fill in - explain consistency guarantee]</span>
 
 ---
 
@@ -2593,26 +2619,28 @@ Your answer: _[Fill in - explain consistency guarantee]_
 - Read latency critical
 
 **Option A:** Raft consensus (single leader)
-- Consistency: _[Strong/Eventual]_
-- Availability during partition: _[Fill in]_
-- Write latency: _[Fill in - cross-datacenter?]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
+
+- Consistency: <span class="fill-in">[Strong/Eventual]</span>
+- Availability during partition: <span class="fill-in">[Fill in]</span>
+- Write latency: <span class="fill-in">[Fill in - cross-datacenter?]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
 **Option B:** Quorum (R=2, W=2, N=3)
-- Consistency: _[Strong/Eventual]_
-- Availability during partition: _[Fill in]_
-- Write latency: _[Fill in - local?]_
-- Pros: _[Fill in]_
-- Cons: _[Fill in]_
 
-**Your decision:** I would choose _[A/B]_ because...
+- Consistency: <span class="fill-in">[Strong/Eventual]</span>
+- Availability during partition: <span class="fill-in">[Fill in]</span>
+- Write latency: <span class="fill-in">[Fill in - local?]</span>
+- Pros: <span class="fill-in">[Fill in]</span>
+- Cons: <span class="fill-in">[Fill in]</span>
 
-_[Fill in your reasoning - consider CAP theorem, latency, and failure modes]_
+**Your decision:** I would choose <span class="fill-in">[A/B]</span> because...
+
+<span class="fill-in">[Fill in your reasoning - consider CAP theorem, latency, and failure modes]</span>
 
 **What would make you change your decision?**
 
-- _[Fill in - what constraints would flip your choice?]_
+- <span class="fill-in">[Fill in - what constraints would flip your choice?]</span>
 
 ---
 
@@ -2681,29 +2709,34 @@ public class RaftElection {
 **Task:** For each scenario, identify which safety property is violated (if any).
 
 **Scenario 1:** Two nodes both think they're leaders in same term
-- Property violated: _[Agreement/Validity/Termination/None]_
-- Why: _[Fill in]_
-- How consensus prevents it: _[Fill in]_
+
+- Property violated: <span class="fill-in">[Agreement/Validity/Termination/None]</span>
+- Why: <span class="fill-in">[Fill in]</span>
+- How consensus prevents it: <span class="fill-in">[Fill in]</span>
 
 **Scenario 2:** Committed log entry is lost after leader failure
-- Property violated: _[Agreement/Validity/Termination/None]_
-- Why: _[Fill in]_
-- How Raft prevents it: _[Fill in]_
+
+- Property violated: <span class="fill-in">[Agreement/Validity/Termination/None]</span>
+- Why: <span class="fill-in">[Fill in]</span>
+- How Raft prevents it: <span class="fill-in">[Fill in]</span>
 
 **Scenario 3:** Node accepts vote from candidate with older term
-- Property violated: _[Agreement/Validity/Termination/None]_
-- Why: _[Fill in]_
-- How to prevent: _[Fill in]_
+
+- Property violated: <span class="fill-in">[Agreement/Validity/Termination/None]</span>
+- Why: <span class="fill-in">[Fill in]</span>
+- How to prevent: <span class="fill-in">[Fill in]</span>
 
 **Scenario 4:** Distributed lock remains held forever after holder crashes
-- Property violated: _[Agreement/Validity/Termination/None]_
-- Why: _[Fill in]_
-- How to prevent: _[Fill in]_
+
+- Property violated: <span class="fill-in">[Agreement/Validity/Termination/None]</span>
+- Why: <span class="fill-in">[Fill in]</span>
+- How to prevent: <span class="fill-in">[Fill in]</span>
 
 **Scenario 5:** Quorum read returns stale data with R=2, W=2, N=3
-- Property violated: _[Agreement/Validity/Termination/None]_
-- Why: _[Fill in - what went wrong?]_
-- How to prevent: _[Fill in]_
+
+- Property violated: <span class="fill-in">[Agreement/Validity/Termination/None]</span>
+- Why: <span class="fill-in">[Fill in - what went wrong?]</span>
+- How to prevent: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -2717,18 +2750,18 @@ Your explanation:
 
 > "Imagine you're building a distributed database with 5 servers..."
 >
-> _[Fill in - use a concrete example of what goes wrong without consensus]_
+> <span class="fill-in">[Fill in - use a concrete example of what goes wrong without consensus]</span>
 
 **Common misconceptions to address:**
 
 1. "Can't we just use the highest node ID as leader?"
-    - Your answer: _[Fill in - explain split-brain]_
+    - Your answer: <span class="fill-in">[Fill in - explain split-brain]</span>
 
 2. "Why not just retry on failure instead of using consensus?"
-    - Your answer: _[Fill in - explain why retries aren't enough]_
+    - Your answer: <span class="fill-in">[Fill in - explain why retries aren't enough]</span>
 
 3. "Isn't consensus slow because of all the messaging?"
-    - Your answer: _[Fill in - explain trade-offs]_
+    - Your answer: <span class="fill-in">[Fill in - explain trade-offs]</span>
 
 ---
 
@@ -2738,31 +2771,31 @@ Your explanation:
 
 **Raft:**
 
-- During normal operation: _[CP/AP/CA - which two?]_
-- During network partition: _[Chooses C or A?]_
-- Why: _[Fill in reasoning]_
+- During normal operation: <span class="fill-in">[CP/AP/CA - which two?]</span>
+- During network partition: <span class="fill-in">[Chooses C or A?]</span>
+- Why: <span class="fill-in">[Fill in reasoning]</span>
 
 **Quorum (R=1, W=1, N=3):**
 
-- Consistency: _[Strong/Eventual]_
-- Availability: _[High/Medium/Low]_
-- CAP classification: _[CP/AP]_
+- Consistency: <span class="fill-in">[Strong/Eventual]</span>
+- Availability: <span class="fill-in">[High/Medium/Low]</span>
+- CAP classification: <span class="fill-in">[CP/AP]</span>
 
 **Quorum (R=2, W=2, N=3):**
 
-- Consistency: _[Strong/Eventual - why different?]_
-- Availability: _[High/Medium/Low]_
-- CAP classification: _[CP/AP]_
+- Consistency: <span class="fill-in">[Strong/Eventual - why different?]</span>
+- Availability: <span class="fill-in">[High/Medium/Low]</span>
+- CAP classification: <span class="fill-in">[CP/AP]</span>
 
 **Distributed Locks:**
 
-- Depends on: _[What makes it CP vs AP?]_
-- With expiration: _[CP/AP - why?]_
-- Without expiration: _[CP/AP - why?]_
+- Depends on: <span class="fill-in">[What makes it CP vs AP?]</span>
+- With expiration: <span class="fill-in">[CP/AP - why?]</span>
+- Without expiration: <span class="fill-in">[CP/AP - why?]</span>
 
 **Deep question:** Can you design an eventually consistent leader election?
 
-Your answer: _[Yes/No - explain why or why not]_
+Your answer: <span class="fill-in">[Yes/No - explain why or why not]</span>
 
 ---
 
@@ -2788,20 +2821,22 @@ Your answer: _[Yes/No - explain why or why not]_
 **Option A:** Implement complete Raft leader election + log replication from memory (30 mins)
 
 **Option B:** Design consensus strategy for real-world system:
+
 - E-commerce order processing across 3 datacenters
 - Must prevent duplicate orders
 - Must handle datacenter failure
-- Specify: _[Leader election/Raft/Quorum/Locks - why?]_
-- Draw architecture: _[How does it work?]_
-- Failure analysis: _[What happens when...?]_
+- Specify: <span class="fill-in">[Leader election/Raft/Quorum/Locks - why?]</span>
+- Draw architecture: <span class="fill-in">[How does it work?]</span>
+- Failure analysis: <span class="fill-in">[What happens when...?]</span>
 
 **Option C:** Debug a complex consensus bug:
+
 - 5-node Raft cluster
 - Client writes "SET x=1", leader replicates to 2 nodes, commits
 - Leader crashes, new leader elected
 - New leader doesn't have "SET x=1" in committed log
-- What went wrong? _[Detailed analysis]_
-- How to fix? _[Explain the bug and solution]_
+- What went wrong? <span class="fill-in">[Detailed analysis]</span>
+- How to fix? <span class="fill-in">[Explain the bug and solution]</span>
 
 **If score < 8:** Review the sections where you struggled, implement the proof of mastery, then retry this gate.
 

@@ -30,10 +30,13 @@ Build real implementations to understand how systems work:
 7. **Load Balancing** - Consistent hashing, health checks
 8. **Concurrency Patterns** - Locks, producer-consumer, thread safety
 9. **Database Scaling** - Replication, sharding, partitioning
+
 10. **Message Queues** - Queue vs pub/sub, delivery guarantees
 11. **Stream Processing** - Windowing, watermarks, exactly-once semantics
+
 12. **Observability** - Metrics, logging, tracing, SLOs
 13. **Distributed Transactions** - Saga pattern, idempotency
+
 14. **Consensus Patterns** - Raft, leader election, distributed locks
 15. **Full System Designs** - Apply everything (Instagram, Uber, etc.)
 
@@ -50,12 +53,16 @@ Pattern-based approach from easy to advanced:
 7. **Trees - Recursion**
 8. **Binary Search**
 9. **Union-Find** - Disjoint sets for connectivity (before Graphs for MST algorithms)
+
 10. **Graphs (DFS/BFS)** - Traversals, shortest path, MST
 11. **Heaps** - Priority queues, top K problems
+
 12. **Backtracking** - Permutations, combinations, constraint satisfaction
 13. **Dynamic Programming - 1D** - Fibonacci, house robber, coin change
+
 14. **Dynamic Programming - 2D** - Knapsack, LCS, edit distance
 15. **Tries** - Prefix trees for string problems
+
 16. **Advanced Topics** - Bit manipulation, intervals, prefix sums
 
 ---
@@ -97,11 +104,13 @@ For each topic:
 **Choose your starting point:**
 
 **For Systems Design:** [01. Storage Engines →](systems/01-storage-engines.md)
+
 - Implement B+Tree and LSM Tree from scratch
 - Benchmark read vs write performance
 - Understand when to use each
 
 **For DSA:** [01. Two Pointers →](dsa/01-two-pointers.md)
+
 - Learn three two-pointer patterns
 - Implement from scratch
 - Solve problems to build pattern recognition
