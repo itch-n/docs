@@ -28,7 +28,6 @@
 5. **What's the difference between min-heap and max-heap?**
     - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
-
 </div>
 
 ---
@@ -67,10 +66,14 @@
 **Scenario 2:** Find median of stream `[5, 15, 1, 3]`
 
 - **Using two heaps:**
-    - After adding 5: maxHeap = <span class="fill-in">___</span>, minHeap = <span class="fill-in">___</span>, median = <span class="fill-in">___</span>
-    - After adding 15: maxHeap = <span class="fill-in">___</span>, minHeap = <span class="fill-in">___</span>, median = <span class="fill-in">___</span>
-    - After adding 1: maxHeap = <span class="fill-in">___</span>, minHeap = <span class="fill-in">___</span>, median = <span class="fill-in">___</span>
-    - After adding 3: maxHeap = <span class="fill-in">___</span>, minHeap = <span class="fill-in">___</span>, median = <span class="fill-in">___</span>
+    - After adding 5: maxHeap = <span class="fill-in">___</span>, minHeap = <span class="fill-in">___</span>,
+      median = <span class="fill-in">___</span>
+    - After adding 15: maxHeap = <span class="fill-in">___</span>, minHeap = <span class="fill-in">___</span>,
+      median = <span class="fill-in">___</span>
+    - After adding 1: maxHeap = <span class="fill-in">___</span>, minHeap = <span class="fill-in">___</span>,
+      median = <span class="fill-in">___</span>
+    - After adding 3: maxHeap = <span class="fill-in">___</span>, minHeap = <span class="fill-in">___</span>,
+      median = <span class="fill-in">___</span>
 
 **Scenario 3:** Merge 3 sorted lists: `[1,4,5]`, `[1,3,4]`, `[2,6]`
 
@@ -98,7 +101,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 - Your answer: <span class="fill-in">[Fill in reasoning]</span>
 - Verified: <span class="fill-in">[Fill in after implementation]</span>
-
 
 </div>
 
@@ -154,11 +156,11 @@ public static int findKthLargest_Heap(int[] nums, int k) {
 
 #### Performance Comparison
 
-| Array Size (n) | k | Sorting (O(n log n)) | Heap (O(n log k)) | Speedup |
-|----------------|---|----------------------|-------------------|---------|
-| n = 1,000      | 10 | ~10,000 ops         | ~3,000 ops        | 3x      |
-| n = 10,000     | 10 | ~130,000 ops        | ~33,000 ops       | 4x      |
-| n = 100,000    | 100 | ~1,600,000 ops     | ~660,000 ops      | 2.4x    |
+| Array Size (n) | k   | Sorting (O(n log n)) | Heap (O(n log k)) | Speedup |
+|----------------|-----|----------------------|-------------------|---------|
+| n = 1,000      | 10  | ~10,000 ops          | ~3,000 ops        | 3x      |
+| n = 10,000     | 10  | ~130,000 ops         | ~33,000 ops       | 4x      |
+| n = 100,000    | 100 | ~1,600,000 ops       | ~660,000 ops      | 2.4x    |
 
 **Your calculation:** For n = 50,000 and k = 50, the speedup is approximately _____ times faster.
 
@@ -818,14 +820,17 @@ public static int findKthLargest_Buggy(int[] nums, int k) {
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug 1:** Should use **min-heap**, not max-heap! For Kth largest, we want to keep the K largest elements and remove the smallest among them.
+**Bug 1:** Should use **min-heap**, not max-heap! For Kth largest, we want to keep the K largest elements and remove the
+smallest among them.
 
 **Correct:**
+
 ```java
 PriorityQueue<Integer> minHeap = new PriorityQueue<>();
 ```
 
-**Bug 2:** With max-heap, `poll()` removes the LARGEST element, which is exactly what we want to KEEP! This defeats the purpose.
+**Bug 2:** With max-heap, `poll()` removes the LARGEST element, which is exactly what we want to KEEP! This defeats the
+purpose.
 
 **Why min-heap works:**
 
@@ -834,6 +839,7 @@ PriorityQueue<Integer> minHeap = new PriorityQueue<>();
 - That smallest element IS the Kth largest!
 
 **Trace with correct code:**
+
 ```
 [3, 2, 1, 5, 6, 4], k=2
 Add 3: [3]
@@ -844,6 +850,7 @@ Add 6: [3,5,6], poll() removes 3 → [5,6]
 Add 4: [4,5,6], poll() removes 4 → [5,6]
 peek() = 5 ✓
 ```
+
 </details>
 
 ---
@@ -902,6 +909,7 @@ static class MedianFinder_Buggy {
 **Bug 1:** Missing **rebalancing logic**! Heaps can become severely unbalanced.
 
 **Correct addNum:**
+
 ```java
 public void addNum(int num) {
     if (maxHeap.isEmpty() || num < maxHeap.peek()) {
@@ -919,9 +927,11 @@ public void addNum(int num) {
 }
 ```
 
-**Bug 2:** The else-if case should probably never happen if we maintain maxHeap.size() >= minHeap.size() as invariant. But if it does, the logic is actually correct - we'd return minHeap.peek().
+**Bug 2:** The else-if case should probably never happen if we maintain maxHeap.size() >= minHeap.size() as invariant.
+But if it does, the logic is actually correct - we'd return minHeap.peek().
 
 **Better approach - Always add to maxHeap first:**
+
 ```java
 public void addNum(int num) {
     maxHeap.offer(num);
@@ -994,6 +1004,7 @@ static class MinHeap_Buggy {
     - Right child of i: <span class="fill-in">[Your formula]</span>
 
 **Test case:**
+
 ```
 Insert: 5, 3, 7, 1
 Expected heap array: [1, 3, 7, 5] (min-heap property)
@@ -1006,6 +1017,7 @@ Actual with buggy code: <span class="fill-in">[What happens?]</span>
 **All three formulas are wrong for 0-indexed arrays!**
 
 **Correct formulas for 0-indexed:**
+
 ```java
 private int parent(int i) {
     return (i - 1) / 2;  // Not i / 2
@@ -1023,6 +1035,7 @@ private int rightChild(int i) {
 **Why these formulas?**
 
 In 0-indexed array `[0, 1, 2, 3, 4, 5, 6]`:
+
 ```
        0
       / \
@@ -1039,6 +1052,7 @@ In 0-indexed array `[0, 1, 2, 3, 4, 5, 6]`:
 - Right of 1: 2*1+2 = 4 ✓
 
 **For 1-indexed arrays (if you stored heap starting at index 1):**
+
 ```java
 parent(i) = i / 2
 leftChild(i) = 2 * i
@@ -1091,6 +1105,7 @@ public static int[][] kClosest_Buggy(int[][] points, int k) {
 - Therefore, use <span class="fill-in">[min/max]</span>-heap
 
 **Test case:**
+
 ```
 Points: [[1,3], [-2,2], [5,8], [0,1]], k=2
 Distances: [10, 8, 89, 1]
@@ -1110,6 +1125,7 @@ Actual with buggy code: <span class="fill-in">[What do you get?]</span>
 - Keep K smallest, remove the largest of them when heap exceeds size K
 
 **Correct:**
+
 ```java
 PriorityQueue<int[]> maxHeap = new PriorityQueue<>(
     (a, b) -> (b[0]*b[0] + b[1]*b[1]) - (a[0]*a[0] + a[1]*a[1])
@@ -1336,7 +1352,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -1362,13 +1379,13 @@ If you scored below 7 or answered "No" to either question, revise your explanati
 
 **Task:** Without looking at notes, complete this decision table.
 
-| Problem | Heap Type | Heap Size | Why? |
-|---------|-----------|-----------|------|
-| Find Kth largest element | <span class="fill-in">[min/max]</span> | <span class="fill-in">[K/N]</span> | <span class="fill-in">[Explain]</span> |
+| Problem                   | Heap Type                              | Heap Size                          | Why?                                   |
+|---------------------------|----------------------------------------|------------------------------------|----------------------------------------|
+| Find Kth largest element  | <span class="fill-in">[min/max]</span> | <span class="fill-in">[K/N]</span> | <span class="fill-in">[Explain]</span> |
 | Find Kth smallest element | <span class="fill-in">[min/max]</span> | <span class="fill-in">[K/N]</span> | <span class="fill-in">[Explain]</span> |
-| Find K closest points | <span class="fill-in">[min/max]</span> | <span class="fill-in">[K/N]</span> | <span class="fill-in">[Explain]</span> |
-| Find K most frequent | <span class="fill-in">[min/max]</span> | <span class="fill-in">[K/N]</span> | <span class="fill-in">[Explain]</span> |
-| Merge K sorted lists | <span class="fill-in">[min/max]</span> | <span class="fill-in">[K/N]</span> | <span class="fill-in">[Explain]</span> |
+| Find K closest points     | <span class="fill-in">[min/max]</span> | <span class="fill-in">[K/N]</span> | <span class="fill-in">[Explain]</span> |
+| Find K most frequent      | <span class="fill-in">[min/max]</span> | <span class="fill-in">[K/N]</span> | <span class="fill-in">[Explain]</span> |
+| Merge K sorted lists      | <span class="fill-in">[min/max]</span> | <span class="fill-in">[K/N]</span> | <span class="fill-in">[Explain]</span> |
 
 **Verification:**
 
@@ -1429,13 +1446,13 @@ After adding 8:
 
 **Complete this table from memory:**
 
-| Operation | Min/Max Heap | Two Heaps (Median) | Heap of Size K | Why? |
-|-----------|--------------|-------------------|----------------|------|
-| Insert | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Delete/Extract | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Peek/Find | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Find Kth largest (total) | - | - | O(?) | <span class="fill-in">[Explain]</span> |
-| Median of N elements (total) | - | O(?) | - | <span class="fill-in">[Explain]</span> |
+| Operation                    | Min/Max Heap | Two Heaps (Median) | Heap of Size K | Why?                                   |
+|------------------------------|--------------|--------------------|----------------|----------------------------------------|
+| Insert                       | O(?)         | O(?)               | O(?)           | <span class="fill-in">[Explain]</span> |
+| Delete/Extract               | O(?)         | O(?)               | O(?)           | <span class="fill-in">[Explain]</span> |
+| Peek/Find                    | O(?)         | O(?)               | O(?)           | <span class="fill-in">[Explain]</span> |
+| Find Kth largest (total)     | -            | -                  | O(?)           | <span class="fill-in">[Explain]</span> |
+| Median of N elements (total) | -            | O(?)               | -              | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why is finding Kth largest with heap O(n log k) instead of O(n log n)?
 
@@ -1447,14 +1464,14 @@ Your answer: <span class="fill-in">[Fill in - explain the fundamental difference
 
 **Without looking at your notes, identify the heap pattern:**
 
-| Problem | Pattern | Heap Type | Explanation |
-|---------|---------|-----------|-------------|
+| Problem                      | Pattern                                | Heap Type                              | Explanation                            |
+|------------------------------|----------------------------------------|----------------------------------------|----------------------------------------|
 | Find median from data stream | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Merge K sorted arrays | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Top K frequent elements | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Kth largest in stream | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Find K closest points | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Last stone weight | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Merge K sorted arrays        | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Top K frequent elements      | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Kth largest in stream        | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Find K closest points        | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Last stone weight            | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1605,6 +1622,7 @@ rightChild(i) = <span class="fill-in">_______________</span>
 **Verify with example:**
 
 Given heap array `[1, 3, 5, 7, 9, 10, 15]`:
+
 ```
        1
       / \

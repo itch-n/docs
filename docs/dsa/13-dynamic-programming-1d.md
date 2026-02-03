@@ -28,7 +28,6 @@
 5. **What's the difference between top-down and bottom-up?**
     - Your answer: <span class="fill-in">[Fill in after learning both approaches]</span>
 
-
 </div>
 
 ---
@@ -104,7 +103,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 - Your answer: <span class="fill-in">[Fill in - what's the pattern?]</span>
 - Verified: <span class="fill-in">[Fill in after learning Fibonacci-style problems]</span>
 
-
 </div>
 
 ---
@@ -135,6 +133,7 @@ public static int fib_Recursive(int n) {
 - For n = 50: Would take hours or days
 
 **Why so slow?** Tree of recursive calls:
+
 ```
 fib(5)
 ├── fib(4)
@@ -209,11 +208,11 @@ public static int fib_BottomUp(int n) {
 
 #### Performance Comparison
 
-| Approach | n=10 | n=20 | n=30 | n=40 | Space |
-|----------|------|------|------|------|-------|
-| Recursive | 0.001ms | 2ms | 200ms | 2000ms | O(n) stack |
+| Approach    | n=10    | n=20    | n=30    | n=40    | Space      |
+|-------------|---------|---------|---------|---------|------------|
+| Recursive   | 0.001ms | 2ms     | 200ms   | 2000ms  | O(n) stack |
 | Memoization | 0.001ms | 0.001ms | 0.001ms | 0.001ms | O(n) array |
-| Bottom-Up | 0.001ms | 0.001ms | 0.001ms | 0.001ms | O(1) |
+| Bottom-Up   | 0.001ms | 0.001ms | 0.001ms | 0.001ms | O(1)       |
 
 **Speedup for n=40:** Memoization is ~2,000,000x faster than pure recursion!
 
@@ -226,6 +225,7 @@ public static int fib_BottomUp(int n) {
 2. **Overlapping Subproblems:** Same values calculated repeatedly in naive recursion
 
 **Visualization of overlapping subproblems:**
+
 ```
 Computing fib(6):
 fib(5): needs fib(4) + fib(3)
@@ -822,7 +822,8 @@ public class StockProblemsClient {
 
 ## Debugging Challenges
 
-**Your task:** Find and fix bugs in broken DP implementations. This tests your understanding of recurrence relations, base cases, and iteration order.
+**Your task:** Find and fix bugs in broken DP implementations. This tests your understanding of recurrence relations,
+base cases, and iteration order.
 
 ### Challenge 1: Broken Climbing Stairs
 
@@ -868,9 +869,11 @@ public static int climbStairs_Buggy(int n) {
 
 **Bug 1 (Line 6):** Array size should be `n + 1`, not `n`. We need indices from 0 to n inclusive, or adjust indexing.
 
-**Bug 2 (Line 9):** Loop condition `i <= n` will cause ArrayIndexOutOfBoundsException. Either use `i < n` or fix array size to `n + 1`.
+**Bug 2 (Line 9):** Loop condition `i <= n` will cause ArrayIndexOutOfBoundsException. Either use `i < n` or fix array
+size to `n + 1`.
 
 **Correct version:**
+
 ```java
 public static int climbStairs(int n) {
     if (n == 1) return 1;
@@ -889,6 +892,7 @@ public static int climbStairs(int n) {
 ```
 
 **Alternative fix with O(1) space:**
+
 ```java
 public static int climbStairs(int n) {
     if (n <= 2) return n;
@@ -902,6 +906,7 @@ public static int climbStairs(int n) {
     return prev1;
 }
 ```
+
 </details>
 
 ---
@@ -949,11 +954,14 @@ public static int coinChange_Buggy(int[] coins, int amount) {
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug 1:** Loop is actually okay but can be clearer. Better approach is `for (int i = 1; i <= amount; i++)` and check `i - coin >= 0`.
+**Bug 1:** Loop is actually okay but can be clearer. Better approach is `for (int i = 1; i <= amount; i++)` and check
+`i - coin >= 0`.
 
-**Bug 2:** The logic has a subtle bug: if `dp[i]` is MAX_VALUE, then `dp[i] + 1` overflows to negative! Need to check before adding.
+**Bug 2:** The logic has a subtle bug: if `dp[i]` is MAX_VALUE, then `dp[i] + 1` overflows to negative! Need to check
+before adding.
 
 **Correct version:**
+
 ```java
 public static int coinChange(int[] coins, int amount) {
     int[] dp = new int[amount + 1];
@@ -972,7 +980,8 @@ public static int coinChange(int[] coins, int amount) {
 }
 ```
 
-**Key insight:** Use `amount + 1` instead of `Integer.MAX_VALUE` as infinity to avoid overflow. It's impossible to need more than `amount` coins if you have coin value 1.
+**Key insight:** Use `amount + 1` instead of `Integer.MAX_VALUE` as infinity to avoid overflow. It's impossible to need
+more than `amount` coins if you have coin value 1.
 </details>
 
 ---
@@ -1025,9 +1034,11 @@ public static int rob_Buggy(int[] nums) {
 
 **Bug (Line 7):** `dp[1]` should be `Math.max(nums[0], nums[1])`, not just `nums[1]`.
 
-**Why:** At house 1, you have a choice: rob house 0 OR rob house 1. You should take the maximum of the two, not automatically rob house 1.
+**Why:** At house 1, you have a choice: rob house 0 OR rob house 1. You should take the maximum of the two, not
+automatically rob house 1.
 
 **Correct version:**
+
 ```java
 public static int rob(int[] nums) {
     if (nums.length == 0) return 0;
@@ -1046,6 +1057,7 @@ public static int rob(int[] nums) {
 ```
 
 **Space-optimized version:**
+
 ```java
 public static int rob(int[] nums) {
     if (nums.length == 0) return 0;
@@ -1063,6 +1075,7 @@ public static int rob(int[] nums) {
     return prev1;
 }
 ```
+
 </details>
 
 ---
@@ -1116,14 +1129,18 @@ public static boolean wordBreak_Buggy(String s, List<String> wordDict) {
 **Why it works:**
 
 - Inner loop `j` from `i` down to `0` checks all possible last words ending at position `i`
-- If `dp[j]` is true (substring 0..j can be segmented) AND substring j..i is in dictionary, then substring 0..i can be segmented
+- If `dp[j]` is true (substring 0..j can be segmented) AND substring j..i is in dictionary, then substring 0..i can be
+  segmented
 - The `break` is an optimization - once we find one valid segmentation, we don't need to find more
 
-**Common misconception:** Students often think the break causes problems, but we only need to know IF segmentation is possible, not find ALL ways.
+**Common misconception:** Students often think the break causes problems, but we only need to know IF segmentation is
+possible, not find ALL ways.
 
-**The real learning:** Not all complex-looking DP code has bugs! Sometimes the challenge is understanding WHY it's correct.
+**The real learning:** Not all complex-looking DP code has bugs! Sometimes the challenge is understanding WHY it's
+correct.
 
 **Alternative version without break (slightly less efficient):**
+
 ```java
 public static boolean wordBreak(String s, List<String> wordDict) {
     Set<String> dict = new HashSet<>(wordDict);
@@ -1195,6 +1212,7 @@ public static int change_Buggy(int amount, int[] coins) {
 **Correct should count:** {1,1,2}, {2,2}, {1,1,1,1} = 3 ways
 
 **Fix - swap loop order:**
+
 ```java
 public static int change(int amount, int[] coins) {
     int[] dp = new int[amount + 1];
@@ -1217,7 +1235,8 @@ public static int change(int amount, int[] coins) {
 - For each coin, we update all amounts that can use it
 - This prevents counting different orders of the same coin set
 
-**Key insight:** In combination problems (Coin Change II, Subset Sum), loop over items in outer loop. In minimum/maximum problems (Coin Change I), loop order doesn't matter.
+**Key insight:** In combination problems (Coin Change II, Subset Sum), loop over items in outer loop. In minimum/maximum
+problems (Coin Change I), loop order doesn't matter.
 </details>
 
 ---
@@ -1428,7 +1447,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -1497,14 +1517,14 @@ Final answer: ways(5) = <span class="fill-in">___</span>
 
 **Without looking at your notes, classify these problems:**
 
-| Problem | Pattern | Recurrence Relation | Base Case |
-|---------|---------|---------------------|-----------|
-| Fibonacci(n) | <span class="fill-in">[Fill in]</span> | F(n) = <span class="fill-in">[Fill in]</span> | F(0)=___, F(1)=___ |
-| Climbing stairs (1 or 2 steps) | <span class="fill-in">[Fill in]</span> | ways(n) = <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
-| House robber | <span class="fill-in">[Fill in]</span> | rob(i) = <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
-| Coin change (min coins) | <span class="fill-in">[Fill in]</span> | dp[i] = <span class="fill-in">[Fill in]</span> | dp[0] = <span class="fill-in">___</span> |
-| Word break | <span class="fill-in">[Fill in]</span> | dp[i] = <span class="fill-in">[Fill in]</span> | dp[0] = <span class="fill-in">___</span> |
-| Longest increasing subsequence | <span class="fill-in">[Fill in]</span> | dp[i] = <span class="fill-in">[Fill in]</span> | dp[i] = <span class="fill-in">___</span> |
+| Problem                        | Pattern                                | Recurrence Relation                              | Base Case                                |
+|--------------------------------|----------------------------------------|--------------------------------------------------|------------------------------------------|
+| Fibonacci(n)                   | <span class="fill-in">[Fill in]</span> | F(n) = <span class="fill-in">[Fill in]</span>    | F(0)=___, F(1)=___                       |
+| Climbing stairs (1 or 2 steps) | <span class="fill-in">[Fill in]</span> | ways(n) = <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span>   |
+| House robber                   | <span class="fill-in">[Fill in]</span> | rob(i) = <span class="fill-in">[Fill in]</span>  | <span class="fill-in">[Fill in]</span>   |
+| Coin change (min coins)        | <span class="fill-in">[Fill in]</span> | dp[i] = <span class="fill-in">[Fill in]</span>   | dp[0] = <span class="fill-in">___</span> |
+| Word break                     | <span class="fill-in">[Fill in]</span> | dp[i] = <span class="fill-in">[Fill in]</span>   | dp[0] = <span class="fill-in">___</span> |
+| Longest increasing subsequence | <span class="fill-in">[Fill in]</span> | dp[i] = <span class="fill-in">[Fill in]</span>   | dp[i] = <span class="fill-in">___</span> |
 
 **Score:** ___/6 correct
 
@@ -1761,9 +1781,12 @@ public static int coinChange(int[] coins, int amount) {
 
 **Your bug findings:**
 
-1. **Bug 1:** <span class="fill-in">[Line ___, Issue: <span class="fill-in">___</span>, Fix: <span class="fill-in">___</span>]</span>
-2. **Bug 2:** <span class="fill-in">[Line ___, Issue: <span class="fill-in">___</span>, Fix: <span class="fill-in">___</span>]</span>
-3. **Bug 3:** <span class="fill-in">[Line ___, Issue: <span class="fill-in">___</span>, Fix: <span class="fill-in">___</span>]</span>
+1. **Bug 1:** <span class="fill-in">[Line
+   ___, Issue: <span class="fill-in">___</span>, Fix: <span class="fill-in">___</span>]</span>
+2. **Bug 2:** <span class="fill-in">[Line
+   ___, Issue: <span class="fill-in">___</span>, Fix: <span class="fill-in">___</span>]</span>
+3. **Bug 3:** <span class="fill-in">[Line
+   ___, Issue: <span class="fill-in">___</span>, Fix: <span class="fill-in">___</span>]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>

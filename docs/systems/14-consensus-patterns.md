@@ -32,7 +32,6 @@
 6. **Why do we need quorums?**
     - Your answer: <span class="fill-in">[Fill in after practice]</span>
 
-
 </div>
 
 ---
@@ -41,7 +40,8 @@
 
 <div class="learner-section" markdown>
 
-**Your task:** Test your intuition about distributed consensus without looking at code. Answer these, then verify after implementation.
+**Your task:** Test your intuition about distributed consensus without looking at code. Answer these, then verify after
+implementation.
 
 ### Complexity Predictions
 
@@ -100,7 +100,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)? Why?]</span>
 
 - Your answer: <span class="fill-in">[Fill in before implementation]</span>
 - Verified answer: <span class="fill-in">[Fill in after implementing Pattern 3]</span>
-
 
 </div>
 
@@ -241,12 +240,12 @@ Result:
 
 #### Performance Comparison: Failure Scenarios
 
-| Scenario | Naive Election | Raft Consensus |
-|----------|----------------|----------------|
-| Network partition | Split-brain (2 leaders) | Single leader in majority |
-| Node failure | Immediate re-election | Election only if leader fails |
-| Data consistency | Violated during partition | Preserved (CP in CAP) |
-| Write availability | Both partitions accept | Only majority partition |
+| Scenario           | Naive Election            | Raft Consensus                |
+|--------------------|---------------------------|-------------------------------|
+| Network partition  | Split-brain (2 leaders)   | Single leader in majority     |
+| Node failure       | Immediate re-election     | Election only if leader fails |
+| Data consistency   | Violated during partition | Preserved (CP in CAP)         |
+| Write availability | Both partitions accept    | Only majority partition       |
 
 #### Why Does Raft Work?
 
@@ -304,7 +303,8 @@ Term 3: When partition heals, Node 5 sees Node 3 has higher term → steps down
 
 ### Pattern 1: Leader Election
 
-**Concept:** Distributed algorithm to elect a single leader node from a cluster of nodes, ensuring only one leader exists at any time.
+**Concept:** Distributed algorithm to elect a single leader node from a cluster of nodes, ensuring only one leader
+exists at any time.
 
 **Use case:** Distributed databases, coordination services, master-worker systems.
 
@@ -581,7 +581,8 @@ public class LeaderElectionClient {
 
 ### Pattern 2: Raft Consensus Algorithm
 
-**Concept:** Consensus algorithm that ensures replicated log consistency across distributed nodes through leader election and log replication.
+**Concept:** Consensus algorithm that ensures replicated log consistency across distributed nodes through leader
+election and log replication.
 
 **Use case:** Distributed databases (etcd, Consul), replicated state machines, configuration management.
 
@@ -1020,7 +1021,8 @@ public class RaftClient {
 
 ### Pattern 3: Distributed Locks
 
-**Concept:** Mechanism to ensure mutual exclusion across distributed systems, preventing concurrent access to shared resources.
+**Concept:** Mechanism to ensure mutual exclusion across distributed systems, preventing concurrent access to shared
+resources.
 
 **Use case:** Job schedulers, resource allocation, preventing duplicate processing.
 
@@ -1781,7 +1783,8 @@ public class QuorumClient {
 
 ## Debugging Challenges
 
-**Your task:** Find and fix bugs in broken consensus implementations. This tests your understanding of distributed systems failure modes.
+**Your task:** Find and fix bugs in broken consensus implementations. This tests your understanding of distributed
+systems failure modes.
 
 ### Challenge 1: Split-Brain in Leader Election
 
@@ -1841,23 +1844,29 @@ public class BuggyLeaderElection {
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug 1 (Line 15):** Increments `votesReceived` unconditionally, even when `voteGranted` is false. Should only increment when vote is granted.
+**Bug 1 (Line 15):** Increments `votesReceived` unconditionally, even when `voteGranted` is false. Should only increment
+when vote is granted.
 
 **Fix:**
+
 ```java
 if (voteGranted) votesReceived++;
 ```
 
-**Bug 2 (Line 19):** Uses `>` instead of `>=`. With 5 nodes, majority is 3. If candidate gets exactly 3 votes, `3 > 3` is false, so no leader elected!
+**Bug 2 (Line 19):** Uses `>` instead of `>=`. With 5 nodes, majority is 3. If candidate gets exactly 3 votes, `3 > 3`
+is false, so no leader elected!
 
 **Fix:**
+
 ```java
 if (votesReceived >= majoritySize) {
 ```
 
-**With bugs:** In partition {1, 2}, Node 1 gets 2 votes but bug counts as 3+ → becomes leader. In partition {3, 4, 5}, Node 3 gets 3 votes → becomes leader. **Two leaders!**
+**With bugs:** In partition {1, 2}, Node 1 gets 2 votes but bug counts as 3+ → becomes leader. In partition {3, 4, 5},
+Node 3 gets 3 votes → becomes leader. **Two leaders!**
 
-**After fixes:** Node 1 gets 2 votes < 3 majority → no leader. Node 3 gets 3 votes ≥ 3 majority → becomes leader. **One leader only.**
+**After fixes:** Node 1 gets 2 votes < 3 majority → no leader. Node 3 gets 3 votes ≥ 3 majority → becomes leader. **One
+leader only.**
 </details>
 
 ---
@@ -1921,14 +1930,17 @@ public class BuggyRaftReplication {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug (Line 17):** Initializes `replicatedCount = 0`, forgetting that the leader already has the entry in its log. Should start at 1.
+**Bug (Line 17):** Initializes `replicatedCount = 0`, forgetting that the leader already has the entry in its log.
+Should start at 1.
 
 **Fix:**
+
 ```java
 int replicatedCount = 1; // Leader has it
 ```
 
-**Why it matters:** With 5 nodes, majority = 3. If leader + 2 followers have the entry, that's 3 copies (majority). But bug counts only 2 followers, thinks it's not committed, and entry could be lost if leader crashes.
+**Why it matters:** With 5 nodes, majority = 3. If leader + 2 followers have the entry, that's 3 copies (majority). But
+bug counts only 2 followers, thinks it's not committed, and entry could be lost if leader crashes.
 
 **Correct behavior:** Leader counts self + 2 followers = 3 ≥ majority → committed. Entry is safe even if leader fails.
 </details>
@@ -1985,9 +1997,11 @@ public class BuggyRequestVote {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug (After line 14):** When updating term, must reset `votedFor = -1` to allow voting in new term. Current code leaves old vote in place.
+**Bug (After line 14):** When updating term, must reset `votedFor = -1` to allow voting in new term. Current code leaves
+old vote in place.
 
 **Fix:**
+
 ```java
 if (candidateTerm > voter.currentTerm) {
     voter.currentTerm = candidateTerm;
@@ -1995,7 +2009,8 @@ if (candidateTerm > voter.currentTerm) {
 }
 ```
 
-**Why it matters:** In new term, voter should be able to vote again. Without reset, voter stays committed to old vote, can't vote for anyone in new term, election may fail.
+**Why it matters:** In new term, voter should be able to vote again. Without reset, voter stays committed to old vote,
+can't vote for anyone in new term, election may fail.
 
 **Correct:** When Node 3 sees candidateTerm=2 > currentTerm=1, it resets votedFor=-1, then can vote for Node 1.
 </details>
@@ -2051,9 +2066,11 @@ public class BuggyAppendEntries {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug (After line 16):** Missing log consistency check. Must verify that follower's log at `prevLogIndex` has term `prevLogTerm`.
+**Bug (After line 16):** Missing log consistency check. Must verify that follower's log at `prevLogIndex` has term
+`prevLogTerm`.
 
 **Fix:**
+
 ```java
 // Check log consistency
 if (prevLogIndex > 0) {
@@ -2066,9 +2083,11 @@ if (prevLogIndex > 0) {
 }
 ```
 
-**Why it matters:** Raft requires logs to be consistent before appending. If follower has conflicting entry (different term at same index), must reject and let leader retry with earlier index.
+**Why it matters:** Raft requires logs to be consistent before appending. If follower has conflicting entry (different
+term at same index), must reject and let leader retry with earlier index.
 
-**Correct:** Leader's prevLogTerm=1, but follower has term=2 at index 2 → reject. Leader decrements prevLogIndex and retries until logs match.
+**Correct:** Leader's prevLogTerm=1, but follower has term=2 at index 2 → reject. Leader decrements prevLogIndex and
+retries until logs match.
 </details>
 
 ---
@@ -2119,9 +2138,11 @@ public class BuggyDistributedLock {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug (Line 11):** Doesn't check if existing lock is expired. Should call `existingLock.isExpired()` before rejecting acquisition.
+**Bug (Line 11):** Doesn't check if existing lock is expired. Should call `existingLock.isExpired()` before rejecting
+acquisition.
 
 **Fix:**
+
 ```java
 if (existingLock != null && !existingLock.isExpired()) {
     if (!existingLock.ownerId.equals(ownerId)) {
@@ -2130,9 +2151,11 @@ if (existingLock != null && !existingLock.isExpired()) {
 }
 ```
 
-**Why it matters:** If lock holder crashes, lock expires after TTL. Without expiration check, lock remains held forever → deadlock. Other processes can never acquire.
+**Why it matters:** If lock holder crashes, lock expires after TTL. Without expiration check, lock remains held
+forever → deadlock. Other processes can never acquire.
 
-**Correct:** After TTL expires, lock is considered released, can be acquired by another process. Prevents deadlock from crashed holders.
+**Correct:** After TTL expires, lock is considered released, can be acquired by another process. Prevents deadlock from
+crashed holders.
 </details>
 
 ---
@@ -2194,6 +2217,7 @@ public class BuggyQuorumRead {
 **Bug (Line 23):** Returns first response without comparing versions. First response might be stale (lower version).
 
 **Fix:**
+
 ```java
 if (responses.size() >= readQuorum) {
     return resolveConflicts(responses); // Pick latest version
@@ -2201,6 +2225,7 @@ if (responses.size() >= readQuorum) {
 ```
 
 **Conflict resolution:**
+
 ```java
 private VersionedValue resolveConflicts(List<VersionedValue> values) {
     VersionedValue latest = values.get(0);
@@ -2213,7 +2238,8 @@ private VersionedValue resolveConflicts(List<VersionedValue> values) {
 }
 ```
 
-**Why it matters:** Even with quorum, responses can have different versions. Must compare and return latest to guarantee consistency.
+**Why it matters:** Even with quorum, responses can have different versions. Must compare and return latest to guarantee
+consistency.
 
 **Correct:** Compare Node 1 (v1) and Node 2 (v2), return v2 (higher version). Client sees consistent, latest data.
 </details>
@@ -2496,7 +2522,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery of consensus patterns through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery of consensus patterns through explanation and application. You cannot move forward until
+you can confidently complete this section.
 
 ### Gate 1: Explain to a Systems Engineer
 
@@ -2570,14 +2597,14 @@ Step 4: [What happens to writes in each partition?]
 
 **Without looking at your notes, classify these scenarios:**
 
-| Scenario | Pattern | Why? |
-|----------|---------|------|
-| Need single coordinator for database writes | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Scenario                                         | Pattern                                | Why?                                   |
+|--------------------------------------------------|----------------------------------------|----------------------------------------|
+| Need single coordinator for database writes      | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 | Multi-datacenter database with high availability | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Prevent duplicate job execution across workers | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Configuration store (like etcd/ZooKeeper) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Globally distributed key-value store | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Coordination service with strong consistency | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Prevent duplicate job execution across workers   | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Configuration store (like etcd/ZooKeeper)        | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Globally distributed key-value store             | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Coordination service with strong consistency     | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -2589,12 +2616,12 @@ If you scored below 5/6, review the decision framework and try again.
 
 **Complete this table from memory:**
 
-| Failure Scenario | Leader Election | Raft | Quorum | Why? |
-|------------------|----------------|------|--------|------|
-| Network partition | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Explain]</span> |
-| Leader crashes | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Explain]</span> |
+| Failure Scenario    | Leader Election                        | Raft                                   | Quorum                                 | Why?                                   |
+|---------------------|----------------------------------------|----------------------------------------|----------------------------------------|----------------------------------------|
+| Network partition   | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Explain]</span> |
+| Leader crashes      | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Explain]</span> |
 | Minority nodes fail | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Explain]</span> |
-| Clock skew | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Explain]</span> |
+| Clock skew          | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Impact?]</span> | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** How does Raft prevent split-brain during network partition?
 

@@ -157,10 +157,10 @@ long duration = System.nanoTime() - start;
 #### Performance Comparison
 
 | Operation Count | B+Tree (O(N log N)) | LSM Tree (O(N log M)) | LSM Advantage |
-|----------------|---------------------|----------------------|---------------|
-| N = 1,000      | ~10,000 ops         | ~2,000 ops           | 5x faster     |
-| N = 10,000     | ~130,000 ops        | ~20,000 ops          | 6.5x faster   |
-| N = 100,000    | ~1,700,000 ops      | ~200,000 ops         | 8.5x faster   |
+|-----------------|---------------------|-----------------------|---------------|
+| N = 1,000       | ~10,000 ops         | ~2,000 ops            | 5x faster     |
+| N = 10,000      | ~130,000 ops        | ~20,000 ops           | 6.5x faster   |
+| N = 100,000     | ~1,700,000 ops      | ~200,000 ops          | 8.5x faster   |
 
 **Your calculation:** For N = 50,000 writes, LSM Tree is approximately _____ times faster.
 
@@ -169,6 +169,7 @@ long duration = System.nanoTime() - start;
 **Key insight to understand:**
 
 B+Tree: Every insert = tree traversal + potential split
+
 ```
 Insert key=50:
 
@@ -180,6 +181,7 @@ Result: 1 logical write = 4-5 physical writes (write amplification!)
 ```
 
 LSM Tree: Batched sequential writes
+
 ```
 Insert key=50:
 
@@ -253,10 +255,10 @@ long duration = System.nanoTime() - start;
 #### Performance Comparison
 
 | SSTable Count | B+Tree (O(log N)) | LSM Tree (O(K * log S)) | B+Tree Advantage |
-|---------------|-------------------|------------------------|------------------|
-| K = 1         | ~13 ops/read      | ~13 ops/read           | ~1x (equal)      |
-| K = 5         | ~13 ops/read      | ~65 ops/read           | 5x faster        |
-| K = 10        | ~13 ops/read      | ~130 ops/read          | 10x faster       |
+|---------------|-------------------|-------------------------|------------------|
+| K = 1         | ~13 ops/read      | ~13 ops/read            | ~1x (equal)      |
+| K = 5         | ~13 ops/read      | ~65 ops/read            | 5x faster        |
+| K = 10        | ~13 ops/read      | ~130 ops/read           | 10x faster       |
 
 **Your calculation:** With 20 SSTables, B+Tree is approximately _____ times faster for reads.
 
@@ -948,9 +950,11 @@ private void splitLeaf(LeafNode leaf) {
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug 1 (Lines 13-16):** Removing elements while iterating forward breaks indices. Each removal shifts remaining elements left.
+**Bug 1 (Lines 13-16):** Removing elements while iterating forward breaks indices. Each removal shifts remaining
+elements left.
 
 **Fix:**
+
 ```java
 // Remove from end to avoid index shifting
 for (int i = leaf.keys.size() - 1; i >= midpoint; i--) {
@@ -965,6 +969,7 @@ leaf.values.subList(midpoint, leaf.values.size()).clear();
 **Bug 2 (After line 11):** Must link new leaf into the leaf chain for range queries!
 
 **Fix:**
+
 ```java
 newLeaf.next = leaf.next;  // New leaf points to old leaf's next
 leaf.next = newLeaf;       // Old leaf points to new leaf
@@ -973,6 +978,7 @@ leaf.next = newLeaf;       // Old leaf points to new leaf
 **Bug 3 (Lines 22-23):** If leaf is root, parent is null - NullPointerException!
 
 **Fix:**
+
 ```java
 if (leaf.parent == null) {
     // Create new root
@@ -989,6 +995,7 @@ if (leaf.parent == null) {
     // Insert newLeaf in corresponding position
 }
 ```
+
 </details>
 
 ---
@@ -1039,9 +1046,11 @@ public void compact() {
 
 **Bug 1 (Line 9):** Iterating from newest to oldest means older values overwrite newer ones!
 
-LSM Trees must keep the NEWEST value for each key. By iterating newest-to-oldest and using `put()`, when we encounter the key again in an older SSTable, it overwrites the newer value.
+LSM Trees must keep the NEWEST value for each key. By iterating newest-to-oldest and using `put()`, when we encounter
+the key again in an older SSTable, it overwrites the newer value.
 
 **Fix:**
+
 ```java
 // Iterate from OLDEST to NEWEST
 for (int i = 0; i < sstables.size(); i++) {
@@ -1055,10 +1064,12 @@ for (int i = 0; i < sstables.size(); i++) {
 **Bug 2 (Line 18):** We add the compacted SSTable but never remove the old ones! Memory leak!
 
 **Fix:**
+
 ```java
 sstables.clear();          // Remove all old SSTables
 sstables.add(compacted);   // Add compacted one
 ```
+
 </details>
 
 ---
@@ -1097,6 +1108,7 @@ private LeafNode findLeaf(K key) {
 - **Bug fix:** <span class="fill-in">[Should comparison be >= or >?]</span>
 
 **Trace through manually:**
+
 ```
 Internal node: keys=[20], children=[ChildA, ChildB]
 ChildA contains: [10, 15]
@@ -1118,6 +1130,7 @@ Search key=20:
 **B+Tree invariant:** Internal node key K means "left child < K, right child >= K"
 
 **Fix:**
+
 ```java
 while (i < internal.keys.size() && key.compareTo(internal.keys.get(i)) >= 0) {
     i++;
@@ -1125,6 +1138,7 @@ while (i < internal.keys.size() && key.compareTo(internal.keys.get(i)) >= 0) {
 ```
 
 OR be more explicit:
+
 ```java
 int i;
 for (i = 0; i < internal.keys.size(); i++) {
@@ -1134,6 +1148,7 @@ for (i = 0; i < internal.keys.size(); i++) {
 }
 current = internal.children.get(i);
 ```
+
 </details>
 
 ---
@@ -1182,11 +1197,13 @@ public class LSMTree<K extends Comparable<K>, V> {
 
 **Bug (After line 20):** We never clear the MemTable after flushing!
 
-**Result:** MemTable keeps growing forever. After first flush, memTable has 100 items. After second flush, it has 200. Eventually OutOfMemoryError.
+**Result:** MemTable keeps growing forever. After first flush, memTable has 100 items. After second flush, it has 200.
+Eventually OutOfMemoryError.
 
 **Also:** Data gets duplicated across SSTables because we keep the same data in memory and keep flushing it again.
 
 **Fix:**
+
 ```java
 private void flush() {
     SSTable<K, V> newTable = new SSTable<>(memTable);
@@ -1197,9 +1214,11 @@ private void flush() {
 ```
 
 OR initialize a new MemTable:
+
 ```java
 memTable = new TreeMap<>();
 ```
+
 </details>
 
 ---
@@ -1238,7 +1257,8 @@ public List<V> rangeQuery(K startKey, K endKey) {
 
 - **Bug location:** <span class="fill-in">[Which line?]</span>
 - **Bug explanation:** <span class="fill-in">[What's missing from the range check?]</span>
-- **Test case:** Tree has keys [1,3,5,7,9,11,13,15]. rangeQuery(5, 10). Expected: [5,7,9]. Actual: <span class="fill-in">[What?]</span>
+- **Test case:** Tree has keys [1,3,5,7,9,11,13,15]. rangeQuery(5, 10). Expected: [5,7,9].
+  Actual: <span class="fill-in">[What?]</span>
 - **Bug fix:** <span class="fill-in">[Add missing condition]</span>
 
 <details markdown>
@@ -1249,6 +1269,7 @@ public List<V> rangeQuery(K startKey, K endKey) {
 **Result:** Range query returns ALL keys from startKey to the end of the tree, ignoring endKey.
 
 **Fix:**
+
 ```java
 while (leaf != null) {
     for (int i = 0; i < leaf.keys.size(); i++) {
@@ -1268,6 +1289,7 @@ while (leaf != null) {
 ```
 
 **Optimization:** Can also break out of outer loop:
+
 ```java
 if (key.compareTo(endKey) > 0) {
     break;  // Exit inner loop
@@ -1278,6 +1300,7 @@ if (leaf.keys.size() > 0 &&
     break;  // Exit outer loop
 }
 ```
+
 </details>
 
 ---
@@ -1516,7 +1539,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Database Engineer
 
@@ -1580,13 +1604,13 @@ Step 3: [Show SSTable creation]
 
 **Without looking at your notes, classify these workloads:**
 
-| Workload | Best Engine (B+Tree/LSM) | Why? |
-|----------|-------------------------|------|
-| Time-series sensor data (high write rate) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Banking transactions (needs consistency) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Analytics with date range queries | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Social media feeds (mostly recent reads) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Key-value cache (50/50 read/write) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Workload                                          | Best Engine (B+Tree/LSM)               | Why?                                   |
+|---------------------------------------------------|----------------------------------------|----------------------------------------|
+| Time-series sensor data (high write rate)         | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Banking transactions (needs consistency)          | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Analytics with date range queries                 | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Social media feeds (mostly recent reads)          | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Key-value cache (50/50 read/write)                | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 | Inventory system (read-heavy, occasional updates) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
@@ -1599,12 +1623,12 @@ If you scored below 5/6, review the decision framework and try again.
 
 **Complete this table from memory:**
 
-| Operation | B+Tree | LSM Tree | Why Different? |
-|-----------|--------|----------|----------------|
-| Insert (single) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Search (single) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Range query | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Compaction | N/A | O(?) | <span class="fill-in">[Explain why B+Tree doesn't need this]</span> |
+| Operation       | B+Tree | LSM Tree | Why Different?                                                      |
+|-----------------|--------|----------|---------------------------------------------------------------------|
+| Insert (single) | O(?)   | O(?)     | <span class="fill-in">[Explain]</span>                              |
+| Search (single) | O(?)   | O(?)     | <span class="fill-in">[Explain]</span>                              |
+| Range query     | O(?)   | O(?)     | <span class="fill-in">[Explain]</span>                              |
+| Compaction      | N/A    | O(?)     | <span class="fill-in">[Explain why B+Tree doesn't need this]</span> |
 
 **Deep questions:**
 
@@ -1621,7 +1645,8 @@ If you scored below 5/6, review the decision framework and try again.
 
 ### Gate 5: Trade-off Decision
 
-**Scenario:** You're designing storage for a monitoring system that collects 1M metrics/second. Reads are infrequent (only for dashboards and alerts).
+**Scenario:** You're designing storage for a monitoring system that collects 1M metrics/second. Reads are infrequent (
+only for dashboards and alerts).
 
 **Option A:** B+Tree
 

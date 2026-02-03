@@ -38,7 +38,6 @@
 8. **When would you use weighted load balancing?**
     - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
-
 </div>
 
 ---
@@ -107,7 +106,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 - Your answer: <span class="fill-in">[Fill in before implementation]</span>
 - Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
-
 </div>
 
 ---
@@ -135,6 +133,7 @@ for (int i = 1; i <= 10; i++) {
 ```
 
 **Output:**
+
 ```
 Request 1 -> S1, Request 2 -> S2, Request 3 -> S3
 Request 4 -> S1, Request 5 -> S2, Request 6 -> S3
@@ -204,10 +203,10 @@ System.out.println(userId + " -> " + entry.getValue().id);
 
 #### Performance Comparison: Adding a Server
 
-| Algorithm | Before | After | Keys Remapped |
-|-----------|--------|-------|---------------|
+| Algorithm             | Before    | After     | Keys Remapped          |
+|-----------------------|-----------|-----------|------------------------|
 | Simple Hash (key % n) | 3 servers | 4 servers | ~75% (3 out of 4 keys) |
-| Consistent Hashing | 3 servers | 4 servers | ~25% (1 out of 4 keys) |
+| Consistent Hashing    | 3 servers | 4 servers | ~25% (1 out of 4 keys) |
 
 **Why does this matter for caching?**
 
@@ -226,20 +225,24 @@ System.out.println(userId + " -> " + entry.getValue().id);
 **Scenario:** User with shopping cart stored in server memory
 
 **Round Robin:**
+
 ```
 Request 1 (user123) -> S1 (cart created)
 Request 2 (user123) -> S2 (cart lost! No session data)
 Request 3 (user123) -> S3 (cart lost! No session data)
 ```
+
 Result: Cart lost, poor user experience
 
 **IP Hash:**
+
 ```
 hash("192.168.1.100") % 3 = 1 -> S2
 Request 1 (user123 from 192.168.1.100) -> S2 (cart created)
 Request 2 (user123 from 192.168.1.100) -> S2 (cart found!)
 Request 3 (user123 from 192.168.1.100) -> S2 (cart persists)
 ```
+
 Result: Same server every time, session maintained
 
 **After implementing, explain in your own words:**
@@ -943,9 +946,11 @@ public synchronized Server getNextServer_Buggy() {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug:** Missing modulo operation for wraparound. After 3 requests, `currentIndex = 3` which is out of bounds for a list of size 3.
+**Bug:** Missing modulo operation for wraparound. After 3 requests, `currentIndex = 3` which is out of bounds for a list
+of size 3.
 
 **Correct:**
+
 ```java
 currentIndex = (currentIndex + 1) % servers.size();
 ```
@@ -997,6 +1002,7 @@ public void releaseConnection_Buggy(Server server) {
 - **Bug 2 fix:** <span class="fill-in">[Add safety check]</span>
 
 **Trace through scenario:**
+
 ```
 Thread 1: Reads S1.connections = 5
 Thread 2: Reads S1.connections = 5 (same value!)
@@ -1008,9 +1014,11 @@ Result: Connection count is wrong
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug 1:** Missing synchronization on activeConnections increment/decrement. Multiple threads can read the same value and create inconsistent state.
+**Bug 1:** Missing synchronization on activeConnections increment/decrement. Multiple threads can read the same value
+and create inconsistent state.
 
 **Fix 1 - Add synchronized:**
+
 ```java
 public synchronized Server getNextServer() {
     // ... selection logic ...
@@ -1029,6 +1037,7 @@ public synchronized void releaseConnection(Server server) {
 ```
 
 **Fix 2 - Use AtomicInteger:**
+
 ```java
 static class ServerWithStats {
     Server server;
@@ -1044,7 +1053,8 @@ static class ServerWithStats {
 minServer.activeConnections.incrementAndGet();
 ```
 
-**Bug 2:** Connection count could go negative if `releaseConnection` called without matching `getNextServer`. Fix with `Math.max(0, ...)`.
+**Bug 2:** Connection count could go negative if `releaseConnection` called without matching `getNextServer`. Fix with
+`Math.max(0, ...)`.
 </details>
 
 ---
@@ -1075,6 +1085,7 @@ public ConsistentHashingLoadBalancer_Buggy(List<Server> servers, int virtualNode
 - **Fix:** <span class="fill-in">[What should the code be?]</span>
 
 **Test case:**
+
 ```
 3 servers, virtualNodesPerServer = 3
 Expected: 9 entries in ring
@@ -1088,6 +1099,7 @@ Problem: Poor key distribution, some servers get no keys
 **Bug:** Missing loop to create virtual nodes. Only creating 1 node per server instead of `virtualNodesPerServer`.
 
 **Correct:**
+
 ```java
 for (Server server : servers) {
     for (int i = 0; i < virtualNodesPerServer; i++) {
@@ -1103,6 +1115,7 @@ for (Server server : servers) {
 - Without them: Each server gets 1 point on ring, uneven distribution
 - With them: Each server gets N points, smoother distribution
 - More virtual nodes = better balance, but more memory
+
 </details>
 
 ---
@@ -1134,6 +1147,7 @@ public Server getServer_Buggy(String key) {
 - **Fix:** <span class="fill-in">[How to handle wraparound?]</span>
 
 **Example:**
+
 ```
 Ring has entries at: [100, 200, 300]
 Key hashes to: 350 (larger than all ring entries)
@@ -1144,9 +1158,11 @@ Result: NullPointerException
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug:** `ceilingEntry` returns null when the hash is greater than all keys in the ring. Need to wrap around to first entry.
+**Bug:** `ceilingEntry` returns null when the hash is greater than all keys in the ring. Need to wrap around to first
+entry.
 
 **Correct:**
+
 ```java
 public Server getServer(String key) {
     if (ring.isEmpty()) {
@@ -1202,6 +1218,7 @@ public Server getNextServer_Buggy() {
 - **Fix:** <span class="fill-in">[How to implement smooth weighted round robin?]</span>
 
 **Example with weights [1, 2, 3]:**
+
 ```
 Buggy output: S1, S2, S2, S3, S3, S3, S1, S2, S2, S3, S3, S3
 (Clumpy distribution)
@@ -1213,9 +1230,11 @@ Expected output: S3, S2, S3, S1, S2, S3
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug:** Using per-server counters doesn't create smooth distribution. Need to use the GCD-based algorithm with global currentWeight.
+**Bug:** Using per-server counters doesn't create smooth distribution. Need to use the GCD-based algorithm with global
+currentWeight.
 
 **Correct approach:**
+
 ```java
 public Server getNextServer() {
     while (true) {
@@ -1286,6 +1305,7 @@ public class HealthAwareLoadBalancer {
 **Bugs:** Multiple race conditions with concurrent modification of `healthyServers` list.
 
 **Fix:**
+
 ```java
 public class HealthAwareLoadBalancer {
     private final List<Server> servers;
@@ -1322,6 +1342,7 @@ public class HealthAwareLoadBalancer {
 - Use immutable snapshots for reads
 - Copy-on-write for updates
 - Volatile for visibility across threads
+
 </details>
 
 ---
@@ -1506,7 +1527,8 @@ For each scenario, identify alternatives and compare:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -1581,14 +1603,14 @@ Percentage remapped: approximately ___ %
 
 **Without looking at your notes, select the best algorithm:**
 
-| Scenario | Algorithm | Why? |
-|----------|-----------|------|
-| 3 identical web servers, stateless app | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Scenario                                     | Algorithm                              | Why?                                   |
+|----------------------------------------------|----------------------------------------|----------------------------------------|
+| 3 identical web servers, stateless app       | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 | Requests have varying durations (1ms to 10s) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Shopping cart stored in server memory | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Cache cluster that scales frequently | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Mix of powerful and weak servers | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Need session persistence without cookies | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Shopping cart stored in server memory        | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Cache cluster that scales frequently         | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Mix of powerful and weak servers             | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Need session persistence without cookies     | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1600,13 +1622,13 @@ If you scored below 5/6, review the algorithms and try again.
 
 **Complete this table from memory:**
 
-| Algorithm | Selection Time | Selection Space | When to Use |
-|-----------|----------------|-----------------|-------------|
-| Round Robin | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Least Connections | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Weighted Round Robin | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Consistent Hashing | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| IP Hash | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Algorithm            | Selection Time | Selection Space | When to Use                            |
+|----------------------|----------------|-----------------|----------------------------------------|
+| Round Robin          | O(?)           | O(?)            | <span class="fill-in">[Explain]</span> |
+| Least Connections    | O(?)           | O(?)            | <span class="fill-in">[Explain]</span> |
+| Weighted Round Robin | O(?)           | O(?)            | <span class="fill-in">[Explain]</span> |
+| Consistent Hashing   | O(?)           | O(?)            | <span class="fill-in">[Explain]</span> |
+| IP Hash              | O(?)           | O(?)            | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why does consistent hashing use O(log n) lookup time?
 
@@ -1737,6 +1759,7 @@ Your explanation:
 > <span class="fill-in">[Fill in - real-world impact]</span>
 
 **Draw a comparison diagram:**
+
 ```
 Simple Hash:        Consistent Hash:
 3 -> 4 servers      3 -> 4 servers
@@ -1752,7 +1775,8 @@ _________________________________
 
 ### Gate 9: Production Scenario
 
-**Real-world challenge:** Your consistent hashing load balancer shows uneven distribution. Server 1 has 60% of keys, Server 2 has 25%, Server 3 has 15%.
+**Real-world challenge:** Your consistent hashing load balancer shows uneven distribution. Server 1 has 60% of keys,
+Server 2 has 25%, Server 3 has 15%.
 
 **Debug this:**
 

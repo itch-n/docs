@@ -28,7 +28,6 @@
 5. **When should you use Write-Through vs Write-Back?**
     - Your answer: <span class="fill-in">[Fill in after practice]</span>
 
-
 </div>
 
 ---
@@ -60,6 +59,7 @@
 ### Scenario Predictions
 
 **Scenario 1:** E-commerce product catalog with access pattern:
+
 ```
 Product A: accessed 5 times
 Product B: accessed 10 times
@@ -73,6 +73,7 @@ Cache capacity: 2 items
 - **Which is better for this pattern?** <span class="fill-in">[LRU/LFU - Why?]</span>
 
 **Scenario 2:** User session cache (last access time matters)
+
 ```
 Session A: last accessed 10 min ago
 Session B: last accessed 2 min ago
@@ -84,6 +85,7 @@ Cache full, new session arrives
 - **Which session gets evicted?** <span class="fill-in">[Fill in]</span>
 
 **Scenario 3:** Write policies
+
 ```
 Request: Update user profile
 Write-Through: Cache + DB both take 5ms each
@@ -115,7 +117,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 - Your calculation: <span class="fill-in">[Fill in]</span>
 - Verified impact: <span class="fill-in">[Fill in after implementation]</span>
-
 
 </div>
 
@@ -225,13 +226,13 @@ public static void benchmarkCached() {
 
 #### Performance Comparison
 
-| Metric | Direct DB | With Cache | Improvement |
-|--------|-----------|------------|-------------|
-| **Total time (1000 requests)** | 50,000ms | 1,049ms | **47.6x faster** |
-| **Average latency** | 50ms | 1.05ms | **47.6x faster** |
-| **Database queries** | 1000 | 1 | **99.9% reduction** |
-| **Throughput** | 20 req/sec | 950 req/sec | **47.5x higher** |
-| **DB cost (estimate)** | $100/day | $2/day | **$98/day savings** |
+| Metric                         | Direct DB  | With Cache  | Improvement         |
+|--------------------------------|------------|-------------|---------------------|
+| **Total time (1000 requests)** | 50,000ms   | 1,049ms     | **47.6x faster**    |
+| **Average latency**            | 50ms       | 1.05ms      | **47.6x faster**    |
+| **Database queries**           | 1000       | 1           | **99.9% reduction** |
+| **Throughput**                 | 20 req/sec | 950 req/sec | **47.5x higher**    |
+| **DB cost (estimate)**         | $100/day   | $2/day      | **$98/day savings** |
 
 **Your calculation:** For 10,000 requests with 90% cache hit rate:
 
@@ -311,11 +312,11 @@ public void updateUserProfile_WriteBack(String userId, String newName) {
 
 **Write Policy Performance:**
 
-| Policy | User Latency | DB Write | Consistency | Data Loss Risk |
-|--------|--------------|----------|-------------|----------------|
-| Write-Through | 51ms | Synchronous | Immediate | None |
-| Write-Back | 1ms | Asynchronous | Eventual | If crash before flush |
-| **Speedup** | **51x faster** | - | Trade-off | Trade-off |
+| Policy        | User Latency   | DB Write     | Consistency | Data Loss Risk        |
+|---------------|----------------|--------------|-------------|-----------------------|
+| Write-Through | 51ms           | Synchronous  | Immediate   | None                  |
+| Write-Back    | 1ms            | Asynchronous | Eventual    | If crash before flush |
+| **Speedup**   | **51x faster** | -            | Trade-off   | Trade-off             |
 
 **Your analysis:** When would you choose each?
 
@@ -969,6 +970,7 @@ public class StampedeLRUCache<K, V> {
 - **Fix approach 2 (Better):** <span class="fill-in">[How to fix with double-checked locking or other pattern?]</span>
 
 **Test case to expose the bug:**
+
 ```java
 // Simulate 1000 concurrent requests for same key (cache miss)
 ExecutorService executor = Executors.newFixedThreadPool(1000);
@@ -982,9 +984,11 @@ for (int i = 0; i < 1000; i++) {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug:** No synchronization during cache miss. Multiple threads can simultaneously detect cache miss and all query the database.
+**Bug:** No synchronization during cache miss. Multiple threads can simultaneously detect cache miss and all query the
+database.
 
 **Fix 1 - Simple locking (but blocks all reads):**
+
 ```java
 public synchronized V get(K key) {
     // ... same logic
@@ -992,6 +996,7 @@ public synchronized V get(K key) {
 ```
 
 **Fix 2 - Better: Per-key locking to avoid thundering herd:**
+
 ```java
 private final ConcurrentHashMap<K, CompletableFuture<V>> inFlightRequests = new ConcurrentHashMap<>();
 
@@ -1069,6 +1074,7 @@ public class StaleWriteBackCache<K, V> {
 
 - **Bug:** <span class="fill-in">[What's wrong with the get() logic?]</span>
 - **Scenario that breaks:**
+
 ```
 
 1. put("key1", "value1") - goes to cache and dirty
@@ -1083,9 +1089,11 @@ public class StaleWriteBackCache<K, V> {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug:** Cache lookup happens before dirty entries check. If cache evicts an item that's in dirtyEntries, we'll miss the latest value.
+**Bug:** Cache lookup happens before dirty entries check. If cache evicts an item that's in dirtyEntries, we'll miss the
+latest value.
 
 **Correct order:**
+
 ```java
 public V get(K key) {
     // Check dirty entries FIRST (most recent writes)
@@ -1101,7 +1109,8 @@ public V get(K key) {
 }
 ```
 
-**Key insight:** With write-back caching, dirty entries hold the "source of truth" until flushed. Always check them first!
+**Key insight:** With write-back caching, dirty entries hold the "source of truth" until flushed. Always check them
+first!
 </details>
 
 ---
@@ -1161,6 +1170,7 @@ public class TTLCache<K, V> {
 
 - **Bug:** <span class="fill-in">[What causes thundering herd?]</span>
 - **Scenario:**
+
 ```
 
 10:00:00 - Cache is populated with 1000 items, all expire at 10:05:00
@@ -1176,9 +1186,11 @@ What happens?
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug:** All items created at the same time will expire at the same time, causing synchronized cache misses and database overload.
+**Bug:** All items created at the same time will expire at the same time, causing synchronized cache misses and database
+overload.
 
 **Fix 1 - Add jitter to TTL:**
+
 ```java
 private final Random random = new Random();
 
@@ -1194,6 +1206,7 @@ public V get(K key) {
 ```
 
 **Fix 2 - Probabilistic early expiration (XFetch algorithm):**
+
 ```java
 public V get(K key) {
     CacheEntry<V> entry = cache.get(key);
@@ -1225,7 +1238,8 @@ private V refreshFromDB(K key) {
 }
 ```
 
-**Key insight:** Synchronized expiration creates thundering herd. Add jitter and probabilistic early expiration to spread load.
+**Key insight:** Synchronized expiration creates thundering herd. Add jitter and probabilistic early expiration to
+spread load.
 </details>
 
 ---
@@ -1293,6 +1307,7 @@ public class BuggyLFUCache<K, V> {
 - **Bug 1:** <span class="fill-in">[What happens to minFreq?]</span>
 - **Bug 2:** <span class="fill-in">[What about empty frequency lists?]</span>
 - **Test case:**
+
 ```
 Cache capacity = 2
 put("A", 1) - freq=1, minFreq=1
@@ -1311,6 +1326,7 @@ put("B", 2) - freq=1, minFreq should be?
 **Bug 2:** Empty frequency lists should be removed from freqMap to save memory.
 
 **Correct implementation:**
+
 ```java
 private void updateFrequency(Node<K, V> node) {
     int freq = node.freq;
@@ -1338,7 +1354,8 @@ private void updateFrequency(Node<K, V> node) {
 }
 ```
 
-**Key insight:** LFU requires careful maintenance of minFreq and frequency lists. Missing updates cause incorrect evictions.
+**Key insight:** LFU requires careful maintenance of minFreq and frequency lists. Missing updates cause incorrect
+evictions.
 </details>
 
 ---
@@ -1388,6 +1405,7 @@ public class InvalidationCache<K, V> {
 
 - **Bug:** <span class="fill-in">[What race condition exists?]</span>
 - **Scenario that fails:**
+
 ```
 T0: cache contains key="user:1" value="Alice"
 T1: Thread 1 calls update("user:1", "Bob")
@@ -1408,6 +1426,7 @@ T3: Thread 1 invalidates cache
 **Bug:** Cache invalidation happens AFTER database write, creating a window where stale data is served.
 
 **Fix 1 - Invalidate before write:**
+
 ```java
 public void update(K key, V newValue) {
     // Invalidate FIRST
@@ -1421,6 +1440,7 @@ public void update(K key, V newValue) {
 ```
 
 **Fix 2 - Use versioning:**
+
 ```java
 static class VersionedValue<V> {
     V value;
@@ -1451,6 +1471,7 @@ public V get(K key) {
 ```
 
 **Fix 3 - Cache-aside with write-through (best):**
+
 ```java
 public void update(K key, V newValue) {
     // Write to both atomically (within transaction if possible)
@@ -1460,7 +1481,8 @@ public void update(K key, V newValue) {
 }
 ```
 
-**Key insight:** Cache invalidation is notoriously hard. Order matters: invalidate before write, or use write-through to avoid invalidation entirely.
+**Key insight:** Cache invalidation is notoriously hard. Order matters: invalidate before write, or use write-through to
+avoid invalidation entirely.
 </details>
 
 ---
@@ -1679,7 +1701,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Product Manager
 
@@ -1743,14 +1766,14 @@ Why? _____________________
 
 **Without looking at your notes, classify these scenarios:**
 
-| Scenario | Best Cache Policy | Write Strategy | Why? |
-|----------|------------------|----------------|------|
-| User sessions (timeout-based) | <span class="fill-in">[LRU/LFU?]</span> | <span class="fill-in">[Write-Through/Write-Back?]</span> | <span class="fill-in">[Explain]</span> |
-| Video streaming (popular content) | <span class="fill-in">[LRU/LFU?]</span> | <span class="fill-in">[Read-only/Write?]</span> | <span class="fill-in">[Explain]</span> |
-| Shopping cart (consistency critical) | <span class="fill-in">[LRU/LFU?]</span> | <span class="fill-in">[Write-Through/Write-Back?]</span> | <span class="fill-in">[Explain]</span> |
-| DNS resolution (hot domains) | <span class="fill-in">[LRU/LFU?]</span> | <span class="fill-in">[TTL strategy?]</span> | <span class="fill-in">[Explain]</span> |
-| Real-time analytics (write-heavy) | <span class="fill-in">[Cache at all?]</span> | <span class="fill-in">[Write-Back/No cache?]</span> | <span class="fill-in">[Explain]</span> |
-| Product catalog (read-heavy) | <span class="fill-in">[LRU/LFU?]</span> | <span class="fill-in">[Write-Through/Write-Back?]</span> | <span class="fill-in">[Explain]</span> |
+| Scenario                             | Best Cache Policy                            | Write Strategy                                           | Why?                                   |
+|--------------------------------------|----------------------------------------------|----------------------------------------------------------|----------------------------------------|
+| User sessions (timeout-based)        | <span class="fill-in">[LRU/LFU?]</span>      | <span class="fill-in">[Write-Through/Write-Back?]</span> | <span class="fill-in">[Explain]</span> |
+| Video streaming (popular content)    | <span class="fill-in">[LRU/LFU?]</span>      | <span class="fill-in">[Read-only/Write?]</span>          | <span class="fill-in">[Explain]</span> |
+| Shopping cart (consistency critical) | <span class="fill-in">[LRU/LFU?]</span>      | <span class="fill-in">[Write-Through/Write-Back?]</span> | <span class="fill-in">[Explain]</span> |
+| DNS resolution (hot domains)         | <span class="fill-in">[LRU/LFU?]</span>      | <span class="fill-in">[TTL strategy?]</span>             | <span class="fill-in">[Explain]</span> |
+| Real-time analytics (write-heavy)    | <span class="fill-in">[Cache at all?]</span> | <span class="fill-in">[Write-Back/No cache?]</span>      | <span class="fill-in">[Explain]</span> |
+| Product catalog (read-heavy)         | <span class="fill-in">[LRU/LFU?]</span>      | <span class="fill-in">[Write-Through/Write-Back?]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1762,12 +1785,12 @@ If you scored below 5/6, review the decision framework and try again.
 
 **Complete this table from memory:**
 
-| Operation | LRU Cache | LFU Cache | Direct DB | Why? |
-|-----------|-----------|-----------|-----------|------|
-| Get (hit) | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Get (miss) | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Put (no eviction) | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Put (with eviction) | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Operation           | LRU Cache | LFU Cache | Direct DB | Why?                                   |
+|---------------------|-----------|-----------|-----------|----------------------------------------|
+| Get (hit)           | O(?)      | O(?)      | O(?)      | <span class="fill-in">[Explain]</span> |
+| Get (miss)          | O(?)      | O(?)      | O(?)      | <span class="fill-in">[Explain]</span> |
+| Put (no eviction)   | O(?)      | O(?)      | O(?)      | <span class="fill-in">[Explain]</span> |
+| Put (with eviction) | O(?)      | O(?)      | O(?)      | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why is LRU O(1) but requires two data structures?
 
@@ -1870,6 +1893,7 @@ public class LRUCache<K, V> {
 ```
 
 **After implementing, test with:**
+
 ```java
 LRUCache<String, Integer> cache = new LRUCache<>(2);
 cache.put("A", 1);
@@ -1923,7 +1947,8 @@ public class BuggyCache<K, V> {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug:** Uses HashMap which doesn't maintain insertion order. `keySet().iterator().next()` returns an arbitrary key, not the least recently used one.
+**Bug:** Uses HashMap which doesn't maintain insertion order. `keySet().iterator().next()` returns an arbitrary key, not
+the least recently used one.
 
 **Fix:** Use LinkedHashMap with access order, or implement proper LRU with HashMap + Doubly Linked List.
 
@@ -1935,6 +1960,7 @@ private final Map<K, V> cache = new LinkedHashMap<>(capacity, 0.75f, true) {
     }
 };
 ```
+
 </details>
 
 ---

@@ -38,7 +38,6 @@
 8. **When would you use a dead letter queue?**
     - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
-
 </div>
 
 ---
@@ -114,7 +113,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 - Your answer: <span class="fill-in">[Fill in before implementation]</span>
 - Verified: <span class="fill-in">[Fill in after implementation]</span>
-
 
 </div>
 
@@ -230,11 +228,11 @@ public class PubSubImageService {
 
 #### Performance Comparison
 
-| Approach | Upload Time | 100 Uploads | Scalability | Failure Handling |
-|----------|-------------|-------------|-------------|------------------|
-| Synchronous | 6 sec | 600 sec (10 min) | Poor | User sees error |
-| Queue (3 workers) | <100ms | ~200 sec (3 min) | Good | Auto retry + DLQ |
-| Pub-Sub | <100ms | ~200 sec (3 min) | Excellent | Per-service retry |
+| Approach          | Upload Time | 100 Uploads      | Scalability | Failure Handling  |
+|-------------------|-------------|------------------|-------------|-------------------|
+| Synchronous       | 6 sec       | 600 sec (10 min) | Poor        | User sees error   |
+| Queue (3 workers) | <100ms      | ~200 sec (3 min) | Good        | Auto retry + DLQ  |
+| Pub-Sub           | <100ms      | ~200 sec (3 min) | Excellent   | Per-service retry |
 
 **Your calculation:** For 1,000 uploads with 10 workers:
 
@@ -1151,7 +1149,8 @@ public class MessageQueuesClient {
 
 ## Debugging Challenges
 
-**Your task:** Find and fix bugs in broken message queue implementations. This tests your understanding of common message queue pitfalls.
+**Your task:** Find and fix bugs in broken message queue implementations. This tests your understanding of common
+message queue pitfalls.
 
 ### Challenge 1: Lost Messages
 
@@ -1202,9 +1201,11 @@ public class BuggyMessageQueue {
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug 1 (send method):** Missing synchronization. Multiple threads can check `queue.size()` simultaneously, both see space available, both add messages, exceeding capacity. Race condition on queue operations.
+**Bug 1 (send method):** Missing synchronization. Multiple threads can check `queue.size()` simultaneously, both see
+space available, both add messages, exceeding capacity. Race condition on queue operations.
 
 **Fix:**
+
 ```java
 public synchronized void send(Message message) throws InterruptedException {
     while (queue.size() >= capacity) {
@@ -1215,9 +1216,11 @@ public synchronized void send(Message message) throws InterruptedException {
 }
 ```
 
-**Bug 2 (receive method):** Returns null instead of waiting. Consumers poll repeatedly or miss messages. No coordination between producers and consumers.
+**Bug 2 (receive method):** Returns null instead of waiting. Consumers poll repeatedly or miss messages. No coordination
+between producers and consumers.
 
 **Fix:**
+
 ```java
 public synchronized Message receive() throws InterruptedException {
     while (queue.isEmpty()) {
@@ -1229,7 +1232,8 @@ public synchronized Message receive() throws InterruptedException {
 }
 ```
 
-**Why messages are lost:** Without synchronization, concurrent operations can corrupt the queue state. Without wait/notify, producers may overwrite or consumers may miss messages.
+**Why messages are lost:** Without synchronization, concurrent operations can corrupt the queue state. Without
+wait/notify, producers may overwrite or consumers may miss messages.
 </details>
 
 ---
@@ -1281,9 +1285,11 @@ public class BuggyConsumer {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug:** Message is removed from queue BEFORE successful processing. If `processMessage` fails, the message is lost. If we add retry logic, we might process it multiple times.
+**Bug:** Message is removed from queue BEFORE successful processing. If `processMessage` fails, the message is lost. If
+we add retry logic, we might process it multiple times.
 
 **At-least-once delivery problem:**
+
 ```
 
 1. Receive message (removed from queue)
@@ -1299,6 +1305,7 @@ public class BuggyConsumer {
 - Deduplication mechanism
 
 **Fix Option 1 - Use acknowledgment pattern:**
+
 ```java
 public void processMessages() {
     while (true) {
@@ -1318,6 +1325,7 @@ public void processMessages() {
 ```
 
 **Fix Option 2 - Use idempotent processing:**
+
 ```java
 private void processMessage(Message msg) throws Exception {
     // Check if already processed (deduplication)
@@ -1380,9 +1388,11 @@ public class BuggyPubSub {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug:** Using thread pool for parallel delivery breaks message ordering. Messages sent to thread pool may execute in any order.
+**Bug:** Using thread pool for parallel delivery breaks message ordering. Messages sent to thread pool may execute in
+any order.
 
 **Example scenario:**
+
 ```
 Publisher sends: msg1, msg2, msg3
 Thread pool:
@@ -1400,6 +1410,7 @@ Subscriber receives: msg2, msg3, msg1 ❌
 - Event sourcing (events must be ordered)
 
 **Fix Option 1 - Serial delivery per subscriber:**
+
 ```java
 public void publish(String topic, Message message) {
     List<Subscriber> subscribers = topicSubscribers.get(topic);
@@ -1426,6 +1437,7 @@ class Subscriber {
 ```
 
 **Fix Option 2 - Partition-based ordering:**
+
 ```java
 // Only guarantee order within partition key (like Kafka)
 public void publish(String topic, Message message, String partitionKey) {
@@ -1499,9 +1511,11 @@ public class BuggyDLQ {
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug 1:** Immediate retry causes rapid retry loop. If a message consistently fails (e.g., bad data), it will be retried maxRetries times in rapid succession, wasting CPU and blocking other messages.
+**Bug 1:** Immediate retry causes rapid retry loop. If a message consistently fails (e.g., bad data), it will be retried
+maxRetries times in rapid succession, wasting CPU and blocking other messages.
 
 **Bug 1 fix - Add exponential backoff:**
+
 ```java
 if (count < maxRetries) {
     long delay = (long) Math.pow(2, count) * 1000; // 1s, 2s, 4s, 8s...
@@ -1512,6 +1526,7 @@ if (count < maxRetries) {
 ```
 
 Or better, use a delayed queue:
+
 ```java
 if (count < maxRetries) {
     long delayMs = (long) Math.pow(2, count) * 1000;
@@ -1520,9 +1535,11 @@ if (count < maxRetries) {
 }
 ```
 
-**Bug 2:** If DLQ is full, `dlq.send(msg)` will block forever (if blocking queue) or throw exception (if non-blocking). Message processing stalls.
+**Bug 2:** If DLQ is full, `dlq.send(msg)` will block forever (if blocking queue) or throw exception (if non-blocking).
+Message processing stalls.
 
 **Bug 2 fix - Handle DLQ overflow:**
+
 ```java
 } else {
     // Try to send to DLQ with timeout
@@ -1561,6 +1578,7 @@ if (count < maxRetries) {
 - Alert when DLQ growth rate is high
 - Dashboard showing DLQ trends
 - Automated DLQ processing for known issues
+
 </details>
 
 ---
@@ -1758,7 +1776,8 @@ For each scenario, identify alternatives and compare:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -1816,14 +1835,14 @@ What happens if Worker 2 fails?
 
 **Without looking at your notes, classify these scenarios:**
 
-| Scenario | Pattern (Queue/Pub-Sub/Priority/DLQ) | Why? |
-|----------|--------------------------------------|------|
-| Image processing service | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Scenario                                 | Pattern (Queue/Pub-Sub/Priority/DLQ)   | Why?                                   |
+|------------------------------------------|----------------------------------------|----------------------------------------|
+| Image processing service                 | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 | Notification system (email + SMS + push) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Order processing with VIP priority | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Payment processing with retries | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Event logging to multiple systems | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Background job processing | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Order processing with VIP priority       | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Payment processing with retries          | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Event logging to multiple systems        | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Background job processing                | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1835,11 +1854,11 @@ If you scored below 5/6, review the patterns and try again.
 
 **Complete this table from memory:**
 
-| Delivery Type | Description | Risk | Use When |
-|---------------|-------------|------|----------|
-| At-most-once | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| Delivery Type | Description                            | Risk                                   | Use When                               |
+|---------------|----------------------------------------|----------------------------------------|----------------------------------------|
+| At-most-once  | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 | At-least-once | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
-| Exactly-once | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| Exactly-once  | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
 **Deep question:** Why is exactly-once delivery so hard to achieve?
 
@@ -1947,6 +1966,7 @@ public class Consumer {
 **Pattern choice:** <span class="fill-in">[Queue/Pub-Sub/Both - explain why]</span>
 
 **Architecture diagram:**
+
 ```
 [Draw your architecture here]
 

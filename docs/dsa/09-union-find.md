@@ -19,7 +19,8 @@
     - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy:**
-    - Example: "Union-Find is like organizing people into groups where you can quickly check if two people are in the same group..."
+    - Example: "Union-Find is like organizing people into groups where you can quickly check if two people are in the
+      same group..."
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **When does this pattern work?**
@@ -27,7 +28,6 @@
 
 5. **What makes union-find fast?**
     - Your answer: <span class="fill-in">[Fill in after learning optimizations]</span>
-
 
 </div>
 
@@ -97,7 +97,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 - Your answer: <span class="fill-in">[Yes/No - Why or why not?]</span>
 - Implication: <span class="fill-in">[When does this limitation matter?]</span>
-
 
 </div>
 
@@ -213,13 +212,14 @@ public class OptimizedConnectivity {
 
 #### Performance Comparison
 
-| Operations | DFS/BFS (O(V+E)) | Union-Find (O(α(n))) | Speedup |
-|------------|------------------|----------------------|---------|
-| 100 queries | ~100,000 ops | ~100 ops | 1,000x |
-| 1,000 queries | ~1,000,000 ops | ~1,000 ops | 1,000x |
-| 10,000 queries | ~10,000,000 ops | ~10,000 ops | 1,000x |
+| Operations     | DFS/BFS (O(V+E)) | Union-Find (O(α(n))) | Speedup |
+|----------------|------------------|----------------------|---------|
+| 100 queries    | ~100,000 ops     | ~100 ops             | 1,000x  |
+| 1,000 queries  | ~1,000,000 ops   | ~1,000 ops           | 1,000x  |
+| 10,000 queries | ~10,000,000 ops  | ~10,000 ops          | 1,000x  |
 
-**Your calculation:** For 5,000 connectivity queries on a graph with 5,000 nodes, the speedup is approximately _____ times faster.
+**Your calculation:** For 5,000 connectivity queries on a graph with 5,000 nodes, the speedup is approximately _____
+times faster.
 
 #### Why Does Union-Find Work?
 
@@ -899,6 +899,7 @@ public int find_Buggy(int x) {
 **Bug:** Missing path compression! Should assign `parent[x] = find_Buggy(parent[x])` to flatten the tree.
 
 **Correct:**
+
 ```java
 public int find(int x) {
     if (parent[x] != x) {
@@ -961,6 +962,7 @@ public boolean union_Buggy(int x, int y) {
 **Bug:** Should attach ROOTS, not the original nodes!
 
 **Correct:**
+
 ```java
 if (rank[rootX] < rank[rootY]) {
     parent[rootX] = rootY;  // Attach rootX under rootY
@@ -969,7 +971,8 @@ if (rank[rootX] < rank[rootY]) {
 }
 ```
 
-**Why:** If you attach `x` instead of `rootX`, you're not attaching the entire tree's root, just one node. This breaks the tree structure and defeats the purpose of union by rank.
+**Why:** If you attach `x` instead of `rootX`, you're not attaching the entire tree's root, just one node. This breaks
+the tree structure and defeats the purpose of union by rank.
 </details>
 
 ---
@@ -1015,9 +1018,11 @@ public boolean hasCycle_Buggy(int n, int[][] edges) {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug:** Should NOT call `union(u, v)` when they're already connected! If `find(u) == find(v)`, they're in the same component, which means adding this edge creates a cycle. Just return true immediately.
+**Bug:** Should NOT call `union(u, v)` when they're already connected! If `find(u) == find(v)`, they're in the same
+component, which means adding this edge creates a cycle. Just return true immediately.
 
 **Correct:**
+
 ```java
 if (uf.find(u) == uf.find(v)) {
     return true;  // Cycle detected! Don't union.
@@ -1095,6 +1100,7 @@ public class UnionFind_Buggy {
 **Bug:** Missing `components--;` in the union method!
 
 **Correct:**
+
 ```java
 if (rootX == rootY) return false;
 
@@ -1150,6 +1156,7 @@ public boolean union_Buggy(int x, int y) {
 **Bug:** Only increment rank when ranks are EQUAL!
 
 **Correct:**
+
 ```java
 if (rank[rootX] < rank[rootY]) {
     parent[rootX] = rootY;
@@ -1163,7 +1170,8 @@ if (rank[rootX] < rank[rootY]) {
 }
 ```
 
-**Why:** Rank represents tree height (upper bound). When attaching a shorter tree under a taller one, the height doesn't change. Only when equal-height trees merge does the new root's height increase by 1.
+**Why:** Rank represents tree height (upper bound). When attaching a shorter tree under a taller one, the height doesn't
+change. Only when equal-height trees merge does the new root's height increase by 1.
 </details>
 
 ---
@@ -1218,9 +1226,11 @@ public int find_ActualBuggy(int x) {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug:** In the compression loop, after we set `parent[x] = root`, we then do `x = parent[x]`, which now equals `root`! This causes the loop to terminate immediately, compressing only the first node.
+**Bug:** In the compression loop, after we set `parent[x] = root`, we then do `x = parent[x]`, which now equals `root`!
+This causes the loop to terminate immediately, compressing only the first node.
 
 **Correct:**
+
 ```java
 while (parent[x] != x) {
     int next = parent[x];  // Save next before modifying
@@ -1423,7 +1433,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -1485,15 +1496,15 @@ After find(3) with path compression:
 
 **Without looking at your notes, classify these problems:**
 
-| Problem | Use Union-Find? | Why / Why Not? |
-|---------|----------------|----------------|
+| Problem                          | Use Union-Find?                       | Why / Why Not?                         |
+|----------------------------------|---------------------------------------|----------------------------------------|
 | Check if two nodes are connected | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
 | Find shortest path between nodes | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
 | Detect cycle in undirected graph | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
-| Count connected components | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
-| Find all paths from A to B | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
-| Detect cycle in directed graph | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
-| Merge groups of connected items | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| Count connected components       | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| Find all paths from A to B       | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| Detect cycle in directed graph   | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| Merge groups of connected items  | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
 | Split a component into two parts | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/8 correct
@@ -1506,11 +1517,11 @@ If you scored below 7/8, review the decision framework and try again.
 
 **Complete this table from memory:**
 
-| Operation | Without Optimizations | With Path Compression | With Both Optimizations |
-|-----------|----------------------|----------------------|------------------------|
-| find(x) | O(?) | O(?) | O(?) |
-| union(x, y) | O(?) | O(?) | O(?) |
-| Space | O(?) | O(?) | O(?) |
+| Operation   | Without Optimizations | With Path Compression | With Both Optimizations |
+|-------------|-----------------------|-----------------------|-------------------------|
+| find(x)     | O(?)                  | O(?)                  | O(?)                    |
+| union(x, y) | O(?)                  | O(?)                  | O(?)                    |
+| Space       | O(?)                  | O(?)                  | O(?)                    |
 
 **Deep questions:**
 
@@ -1622,7 +1633,8 @@ public class UnionFind {
 
 **Problem:** Number of Connected Components in an Undirected Graph
 
-Given `n` nodes labeled from `0` to `n-1` and a list of undirected edges, write a function to find the number of connected components.
+Given `n` nodes labeled from `0` to `n-1` and a list of undirected edges, write a function to find the number of
+connected components.
 
 ```java
 public int countComponents(int n, int[][] edges) {
@@ -1703,6 +1715,7 @@ Your explanation:
 > - <span class="fill-in">[Explain why it's faster]</span>
 
 **Draw the transformation:**
+
 ```
 Before:   [Draw the chain]
 

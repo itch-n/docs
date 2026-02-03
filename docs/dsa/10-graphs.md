@@ -28,7 +28,6 @@
 5. **When should you use DFS vs BFS?**
     - Your answer: <span class="fill-in">[Fill in after practice]</span>
 
-
 </div>
 
 ---
@@ -115,12 +114,14 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 Given graph: 0→1, 0→2, 1→3, 2→3
 
 **Adjacency List representation:**
+
 ```
 Your answer:
 <span class="fill-in">[Draw/write the adjacency list structure]</span>
 ```
 
 **Adjacency Matrix representation:**
+
 ```
 Your answer:
 <span class="fill-in">[Draw the 4x4 matrix]</span>
@@ -216,11 +217,11 @@ public static int findPath_BFS(Map<Integer, List<Integer>> graph, int start, int
 
 #### Performance Comparison
 
-| Graph Size | DFS (worst case) | BFS | Speedup |
-|------------|------------------|-----|---------|
-| V = 10, E = 20 | ~3,628,800 ops (10!) | 30 ops | ~120,000x |
-| V = 6, E = 10 | ~720 ops (6!) | 16 ops | 45x |
-| V = 100, E = 200 | Intractable | 300 ops | Infinite |
+| Graph Size       | DFS (worst case)     | BFS     | Speedup   |
+|------------------|----------------------|---------|-----------|
+| V = 10, E = 20   | ~3,628,800 ops (10!) | 30 ops  | ~120,000x |
+| V = 6, E = 10    | ~720 ops (6!)        | 16 ops  | 45x       |
+| V = 100, E = 200 | Intractable          | 300 ops | Infinite  |
 
 **Your calculation:** For a graph with V = 8 nodes, BFS would be approximately _____ times faster in worst case.
 
@@ -335,11 +336,11 @@ public class GraphList {
 
 #### Space Comparison
 
-| Graph Type | Adjacency Matrix | Adjacency List | Better Choice |
-|------------|------------------|----------------|---------------|
-| Dense (V=1000, E=500,000) | 1M ints (4 MB) | 501K ints (2 MB) | Matrix (similar) |
-| Sparse (V=1000, E=5000) | 1M ints (4 MB) | 6K ints (24 KB) | **List (167x less)** |
-| Very Sparse (V=1000, E=100) | 1M ints (4 MB) | 1.1K ints (4 KB) | **List (1000x less)** |
+| Graph Type                  | Adjacency Matrix | Adjacency List   | Better Choice         |
+|-----------------------------|------------------|------------------|-----------------------|
+| Dense (V=1000, E=500,000)   | 1M ints (4 MB)   | 501K ints (2 MB) | Matrix (similar)      |
+| Sparse (V=1000, E=5000)     | 1M ints (4 MB)   | 6K ints (24 KB)  | **List (167x less)**  |
+| Very Sparse (V=1000, E=100) | 1M ints (4 MB)   | 1.1K ints (4 KB) | **List (1000x less)** |
 
 **Your calculation:** For V = 5000 nodes and E = 10,000 edges, adjacency list uses _____ less space than matrix.
 
@@ -454,12 +455,12 @@ public static int shortestPath_Dijkstra(Map<Integer, List<int[]>> graph, int sta
 
 #### Algorithm Comparison
 
-| Scenario | BFS Result | Dijkstra Result | Correct? |
-|----------|-----------|-----------------|----------|
-| Unweighted graph | Shortest path | Shortest path | Both ✓ |
-| Weighted (all weights = 1) | Shortest path | Shortest path | Both ✓ |
-| Weighted (varying weights) | **Wrong** (min edges) | Shortest path | Dijkstra ✓ |
-| Negative weights | Wrong | **Wrong** | Neither (use Bellman-Ford) |
+| Scenario                   | BFS Result            | Dijkstra Result | Correct?                   |
+|----------------------------|-----------------------|-----------------|----------------------------|
+| Unweighted graph           | Shortest path         | Shortest path   | Both ✓                     |
+| Weighted (all weights = 1) | Shortest path         | Shortest path   | Both ✓                     |
+| Weighted (varying weights) | **Wrong** (min edges) | Shortest path   | Dijkstra ✓                 |
+| Negative weights           | Wrong                 | **Wrong**       | Neither (use Bellman-Ford) |
 
 **Your analysis:** When all edge weights are equal, BFS is _____ than Dijkstra because _____.
 
@@ -996,7 +997,8 @@ public class CycleDetectionClient {
 
 ### Pattern 5: Dijkstra's Algorithm (Single-Source Shortest Path)
 
-**Concept:** Find shortest paths from a source node to all other nodes in a weighted graph with non-negative edge weights.
+**Concept:** Find shortest paths from a source node to all other nodes in a weighted graph with non-negative edge
+weights.
 
 **Use case:** Network routing, GPS navigation, shortest path in weighted graphs.
 
@@ -1342,6 +1344,7 @@ private static void dfs(Map<Integer, List<Integer>> graph, int node, boolean[] v
 <summary>Click to verify your answers</summary>
 
 **Bug 1 (Line 18):** After calling `dfs()`, we never increment `count`! Should be:
+
 ```java
 if (!visited[i]) {
     dfs(graph, i, visited);
@@ -1349,9 +1352,11 @@ if (!visited[i]) {
 }
 ```
 
-**Bug 2:** Actually the same as Bug 1. The `count` variable is initialized but never incremented, so it always returns 0.
+**Bug 2:** Actually the same as Bug 1. The `count` variable is initialized but never incremented, so it always returns
+0.
 
 **Correct fix:**
+
 ```java
 for (int i = 0; i < n; i++) {
     if (!visited[i]) {
@@ -1361,6 +1366,7 @@ for (int i = 0; i < n; i++) {
 }
 return count;
 ```
+
 </details>
 
 ---
@@ -1414,6 +1420,7 @@ public static int shortestPath_Buggy(Map<Integer, List<Integer>> graph, int star
 **Bug 1:** Missing `visited.add(start)` after adding start to queue. Without this, we might revisit the start node.
 
 **Bug 2:** Not processing nodes level-by-level. Should use:
+
 ```java
 while (!queue.isEmpty()) {
     int size = queue.size();  // Process all nodes at current level
@@ -1506,6 +1513,7 @@ private static boolean dfsTopSort(Map<Integer, List<Integer>> graph, int node,
 <summary>Click to verify your answer</summary>
 
 **Bug (Line 38):** Missing return value check! Should be:
+
 ```java
 if (visited[neighbor] == 0) {
     if (!dfsTopSort(graph, neighbor, visited, stack)) {
@@ -1514,9 +1522,11 @@ if (visited[neighbor] == 0) {
 }
 ```
 
-**Why:** Even if a recursive call detects a cycle (returns false), we ignore it and continue. The cycle detection never propagates back up the call stack.
+**Why:** Even if a recursive call detects a cycle (returns false), we ignore it and continue. The cycle detection never
+propagates back up the call stack.
 
 **Correct version:**
+
 ```java
 for (int neighbor : graph.get(node)) {
     if (visited[neighbor] == 1) {
@@ -1529,6 +1539,7 @@ for (int neighbor : graph.get(node)) {
     }
 }
 ```
+
 </details>
 
 ---
@@ -1587,6 +1598,7 @@ public static int dijkstra_Buggy(Map<Integer, List<int[]>> graph, int start, int
 <summary>Click to verify your answer</summary>
 
 **Bug:** Missing distance check after polling. Should be:
+
 ```java
 while (!pq.isEmpty()) {
     int[] curr = pq.poll();
@@ -1601,9 +1613,11 @@ while (!pq.isEmpty()) {
 }
 ```
 
-**Why:** We may add the same node to the priority queue multiple times with different distances. Without this check, we process outdated entries, doing unnecessary work and potentially getting wrong results.
+**Why:** We may add the same node to the priority queue multiple times with different distances. Without this check, we
+process outdated entries, doing unnecessary work and potentially getting wrong results.
 
 **Example trace without fix:**
+
 ```
 Step 1: Process (0, dist=0), add (1, dist=5)
 Step 2: Process (1, dist=5), find shorter path, add (1, dist=3)
@@ -1649,6 +1663,7 @@ public static Map<Integer, List<Integer>> buildGraph_Buggy(int n, int[][] edges)
 <summary>Click to verify your answer</summary>
 
 **Bug:** For undirected graphs, need to add edge in BOTH directions:
+
 ```java
 for (int[] edge : edges) {
     int u = edge[0], v = edge[1];
@@ -1657,7 +1672,8 @@ for (int[] edge : edges) {
 }
 ```
 
-**Why:** In an undirected graph, edge (u,v) means both u→v and v→u. Without the reverse edge, the graph is incorrectly treated as directed.
+**Why:** In an undirected graph, edge (u,v) means both u→v and v→u. Without the reverse edge, the graph is incorrectly
+treated as directed.
 </details>
 
 ---
@@ -1707,11 +1723,13 @@ public static int primMST_Buggy(Map<Integer, List<int[]>> graph, int n) {
 <summary>Click to verify your answer</summary>
 
 **Bug 1 (Line 7):** Condition `!visited.isEmpty()` is wrong. Should be `!pq.isEmpty()`:
+
 ```java
 while (!pq.isEmpty() && visited.size() < n) {
 ```
 
 **Bug 2 (Line 10):** Need to check if node was already visited before adding to MST:
+
 ```java
 int[] curr = pq.poll();
 int cost = curr[0], node = curr[1];
@@ -1722,7 +1740,8 @@ visited.add(node);
 totalCost += cost;
 ```
 
-**Why:** Multiple edges can lead to the same node with different costs. Without the check, we might add a node to the MST multiple times, inflating the total cost.
+**Why:** Multiple edges can lead to the same node with different costs. Without the check, we might add a node to the
+MST multiple times, inflating the total cost.
 </details>
 
 ---
@@ -2013,7 +2032,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -2083,14 +2103,14 @@ Level 2: [After processing level 1]
 
 **Without looking at your notes, select the correct algorithm:**
 
-| Problem | Algorithm | Why? |
-|---------|-----------|------|
-| Find shortest path (unweighted) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Detect cycle in directed graph | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Course prerequisite ordering | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| GPS navigation (weighted roads) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Problem                           | Algorithm                              | Why?                                   |
+|-----------------------------------|----------------------------------------|----------------------------------------|
+| Find shortest path (unweighted)   | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Detect cycle in directed graph    | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Course prerequisite ordering      | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| GPS navigation (weighted roads)   | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 | Connect cities with minimum cable | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Count connected components | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Count connected components        | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -2102,13 +2122,13 @@ If you scored below 5/6, review the decision framework and try again.
 
 **Complete this table from memory:**
 
-| Algorithm | Time Complexity | Space Complexity | Why? |
-|-----------|----------------|------------------|------|
-| DFS (recursive) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| BFS | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Topological Sort | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Dijkstra (with PQ) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Prim's MST | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Algorithm          | Time Complexity | Space Complexity | Why?                                   |
+|--------------------|-----------------|------------------|----------------------------------------|
+| DFS (recursive)    | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
+| BFS                | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
+| Topological Sort   | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
+| Dijkstra (with PQ) | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
+| Prim's MST         | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why is Dijkstra O((V+E) log V) while BFS is O(V+E)?
 
@@ -2213,11 +2233,13 @@ public static int[] dijkstra(Map<Integer, List<int[]>> graph, int start, int n) 
 **Bug:** Missing check after polling to skip outdated entries.
 
 **Fix:** Add after line 10:
+
 ```java
 if (d > dist[node]) continue;
 ```
 
-**Why:** Without this, we process the same node multiple times with different distances, wasting time and potentially computing wrong distances.
+**Why:** Without this, we process the same node multiple times with different distances, wasting time and potentially
+computing wrong distances.
 </details>
 
 ---
@@ -2297,12 +2319,14 @@ Your explanation:
 Edges: (0,1), (0,2), (1,3), (2,3)
 
 **Adjacency List:**
+
 ```
 Your drawing:
 <span class="fill-in">[Show the map/list structure]</span>
 ```
 
 **Adjacency Matrix:**
+
 ```
 Your drawing:
   0 1 2 3

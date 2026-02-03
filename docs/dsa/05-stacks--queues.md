@@ -29,7 +29,6 @@
 5. **What problems require stacks vs queues?**
     - Your answer: <span class="fill-in">[Fill in after practice]</span>
 
-
 </div>
 
 ---
@@ -161,9 +160,9 @@ public static boolean isValid_Stack(String s) {
 
 | String Length | Brute Force (O(n²)) | Stack (O(n)) | Speedup |
 |---------------|---------------------|--------------|---------|
-| n = 100       | ~5,000 ops         | 100 ops      | 50x     |
-| n = 1,000     | ~500,000 ops       | 1,000 ops    | 500x    |
-| n = 10,000    | ~50,000,000 ops    | 10,000 ops   | 5,000x  |
+| n = 100       | ~5,000 ops          | 100 ops      | 50x     |
+| n = 1,000     | ~500,000 ops        | 1,000 ops    | 500x    |
+| n = 10,000    | ~50,000,000 ops     | 10,000 ops   | 5,000x  |
 
 **Your calculation:** For n = 5,000, the speedup is approximately _____ times faster.
 
@@ -331,11 +330,11 @@ public static int[] maxSlidingWindow_Deque(int[] nums, int k) {
 
 #### Performance Comparison
 
-| Array Size | Window k | Brute Force (O(n*k)) | Deque (O(n)) | Speedup |
-|------------|----------|----------------------|--------------|---------|
-| n = 1,000  | k = 10   | 10,000 ops          | 2,000 ops    | 5x      |
-| n = 10,000 | k = 100  | 1,000,000 ops       | 20,000 ops   | 50x     |
-| n = 100,000| k = 1000 | 100,000,000 ops     | 200,000 ops  | 500x    |
+| Array Size  | Window k | Brute Force (O(n*k)) | Deque (O(n)) | Speedup |
+|-------------|----------|----------------------|--------------|---------|
+| n = 1,000   | k = 10   | 10,000 ops           | 2,000 ops    | 5x      |
+| n = 10,000  | k = 100  | 1,000,000 ops        | 20,000 ops   | 50x     |
+| n = 100,000 | k = 1000 | 100,000,000 ops      | 200,000 ops  | 500x    |
 
 **After implementing, explain:**
 
@@ -837,11 +836,14 @@ public static boolean isValid_Buggy(String s) {
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug 1 (Line 9):** Should check `if (stack.isEmpty()) return false;` BEFORE popping. Otherwise, popping from empty stack throws `EmptyStackException`.
+**Bug 1 (Line 9):** Should check `if (stack.isEmpty()) return false;` BEFORE popping. Otherwise, popping from empty
+stack throws `EmptyStackException`.
 
-**Bug 2 (Line 15):** Should return `stack.isEmpty()`, not `true`. String like "(((" would leave elements in stack, so it's invalid.
+**Bug 2 (Line 15):** Should return `stack.isEmpty()`, not `true`. String like "(((" would leave elements in stack, so
+it's invalid.
 
 **Correct code:**
+
 ```java
 } else {
     if (stack.isEmpty()) return false;  // Check first!
@@ -850,6 +852,7 @@ public static boolean isValid_Buggy(String s) {
 }
 return stack.isEmpty();  // All brackets must be matched
 ```
+
 </details>
 
 ---
@@ -894,11 +897,13 @@ public static int[] nextGreaterElement_Buggy(int[] nums) {
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug 1:** Should be `result[idx] = nums[i]`, not `result[i] = nums[i]`. We're setting the result for the INDEX we popped, not the current index.
+**Bug 1:** Should be `result[idx] = nums[i]`, not `result[i] = nums[i]`. We're setting the result for the INDEX we
+popped, not the current index.
 
 **Bug 2:** Should push `i` (the index), not `nums[i]` (the value). We need indices to set the result array correctly.
 
 **Correct code:**
+
 ```java
 while (!stack.isEmpty() && nums[i] > nums[stack.peek()]) {
     int idx = stack.pop();
@@ -906,6 +911,7 @@ while (!stack.isEmpty() && nums[i] > nums[stack.peek()]) {
 }
 stack.push(i);  // Push INDEX, not value
 ```
+
 </details>
 
 ---
@@ -957,6 +963,7 @@ static class MinStack_Buggy {
 **Bug:** Should only pop from minStack if the value being removed equals the current minimum.
 
 **Correct code:**
+
 ```java
 public void pop() {
     int val = stack.pop();
@@ -967,6 +974,7 @@ public void pop() {
 ```
 
 **Alternative (simpler):** Always push to minStack:
+
 ```java
 public void push(int val) {
     stack.push(val);
@@ -979,6 +987,7 @@ public void pop() {
     minStack.pop();  // Now both always in sync
 }
 ```
+
 </details>
 
 ---
@@ -1027,6 +1036,7 @@ static class QueueWithStacks_Buggy {
 **Bug:** Should only transfer when outbox is EMPTY, not on every dequeue.
 
 **Correct code:**
+
 ```java
 public int dequeue() {
     if (outbox.isEmpty()) {  // Only transfer when needed
@@ -1042,6 +1052,7 @@ public int dequeue() {
 
 - Buggy version: O(n) per dequeue
 - Correct version: O(1) amortized (each element transferred at most once)
+
 </details>
 
 ---
@@ -1107,6 +1118,7 @@ public static int[] maxSlidingWindow_Buggy(int[] nums, int k) {
 - First window completes at i=2 (indices 0,1,2 for k=3)
 
 **Correct code:**
+
 ```java
 while (!deque.isEmpty() && deque.peekFirst() < i - k + 1) {
     deque.pollFirst();
@@ -1116,6 +1128,7 @@ if (i >= k - 1) {
     result[i - k + 1] = nums[deque.peekFirst()];
 }
 ```
+
 </details>
 
 ---
@@ -1327,7 +1340,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -1413,15 +1427,15 @@ Result: <span class="fill-in">_________________________________</span>
 
 **Without looking at your notes, classify these problems:**
 
-| Problem | Data Structure | Why? |
-|---------|----------------|------|
-| Undo/Redo operations | <span class="fill-in">[Stack/Queue/Deque]</span> | <span class="fill-in">[Explain]</span> |
-| Print jobs (first come, first served) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Browser back button | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Find next warmer day | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| BFS traversal | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Expression evaluation | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Sliding window maximum | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Problem                               | Data Structure                                   | Why?                                   |
+|---------------------------------------|--------------------------------------------------|----------------------------------------|
+| Undo/Redo operations                  | <span class="fill-in">[Stack/Queue/Deque]</span> | <span class="fill-in">[Explain]</span> |
+| Print jobs (first come, first served) | <span class="fill-in">[Fill in]</span>           | <span class="fill-in">[Explain]</span> |
+| Browser back button                   | <span class="fill-in">[Fill in]</span>           | <span class="fill-in">[Explain]</span> |
+| Find next warmer day                  | <span class="fill-in">[Fill in]</span>           | <span class="fill-in">[Explain]</span> |
+| BFS traversal                         | <span class="fill-in">[Fill in]</span>           | <span class="fill-in">[Explain]</span> |
+| Expression evaluation                 | <span class="fill-in">[Fill in]</span>           | <span class="fill-in">[Explain]</span> |
+| Sliding window maximum                | <span class="fill-in">[Fill in]</span>           | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/7 correct
 
@@ -1433,12 +1447,12 @@ If you scored below 6/7, review the patterns and try again.
 
 **Complete this table from memory:**
 
-| Operation | Stack | Queue | Queue with Stacks (Amortized) |
-|-----------|-------|-------|-------------------------------|
-| Insert (push/enqueue) | O(?) | O(?) | O(?) |
-| Remove (pop/dequeue) | O(?) | O(?) | O(?) |
-| Peek/Front | O(?) | O(?) | O(?) |
-| Space | O(?) | O(?) | O(?) |
+| Operation             | Stack | Queue | Queue with Stacks (Amortized) |
+|-----------------------|-------|-------|-------------------------------|
+| Insert (push/enqueue) | O(?)  | O(?)  | O(?)                          |
+| Remove (pop/dequeue)  | O(?)  | O(?)  | O(?)                          |
+| Peek/Front            | O(?)  | O(?)  | O(?)                          |
+| Space                 | O(?)  | O(?)  | O(?)                          |
 
 **Deep questions:**
 
@@ -1642,6 +1656,7 @@ Your explanation:
 **Problem 1:** How would you implement a stack that supports push, pop, top, and getMin in O(1)?
 
 Your approach:
+
 ```
 [Write pseudocode and draw diagram]
 
@@ -1656,6 +1671,7 @@ Your approach:
 **Problem 2:** How would you find the largest rectangle in a histogram using a stack?
 
 Your approach:
+
 ```
 [Write pseudocode and draw diagram]
 

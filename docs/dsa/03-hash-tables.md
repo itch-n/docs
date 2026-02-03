@@ -28,7 +28,6 @@
 5. **What happens when two keys hash to the same location?**
     - Your answer: <span class="fill-in">[Fill in after learning about collisions]</span>
 
-
 </div>
 
 ---
@@ -168,9 +167,9 @@ public static int[] twoSum_HashMap(int[] nums, int target) {
 
 | Array Size | Brute Force (O(n²)) | HashMap (O(n)) | Speedup |
 |------------|---------------------|----------------|---------|
-| n = 100    | 10,000 ops         | 100 ops        | 100x    |
-| n = 1,000  | 1,000,000 ops      | 1,000 ops      | 1,000x  |
-| n = 10,000 | 100,000,000 ops    | 10,000 ops     | 10,000x |
+| n = 100    | 10,000 ops          | 100 ops        | 100x    |
+| n = 1,000  | 1,000,000 ops       | 1,000 ops      | 1,000x  |
+| n = 10,000 | 100,000,000 ops     | 10,000 ops     | 10,000x |
 
 **Your calculation:** For n = 5,000, the speedup is approximately _____ times faster.
 
@@ -254,9 +253,9 @@ public static boolean containsDuplicate_HashSet(int[] nums) {
 
 | Array Size | Linear Search (O(n²)) | HashSet (O(n)) | Speedup |
 |------------|-----------------------|----------------|---------|
-| n = 100    | 10,000 ops           | 100 ops        | 100x    |
-| n = 1,000  | 1,000,000 ops        | 1,000 ops      | 1,000x  |
-| n = 10,000 | 100,000,000 ops      | 10,000 ops     | 10,000x |
+| n = 100    | 10,000 ops            | 100 ops        | 100x    |
+| n = 1,000  | 1,000,000 ops         | 1,000 ops      | 1,000x  |
+| n = 10,000 | 100,000,000 ops       | 10,000 ops     | 10,000x |
 
 **Key insight:**
 
@@ -779,6 +778,7 @@ public static int[] twoSum_Buggy(int[] nums, int target) {
 **Bug 1:** Two separate loops are inefficient (though not technically wrong). Better to check and add in single loop.
 
 **Bug 2:** Could return `[i, i]` if the same element appears twice. Fix:
+
 ```java
 if (map.containsKey(complement) && map.get(complement) != i) {
     return new int[] {map.get(complement), i};
@@ -787,6 +787,7 @@ map.put(nums[i], i);
 ```
 
 **Better solution - check BEFORE adding:**
+
 ```java
 for (int i = 0; i < nums.length; i++) {
     int complement = target - nums[i];
@@ -796,6 +797,7 @@ for (int i = 0; i < nums.length; i++) {
     map.put(nums[i], i);  // Add after checking
 }
 ```
+
 </details>
 
 ---
@@ -837,12 +839,14 @@ public static Map<Character, Integer> countChars_Buggy(String s) {
 **Bug:** `freq.get(c)` returns `null` for first occurrence, causing `NullPointerException` when adding 1.
 
 **Fix Option 1 - Use getOrDefault:**
+
 ```java
 int count = freq.getOrDefault(c, 0);
 freq.put(c, count + 1);
 ```
 
 **Fix Option 2 - Check containsKey:**
+
 ```java
 if (freq.containsKey(c)) {
     freq.put(c, freq.get(c) + 1);
@@ -852,9 +856,11 @@ if (freq.containsKey(c)) {
 ```
 
 **Fix Option 3 - Use compute:**
+
 ```java
 freq.compute(c, (key, val) -> val == null ? 1 : val + 1);
 ```
+
 </details>
 
 ---
@@ -900,6 +906,7 @@ public static List<List<String>> groupAnagrams_Buggy(String[] strs) {
 **Bug:** Lowercase doesn't make anagrams have the same key. "eat" and "tea" are different when lowercased.
 
 **Fix - Sort characters:**
+
 ```java
 char[] chars = s.toCharArray();
 Arrays.sort(chars);
@@ -963,6 +970,7 @@ public static class BadHashCode {
 - Defeats the entire purpose of hashing!
 
 **Correct implementation:**
+
 ```java
 @Override
 public int hashCode() {
@@ -1017,6 +1025,7 @@ public static int[] intersection_Buggy(int[] nums1, int[] nums2) {
 **Bugs 1 & 2:** NullPointerException if either array is null.
 
 **Fix - Add null checks:**
+
 ```java
 public static int[] intersection_Fixed(int[] nums1, int[] nums2) {
     if (nums1 == null || nums2 == null) {
@@ -1034,6 +1043,7 @@ public static int[] intersection_Fixed(int[] nums1, int[] nums2) {
 - Return empty array: Easier for caller, no exception handling
 - Throw exception: Fail fast, makes null input a programmer error
 - Which is better? Depends on your API design philosophy!
+
 </details>
 
 ---
@@ -1318,7 +1328,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -1376,14 +1387,14 @@ Step 3: [Continue until found]
 
 **Without looking at your notes, classify these problems:**
 
-| Problem | Data Structure (HashMap/HashSet) | Why? |
-|---------|----------------------------------|------|
-| Count word frequency | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Find if array has duplicates | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Group strings by first letter | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Problem                           | Data Structure (HashMap/HashSet)       | Why?                                   |
+|-----------------------------------|----------------------------------------|----------------------------------------|
+| Count word frequency              | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Find if array has duplicates      | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Group strings by first letter     | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 | Check if two strings are anagrams | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Find missing number from 1 to n | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Two sum | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Find missing number from 1 to n   | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Two sum                           | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1395,11 +1406,11 @@ If you scored below 5/6, review the patterns and try again.
 
 **Complete this table from memory:**
 
-| Operation | HashMap Time | HashMap Space | HashSet Time | HashSet Space |
-|-----------|--------------|---------------|--------------|---------------|
-| Add/Put | O(?) | O(?) | O(?) | O(?) |
-| Lookup/Contains | O(?) | O(?) | O(?) | O(?) |
-| Remove | O(?) | O(?) | O(?) | O(?) |
+| Operation       | HashMap Time | HashMap Space | HashSet Time | HashSet Space |
+|-----------------|--------------|---------------|--------------|---------------|
+| Add/Put         | O(?)         | O(?)          | O(?)         | O(?)          |
+| Lookup/Contains | O(?)         | O(?)          | O(?)         | O(?)          |
+| Remove          | O(?)         | O(?)          | O(?)         | O(?)          |
 
 **Deep question:** Why is hash table lookup O(1) average but O(n) worst case?
 
@@ -1535,6 +1546,7 @@ Your explanation:
 **How to handle capacity limit:** <span class="fill-in">[Fill in - what happens when 101st item added?]</span>
 
 **Code outline:**
+
 ```java
 // Your design
 class SimpleCache {

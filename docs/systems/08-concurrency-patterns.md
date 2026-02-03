@@ -32,7 +32,6 @@
     - Example: "A BlockingQueue is like a conveyor belt in a factory..."
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
-
 </div>
 
 ---
@@ -41,7 +40,8 @@
 
 <div class="learner-section" markdown>
 
-**Your task:** Test your intuition about concurrency without looking at code. Answer these, then verify after implementation.
+**Your task:** Test your intuition about concurrency without looking at code. Answer these, then verify after
+implementation.
 
 ### Complexity Predictions
 
@@ -57,9 +57,9 @@
 
 3. **Thread pool sizing calculation:**
     - For 8 CPU cores, 100ms CPU work, 0ms I/O per task:
-     - Optimal pool size: <span class="fill-in">[Your guess: O(?)]</span>
+    - Optimal pool size: <span class="fill-in">[Your guess: O(?)]</span>
     - For 8 CPU cores, 50ms CPU work, 200ms I/O per task:
-     - Optimal pool size: <span class="fill-in">[Your guess: O(?)]</span>
+    - Optimal pool size: <span class="fill-in">[Your guess: O(?)]</span>
     - Verified: <span class="fill-in">[Actual formula and results]</span>
 
 ### Scenario Predictions
@@ -155,6 +155,7 @@ public class UnsafeCounter {
 - **Lost updates:** ~350,000 increments lost
 
 **Why it fails:**
+
 ```
 Thread 1: read count=5
 Thread 2: read count=5
@@ -220,6 +221,7 @@ public class LockFreeCounter {
 - Actual result: 1,000,000 ✓
 
 **CAS behavior:**
+
 ```
 do {
     current = read count
@@ -229,12 +231,12 @@ do {
 
 #### Performance Comparison
 
-| Threads | Unsafe (BROKEN) | Synchronized | Lock-Free (Atomic) | Winner |
-|---------|-----------------|--------------|-------------------|--------|
-| 1       | 100% (5ms)     | 100% (5ms)   | 100% (5ms)       | Tie    |
-| 2       | 75% lost       | 100% (12ms)  | 100% (8ms)       | Lock-free 1.5x |
-| 10      | 35% lost       | 100% (150ms) | 100% (50ms)      | Lock-free 3x   |
-| 100     | 5% lost        | 100% (2000ms)| 100% (500ms)     | Lock-free 4x   |
+| Threads | Unsafe (BROKEN) | Synchronized  | Lock-Free (Atomic) | Winner         |
+|---------|-----------------|---------------|--------------------|----------------|
+| 1       | 100% (5ms)      | 100% (5ms)    | 100% (5ms)         | Tie            |
+| 2       | 75% lost        | 100% (12ms)   | 100% (8ms)         | Lock-free 1.5x |
+| 10      | 35% lost        | 100% (150ms)  | 100% (50ms)        | Lock-free 3x   |
+| 100     | 5% lost         | 100% (2000ms) | 100% (500ms)       | Lock-free 4x   |
 
 **Your calculation:** For 50 threads, synchronized takes 800ms. Lock-free should take approximately _____ ms.
 
@@ -1879,6 +1881,7 @@ public class BrokenBankAccount {
 **Bug:** Check-then-act race condition. The check `balance >= amount` and the action `balance -= amount` are not atomic.
 
 **Scenario trace:**
+
 ```
 Thread A: check balance (1000) >= 600 ✓
 Thread B: check balance (1000) >= 600 ✓
@@ -1887,6 +1890,7 @@ Thread B: balance = 400 - 600 = -200  ← OVERDRAFT!
 ```
 
 **Fix Option 1 - Synchronized:**
+
 ```java
 public synchronized boolean withdraw(int amount) {
     if (balance >= amount) {
@@ -1898,6 +1902,7 @@ public synchronized boolean withdraw(int amount) {
 ```
 
 **Fix Option 2 - ReentrantLock:**
+
 ```java
 private final ReentrantLock lock = new ReentrantLock();
 
@@ -1914,6 +1919,7 @@ public boolean withdraw(int amount) {
     }
 }
 ```
+
 </details>
 
 ---
@@ -1970,6 +1976,7 @@ public class DeadlockTransfer {
 **Bug:** Circular lock dependency causes deadlock.
 
 **Deadlock scenario:**
+
 ```
 Thread 1: transfer(acc1, acc2, 100)
     - Locks acc1 ✓
@@ -1983,6 +1990,7 @@ DEADLOCK! Both threads waiting for each other.
 ```
 
 **Fix - Consistent lock ordering:**
+
 ```java
 public static boolean transfer(Account from, Account to, int amount) {
     // Always lock in consistent order (e.g., by account ID)
@@ -2064,6 +2072,7 @@ public class BrokenShutdown {
 - Loop runs forever!
 
 **Fix Option 1 - volatile:**
+
 ```java
 private volatile boolean stopRequested = false;
 ```
@@ -2073,6 +2082,7 @@ private volatile boolean stopRequested = false;
 - Adds memory barrier (flush to main memory)
 
 **Fix Option 2 - synchronized:**
+
 ```java
 private boolean stopRequested = false;
 
@@ -2093,6 +2103,7 @@ public void backgroundWork() {
 ```
 
 **Fix Option 3 - AtomicBoolean:**
+
 ```java
 private final AtomicBoolean stopRequested = new AtomicBoolean(false);
 
@@ -2107,6 +2118,7 @@ public void requestStop() {
     stopRequested.set(true);
 }
 ```
+
 </details>
 
 ---
@@ -2177,6 +2189,7 @@ public class StarvationExample {
 **Bug:** Thread pool starvation - workers block waiting for work that can't execute.
 
 **Deadlock scenario:**
+
 ```
 Pool size: 2 threads
 Thread 1: Executing Task 1, blocked on subtask1.get()
@@ -2188,6 +2201,7 @@ DEADLOCK!
 ```
 
 **Fix Option 1 - Separate thread pools:**
+
 ```java
 private final ExecutorService mainExecutor = Executors.newFixedThreadPool(2);
 private final ExecutorService subtaskExecutor = Executors.newFixedThreadPool(4);
@@ -2197,12 +2211,14 @@ private final ExecutorService subtaskExecutor = Executors.newFixedThreadPool(4);
 ```
 
 **Fix Option 2 - Larger pool:**
+
 ```java
 // Pool must be large enough for all parallel tasks + their subtasks
 private final ExecutorService executor = Executors.newFixedThreadPool(10);
 ```
 
 **Fix Option 3 - Don't block on subtasks in worker thread:**
+
 ```java
 // Use callbacks/CompletableFuture instead of blocking get()
 CompletableFuture.supplyAsync(() -> "Subtask 1", executor)
@@ -2212,6 +2228,7 @@ CompletableFuture.supplyAsync(() -> "Subtask 1", executor)
     )
     .thenAccept(result -> System.out.println(result));
 ```
+
 </details>
 
 ---
@@ -2269,10 +2286,10 @@ public class ABAStack<T> {
 
 - **Bug explanation:** <span class="fill-in">[What is the ABA problem?]</span>
 - **ABA scenario:**
-  1. Thread 1 reads head = A
-  2. Thread 2 pops A, pops B, pushes A back
-  3. Thread 1's CAS succeeds (A == A) but...
-  4. Problem: <span class="fill-in">[What's wrong?]</span>
+    1. Thread 1 reads head = A
+    2. Thread 2 pops A, pops B, pushes A back
+    3. Thread 1's CAS succeeds (A == A) but...
+    4. Problem: <span class="fill-in">[What's wrong?]</span>
 - **When does this cause issues?** <span class="fill-in">[What if nodes are reused?]</span>
 - **Bug fix:** <span class="fill-in">[How to prevent ABA?]</span>
 
@@ -2282,6 +2299,7 @@ public class ABAStack<T> {
 **Bug:** ABA problem - CAS succeeds when it shouldn't because value cycled back.
 
 **ABA scenario:**
+
 ```
 Initial: head -> A -> B -> C
 
@@ -2300,6 +2318,7 @@ Thread 1 resumes:
 ```
 
 **Fix Option 1 - AtomicStampedReference:**
+
 ```java
 // Add version number to prevent ABA
 private final AtomicStampedReference<Node<T>> head =
@@ -2616,7 +2635,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -2678,14 +2698,14 @@ T3: [Final state]
 
 **Without looking at your notes, classify these scenarios:**
 
-| Scenario | Pattern (Lock/Lock-Free/Queue/Pool) | Synchronization Needed? |
-|----------|-----------------------------------|------------------------|
+| Scenario                                  | Pattern (Lock/Lock-Free/Queue/Pool)    | Synchronization Needed?                      |
+|-------------------------------------------|----------------------------------------|----------------------------------------------|
 | Increment shared counter from 100 threads | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
-| Background job processing pipeline | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
-| Cache with 90% reads, 10% writes | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
-| Web server handling HTTP requests | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
-| Bank account transfers | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
-| Shutdown flag for worker thread | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
+| Background job processing pipeline        | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
+| Cache with 90% reads, 10% writes          | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
+| Web server handling HTTP requests         | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
+| Bank account transfers                    | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
+| Shutdown flag for worker thread           | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
 
 **Score:** ___/6 correct
 
@@ -2697,11 +2717,11 @@ If you scored below 5/6, review the patterns and try again.
 
 **Complete this table from memory:**
 
-| Operation | Unsynchronized | Synchronized | Lock-Free (Atomic) | Why Different? |
-|-----------|----------------|--------------|-------------------|----------------|
-| Counter increment | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Cache get (no contention) | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Cache get (high contention) | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Operation                   | Unsynchronized | Synchronized | Lock-Free (Atomic) | Why Different?                         |
+|-----------------------------|----------------|--------------|--------------------|----------------------------------------|
+| Counter increment           | O(?)           | O(?)         | O(?)               | <span class="fill-in">[Explain]</span> |
+| Cache get (no contention)   | O(?)           | O(?)         | O(?)               | <span class="fill-in">[Explain]</span> |
+| Cache get (high contention) | O(?)           | O(?)         | O(?)               | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why does synchronized counter perform worse than lock-free under high contention?
 
@@ -2732,9 +2752,9 @@ public class BankAccount {
 - **Bug type:** <span class="fill-in">[Race condition/Deadlock/Visibility/Starvation?]</span>
 - **Root cause:** <span class="fill-in">[Explain in one sentence]</span>
 - **Timeline of failure:**
-  1. Thread A: <span class="fill-in">___</span>
-  2. Thread B: <span class="fill-in">___</span>
-  3. Result: <span class="fill-in">___</span>
+    1. Thread A: <span class="fill-in">___</span>
+    2. Thread B: <span class="fill-in">___</span>
+    3. Result: <span class="fill-in">___</span>
 - **Fix:** <span class="fill-in">[Write the corrected code]</span>
 
 **Verification:**
@@ -2751,6 +2771,7 @@ public class BankAccount {
 **Scenario:** You need to implement a hit counter for a high-traffic website (1M requests/sec).
 
 **Option A:** Synchronized counter
+
 ```java
 private int hits = 0;
 public synchronized void recordHit() { hits++; }
@@ -2758,6 +2779,7 @@ public synchronized int getHits() { return hits; }
 ```
 
 **Option B:** AtomicInteger counter
+
 ```java
 private AtomicInteger hits = new AtomicInteger(0);
 public void recordHit() { hits.incrementAndGet(); }
@@ -2765,6 +2787,7 @@ public int getHits() { return hits.get(); }
 ```
 
 **Option C:** Approximate counter (thread-local + periodic merge)
+
 ```java
 ThreadLocal<Integer> localHits = ThreadLocal.withInitial(() -> 0);
 AtomicInteger globalHits = new AtomicInteger(0);
@@ -2773,11 +2796,11 @@ AtomicInteger globalHits = new AtomicInteger(0);
 
 **Your analysis:**
 
-| Option | Throughput | Accuracy | Complexity | Your Choice? |
-|--------|-----------|----------|------------|--------------|
-| A: Synchronized | <span class="fill-in">[High/Med/Low]</span> | <span class="fill-in">[Exact/Approx]</span> | <span class="fill-in">[Simple/Complex]</span> | <span class="fill-in">[Yes/No]</span> |
+| Option           | Throughput                                  | Accuracy                                    | Complexity                                    | Your Choice?                          |
+|------------------|---------------------------------------------|---------------------------------------------|-----------------------------------------------|---------------------------------------|
+| A: Synchronized  | <span class="fill-in">[High/Med/Low]</span> | <span class="fill-in">[Exact/Approx]</span> | <span class="fill-in">[Simple/Complex]</span> | <span class="fill-in">[Yes/No]</span> |
 | B: AtomicInteger | <span class="fill-in">[High/Med/Low]</span> | <span class="fill-in">[Exact/Approx]</span> | <span class="fill-in">[Simple/Complex]</span> | <span class="fill-in">[Yes/No]</span> |
-| C: Approximate | <span class="fill-in">[High/Med/Low]</span> | <span class="fill-in">[Exact/Approx]</span> | <span class="fill-in">[Simple/Complex]</span> | <span class="fill-in">[Yes/No]</span> |
+| C: Approximate   | <span class="fill-in">[High/Med/Low]</span> | <span class="fill-in">[Exact/Approx]</span> | <span class="fill-in">[Simple/Complex]</span> | <span class="fill-in">[Yes/No]</span> |
 
 **Your decision:** I would choose <span class="fill-in">[A/B/C]</span> because...
 

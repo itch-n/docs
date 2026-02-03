@@ -38,7 +38,6 @@
 8. **When would you use RPC instead of REST?**
     - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
-
 </div>
 
 ---
@@ -110,7 +109,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 - Example of idempotent operation: <span class="fill-in">[Fill in]</span>
 - Example of non-idempotent operation: <span class="fill-in">[Fill in]</span>
 
-
 </div>
 
 ---
@@ -151,6 +149,7 @@ class User {
 - Emergency rollback required
 
 **Client code that breaks:**
+
 ```java
 // This worked yesterday, crashes today!
 User user = api.getUser("123");
@@ -241,9 +240,9 @@ public List<Post> getUserPosts(String userId) {
 **Performance:**
 | User's Posts | Response Size | Load Time | Mobile Result |
 |--------------|---------------|-----------|---------------|
-| 100 posts    | 500 KB        | 0.5s      | Works         |
-| 1,000 posts  | 5 MB          | 2s        | Slow          |
-| 10,000 posts | 50 MB         | 10s+      | Crashes       |
+| 100 posts | 500 KB | 0.5s | Works |
+| 1,000 posts | 5 MB | 2s | Slow |
+| 10,000 posts | 50 MB | 10s+ | Crashes |
 
 #### Approach 2: Paginated API (Good)
 
@@ -333,6 +332,7 @@ public Response createUser(@RequestBody CreateUserRequest req) {
 ```
 
 **Response:**
+
 ```json
 {
   "message": "Error occurred"
@@ -392,6 +392,7 @@ class ApiError {
 ```
 
 **Response (duplicate email):**
+
 ```json
 {
   "code": "DUPLICATE_EMAIL",
@@ -455,6 +456,7 @@ public Response processPayment(@RequestBody PaymentRequest req) {
 ```
 
 **Scenario:**
+
 ```
 Client: POST /payments (amount=$100)
 Server: Processes payment, charges card $100
@@ -498,6 +500,7 @@ public Response processPayment(
 ```
 
 **Scenario:**
+
 ```
 Client: POST /payments (Idempotency-Key: "uuid-12345", amount=$100)
 Server: Processes payment, charges card $100, saves with key "uuid-12345"
@@ -1061,9 +1064,11 @@ public class UserController {
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug 1:** Version 2 endpoint uses `/users/{id}` instead of `/v2/users/{id}`. This creates ambiguity - which version is the "default"? Clients expect explicit versioning.
+**Bug 1:** Version 2 endpoint uses `/users/{id}` instead of `/v2/users/{id}`. This creates ambiguity - which version is
+the "default"? Clients expect explicit versioning.
 
 **Fix:**
+
 ```java
 @GetMapping("/v2/users/{id}")
 public UserV2 getUserV2(String id) {
@@ -1071,9 +1076,11 @@ public UserV2 getUserV2(String id) {
 }
 ```
 
-**Bug 2:** Single update endpoint doesn't handle version differences. V1 clients send `name` field, V2 clients send `firstName`/`lastName`. Need separate endpoints or request versioning.
+**Bug 2:** Single update endpoint doesn't handle version differences. V1 clients send `name` field, V2 clients send
+`firstName`/`lastName`. Need separate endpoints or request versioning.
 
 **Fix:**
+
 ```java
 @PutMapping("/v1/users/{id}")
 public Response updateUserV1(String id, @RequestBody UpdateUserV1Request req) {
@@ -1095,6 +1102,7 @@ public Response updateUserV2(String id, @RequestBody UpdateUserV2Request req) {
     return Response.ok(new UserV2(user));
 }
 ```
+
 </details>
 
 ---
@@ -1154,6 +1162,7 @@ public PaginatedResponse getPosts(
 **Bug 1:** Missing default values. If client doesn't send parameters, request fails with 400 Bad Request.
 
 **Fix:**
+
 ```java
 @RequestParam(defaultValue = "1") int page,
 @RequestParam(defaultValue = "20") int limit
@@ -1162,6 +1171,7 @@ public PaginatedResponse getPosts(
 **Bug 2:** No limit validation. Malicious client could send `limit=999999` and DOS the database.
 
 **Fix:**
+
 ```java
 if (limit > 100) limit = 100;  // Cap at max
 if (limit < 1) limit = 20;     // Minimum 1
@@ -1175,9 +1185,11 @@ if (limit < 1) limit = 20;     // Minimum 1
 - Page 2, limit 10: offset = (2-1) * 10 = 10 (items 10-19)
 
 **Fix:**
+
 ```java
 int offset = (page - 1) * limit;
 ```
+
 </details>
 
 ---
@@ -1233,24 +1245,25 @@ public Response partialUpdate(
 
 **Your debugging:**
 
-| Operation | Current Method | Correct Method | Why? |
-|-----------|---------------|----------------|------|
-| Get profile | POST | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Update email | GET | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Delete user | POST | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Partial update | PUT | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Operation      | Current Method | Correct Method                         | Why?                                   |
+|----------------|----------------|----------------------------------------|----------------------------------------|
+| Get profile    | POST           | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Update email   | GET            | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Delete user    | POST           | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Partial update | PUT            | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-| Operation | Current Method | Correct Method | Why? |
-|-----------|---------------|----------------|------|
-| Get profile | POST | **GET** | Reading data, no side effects, should be cacheable |
-| Update email | GET | **PATCH or PUT** | Modifying data, GET should never modify state |
-| Delete user | POST | **DELETE** | Deleting resource, use proper semantic method |
-| Partial update | PUT | **PATCH** | PUT replaces entire resource, PATCH for partial updates |
+| Operation      | Current Method | Correct Method   | Why?                                                    |
+|----------------|----------------|------------------|---------------------------------------------------------|
+| Get profile    | POST           | **GET**          | Reading data, no side effects, should be cacheable      |
+| Update email   | GET            | **PATCH or PUT** | Modifying data, GET should never modify state           |
+| Delete user    | POST           | **DELETE**       | Deleting resource, use proper semantic method           |
+| Partial update | PUT            | **PATCH**        | PUT replaces entire resource, PATCH for partial updates |
 
 **Correct implementations:**
+
 ```java
 // 1. Get profile - use GET
 @GetMapping("/users/{id}/profile")
@@ -1357,6 +1370,7 @@ public Response createUser(@RequestBody CreateUserRequest req) {
 <summary>Click to verify your answers</summary>
 
 **Correct implementation:**
+
 ```java
 @PostMapping("/users")
 public Response createUser(@RequestBody CreateUserRequest req) {
@@ -1425,6 +1439,7 @@ public Response createUser(@RequestBody CreateUserRequest req) {
 - Bug 3: **409 Conflict** (not 400) - resource conflict, specific error type
 - Bug 4: **201 Created** (not 200) - resource was created
 - Bug 5: Always log exceptions, provide structured errors, differentiate error types
+
 </details>
 
 ---
@@ -1491,6 +1506,7 @@ public Response processPayment(@RequestBody PaymentRequest req) {
 3. No way to safely retry
 
 **Correct implementation:**
+
 ```java
 @PostMapping("/payments")
 public Response processPayment(
@@ -1553,6 +1569,7 @@ public Response processPayment(
 2. Check for existing payment before processing
 3. Transaction ensures atomicity
 4. Safe to retry with same key
+
 </details>
 
 ---
@@ -1726,7 +1743,8 @@ For each API paradigm, identify alternatives and compare:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -1752,7 +1770,8 @@ For each API paradigm, identify alternatives and compare:
 **Self-assessment:**
 
 - Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by someone from a different tech background? <span class="fill-in">[Yes/No]</span>
+- Could your explanation be understood by someone from a different tech
+  background? <span class="fill-in">[Yes/No]</span>
 - Did you use examples? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
@@ -1763,18 +1782,18 @@ If you scored below 7 or answered "No" to either question, revise your explanati
 
 **Task:** Match the scenario to the correct status code WITHOUT looking at your notes.
 
-| Scenario | Your Answer | Correct |
-|----------|-------------|---------|
-| User successfully fetched | <span class="fill-in">[Status code?]</span> | 200 |
-| User successfully created | <span class="fill-in">[Status code?]</span> | 201 |
-| User successfully deleted | <span class="fill-in">[Status code?]</span> | 204 |
-| Email format is invalid | <span class="fill-in">[Status code?]</span> | 400 |
-| Email already exists | <span class="fill-in">[Status code?]</span> | 409 |
-| User not authenticated | <span class="fill-in">[Status code?]</span> | 401 |
-| User not authorized | <span class="fill-in">[Status code?]</span> | 403 |
-| User not found | <span class="fill-in">[Status code?]</span> | 404 |
-| Too many requests | <span class="fill-in">[Status code?]</span> | 429 |
-| Server crashed | <span class="fill-in">[Status code?]</span> | 500 |
+| Scenario                  | Your Answer                                 | Correct |
+|---------------------------|---------------------------------------------|---------|
+| User successfully fetched | <span class="fill-in">[Status code?]</span> | 200     |
+| User successfully created | <span class="fill-in">[Status code?]</span> | 201     |
+| User successfully deleted | <span class="fill-in">[Status code?]</span> | 204     |
+| Email format is invalid   | <span class="fill-in">[Status code?]</span> | 400     |
+| Email already exists      | <span class="fill-in">[Status code?]</span> | 409     |
+| User not authenticated    | <span class="fill-in">[Status code?]</span> | 401     |
+| User not authorized       | <span class="fill-in">[Status code?]</span> | 403     |
+| User not found            | <span class="fill-in">[Status code?]</span> | 404     |
+| Too many requests         | <span class="fill-in">[Status code?]</span> | 429     |
+| Server crashed            | <span class="fill-in">[Status code?]</span> | 500     |
 
 **Score:** ___/10 correct
 
@@ -1833,6 +1852,7 @@ I need to build an API
 2. **Maximum page size:** <span class="fill-in">[Your choice and why]</span>
 
 3. **Response structure (design the JSON):**
+
 ```json
 {
   // Fill in your design
@@ -1864,14 +1884,14 @@ Your answer: <span class="fill-in">[Fill in]</span>
 
 **Classification test:** Mark each operation as Idempotent or Not Idempotent
 
-| Operation | Naturally Idempotent? | Why? |
-|-----------|----------------------|------|
-| GET /users/123 | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
-| POST /users | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
-| PUT /users/123 | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
-| PATCH /users/123 (set email) | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| Operation                            | Naturally Idempotent?                 | Why?                                   |
+|--------------------------------------|---------------------------------------|----------------------------------------|
+| GET /users/123                       | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| POST /users                          | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| PUT /users/123                       | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| PATCH /users/123 (set email)         | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
 | PATCH /users/123 (increment counter) | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
-| DELETE /users/123 | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| DELETE /users/123                    | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1897,6 +1917,7 @@ Your solution:
 **Scenario:** Design the error response for "email already exists" during user creation.
 
 **Your JSON response:**
+
 ```json
 {
   // Fill in your design
@@ -1914,6 +1935,7 @@ Your solution:
 **Compare to bad design:**
 
 Bad example:
+
 ```json
 {
   "error": "Something went wrong"
@@ -2019,16 +2041,16 @@ Endpoints:
 
 **Critical understanding:** Classify each change as Breaking or Compatible
 
-| Change | Breaking or Compatible? | Why? |
-|--------|------------------------|------|
-| Add new optional field to response | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
-| Remove field from response | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
-| Rename field in response | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
-| Change field type (string → int) | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
-| Add new required field to request | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
+| Change                                | Breaking or Compatible?            | Why?                                   |
+|---------------------------------------|------------------------------------|----------------------------------------|
+| Add new optional field to response    | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
+| Remove field from response            | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
+| Rename field in response              | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
+| Change field type (string → int)      | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
+| Add new required field to request     | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
 | Make existing required field optional | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
-| Add new endpoint | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
-| Change HTTP method (POST → PUT) | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
+| Add new endpoint                      | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
+| Change HTTP method (POST → PUT)       | <span class="fill-in">[B/C]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/8 correct
 

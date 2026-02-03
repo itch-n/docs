@@ -38,7 +38,6 @@
 8. **When would you use Pastebin instead of email?**
     - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
-
 </div>
 
 ---
@@ -47,7 +46,8 @@
 
 <div class="learner-section" markdown>
 
-**Your task:** Test your system design intuition without looking at implementation details. Answer these, then verify after building the systems.
+**Your task:** Test your system design intuition without looking at implementation details. Answer these, then verify
+after building the systems.
 
 ### Capacity Planning Predictions
 
@@ -104,11 +104,11 @@
 
 **Question:** What's the main bottleneck in each system?
 
-| System | Bottleneck (CPU/Memory/Disk/Network) | Why? |
-|--------|--------------------------------------|------|
+| System        | Bottleneck (CPU/Memory/Disk/Network)      | Why?                                   |
+|---------------|-------------------------------------------|----------------------------------------|
 | URL Shortener | <span class="fill-in">[Your guess]</span> | <span class="fill-in">[Explain]</span> |
-| Twitter Feed | <span class="fill-in">[Your guess]</span> | <span class="fill-in">[Explain]</span> |
-| Pastebin | <span class="fill-in">[Your guess]</span> | <span class="fill-in">[Explain]</span> |
+| Twitter Feed  | <span class="fill-in">[Your guess]</span> | <span class="fill-in">[Explain]</span> |
+| Pastebin      | <span class="fill-in">[Your guess]</span> | <span class="fill-in">[Explain]</span> |
 
 Verify after implementation: <span class="fill-in">[Were you correct?]</span>
 
@@ -205,14 +205,14 @@ Verify after implementation: <span class="fill-in">[Were you correct?]</span>
 
 #### Performance Comparison
 
-| Metric | Monolithic | Distributed | Improvement |
-|--------|-----------|-------------|-------------|
-| Concurrent Users | 10K | 10M+ | 1000x |
-| Timeline Load Time | 2-3 sec | 50-100ms | 20-30x |
-| Database Load | 100% | 20% (cache) | 5x reduction |
-| Availability | 95% (1 failure point) | 99.99% | 52x less downtime |
-| Deployment Risk | Full outage | Zero downtime | Risk eliminated |
-| Cost per User | High (over-provision) | Low (scale on demand) | 10x reduction |
+| Metric             | Monolithic            | Distributed           | Improvement       |
+|--------------------|-----------------------|-----------------------|-------------------|
+| Concurrent Users   | 10K                   | 10M+                  | 1000x             |
+| Timeline Load Time | 2-3 sec               | 50-100ms              | 20-30x            |
+| Database Load      | 100%                  | 20% (cache)           | 5x reduction      |
+| Availability       | 95% (1 failure point) | 99.99%                | 52x less downtime |
+| Deployment Risk    | Full outage           | Zero downtime         | Risk eliminated   |
+| Cost per User      | High (over-provision) | Low (scale on demand) | 10x reduction     |
 
 ### Key System Design Principles Illustrated
 
@@ -1279,7 +1279,8 @@ public class Pastebin {
 
 ## Debugging Challenges
 
-**Your task:** Find and fix system-wide bugs that span multiple components. These are the hardest bugs to debug because they involve interactions between services.
+**Your task:** Find and fix system-wide bugs that span multiple components. These are the hardest bugs to debug because
+they involve interactions between services.
 
 ### Challenge 1: Cascading Failure in URL Shortener
 
@@ -1360,6 +1361,7 @@ static class DatabaseShards {
 3. No rate limiting → traffic overwhelms system
 
 **Fixes:**
+
 ```java
 // Fix 1: Bounded LRU cache
 static class Cache {
@@ -1393,6 +1395,7 @@ static class RateLimiter {
     // Use token bucket or sliding window
 }
 ```
+
 </details>
 
 ---
@@ -1525,6 +1528,7 @@ class FanoutConsumer {
 - Accept slight delay (100-200ms)
 - Guarantee eventual delivery
 - Guarantee ordering per user
+
 </details>
 
 ---
@@ -1667,6 +1671,7 @@ public class Pastebin {
 - Query time for large pastes: 2s → 100ms (20x faster)
 - Memory usage: 1GB → 50MB (20x reduction)
 - Cost: 1x (SQL) → 0.2x (hybrid SQL + S3)
+
 </details>
 
 ---
@@ -1739,7 +1744,7 @@ public void trackClick(String shortCode) {
 -   [ ] Synchronous DB writes (slow but safe)
 -   [ ] Write-ahead log
 -   [ ] Distributed transactions
--   Your choice: <span class="fill-in">[Fill in and explain why]</span>
+- Your choice: <span class="fill-in">[Fill in and explain why]</span>
 
 <details markdown>
 <summary>Click to see the solution</summary>
@@ -1803,6 +1808,7 @@ class AnalyticsConsumer {
 - **Reliability:** Much higher (no data loss)
 
 **Alternative:** Synchronous writes (simpler but slower)
+
 ```java
 public String getOriginalURL(String shortCode) {
     String url = database.get(shortCode);
@@ -1813,6 +1819,7 @@ public String getOriginalURL(String shortCode) {
     return url;
 }
 ```
+
 </details>
 
 ---
@@ -2120,7 +2127,8 @@ What are you building?
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery of full system design by demonstrating integration of all concepts. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery of full system design by demonstrating integration of all concepts. You cannot move forward
+until you can confidently complete this section.
 
 ### Gate 1: Explain System Trade-offs
 
@@ -2136,7 +2144,8 @@ What are you building?
 
 - Trade-off clarity score (1-10): <span class="fill-in">___</span>
 - Did you mention specific technologies (Redis, Kafka, etc.)? <span class="fill-in">[Yes/No]</span>
-- Did you quantify the trade-offs (e.g., "100ms latency increase for 99.99% availability")? <span class="fill-in">[Yes/No]</span>
+- Did you quantify the trade-offs (e.g., "100ms latency increase for 99.99%
+  availability")? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 8 or answered "No" to either question, revise your explanation.
 
@@ -2272,14 +2281,14 @@ If you scored below 8 or answered "No" to either question, revise your explanati
 
 **Classify these system design challenges (without looking at notes):**
 
-| Challenge | Primary Pattern(s) | Why? |
-|-----------|-------------------|------|
-| News feed with 1M posts/day | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Distributed rate limiter | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Challenge                      | Primary Pattern(s)                     | Why?                                   |
+|--------------------------------|----------------------------------------|----------------------------------------|
+| News feed with 1M posts/day    | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Distributed rate limiter       | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 | Global leaderboard (real-time) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| File sync across devices | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Chat system with 100M users | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Search autocomplete | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| File sync across devices       | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Chat system with 100M users    | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Search autocomplete            | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -2319,6 +2328,7 @@ If you scored below 8 or answered "No" to either question, revise your explanati
 - Bandwidth: <span class="fill-in">[Calculate]</span>
 
 **Step 3: High-Level Design (10 min)**
+
 ```
 [Draw your architecture]
 
@@ -2398,12 +2408,12 @@ Your explanation:
 
 **Complete this matrix from memory:**
 
-| System Requirement | Consistency | Availability | Partition Tolerance | Your Choice | Why? |
-|-------------------|-------------|--------------|---------------------|-------------|------|
-| Bank transactions | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Social media feed | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| URL shortener | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Chat messages | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| System Requirement   | Consistency                                 | Availability                                | Partition Tolerance                         | Your Choice                            | Why?                                   |
+|----------------------|---------------------------------------------|---------------------------------------------|---------------------------------------------|----------------------------------------|----------------------------------------|
+| Bank transactions    | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Social media feed    | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| URL shortener        | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Chat messages        | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 | E-commerce inventory | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Priority 1-3]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Given the CAP theorem, explain why you can't have perfect C, A, and P simultaneously.
@@ -2506,10 +2516,12 @@ public class TwitterFeed {
     - Fix: <span class="fill-in">[Fill in]</span>
 
 **Additional problems you spotted:**
+
 5. <span class="fill-in">[Fill in if you found more]</span>
 6. <span class="fill-in">[Fill in if you found more]</span>
 
 **Your production-ready rewrite:**
+
 ```java
 // TODO: Rewrite this class to be production-ready
 // - Use distributed cache
@@ -2541,4 +2553,5 @@ public class TwitterFeed {
 
 **If score < 8:** Review the sections where you struggled, revisit the implementations, then retry the gates.
 
-**If score ≥ 8:** Congratulations! You've mastered full system design. You're ready for system design interviews and real-world distributed systems work.
+**If score ≥ 8:** Congratulations! You've mastered full system design. You're ready for system design interviews and
+real-world distributed systems work.

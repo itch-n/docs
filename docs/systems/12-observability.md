@@ -33,7 +33,6 @@
 6. **When should you add metrics vs logs vs traces?**
     - Your answer: <span class="fill-in">[Fill in after practice]</span>
 
-
 </div>
 
 ---
@@ -101,7 +100,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 - Your answer: <span class="fill-in">[Fill in reasoning]</span>
 - Verified: <span class="fill-in">[Fill in after learning about performance impact]</span>
-
 
 </div>
 
@@ -220,12 +218,12 @@ public class CheckoutService {
 
 #### Performance Comparison
 
-| Scenario | No Observability | With Observability | Improvement |
-|----------|------------------|-------------------|-------------|
-| Time to detect issue | 30+ minutes (user reports) | 30 seconds (alert fired) | 60x faster |
-| Time to identify root cause | 2-4 hours (trial/error) | 5 minutes (query traces) | 24x faster |
-| Deploy cycles needed | 3-5 deploys | 1 deploy | 3-5x fewer |
-| Customer impact | High (hours) | Low (minutes) | 10x better |
+| Scenario                    | No Observability           | With Observability       | Improvement |
+|-----------------------------|----------------------------|--------------------------|-------------|
+| Time to detect issue        | 30+ minutes (user reports) | 30 seconds (alert fired) | 60x faster  |
+| Time to identify root cause | 2-4 hours (trial/error)    | 5 minutes (query traces) | 24x faster  |
+| Deploy cycles needed        | 3-5 deploys                | 1 deploy                 | 3-5x fewer  |
+| Customer impact             | High (hours)               | Low (minutes)            | 10x better  |
 
 **Your calculation:** If you have 10 incidents per month, observability saves approximately _____ engineering hours.
 
@@ -1856,6 +1854,7 @@ public class EndpointMetrics {
 - Which status codes are returned
 
 **Fix:**
+
 ```java
 public void recordRequest(String endpoint, String method, int statusCode) {
     Map<String, String> labels = Map.of(
@@ -1874,6 +1873,7 @@ public void recordRequest(String endpoint, String method, int statusCode) {
 - Identify which API is slow
 - Track SLOs per endpoint
 - Debug which endpoint is causing load
+
 </details>
 
 ---
@@ -1924,6 +1924,7 @@ public class CacheMetrics {
 - **Metric system overload:** Can crash Prometheus/etc.
 
 **Fix:** Track aggregated metrics instead:
+
 ```java
 // GOOD: Low cardinality
 private Counter cacheHits = new Counter("cache_hits_total", Map.of());
@@ -1998,6 +1999,7 @@ public class LatencyHistogram {
 - At 100 calls/sec = 2 billion operations/sec!
 
 **Fix:** Use bucketed histogram (like Prometheus):
+
 ```java
 public class LatencyHistogram {
     private final double[] buckets = {0.01, 0.05, 0.1, 0.5, 1.0, 5.0};
@@ -2087,6 +2089,7 @@ public Span startSpan(String operation) {
 - Can't reconstruct full request flow
 
 **Fix:** Sample based on trace ID (head-based sampling):
+
 ```java
 public class TraceSampler {
     private double sampleRate = 0.10;
@@ -2103,6 +2106,7 @@ public class TraceSampler {
 ```
 
 **Alternative:** Tail-based sampling (sample AFTER seeing full trace):
+
 ```java
 // Keep all traces in memory temporarily
 // Sample based on: errors, high latency, specific endpoints
@@ -2164,6 +2168,7 @@ public class OrderService {
 - Ordering - can't tell which log belongs to which request
 
 **Fix:** Add context to every log:
+
 ```java
 public void processOrder(Order order) {
     // Set context once at start
@@ -2486,7 +2491,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -2556,14 +2562,14 @@ SLO to define:
 
 **Without looking at your notes, classify these problems:**
 
-| Problem | Use Metrics/Logs/Traces | Why? |
-|---------|------------------------|------|
-| Find average latency over time | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Debug why order #12345 failed | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Problem                              | Use Metrics/Logs/Traces                | Why?                                   |
+|--------------------------------------|----------------------------------------|----------------------------------------|
+| Find average latency over time       | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Debug why order #12345 failed        | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 | See which service is slow in request | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Alert when error rate > 1% | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Find all requests by user_123 | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Track SLO compliance | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Alert when error rate > 1%           | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Find all requests by user_123        | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Track SLO compliance                 | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -2575,12 +2581,12 @@ If you scored below 5/6, review the patterns and try again.
 
 **Complete this table from memory:**
 
-| Operation | Time Complexity | Space Complexity | Why? |
-|-----------|----------------|------------------|------|
-| Counter increment | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Histogram observe | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Structured log write | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Trace span creation | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Operation            | Time Complexity | Space Complexity | Why?                                   |
+|----------------------|-----------------|------------------|----------------------------------------|
+| Counter increment    | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
+| Histogram observe    | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
+| Structured log write | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
+| Trace span creation  | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why do we sample traces but not metrics?
 

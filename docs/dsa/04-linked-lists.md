@@ -28,7 +28,6 @@
 5. **What's the key difference between singly and doubly linked lists?**
     - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
-
 </div>
 
 ---
@@ -61,7 +60,8 @@
 **Scenario 1:** Reverse list `1 -> 2 -> 3 -> 4 -> 5`
 
 - **How many pointers needed?** <span class="fill-in">[Fill in: prev, curr, next - why each?]</span>
-- **Initial state:** prev = <span class="fill-in">___</span>, curr = <span class="fill-in">___</span>, next = <span class="fill-in">___</span>
+- **Initial state:** prev = <span class="fill-in">___</span>, curr = <span class="fill-in">___</span>,
+  next = <span class="fill-in">___</span>
 - **After first iteration:** List becomes <span class="fill-in">[Draw it: ? -> ? -> ? -> ?]</span>
 - **What's the new head?** <span class="fill-in">[Which pointer points to it?]</span>
 
@@ -150,10 +150,10 @@ public static ListNode insertAtBeginning_List(ListNode head, int value) {
 #### Performance Comparison
 
 | Collection Size | Array (O(n)) | Linked List (O(1)) | Speedup |
-|----------------|--------------|-------------------|---------|
-| n = 100        | 100 ops      | 2 ops             | 50x     |
-| n = 1,000      | 1,000 ops    | 2 ops             | 500x    |
-| n = 10,000     | 10,000 ops   | 2 ops             | 5,000x  |
+|-----------------|--------------|--------------------|---------|
+| n = 100         | 100 ops      | 2 ops              | 50x     |
+| n = 1,000       | 1,000 ops    | 2 ops              | 500x    |
+| n = 10,000      | 10,000 ops   | 2 ops              | 5,000x  |
 
 **Your calculation:** For n = 5,000, inserting at beginning is _____ times faster with linked list.
 
@@ -232,10 +232,10 @@ public static int getMiddle_List_Optimized(ListNode head) {
 #### Performance Comparison
 
 | Collection Size | Array (O(1)) | List Naive (O(n)) | List Optimized (O(n)) |
-|----------------|--------------|-------------------|---------------------|
-| n = 100        | 1 op         | 150 ops           | 50 ops              |
-| n = 1,000      | 1 op         | 1,500 ops         | 500 ops             |
-| n = 10,000     | 1 op         | 15,000 ops        | 5,000 ops           |
+|-----------------|--------------|-------------------|-----------------------|
+| n = 100         | 1 op         | 150 ops           | 50 ops                |
+| n = 1,000       | 1 op         | 1,500 ops         | 500 ops               |
+| n = 10,000      | 1 op         | 15,000 ops        | 5,000 ops             |
 
 **Key insight:** Arrays win for access, linked lists win for insertion/deletion.
 
@@ -857,7 +857,8 @@ public class RemoveNodeClient {
 
 ## Debugging Challenges
 
-**Your task:** Find and fix bugs in broken linked list implementations. This tests your understanding of pointer manipulation.
+**Your task:** Find and fix bugs in broken linked list implementations. This tests your understanding of pointer
+manipulation.
 
 ### Challenge 1: Broken Reverse Implementation
 
@@ -899,9 +900,11 @@ public static ListNode reverseList_Buggy(ListNode head) {
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug 1 (Line 10):** Missing `prev = curr` before `curr = next`. The prev pointer never advances, so we lose track of the reversed portion.
+**Bug 1 (Line 10):** Missing `prev = curr` before `curr = next`. The prev pointer never advances, so we lose track of
+the reversed portion.
 
 **Correct:**
+
 ```java
 while (curr != null) {
     ListNode next = curr.next;
@@ -911,7 +914,8 @@ while (curr != null) {
 }
 ```
 
-**Bug 2 (Line 13):** Returning `curr` which is null at the end. Should return `prev`, which points to the new head (the last node we processed).
+**Bug 2 (Line 13):** Returning `curr` which is null at the end. Should return `prev`, which points to the new head (the
+last node we processed).
 
 **Correct:** `return prev;`
 </details>
@@ -964,11 +968,14 @@ public static ListNode detectCycle_Buggy(ListNode head) {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug (Line 18):** In the second phase (finding cycle start), both pointers should move ONE step at a time, not two steps for fast.
+**Bug (Line 18):** In the second phase (finding cycle start), both pointers should move ONE step at a time, not two
+steps for fast.
 
-**Why it fails:** After finding the cycle, we're looking for the entry point. Moving fast by 2 steps can skip over the cycle start or cause fast to go past the end (if there's a path outside the cycle).
+**Why it fails:** After finding the cycle, we're looking for the entry point. Moving fast by 2 steps can skip over the
+cycle start or cause fast to go past the end (if there's a path outside the cycle).
 
 **Correct:**
+
 ```java
 slow = head;
 while (slow != fast) {
@@ -977,7 +984,8 @@ while (slow != fast) {
 }
 ```
 
-**Mathematical proof:** When slow and fast meet at distance k from cycle start, resetting slow to head and moving both one step at a time guarantees they meet at the cycle start. Moving fast by 2 breaks this property.
+**Mathematical proof:** When slow and fast meet at distance k from cycle start, resetting slow to head and moving both
+one step at a time guarantees they meet at the cycle start. Moving fast by 2 breaks this property.
 </details>
 
 ---
@@ -1028,9 +1036,11 @@ public static ListNode mergeTwoLists_Buggy(ListNode l1, ListNode l2) {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug (After line 16):** Missing `curr = curr.next;`. The curr pointer never advances, so we keep overwriting curr.next instead of building a chain.
+**Bug (After line 16):** Missing `curr = curr.next;`. The curr pointer never advances, so we keep overwriting curr.next
+instead of building a chain.
 
 **Correct:**
+
 ```java
 while (l1 != null && l2 != null) {
     if (l1.val < l2.val) {
@@ -1044,7 +1054,8 @@ while (l1 != null && l2 != null) {
 }
 ```
 
-**Why it matters:** Without advancing curr, curr.next always points to the last node we attached. We're not building a proper linked list chain.
+**Why it matters:** Without advancing curr, curr.next always points to the last node we attached. We're not building a
+proper linked list chain.
 </details>
 
 ---
@@ -1097,17 +1108,20 @@ public static ListNode removeNthFromEnd_Buggy(ListNode head, int n) {
 
 **Bug 1 (Line 11):** Loop should run `n + 1` times, not `n` times.
 
-**Why:** We want slow to be positioned ONE NODE BEFORE the node to remove, not at the node itself. This requires an extra step of gap.
+**Why:** We want slow to be positioned ONE NODE BEFORE the node to remove, not at the node itself. This requires an
+extra step of gap.
 
 **Correct:** `for (int i = 0; i <= n; i++)`
 
 **Bug 2 (Line 16):** Should check `fast.next != null`, not `fast != null`.
 
-**Why:** We want to stop when fast is at the last node (so fast.next is null), not when fast goes past it. This positions slow at the node before the one to remove.
+**Why:** We want to stop when fast is at the last node (so fast.next is null), not when fast goes past it. This
+positions slow at the node before the one to remove.
 
 **Correct:** `while (fast.next != null)`
 
 **Combined fix:**
+
 ```java
 // Move fast n+1 steps ahead
 for (int i = 0; i <= n; i++) {
@@ -1120,6 +1134,7 @@ while (fast.next != null) {
     fast = fast.next;
 }
 ```
+
 </details>
 
 ---
@@ -1170,7 +1185,8 @@ public static ListNode reverseFirstK_Buggy(ListNode head, int k) {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug (Line 22):** Actually, this code is CORRECT! There's no bug here - it's a trick question to test your understanding.
+**Bug (Line 22):** Actually, this code is CORRECT! There's no bug here - it's a trick question to test your
+understanding.
 
 **Why it works:**
 
@@ -1181,9 +1197,11 @@ public static ListNode reverseFirstK_Buggy(ListNode head, int k) {
 
 **No cycle created!** The original head (now tail of reversed portion) correctly points to the rest of the list.
 
-**However, there IS a subtle issue:** If k >= list length, curr will be null, and tail.next should remain null. The code handles this correctly because setting tail.next = null is fine.
+**However, there IS a subtle issue:** If k >= list length, curr will be null, and tail.next should remain null. The code
+handles this correctly because setting tail.next = null is fine.
 
-**Actually, if you thought there was a bug because you weren't sure, you're thinking critically - good! But trace through carefully and you'll see it works.**
+**Actually, if you thought there was a bug because you weren't sure, you're thinking critically - good! But trace
+through carefully and you'll see it works.**
 
 The real lesson: Always trace through pointer manipulations step by step to verify correctness.
 </details>
@@ -1227,7 +1245,8 @@ public static ListNode findMiddle_Buggy(ListNode head) {
 
 **Bug 1:** If `head` is null, then `fast.next` throws NullPointerException.
 
-**Bug 2:** If list has even length (e.g., `1 -> 2`), then fast.next.next will try to access next of null on second iteration.
+**Bug 2:** If list has even length (e.g., `1 -> 2`), then fast.next.next will try to access next of null on second
+iteration.
 
 **Fix:** Check both `fast != null` AND `fast.next != null`:
 
@@ -1450,7 +1469,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -1507,14 +1527,14 @@ Final: [Your drawing - after all reversals]
 
 **Without looking at your notes, classify these problems:**
 
-| Problem | Pattern (Reverse/Cycle/Merge/Remove) | Key Technique |
-|---------|--------------------------------------|---------------|
-| Reverse a linked list | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[3 pointers: prev, curr, next]</span> |
-| Detect if list has a cycle | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fast/slow pointers]</span> |
-| Find middle of linked list | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fast/slow pointers]</span> |
-| Merge two sorted lists | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Dummy node + pointer]</span> |
-| Remove nth from end | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Two pointers with gap]</span> |
-| Find cycle start node | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fast/slow meet, then reset]</span> |
+| Problem                    | Pattern (Reverse/Cycle/Merge/Remove)   | Key Technique                                               |
+|----------------------------|----------------------------------------|-------------------------------------------------------------|
+| Reverse a linked list      | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[3 pointers: prev, curr, next]</span> |
+| Detect if list has a cycle | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fast/slow pointers]</span>           |
+| Find middle of linked list | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fast/slow pointers]</span>           |
+| Merge two sorted lists     | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Dummy node + pointer]</span>         |
+| Remove nth from end        | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Two pointers with gap]</span>        |
+| Find cycle start node      | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fast/slow meet, then reset]</span>   |
 
 **Score:** ___/6 correct
 
@@ -1526,13 +1546,13 @@ If you scored below 5/6, review the patterns and try again.
 
 **Complete this table from memory:**
 
-| Operation | Time Complexity | Space Complexity | Why? |
-|-----------|----------------|------------------|------|
-| Reverse iteratively | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Reverse recursively | O(?) | O(?) | <span class="fill-in">[Why different?]</span> |
-| Detect cycle (Floyd's) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Merge two lists | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Merge K lists (heap) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Operation              | Time Complexity | Space Complexity | Why?                                          |
+|------------------------|-----------------|------------------|-----------------------------------------------|
+| Reverse iteratively    | O(?)            | O(?)             | <span class="fill-in">[Explain]</span>        |
+| Reverse recursively    | O(?)            | O(?)             | <span class="fill-in">[Why different?]</span> |
+| Detect cycle (Floyd's) | O(?)            | O(?)             | <span class="fill-in">[Explain]</span>        |
+| Merge two lists        | O(?)            | O(?)             | <span class="fill-in">[Explain]</span>        |
+| Merge K lists (heap)   | O(?)            | O(?)             | <span class="fill-in">[Explain]</span>        |
 
 **Deep question:** Why is recursive reversal O(n) space while iterative is O(1)?
 
@@ -1641,7 +1661,8 @@ public static ListNode mergeTwoLists(ListNode l1, ListNode l2) {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug:** Missing `curr = curr.next;` in the while loop. Without it, we never advance curr, so we keep overwriting the same pointer.
+**Bug:** Missing `curr = curr.next;` in the while loop. Without it, we never advance curr, so we keep overwriting the
+same pointer.
 
 **Fix:** Add `curr = curr.next;` at the end of the while loop.
 </details>

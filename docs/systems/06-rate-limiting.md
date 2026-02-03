@@ -38,7 +38,6 @@
 8. **When would you use fixed window vs sliding window?**
     - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
-
 </div>
 
 ---
@@ -225,14 +224,14 @@ public class TokenBucketRateLimiter {
 
 #### Performance Comparison
 
-| Scenario | No Limiting | Fixed Window | Token Bucket | Sliding Window Log |
-|----------|-------------|--------------|--------------|-------------------|
-| Memory per user | 0 bytes | 12 bytes | 16 bytes | ~800 bytes (100 timestamps) |
-| 1M users memory | 0 MB | 12 MB | 16 MB | 800 MB |
-| Prevents abuse | No | Yes | Yes | Yes |
-| Allows bursts | N/A | No | Yes | No |
-| Accurate rate | N/A | Boundary issue | Accurate | Most accurate |
-| CPU per request | Low | Low | Low | Medium (cleanup) |
+| Scenario        | No Limiting | Fixed Window   | Token Bucket | Sliding Window Log          |
+|-----------------|-------------|----------------|--------------|-----------------------------|
+| Memory per user | 0 bytes     | 12 bytes       | 16 bytes     | ~800 bytes (100 timestamps) |
+| 1M users memory | 0 MB        | 12 MB          | 16 MB        | 800 MB                      |
+| Prevents abuse  | No          | Yes            | Yes          | Yes                         |
+| Allows bursts   | N/A         | No             | Yes          | No                          |
+| Accurate rate   | N/A         | Boundary issue | Accurate     | Most accurate               |
+| CPU per request | Low         | Low            | Low          | Medium (cleanup)            |
 
 **Your calculation:** For 10 million users with sliding window log tracking 1000 requests each:
 
@@ -1029,12 +1028,14 @@ public class BrokenTokenBucket {
 **Bug:** The formula `elapsed * refillRate` multiplies milliseconds by tokens/second, giving a massive number.
 
 **Correct formula:**
+
 ```java
 double elapsedSeconds = elapsed / 1000.0;
 int tokensToAdd = (int)(elapsedSeconds * refillRate);
 ```
 
 OR:
+
 ```java
 int tokensToAdd = (int)((elapsed / 1000.0) * refillRate);
 ```
@@ -1095,6 +1096,7 @@ public class RacyTokenBucket {
 **Bug:** Missing `synchronized` keyword. Multiple threads can pass the `tokens >= 1` check before any thread decrements.
 
 **Fix:**
+
 ```java
 public synchronized boolean tryAcquire() {
     refill();
@@ -1168,7 +1170,8 @@ public class BrokenFixedWindow {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug 1:** Using `>` instead of `>=` means windows that expire exactly at the boundary don't reset. Using `>=` is standard and clearer.
+**Bug 1:** Using `>` instead of `>=` means windows that expire exactly at the boundary don't reset. Using `>=` is
+standard and clearer.
 
 **Bug 2:** The condition `counter <= maxRequests` allows 11 requests:
 
@@ -1179,6 +1182,7 @@ public class BrokenFixedWindow {
 - counter = 10 → increment to 11 (11th request) ← BUG!
 
 **Fix:**
+
 ```java
 if (counter < maxRequests) {  // Use < not <=
     counter++;
@@ -1187,6 +1191,7 @@ if (counter < maxRequests) {  // Use < not <=
 ```
 
 OR increment first, then check:
+
 ```java
 counter++;
 if (counter <= maxRequests) {
@@ -1195,6 +1200,7 @@ if (counter <= maxRequests) {
 counter--; // rollback
 return false;
 ```
+
 </details>
 
 ---
@@ -1247,19 +1253,23 @@ public class LeakyWindowLog {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Trick question!** The code is actually correct for the most part. The cleanup loop runs on every request and removes old timestamps.
+**Trick question!** The code is actually correct for the most part. The cleanup loop runs on every request and removes
+old timestamps.
 
 **However, there ARE subtle issues:**
 
-1. **Peak memory usage:** During high traffic, the queue holds up to `maxRequests` timestamps (100 × 8 bytes = 800 bytes per user). For 1 million users: ~800 MB.
+1. **Peak memory usage:** During high traffic, the queue holds up to `maxRequests` timestamps (100 × 8 bytes = 800 bytes
+   per user). For 1 million users: ~800 MB.
 
-2. **Stale data if no requests:** If a user makes 100 requests then stops, those timestamps stay in memory for the full window duration (60 seconds).
+2. **Stale data if no requests:** If a user makes 100 requests then stops, those timestamps stay in memory for the full
+   window duration (60 seconds).
 
 3. **Not a traditional memory leak:** Memory is bounded by `maxRequests × number_of_active_users`.
 
 **Better approach:** Use a background cleanup thread or TTL-based cache eviction for inactive users.
 
-**Actual memory leak scenario:** If implementing per-user rate limiting, you might store a `Map<UserId, RateLimiter>` that grows indefinitely without eviction of inactive users.
+**Actual memory leak scenario:** If implementing per-user rate limiting, you might store a `Map<UserId, RateLimiter>`
+that grows indefinitely without eviction of inactive users.
 </details>
 
 ---
@@ -1329,6 +1339,7 @@ public class BrokenSlidingCounter {
 **Bug:** The formula `previousCount * ratio` makes the previous count INCREASE as time passes. It should DECREASE!
 
 **Correct formula:**
+
 ```java
 double weightedCount = previousCount * (1 - ratio) + currentCount;
 ```
@@ -1348,6 +1359,7 @@ double weightedCount = previousCount * (1 - ratio) + currentCount;
 - At ratio = 0.75:
     - Correct: 80 × 0.25 + 40 = 20 + 40 = 60
     - Buggy: 80 × 0.75 + 40 = 60 + 40 = 100 (too lenient!)
+
 </details>
 
 ---
@@ -1415,6 +1427,7 @@ public class BrokenLeakyBucket {
 **Bug 1:** Same as token bucket - multiplying milliseconds by rate per second.
 
 **Fix:**
+
 ```java
 double elapsedSeconds = elapsed / 1000.0;
 int requestsToLeak = (int)(elapsedSeconds * leakRate);
@@ -1423,6 +1436,7 @@ int requestsToLeak = (int)(elapsedSeconds * leakRate);
 **Bug 2:** Updating `lastLeakTime` every call loses fractional seconds.
 
 **Better approach:**
+
 ```java
 private void leak() {
     long now = System.currentTimeMillis();
@@ -1631,7 +1645,8 @@ For each scenario, identify alternatives and compare:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Backend Developer
 
@@ -1694,14 +1709,14 @@ T=5s:   Refill calculation: <span class="fill-in">[Your work]</span>
 
 **Without looking at your notes, choose the best algorithm:**
 
-| Scenario | Best Algorithm | Why? |
-|----------|----------------|------|
-| Public API, allow traffic spikes | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Login attempts, prevent brute force | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Video streaming, smooth bandwidth | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| 10M users, minimize memory | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Scenario                              | Best Algorithm                         | Why?                                   |
+|---------------------------------------|----------------------------------------|----------------------------------------|
+| Public API, allow traffic spikes      | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Login attempts, prevent brute force   | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Video streaming, smooth bandwidth     | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| 10M users, minimize memory            | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 | Critical API, perfect accuracy needed | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Internal service, simple is better | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Internal service, simple is better    | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1713,13 +1728,13 @@ If you scored below 5/6, review the trade-offs and try again.
 
 **Complete this table from memory:**
 
-| Algorithm | Time per Request | Space per User | Memory for 1M Users |
-|-----------|------------------|----------------|---------------------|
-| Token Bucket | O(?) | O(?) | <span class="fill-in">[Calculate]</span> |
-| Leaky Bucket | O(?) | O(?) | <span class="fill-in">[Calculate]</span> |
-| Fixed Window | O(?) | O(?) | <span class="fill-in">[Calculate]</span> |
-| Sliding Window Log | O(?) | O(?) | <span class="fill-in">[Calculate]</span> |
-| Sliding Window Counter | O(?) | O(?) | <span class="fill-in">[Calculate]</span> |
+| Algorithm              | Time per Request | Space per User | Memory for 1M Users                      |
+|------------------------|------------------|----------------|------------------------------------------|
+| Token Bucket           | O(?)             | O(?)           | <span class="fill-in">[Calculate]</span> |
+| Leaky Bucket           | O(?)             | O(?)           | <span class="fill-in">[Calculate]</span> |
+| Fixed Window           | O(?)             | O(?)           | <span class="fill-in">[Calculate]</span> |
+| Sliding Window Log     | O(?)             | O(?)           | <span class="fill-in">[Calculate]</span> |
+| Sliding Window Counter | O(?)             | O(?)           | <span class="fill-in">[Calculate]</span> |
 
 **Deep question:** Why is sliding window log more accurate than fixed window, and what's the trade-off?
 
@@ -1831,17 +1846,18 @@ public boolean tryAcquire() {
 
 **Your analysis:**
 
-| Algorithm | Latency | Memory | Meets Requirements? |
-|-----------|---------|--------|---------------------|
-| Token Bucket | <span class="fill-in">[Estimate]</span> | <span class="fill-in">[Calculate]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
-| Leaky Bucket | <span class="fill-in">[Estimate]</span> | <span class="fill-in">[Calculate]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
-| Fixed Window | <span class="fill-in">[Estimate]</span> | <span class="fill-in">[Calculate]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
-| Sliding Window Log | <span class="fill-in">[Estimate]</span> | <span class="fill-in">[Calculate]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
+| Algorithm              | Latency                                 | Memory                                   | Meets Requirements?                          |
+|------------------------|-----------------------------------------|------------------------------------------|----------------------------------------------|
+| Token Bucket           | <span class="fill-in">[Estimate]</span> | <span class="fill-in">[Calculate]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
+| Leaky Bucket           | <span class="fill-in">[Estimate]</span> | <span class="fill-in">[Calculate]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
+| Fixed Window           | <span class="fill-in">[Estimate]</span> | <span class="fill-in">[Calculate]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
+| Sliding Window Log     | <span class="fill-in">[Estimate]</span> | <span class="fill-in">[Calculate]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
 | Sliding Window Counter | <span class="fill-in">[Estimate]</span> | <span class="fill-in">[Calculate]</span> | <span class="fill-in">[Yes/No - Why?]</span> |
 
 **Your final decision:** <span class="fill-in">[Which algorithm and why?]</span>
 
-**What would make you change your decision?** <span class="fill-in">[Fill in constraints that would flip your choice]</span>
+**What would make you change your decision?
+** <span class="fill-in">[Fill in constraints that would flip your choice]</span>
 
 ---
 

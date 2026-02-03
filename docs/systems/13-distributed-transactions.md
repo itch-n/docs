@@ -38,7 +38,6 @@
 8. **When would you use event sourcing?**
     - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
-
 </div>
 
 ---
@@ -105,7 +104,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 - Your answer: <span class="fill-in">[Fill in before implementation]</span>
 - Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
-
 </div>
 
 ---
@@ -148,6 +146,7 @@ public class NaiveOrderProcessing {
 - **Debugging nightmare:** Can't tell which step failed or what state the system is in
 
 **Real failure scenario:**
+
 ```
 Step 1: Inventory reserved ✓
 Step 2: Payment charged ✓
@@ -254,15 +253,15 @@ public class SagaOrderProcessing {
 
 #### Performance Comparison
 
-| Aspect | Naive | 2PC | Saga |
-|--------|-------|-----|------|
-| **Consistency** | None | Strong (ACID) | Eventual |
-| **Availability** | High | Low (any down = fail) | High |
-| **Latency** | 1 round trip | 2+ round trips | 1 round trip per step |
-| **Blocking** | No | Yes (locks held) | No |
-| **Partial failures** | Corrupt data | All abort | Compensate |
-| **Complexity** | Low | Medium | High |
-| **Best for** | Nothing (unsafe) | Small, fast operations | Long-running, microservices |
+| Aspect               | Naive            | 2PC                    | Saga                        |
+|----------------------|------------------|------------------------|-----------------------------|
+| **Consistency**      | None             | Strong (ACID)          | Eventual                    |
+| **Availability**     | High             | Low (any down = fail)  | High                        |
+| **Latency**          | 1 round trip     | 2+ round trips         | 1 round trip per step       |
+| **Blocking**         | No               | Yes (locks held)       | No                          |
+| **Partial failures** | Corrupt data     | All abort              | Compensate                  |
+| **Complexity**       | Low              | Medium                 | High                        |
+| **Best for**         | Nothing (unsafe) | Small, fast operations | Long-running, microservices |
 
 **Latency Example (3 services, 50ms network latency each):**
 
@@ -1276,7 +1275,8 @@ public class DistributedTransactionsClient {
 
 ## Debugging Challenges
 
-**Your task:** Find and fix bugs in distributed transaction implementations. This tests your understanding of distributed systems pitfalls.
+**Your task:** Find and fix bugs in distributed transaction implementations. This tests your understanding of
+distributed systems pitfalls.
 
 ### Challenge 1: Broken Saga Compensation Order
 
@@ -1343,6 +1343,7 @@ public class BrokenSagaCompensation {
 - Forward compensation can violate business rules
 
 **Example failure:**
+
 ```
 Forward order: Compensate inventory → compensate payment → compensate shipping
 Problem: Refund issued before shipment canceled (business rule violation)
@@ -1352,11 +1353,13 @@ Correct: Cancel shipment first, then refund, then release inventory
 ```
 
 **Fix:**
+
 ```java
 for (int i = completedSteps.size() - 1; i >= 0; i--) {
     completedSteps.get(i).compensate();
 }
 ```
+
 </details>
 
 ---
@@ -1403,7 +1406,8 @@ public class NonIdempotentCompensation extends CompensatingAction {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug:** Compensation adds inventory without checking if it was already compensated. Running twice adds 20 units instead of 10.
+**Bug:** Compensation adds inventory without checking if it was already compensated. Running twice adds 20 units instead
+of 10.
 
 **Impact:**
 
@@ -1412,6 +1416,7 @@ public class NonIdempotentCompensation extends CompensatingAction {
 - Accounting mismatch
 
 **Fix - Make it idempotent:**
+
 ```java
 @Override
 public void compensate() throws Exception {
@@ -1429,6 +1434,7 @@ public void compensate() throws Exception {
 ```
 
 **Alternative fix - Use state machine:**
+
 ```java
 if (reservation.status == COMPENSATED) {
     return; // Already done
@@ -1436,6 +1442,7 @@ if (reservation.status == COMPENSATED) {
 inventory.add(productId, quantity);
 reservation.status = COMPENSATED;
 ```
+
 </details>
 
 ---
@@ -1497,6 +1504,7 @@ public class OrphanedSaga {
 **Detection strategies:**
 
 1. **Timeout monitoring:**
+
 ```java
 // Background job finds incomplete sagas
 List<Saga> stuck = sagaLog.findSagasOlderThan(5 minutes, status != COMPLETED);
@@ -1506,6 +1514,7 @@ for (Saga saga : stuck) {
 ```
 
 2. **Health check pattern:**
+
 ```java
 // Coordinator sends heartbeats
 coordinator.recordHeartbeat(sagaId, timestamp);
@@ -1517,6 +1526,7 @@ if (timeSinceLastHeartbeat > threshold) {
 ```
 
 **Recovery strategy:**
+
 ```java
 // Check saga log to determine recovery action
 SagaState state = sagaLog.getCurrentState(sagaId);
@@ -1588,6 +1598,7 @@ public class CompensationFailure {
 - **Customer impact:** <span class="fill-in">[What does the customer see?]</span>
 
 **Failure tree:**
+
 ```
 Transaction: Charge $100 → Reserve inventory
 ├─ Charge succeeds ✓
@@ -1609,6 +1620,7 @@ Current state:
 **This is a real problem with no perfect solution.** Here are the strategies:
 
 **Strategy 1: Retry with exponential backoff**
+
 ```java
 catch (Exception compensationError) {
     // Add to retry queue
@@ -1625,6 +1637,7 @@ catch (Exception compensationError) {
 ```
 
 **Strategy 2: Dead letter queue + manual intervention**
+
 ```java
 catch (Exception compensationError) {
     // Move to dead letter queue after max retries
@@ -1647,6 +1660,7 @@ catch (Exception compensationError) {
 ```
 
 **Strategy 3: Eventual consistency with monitoring**
+
 ```java
 catch (Exception compensationError) {
     // Mark saga as "COMPENSATION_PENDING"
@@ -1719,6 +1733,7 @@ public class TwoPhaseCommitPartialFailure {
 - **Data consistency:** <span class="fill-in">[Is data consistent across participants?]</span>
 
 **Participant states:**
+
 ```
 Participant 0: COMMITTED ✓
 Participant 1: COMMITTED ✓
@@ -1747,6 +1762,7 @@ Other transactions: BLOCKED waiting for locks!
 6. **They're STUCK!**
 
 **Recovery using transaction log:**
+
 ```java
 // Participant timeout handler
 if (waitingTime > TIMEOUT) {
@@ -1776,6 +1792,7 @@ if (waitingTime > TIMEOUT) {
 ```
 
 **Why coordinator log is critical:**
+
 ```java
 // Coordinator MUST log decision BEFORE sending commits
 transactionLog.write(txId, "COMMIT_DECISION");  // Durable write!
@@ -1987,7 +2004,8 @@ For each scenario, identify alternatives and compare:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -2008,7 +2026,8 @@ For each scenario, identify alternatives and compare:
 **Self-assessment:**
 
 - Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by someone who doesn't know distributed systems? <span class="fill-in">[Yes/No]</span>
+- Could your explanation be understood by someone who doesn't know distributed
+  systems? <span class="fill-in">[Yes/No]</span>
 - Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
 
 If you scored below 7 or answered "No" to either question, revise your explanation.
@@ -2053,14 +2072,14 @@ Compensation flow:
 
 **Without looking at your notes, classify these scenarios:**
 
-| Scenario | Best Pattern (2PC/Saga-Orch/Saga-Chor/Event Sourcing) | Why? |
-|----------|-------------------------------------------------------|------|
-| Bank transfer between two accounts | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| E-commerce order (inventory + payment + shipping) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| User signup flow (create account + send email + provision resources) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Financial audit system | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Flight booking (multiple airlines) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Microservices with loose coupling | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Scenario                                                             | Best Pattern (2PC/Saga-Orch/Saga-Chor/Event Sourcing) | Why?                                   |
+|----------------------------------------------------------------------|-------------------------------------------------------|----------------------------------------|
+| Bank transfer between two accounts                                   | <span class="fill-in">[Fill in]</span>                | <span class="fill-in">[Explain]</span> |
+| E-commerce order (inventory + payment + shipping)                    | <span class="fill-in">[Fill in]</span>                | <span class="fill-in">[Explain]</span> |
+| User signup flow (create account + send email + provision resources) | <span class="fill-in">[Fill in]</span>                | <span class="fill-in">[Explain]</span> |
+| Financial audit system                                               | <span class="fill-in">[Fill in]</span>                | <span class="fill-in">[Explain]</span> |
+| Flight booking (multiple airlines)                                   | <span class="fill-in">[Fill in]</span>                | <span class="fill-in">[Explain]</span> |
+| Microservices with loose coupling                                    | <span class="fill-in">[Fill in]</span>                | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -2072,11 +2091,11 @@ If you scored below 5/6, review the Decision Framework and try again.
 
 **Complete this table from understanding:**
 
-| Pattern | What happens if coordinator crashes? | What happens if participant fails? | Can you rollback? |
-|---------|--------------------------------------|-------------------------------------|-------------------|
-| 2PC | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - How?]</span> |
+| Pattern            | What happens if coordinator crashes?   | What happens if participant fails?     | Can you rollback?                            |
+|--------------------|----------------------------------------|----------------------------------------|----------------------------------------------|
+| 2PC                | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - How?]</span> |
 | Saga Orchestration | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - How?]</span> |
-| Saga Choreography | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - How?]</span> |
+| Saga Choreography  | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No - How?]</span> |
 
 **Deep question:** What happens when compensation itself fails?
 

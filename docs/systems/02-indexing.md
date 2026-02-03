@@ -28,7 +28,6 @@
 5. **When should you NOT create an index?**
     - Your answer: <span class="fill-in">[Fill in after understanding trade-offs]</span>
 
-
 </div>
 
 ---
@@ -177,12 +176,12 @@ public class BTreeIndexedTable {
 
 #### Performance Comparison
 
-| Table Size | No Index (O(n)) | B+Tree Index (O(log n)) | Speedup |
-|------------|-----------------|-------------------------|---------|
-| n = 1,000  | 1,000 ops      | 10 ops                  | 100x    |
-| n = 10,000 | 10,000 ops     | 13 ops                  | 769x    |
-| n = 100,000| 100,000 ops    | 17 ops                  | 5,882x  |
-| n = 1,000,000 | 1,000,000 ops | 20 ops               | 50,000x |
+| Table Size    | No Index (O(n)) | B+Tree Index (O(log n)) | Speedup |
+|---------------|-----------------|-------------------------|---------|
+| n = 1,000     | 1,000 ops       | 10 ops                  | 100x    |
+| n = 10,000    | 10,000 ops      | 13 ops                  | 769x    |
+| n = 100,000   | 100,000 ops     | 17 ops                  | 5,882x  |
+| n = 1,000,000 | 1,000,000 ops   | 20 ops                  | 50,000x |
 
 **Your calculation:** For n = 5,000,000, the speedup is approximately _____ times faster.
 
@@ -195,12 +194,14 @@ public class BTreeIndexedTable {
 - Disk seek time: 5ms per page read
 
 **Without Index:**
+
 ```
 Total pages to scan: 1,000,000 / 100 = 10,000 pages
 Disk I/O time: 10,000 pages × 5ms = 50,000ms = 50 seconds
 ```
 
 **With B+Tree Index (height=4):**
+
 ```
 Tree levels to traverse: 4 pages (root → branch → branch → leaf)
 Then read data page: 1 page
@@ -224,6 +225,7 @@ B+Tree organizes data hierarchically:
 ```
 
 Looking for email starting with 'M':
+
 ```
 Step 1: Read root → "M is between J-R" → Go middle branch
 Step 2: Read branch → "M is between J-M" → Go left child
@@ -785,6 +787,7 @@ LIMIT 10;
 4. Take top 10
 
 **Fix:** Create composite index:
+
 ```sql
 CREATE INDEX idx_customer_time ON orders(customer_id, created_at);
 ```
@@ -835,8 +838,8 @@ SELECT * FROM events WHERE user_id = ? AND created_at > ?;
 **Your debugging:**
 
 - **Problem indexes:** <span class="fill-in">[Which indexes are hurting performance?]</span>
-  1. <span class="fill-in">[Index name and reason]</span>
-  2. <span class="fill-in">[Index name and reason]</span>
+    1. <span class="fill-in">[Index name and reason]</span>
+    2. <span class="fill-in">[Index name and reason]</span>
 
 - **Why these are bad:**
     - <span class="fill-in">[What happens on every INSERT?]</span>
@@ -940,6 +943,7 @@ SELECT * FROM products WHERE price > 100.00 ORDER BY price;
 - Hash destroys ordering, so range queries can't work
 
 **Fix:**
+
 ```sql
 DROP INDEX idx_price USING HASH;
 CREATE INDEX idx_price USING BTREE ON products(price);
@@ -1035,6 +1039,7 @@ But CANNOT serve:
 - Query 3 filters on (customer_id, created_at) → skips first column → can't seek efficiently
 
 **Fix:** Reorder based on query patterns
+
 ```sql
 CREATE INDEX idx_search ON orders(customer_id, created_at, status);
 ```
@@ -1107,7 +1112,8 @@ WHERE status = 1  -- Number! Needs conversion
 
 **Bug:** Implicit type conversion prevents index usage.
 
-**Why:** Database must convert EVERY row's `phone` column from VARCHAR to INT to compare with 1234567890. This requires scanning the entire table.
+**Why:** Database must convert EVERY row's `phone` column from VARCHAR to INT to compare with 1234567890. This requires
+scanning the entire table.
 
 **Rule:** When query value type doesn't match column type, database either:
 
@@ -1120,6 +1126,7 @@ WHERE status = 1  -- Number! Needs conversion
 - `WHERE phone = 1234567890` → Must convert column → index not used
 
 **Similar issues:**
+
 ```sql
 
 -- Don't do this:
@@ -1132,6 +1139,7 @@ WHERE email = 'john@example.com'  -- Store lowercase, search lowercase
 ```
 
 **Detection:** Use EXPLAIN:
+
 ```sql
 EXPLAIN SELECT * FROM users WHERE phone = 1234567890;
 
@@ -1231,7 +1239,8 @@ Should I create an index?
 
 ### The "Kill Switch" - Don't index when:
 
-1. **Low cardinality** - <span class="fill-in">[Column has few distinct values (e.g., boolean, status with 3 values)]</span>
+1. **Low cardinality
+   ** - <span class="fill-in">[Column has few distinct values (e.g., boolean, status with 3 values)]</span>
 2. **Write-heavy workload** - <span class="fill-in">[Index maintenance slows inserts/updates/deletes]</span>
 3. **Small table** - <span class="fill-in">[Table scan faster than index for tiny tables]</span>
 4. **Never queried** - <span class="fill-in">[Index on column never used in WHERE/JOIN/ORDER BY]</span>
@@ -1264,6 +1273,7 @@ Should I create an index?
 ### Scenario 1: Posts Table
 
 **Schema:**
+
 ```sql
 CREATE TABLE posts (
     id BIGINT PRIMARY KEY,
@@ -1291,6 +1301,7 @@ CREATE TABLE posts (
 ### Scenario 2: Orders Table
 
 **Schema:**
+
 ```sql
 CREATE TABLE orders (
     id BIGINT PRIMARY KEY,
@@ -1318,6 +1329,7 @@ CREATE TABLE orders (
 ### Scenario 3: Events Table (Time-Series)
 
 **Schema:**
+
 ```sql
 CREATE TABLE events (
     id BIGINT PRIMARY KEY,
@@ -1374,7 +1386,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -1407,6 +1420,7 @@ If you scored below 7 or answered "No" to either question, revise your explanati
 **Task:** Design indexes for this table without looking at your notes.
 
 **Schema:**
+
 ```sql
 CREATE TABLE posts (
     id BIGINT PRIMARY KEY,
@@ -1465,6 +1479,7 @@ CREATE TABLE posts (
 ### Gate 3: Debugging Real Query
 
 **Given:**
+
 ```sql
 
 -- Existing indexes
@@ -1520,10 +1535,10 @@ LIMIT 20;
 **Complete this table from memory:**
 
 | Index Type | Point Lookup | Range Query | Insert | Space |
-|------------|-------------|-------------|---------|-------|
-| B+Tree     | O(?)        | O(?)        | O(?)    | O(?)  |
-| Hash       | O(?)        | O(?)        | O(?)    | O(?)  |
-| No Index   | O(?)        | O(?)        | O(?)    | O(?)  |
+|------------|--------------|-------------|--------|-------|
+| B+Tree     | O(?)         | O(?)        | O(?)   | O(?)  |
+| Hash       | O(?)         | O(?)        | O(?)   | O(?)  |
+| No Index   | O(?)         | O(?)        | O(?)   | O(?)  |
 
 **Deep questions:**
 
@@ -1583,20 +1598,21 @@ LIMIT 20;
 
 **Index:** `CREATE INDEX idx ON orders(customer_id, status, created_at)`
 
-| Query | Uses Index? | Efficiency |
-|-------|-------------|------------|
-| `WHERE customer_id = ?` | <span class="fill-in">[Y/N]</span> | <span class="fill-in">[Full/Partial/None]</span> |
-| `WHERE status = ?` | <span class="fill-in">[Y/N]</span> | <span class="fill-in">[Full/Partial/None]</span> |
-| `WHERE customer_id = ? AND status = ?` | <span class="fill-in">[Y/N]</span> | <span class="fill-in">[Full/Partial/None]</span> |
-| `WHERE customer_id = ? AND created_at > ?` | <span class="fill-in">[Y/N]</span> | <span class="fill-in">[Full/Partial/None]</span> |
+| Query                                                     | Uses Index?                        | Efficiency                                       |
+|-----------------------------------------------------------|------------------------------------|--------------------------------------------------|
+| `WHERE customer_id = ?`                                   | <span class="fill-in">[Y/N]</span> | <span class="fill-in">[Full/Partial/None]</span> |
+| `WHERE status = ?`                                        | <span class="fill-in">[Y/N]</span> | <span class="fill-in">[Full/Partial/None]</span> |
+| `WHERE customer_id = ? AND status = ?`                    | <span class="fill-in">[Y/N]</span> | <span class="fill-in">[Full/Partial/None]</span> |
+| `WHERE customer_id = ? AND created_at > ?`                | <span class="fill-in">[Y/N]</span> | <span class="fill-in">[Full/Partial/None]</span> |
 | `WHERE customer_id = ? AND status = ? AND created_at > ?` | <span class="fill-in">[Y/N]</span> | <span class="fill-in">[Full/Partial/None]</span> |
-| `WHERE status = ? AND created_at > ?` | <span class="fill-in">[Y/N]</span> | <span class="fill-in">[Full/Partial/None]</span> |
+| `WHERE status = ? AND created_at > ?`                     | <span class="fill-in">[Y/N]</span> | <span class="fill-in">[Full/Partial/None]</span> |
 
 **For each "Partial" efficiency, explain why:**
 
 - <span class="fill-in">[Fill in the limitation]</span>
 
 **Optimal column order for these queries:**
+
 ```sql
 CREATE INDEX idx_optimal ON orders(_____, _____, _____);
 ```
@@ -1608,6 +1624,7 @@ CREATE INDEX idx_optimal ON orders(_____, _____, _____);
 ### Gate 7: Covering Index Deep Dive
 
 **Schema:**
+
 ```sql
 CREATE TABLE users (
     id BIGINT PRIMARY KEY,
@@ -1625,6 +1642,7 @@ WHERE email = 'john@example.com';
 ```
 
 **Option 1: Simple secondary index**
+
 ```sql
 CREATE INDEX idx_email ON users(email);
 ```
@@ -1636,6 +1654,7 @@ CREATE INDEX idx_email ON users(email);
 3. <span class="fill-in">[Total disk reads: <span class="fill-in">___</span> ]</span>
 
 **Option 2: Covering index**
+
 ```sql
 CREATE INDEX idx_email_covering ON users(email) INCLUDE (name, city);
 

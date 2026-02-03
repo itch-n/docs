@@ -38,7 +38,6 @@
 8. **When would you use horizontal vs vertical scaling?**
     - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
-
 </div>
 
 ---
@@ -47,7 +46,8 @@
 
 <div class="learner-section" markdown>
 
-**Your task:** Test your intuition about database scaling without looking at code. Answer these, then verify after implementation.
+**Your task:** Test your intuition about database scaling without looking at code. Answer these, then verify after
+implementation.
 
 ### Complexity Predictions
 
@@ -218,17 +218,17 @@ Architecture:
 
 #### Performance Comparison
 
-| Metric | Single DB | Replication (2 slaves) | Sharding (4 shards) |
-|--------|-----------|------------------------|---------------------|
-| **Read Capacity** | 5,000 req/sec | 15,000 req/sec | 20,000 req/sec |
-| **Write Capacity** | 500 req/sec | 500 req/sec | 2,000 req/sec |
-| **Data Capacity** | 1TB max | 1TB max | 4TB+ (linear) |
-| **Latency (reads)** | 50ms @ load | 50ms @ load | 50ms @ load |
-| **Latency (writes)** | 50ms | 50ms + replication | 50ms |
-| **Single-key lookup** | 1 query | 1 query | 1 query (1 shard) |
-| **Cross-entity query** | 1 query | 1 query | 4 queries (all shards) |
-| **Cost** | 1x | 3x (1M + 2S) | 4x (4 shards) |
-| **Complexity** | Low | Medium | High |
+| Metric                 | Single DB     | Replication (2 slaves) | Sharding (4 shards)    |
+|------------------------|---------------|------------------------|------------------------|
+| **Read Capacity**      | 5,000 req/sec | 15,000 req/sec         | 20,000 req/sec         |
+| **Write Capacity**     | 500 req/sec   | 500 req/sec            | 2,000 req/sec          |
+| **Data Capacity**      | 1TB max       | 1TB max                | 4TB+ (linear)          |
+| **Latency (reads)**    | 50ms @ load   | 50ms @ load            | 50ms @ load            |
+| **Latency (writes)**   | 50ms          | 50ms + replication     | 50ms                   |
+| **Single-key lookup**  | 1 query       | 1 query                | 1 query (1 shard)      |
+| **Cross-entity query** | 1 query       | 1 query                | 4 queries (all shards) |
+| **Cost**               | 1x            | 3x (1M + 2S)           | 4x (4 shards)          |
+| **Complexity**         | Low           | Medium                 | High                   |
 
 **Your calculation:** For 50,000 read req/sec, you'd need _____ read replicas OR _____ shards.
 
@@ -1125,7 +1125,8 @@ public class DatabaseScalingClient {
 
 ## Debugging Challenges
 
-**Your task:** Find and fix bugs in broken database scaling implementations. This tests your understanding of scaling pitfalls.
+**Your task:** Find and fix bugs in broken database scaling implementations. This tests your understanding of scaling
+pitfalls.
 
 ### Challenge 1: Broken Hash Sharding (Uneven Distribution)
 
@@ -1170,6 +1171,7 @@ public class BrokenHashSharding {
 **Bug:** Using `key.length()` as hash creates terrible distribution. All keys with same length go to same shard.
 
 **Fix:**
+
 ```java
 public DatabaseShard getShard(String key) {
     // Use proper hash function
@@ -1178,7 +1180,8 @@ public DatabaseShard getShard(String key) {
 }
 ```
 
-**Why:** `hashCode()` produces different values for different strings, even with same length. The `Math.abs()` handles negative hash codes.
+**Why:** `hashCode()` produces different values for different strings, even with same length. The `Math.abs()` handles
+negative hash codes.
 </details>
 
 ---
@@ -1233,6 +1236,7 @@ public class BrokenReplication {
 **Bug:** Reading from slaves immediately after writing to master causes stale reads due to replication lag.
 
 **Fix Option 1 - Read-Your-Writes (sticky sessions):**
+
 ```java
 public void updateProfile(String userId, String newName) {
     master.write(userId, newName);
@@ -1253,6 +1257,7 @@ public String getProfile(String userId) {
 ```
 
 **Fix Option 2 - Always read from master after writes:**
+
 ```java
 public String getProfile(String userId, boolean afterWrite) {
     if (afterWrite) {
@@ -1362,6 +1367,7 @@ public List<User> findAllUsersOver21(int limit, int offset) {
 - Before: 10 shards × 2 seconds = 20 seconds
 - After: max(2 seconds) = 2 seconds (parallel)
 - **10x faster!**
+
 </details>
 
 ---
@@ -1411,9 +1417,11 @@ public class BrokenSharding {
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Design bug:** Sharding by user_id groups all of a user's data on one shard. For celebrities with massive data/traffic, that shard becomes a hotspot.
+**Design bug:** Sharding by user_id groups all of a user's data on one shard. For celebrities with massive data/traffic,
+that shard becomes a hotspot.
 
 **Fix Option 1 - Split entity sharding:**
+
 ```java
 // Shard users and their posts by user_id (small data)
 public DatabaseShard getUserShard(String userId) {
@@ -1429,6 +1437,7 @@ public DatabaseShard getFollowerShard(String followerId) {
 ```
 
 **Fix Option 2 - Caching layer:**
+
 ```java
 // Cache celebrity data in Redis/Memcached
 public List<Post> getUserPosts(String userId) {
@@ -1442,6 +1451,7 @@ public List<Post> getUserPosts(String userId) {
 ```
 
 **Fix Option 3 - Consistent hashing with detection:**
+
 ```java
 // Detect hot shards and split them
 if (shard.requestRate() > threshold) {
@@ -1507,9 +1517,11 @@ public class BrokenMasterFailover {
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug:** Split-brain occurs when two nodes both think they're master, accepting conflicting writes. This causes data divergence and conflicts.
+**Bug:** Split-brain occurs when two nodes both think they're master, accepting conflicting writes. This causes data
+divergence and conflicts.
 
 **Fix Option 1 - Fencing (prevent old master from accepting writes):**
+
 ```java
 public void handleMasterFailure() {
     // Step 1: FENCE old master (disable it)
@@ -1530,6 +1542,7 @@ public void handleMasterFailure() {
 ```
 
 **Fix Option 2 - Consensus protocol (Raft/Paxos):**
+
 ```java
 // Use leader election with quorum
 // - Only ONE master elected at a time
@@ -1552,6 +1565,7 @@ public void electMaster() {
 ```
 
 **Fix Option 3 - Epoch/term numbers:**
+
 ```java
 class Database {
     int epoch = 0;  // Incremented on each master change
@@ -1571,6 +1585,7 @@ class Database {
 - **MySQL:** Group Replication with consensus
 - **MongoDB:** Replica sets with election
 - **Distributed databases:** Raft/Paxos consensus algorithms
+
 </details>
 
 ---
@@ -1765,7 +1780,8 @@ For each scenario, identify alternatives and compare:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery of database scaling through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery of database scaling through explanation and application. You cannot move forward until you
+can confidently complete this section.
 
 ### Gate 1: Explain to a Product Manager
 
@@ -1828,14 +1844,14 @@ _________________________________________________________________
 
 **Without looking at your notes, choose the best strategy:**
 
-| Scenario | Best Strategy | Why? | Trade-off? |
-|----------|--------------|------|------------|
-| 95% reads, 5% writes, 10M records | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[Main downside]</span> |
+| Scenario                            | Best Strategy                          | Why?                                   | Trade-off?                                   |
+|-------------------------------------|----------------------------------------|----------------------------------------|----------------------------------------------|
+| 95% reads, 5% writes, 10M records   | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[Main downside]</span> |
 | 50% reads, 50% writes, 100M records | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[Main downside]</span> |
-| Time-series data, range queries | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[Main downside]</span> |
+| Time-series data, range queries     | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[Main downside]</span> |
 | Social network with celebrity users | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[Main downside]</span> |
-| Need 99.99% write availability | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[Main downside]</span> |
-| Small data, need low latency reads | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[Main downside]</span> |
+| Need 99.99% write availability      | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[Main downside]</span> |
+| Small data, need low latency reads  | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[Main downside]</span> |
 
 **Score:** ___/6 correct
 
@@ -1876,7 +1892,8 @@ If you scored below 5/6, review the patterns and try again.
 
 ### Gate 5: Debugging Scenario
 
-**Scenario:** After deploying sharding, users report seeing inconsistent data. User "alice" updates her email on the app, but sometimes sees the old email when refreshing.
+**Scenario:** After deploying sharding, users report seeing inconsistent data. User "alice" updates her email on the
+app, but sometimes sees the old email when refreshing.
 
 **Your diagnosis:**
 
@@ -1903,24 +1920,24 @@ If you scored below 5/6, review the patterns and try again.
 **Sharding (horizontal scaling):**
 
 - Pros: <span class="fill-in">[List 3]</span>
-  1. <span class="fill-in">[Fill in]</span>
-  2. <span class="fill-in">[Fill in]</span>
-  3. <span class="fill-in">[Fill in]</span>
+    1. <span class="fill-in">[Fill in]</span>
+    2. <span class="fill-in">[Fill in]</span>
+    3. <span class="fill-in">[Fill in]</span>
 - Cons: <span class="fill-in">[List 3]</span>
-  1. <span class="fill-in">[Fill in]</span>
-  2. <span class="fill-in">[Fill in]</span>
-  3. <span class="fill-in">[Fill in]</span>
+    1. <span class="fill-in">[Fill in]</span>
+    2. <span class="fill-in">[Fill in]</span>
+    3. <span class="fill-in">[Fill in]</span>
 
 **Vertical Scaling (bigger server):**
 
 - Pros: <span class="fill-in">[List 3]</span>
-  1. <span class="fill-in">[Fill in]</span>
-  2. <span class="fill-in">[Fill in]</span>
-  3. <span class="fill-in">[Fill in]</span>
+    1. <span class="fill-in">[Fill in]</span>
+    2. <span class="fill-in">[Fill in]</span>
+    3. <span class="fill-in">[Fill in]</span>
 - Cons: <span class="fill-in">[List 3]</span>
-  1. <span class="fill-in">[Fill in]</span>
-  2. <span class="fill-in">[Fill in]</span>
-  3. <span class="fill-in">[Fill in]</span>
+    1. <span class="fill-in">[Fill in]</span>
+    2. <span class="fill-in">[Fill in]</span>
+    3. <span class="fill-in">[Fill in]</span>
 
 **When would you choose vertical scaling over sharding?**
 

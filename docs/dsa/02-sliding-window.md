@@ -28,7 +28,6 @@
 5. **When does this pattern fail?**
     - Your answer: <span class="fill-in">[Fill in after trying non-contiguous problems]</span>
 
-
 </div>
 
 ---
@@ -96,7 +95,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 - **Fixed window when:** <span class="fill-in">[Fill in]</span>
 - **Dynamic window when:** <span class="fill-in">[Fill in]</span>
-
 
 </div>
 
@@ -175,9 +173,9 @@ public static int maxSum_SlidingWindow(int[] nums, int k) {
 
 | Array Size (n) | Window Size (k) | Brute Force (O(n×k)) | Sliding Window (O(n)) | Speedup |
 |----------------|-----------------|----------------------|-----------------------|---------|
-| n = 100        | k = 10          | 1,000 ops           | 100 ops               | 10x     |
-| n = 1,000      | k = 100         | 100,000 ops         | 1,000 ops             | 100x    |
-| n = 10,000     | k = 100         | 1,000,000 ops       | 10,000 ops            | 100x    |
+| n = 100        | k = 10          | 1,000 ops            | 100 ops               | 10x     |
+| n = 1,000      | k = 100         | 100,000 ops          | 1,000 ops             | 100x    |
+| n = 10,000     | k = 100         | 1,000,000 ops        | 10,000 ops            | 100x    |
 
 **Your calculation:** For n = 5,000 and k = 50, the speedup is approximately _____ times faster.
 
@@ -776,9 +774,11 @@ public static double maxAverage_Buggy(int[] nums, int k) {
 
 **Bug 1 (Line 5):** Loop should be `i < k`, not `i <= k`. We want k elements (indices 0 to k-1), not k+1 elements.
 
-**Bug 2 (Line 15):** `windowSum / k` performs integer division. Should be `windowSum / (double) k` to get accurate average.
+**Bug 2 (Line 15):** `windowSum / k` performs integer division. Should be `windowSum / (double) k` to get accurate
+average.
 
 **Correct code:**
+
 ```java
 for (int i = 0; i < k; i++) {  // Fixed: i < k
     windowSum += nums[i];
@@ -790,6 +790,7 @@ for (int i = k; i < nums.length; i++) {
     maxAvg = Math.max(maxAvg, windowSum / (double) k);  // Fixed: cast to double
 }
 ```
+
 </details>
 
 ---
@@ -836,16 +837,20 @@ public static int longestSubstring_Buggy(String s) {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug (Line 16):** Using `window.size()` seems correct but could fail in edge cases. The proper calculation is `right - left + 1` to get the current window length.
+**Bug (Line 16):** Using `window.size()` seems correct but could fail in edge cases. The proper calculation is
+`right - left + 1` to get the current window length.
 
-**Why the bug is subtle:** In this specific implementation, `window.size()` and `right - left + 1` are usually the same because we maintain a set. However, using indices is the standard approach and more explicit.
+**Why the bug is subtle:** In this specific implementation, `window.size()` and `right - left + 1` are usually the same
+because we maintain a set. However, using indices is the standard approach and more explicit.
 
 **Correct:**
+
 ```java
 maxLen = Math.max(maxLen, right - left + 1);  // Proper window length calculation
 ```
 
-**Note:** This is a subtle bug because the code might work in many cases, but using index-based calculation is clearer and more maintainable.
+**Note:** This is a subtle bug because the code might work in many cases, but using index-based calculation is clearer
+and more maintainable.
 </details>
 
 ---
@@ -887,6 +892,7 @@ public static int minSubArrayLen_Buggy(int target, int[] nums) {
 - Actual with buggy code: <span class="fill-in">[Trace through and predict]</span>
 
 **Trace manually:**
+
 ```
 right=0: sum=2, sum < 7, skip
 right=1: sum=5, sum < 7, skip
@@ -901,9 +907,11 @@ right=4: sum=10, sum >= 7, minLen=4 (not updated!), left=2, sum=8
 
 **Bug (Line 7):** Should be `while (sum >= target)` instead of `if (sum >= target)`.
 
-**Why:** When we find a valid window, we should shrink it as much as possible to find the minimum length. Using `if` only shrinks once, but we might be able to shrink multiple times and still maintain `sum >= target`.
+**Why:** When we find a valid window, we should shrink it as much as possible to find the minimum length. Using `if`
+only shrinks once, but we might be able to shrink multiple times and still maintain `sum >= target`.
 
 **Correct:**
+
 ```java
 while (sum >= target) {  // Keep shrinking while valid
     minLen = Math.min(minLen, right - left + 1);
@@ -912,7 +920,8 @@ while (sum >= target) {  // Keep shrinking while valid
 }
 ```
 
-**Key insight:** Dynamic windows often need `while` loops for shrinking, not `if` statements, because you want to shrink as much as possible while maintaining the constraint.
+**Key insight:** Dynamic windows often need `while` loops for shrinking, not `if` statements, because you want to shrink
+as much as possible while maintaining the constraint.
 </details>
 
 ---
@@ -961,11 +970,14 @@ public static int longestKDistinct_Buggy(String s, int k) {
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug 1:** Should be `while (window.size() > k)` instead of `if`. We need to keep shrinking until we have at most k distinct characters.
+**Bug 1:** Should be `while (window.size() > k)` instead of `if`. We need to keep shrinking until we have at most k
+distinct characters.
 
-**Bug 2:** After decrementing frequency, we must remove the character from the map if frequency becomes 0. Otherwise, `window.size()` will never decrease!
+**Bug 2:** After decrementing frequency, we must remove the character from the map if frequency becomes 0. Otherwise,
+`window.size()` will never decrease!
 
 **Correct:**
+
 ```java
 while (window.size() > k) {  // Keep shrinking while invalid
     char leftChar = s.charAt(left);
@@ -979,7 +991,8 @@ while (window.size() > k) {  // Keep shrinking while invalid
 }
 ```
 
-**Key mistake:** Not removing keys from HashMap when their frequency reaches 0 is a common bug in sliding window problems with frequency tracking.
+**Key mistake:** Not removing keys from HashMap when their frequency reaches 0 is a common bug in sliding window
+problems with frequency tracking.
 </details>
 
 ---
@@ -1206,7 +1219,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -1265,14 +1279,14 @@ Window 4: [Final window]
 
 **Without looking at your notes, classify these problems:**
 
-| Problem | Fixed or Dynamic Window? | What to Track? | Why? |
-|---------|--------------------------|----------------|------|
-| Max sum of k consecutive elements | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Longest substring with unique chars | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Problem                              | Fixed or Dynamic Window?               | What to Track?                         | Why?                                   |
+|--------------------------------------|----------------------------------------|----------------------------------------|----------------------------------------|
+| Max sum of k consecutive elements    | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Longest substring with unique chars  | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 | Contains duplicate within k distance | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Min subarray with sum >= target | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Find all anagrams in string | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Longest k distinct characters | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Min subarray with sum >= target      | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Find all anagrams in string          | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Longest k distinct characters        | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1284,12 +1298,12 @@ If you scored below 5/6, review the patterns and try again.
 
 **Complete this table from memory:**
 
-| Window Type | Time Complexity | Space Complexity | Why? |
-|-------------|----------------|------------------|------|
-| Fixed Window (track sum) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Fixed Window (track max with deque) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Dynamic Window (HashSet) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Dynamic Window (HashMap) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Window Type                         | Time Complexity | Space Complexity | Why?                                   |
+|-------------------------------------|-----------------|------------------|----------------------------------------|
+| Fixed Window (track sum)            | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
+| Fixed Window (track max with deque) | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
+| Dynamic Window (HashSet)            | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
+| Dynamic Window (HashMap)            | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why is sliding window O(n) even though there's a nested loop with `while (shrink condition)`?
 
@@ -1347,7 +1361,8 @@ public static int maxSumKElements(int[] nums, int k) {
 **After implementing, test with:**
 
 - Input: `nums = [1, 4, 2, 10, 2, 3, 1, 5]`, `k = 3`
-- Expected: `16` (subarray `[2, 10, 4]` - wait, let me recalculate: [10, 2, 3] = 15 or [2, 3, 1] = 6... actually [4, 2, 10] = 16)
+- Expected: `16` (subarray `[2, 10, 4]` - wait, let me recalculate: [10, 2, 3] = 15 or [2, 3, 1] = 6...
+  actually [4, 2, 10] = 16)
 
 **Verification:**
 

@@ -28,7 +28,6 @@
 5. **What's the difference between iterative and recursive?**
     - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
-
 </div>
 
 ---
@@ -107,7 +106,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 - Prefix notation uses: <span class="fill-in">[Which traversal?]</span>
 - Postfix notation uses: <span class="fill-in">[Which traversal?]</span>
 
-
 </div>
 
 ---
@@ -179,11 +177,11 @@ private static void inorderHelper(TreeNode node, List<Integer> result) {
 
 #### Performance Comparison
 
-| Tree Size | Collect + Sort (O(n log n)) | Inorder (O(n)) | Speedup |
-|-----------|----------------------------|----------------|---------|
-| n = 100   | ~664 ops                   | 100 ops        | 6.6x    |
-| n = 1,000 | ~9,966 ops                 | 1,000 ops      | 10x     |
-| n = 10,000| ~132,877 ops               | 10,000 ops     | 13x     |
+| Tree Size  | Collect + Sort (O(n log n)) | Inorder (O(n)) | Speedup |
+|------------|-----------------------------|----------------|---------|
+| n = 100    | ~664 ops                    | 100 ops        | 6.6x    |
+| n = 1,000  | ~9,966 ops                  | 1,000 ops      | 10x     |
+| n = 10,000 | ~132,877 ops                | 10,000 ops     | 13x     |
 
 **Your calculation:** For n = 5,000, the speedup is approximately _____ times faster.
 
@@ -241,6 +239,7 @@ public static void inorderIterative(TreeNode root) {
 **Key insight to understand:**
 
 For this tree:
+
 ```
        4
       / \
@@ -824,6 +823,7 @@ public static List<Integer> inorderRecursive_Buggy(TreeNode root) {
 **Bug 2:** We're creating a new `result` list in each call, so left and right subtree results are lost.
 
 **Fix - Need to pass result as parameter:**
+
 ```java
 public static List<Integer> inorderRecursive(TreeNode root) {
     List<Integer> result = new ArrayList<>();
@@ -839,6 +839,7 @@ private static void inorderHelper(TreeNode root, List<Integer> result) {
     inorderHelper(root.right, result);
 }
 ```
+
 </details>
 
 ---
@@ -890,11 +891,14 @@ public static List<Integer> inorderIterative_Buggy(TreeNode root) {
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug 1:** Loop condition should be `while (curr != null || !stack.isEmpty())`. Current code won't even start if root is not null.
+**Bug 1:** Loop condition should be `while (curr != null || !stack.isEmpty())`. Current code won't even start if root is
+not null.
 
-**Bug 2:** Should be `curr = node.right`, not `curr = curr.left`. After visiting a node, we need to go to its right subtree.
+**Bug 2:** Should be `curr = node.right`, not `curr = curr.left`. After visiting a node, we need to go to its right
+subtree.
 
 **Correct code:**
+
 ```java
 while (curr != null || !stack.isEmpty()) {
     while (curr != null) {
@@ -906,6 +910,7 @@ while (curr != null || !stack.isEmpty()) {
     curr = node.right;  // Go right after visiting
 }
 ```
+
 </details>
 
 ---
@@ -1011,6 +1016,7 @@ public static List<List<Integer>> levelOrder_Buggy(TreeNode root) {
 - **Bug fix:** <span class="fill-in">[How to track each level separately?]</span>
 
 **Test case:**
+
 ```
 Tree:     4
          / \
@@ -1025,9 +1031,11 @@ Tree:     4
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug:** The inner while loop processes until the queue is empty, which means it processes ALL levels at once, not one level at a time.
+**Bug:** The inner while loop processes until the queue is empty, which means it processes ALL levels at once, not one
+level at a time.
 
 **Fix - Capture level size before inner loop:**
+
 ```java
 while (!queue.isEmpty()) {
     int levelSize = queue.size();  // Capture current level size
@@ -1045,7 +1053,8 @@ while (!queue.isEmpty()) {
 }
 ```
 
-**Why:** By capturing `queue.size()` before the loop, we know exactly how many nodes are in the current level. New nodes added during the loop belong to the NEXT level.
+**Why:** By capturing `queue.size()` before the loop, we know exactly how many nodes are in the current level. New nodes
+added during the loop belong to the NEXT level.
 </details>
 
 ---
@@ -1098,6 +1107,7 @@ public static List<Integer> traversal_Buggy(TreeNode root) {
 - Queue is FIFO (First In, First Out) - goes wide first
 
 **Fix:**
+
 ```java
 Queue<TreeNode> queue = new LinkedList<>();  // Use Queue!
 queue.offer(root);
@@ -1110,6 +1120,7 @@ while (!queue.isEmpty()) {
     if (node.right != null) queue.offer(node.right);
 }
 ```
+
 </details>
 
 ---
@@ -1155,9 +1166,11 @@ public static List<Integer> morrisTraversal_Buggy(TreeNode root) {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug:** The while loop `while (pred.right != null)` will loop forever once we create a thread (pred.right = curr), because we never check if pred.right == curr.
+**Bug:** The while loop `while (pred.right != null)` will loop forever once we create a thread (pred.right = curr),
+because we never check if pred.right == curr.
 
 **Fix - Check for existing thread:**
+
 ```java
 TreeNode pred = curr.left;
 while (pred.right != null && pred.right != curr) {  // Check for thread!
@@ -1175,6 +1188,7 @@ if (pred.right == null) {
     curr = curr.right;
 }
 ```
+
 </details>
 
 ---
@@ -1384,7 +1398,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -1446,14 +1461,14 @@ Final order: <span class="fill-in">_________________________________</span>
 
 **Without looking at your notes, classify these problems:**
 
-| Problem | Which Traversal? | Why? |
-|---------|-----------------|------|
+| Problem                    | Which Traversal?                       | Why?                                   |
+|----------------------------|----------------------------------------|----------------------------------------|
 | Get sorted values from BST | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Copy a tree structure | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Delete entire tree safely | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Copy a tree structure      | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Delete entire tree safely  | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 | Find shortest path in tree | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 | Serialize tree for storage | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Find kth smallest in BST | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Find kth smallest in BST   | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1465,13 +1480,13 @@ If you scored below 5/6, review the patterns and try again.
 
 **Complete this table from memory:**
 
-| Traversal | Time Complexity | Space Complexity (Recursive) | Space Complexity (Iterative) | Why? |
-|-----------|----------------|------------------------------|------------------------------|------|
-| Inorder | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Preorder | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Postorder | O(?) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Level-order | O(?) | N/A | O(?) | <span class="fill-in">[Explain]</span> |
-| Morris | O(?) | N/A | O(?) | <span class="fill-in">[Explain]</span> |
+| Traversal   | Time Complexity | Space Complexity (Recursive) | Space Complexity (Iterative) | Why?                                   |
+|-------------|-----------------|------------------------------|------------------------------|----------------------------------------|
+| Inorder     | O(?)            | O(?)                         | O(?)                         | <span class="fill-in">[Explain]</span> |
+| Preorder    | O(?)            | O(?)                         | O(?)                         | <span class="fill-in">[Explain]</span> |
+| Postorder   | O(?)            | O(?)                         | O(?)                         | <span class="fill-in">[Explain]</span> |
+| Level-order | O(?)            | N/A                          | O(?)                         | <span class="fill-in">[Explain]</span> |
+| Morris      | O(?)            | N/A                          | O(?)                         | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why is Morris traversal O(1) space even though we're "modifying" the tree?
 
@@ -1485,7 +1500,8 @@ Your answer: <span class="fill-in">[Fill in - both are O(h) = O(log n), but why 
 
 ### Gate 5: Trade-off Decision
 
-**Scenario:** You need to traverse a binary tree with 1 million nodes, but the tree is highly skewed (like a linked list).
+**Scenario:** You need to traverse a binary tree with 1 million nodes, but the tree is highly skewed (like a linked
+list).
 
 **Option A:** Recursive inorder
 
@@ -1540,6 +1556,7 @@ public static List<Integer> inorderIterative(TreeNode root) {
 ```
 
 **After implementing, test with:**
+
 ```
 Tree:     4
          / \

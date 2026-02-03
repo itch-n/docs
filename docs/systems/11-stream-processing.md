@@ -32,7 +32,6 @@
     - Example: "Late data is like receiving a postcard that was sent last week..."
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
-
 </div>
 
 ---
@@ -130,7 +129,6 @@ Event occurs at 10:00:00 but arrives at system at 10:00:05:
 - Processing time = <span class="fill-in">[Fill in]</span>
 - Which one should windowing use? <span class="fill-in">[Why?]</span>
 
-
 </div>
 
 ---
@@ -181,6 +179,7 @@ public class BatchAnalytics {
 - **Use case:** Reports, ETL jobs, historical analysis
 
 **Timeline visualization:**
+
 ```
 Events:     |-------- 60 seconds of collection --------|
 Processing:                                              [Compute] → Results at T+60s
@@ -240,6 +239,7 @@ public class StreamAnalytics {
 - **Use case:** Dashboards, alerting, fraud detection
 
 **Timeline visualization:**
+
 ```
 Events:     |--10s--|--10s--|--10s--|--10s--|--10s--|--10s--|
 Windows:    [-------- Window 0-60s --------]
@@ -251,16 +251,17 @@ User sees:                                   ↑
 
 #### Performance Comparison
 
-| Metric | Batch (60s) | Stream (Real-Time) | Improvement |
-|--------|-------------|-------------------|-------------|
-| **Latency to see results** | 30-60 seconds | 5-10 seconds | **6-10x faster** |
-| **Memory (peak)** | 600K events | 100K events | **6x less** |
-| **Staleness of data** | Up to 60s old | Up to 5s old | **12x fresher** |
-| **Throughput** | 10K events/sec | 10K events/sec | Same |
+| Metric                     | Batch (60s)    | Stream (Real-Time) | Improvement      |
+|----------------------------|----------------|--------------------|------------------|
+| **Latency to see results** | 30-60 seconds  | 5-10 seconds       | **6-10x faster** |
+| **Memory (peak)**          | 600K events    | 100K events        | **6x less**      |
+| **Staleness of data**      | Up to 60s old  | Up to 5s old       | **12x fresher**  |
+| **Throughput**             | 10K events/sec | 10K events/sec     | Same             |
 
 #### Real-World Impact: Fraud Detection Example
 
 **Batch approach:**
+
 ```
 
 10:00:00 - Fraudulent transaction occurs
@@ -276,6 +277,7 @@ Detection delay: 65 seconds
 ```
 
 **Stream approach:**
+
 ```
 
 10:00:00 - Fraudulent transaction occurs
@@ -295,12 +297,14 @@ Detection delay: 11 seconds
 **Key insight to understand:**
 
 Batch processing treats time in discrete chunks:
+
 ```
 Batch 1: [0s ────────────────── 60s] → Process → Wait
 Batch 2: [60s ──────────────── 120s] → Process → Wait
 ```
 
 Stream processing treats time continuously:
+
 ```
 Events: ─•──•─•───•──•─•──•─•──•─→ (continuous)
 Windows: [─────────] [─────────]
@@ -1608,6 +1612,7 @@ public static Map<Long, Map<String, Long>> tumblingWindow_Buggy(
 - Fixed: windowStart = (1500 / 1000) * 1000 = 1000 (correct - actual timestamp)
 
 **Bug 2:** Using `put` overwrites the count instead of incrementing it.
+
 ```java
 // Wrong: Always sets count to 1
 window.put(event.key, 1L);
@@ -1615,6 +1620,7 @@ window.put(event.key, 1L);
 // Correct: Increment existing count or start at 1
 window.merge(event.key, 1L, Long::sum);
 ```
+
 </details>
 
 ---
@@ -1677,6 +1683,7 @@ public void processEvent_Buggy(Event<String, String> event) {
 - **Fix:** <span class="fill-in">[How to properly check if window is still open?]</span>
 
 **Test trace:**
+
 ```
 Window [0-1000ms], allowedLateness=200ms
 
@@ -1691,6 +1698,7 @@ Your predictions: <span class="fill-in">[Fill in for each event]</span>
 <summary>Click to verify your answers</summary>
 
 **Bug 1:** Late data check doesn't account for allowed lateness.
+
 ```java
 // Wrong: Drops ANY late event
 if (event.eventTime < currentWatermark) {
@@ -1706,6 +1714,7 @@ if (event.eventTime < currentWatermark - allowedLateness) {
 ```
 
 **Bug 2:** Window closing doesn't account for allowed lateness.
+
 ```java
 // Wrong: Closes window as soon as watermark passes windowEnd
 if (currentWatermark > windowEnd) {
@@ -1724,6 +1733,7 @@ if (currentWatermark >= windowEnd + allowedLateness) {
 - Event@900ms, watermark=900ms → Accepted (in window, on time)
 - Event@800ms, watermark=1100ms → Accepted (late but within 200ms)
 - Event@800ms, watermark=1300ms → Dropped (too late: 1300 - 800 = 500ms > 200ms)
+
 </details>
 
 ---
@@ -1812,6 +1822,7 @@ if (currentTime - lastTime > ttlMs) {
     - Actual: 1M keys (ALL keys ever seen)
     - Memory waste: 900K entries × (state size + 2 map entries)
     - HashMap performance degrades with size (more collisions, slower lookups)
+
 </details>
 
 ---
@@ -1897,6 +1908,7 @@ public static List<WindowResult<String>> sessionWindow_Buggy(
 <summary>Click to verify your answers</summary>
 
 **Bug 1: Missing sort**
+
 ```java
 // Without sort: [3000, 1000, 2000]
 // Session 1: [3000], Session 2: [1000], Session 3: [2000]
@@ -1911,6 +1923,7 @@ keyEvents.sort(Comparator.comparingLong(e -> e.timestamp));
 ```
 
 **Bug 2: Gap boundary**
+
 ```java
 // Question: Is 1000ms gap exactly equal to gapMs=1000ms a new session?
 // Typically: gap GREATER THAN threshold → new session
@@ -1924,12 +1937,14 @@ if (event.timestamp - lastTimestamp > gapMs) {
 ```
 
 **Bug 3: Empty list**
+
 ```java
 // Add check before accessing keyEvents.get(0)
 if (keyEvents.isEmpty()) {
     continue;
 }
 ```
+
 </details>
 
 ---
@@ -1996,9 +2011,12 @@ Your answer: <span class="fill-in">[Fill in]</span>
 <summary>Click to verify your answers</summary>
 
 **Bug explanation:**
-The current code stores left events AFTER checking right state. This is fine, but the symmetric operation in `processRight` must also store right events AFTER checking left state. The join will be emitted only once (either by left or right, whichever processes second).
+The current code stores left events AFTER checking right state. This is fine, but the symmetric operation in
+`processRight` must also store right events AFTER checking left state. The join will be emitted only once (either by
+left or right, whichever processes second).
 
 **Correct pattern:** Store BEFORE matching (then match both directions):
+
 ```java
 // CORRECT: Store first, then match
 leftState.append(event.key, event, event.timestamp);
@@ -2015,6 +2033,7 @@ This ensures both sides can find each other. The join will be emitted by whichev
 - Without TTL: All events stay in state forever → memory leak
 - With join window = 5s: Set TTL = 2 × join window = 10s (safety margin)
 - Why 2×? Events might arrive late, need extra retention
+
 </details>
 
 ---
@@ -2346,7 +2365,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -2385,6 +2405,7 @@ If you scored below 7 or answered "No" to either question, revise your explanati
 **Given:** Events with timestamps [1000, 2500, 3000, 5500, 6000, 8000], windowSize = 3000ms
 
 **Tumbling Window (size=3000ms):**
+
 ```
 Timeline: 0 ─────── 3000 ─────── 6000 ─────── 9000
           |         |            |            |
@@ -2407,6 +2428,7 @@ Window 6000-9000: Count = <span class="fill-in">___</span>
 ```
 
 **Sliding Window (size=3000ms, slide=2000ms):**
+
 ```
 Timeline: 0 ─── 2000 ─── 4000 ─── 6000 ─── 8000 ─── 10000
           |      |        |        |        |        |
@@ -2483,11 +2505,11 @@ With windowSize=60s, allowedLateness=30s:
 
 **Complete this table from memory:**
 
-| State Type | When to Use | Space Complexity | TTL Required? |
-|------------|-------------|------------------|---------------|
-| Value State | <span class="fill-in">[Fill in]</span> | O(?) per key | <span class="fill-in">[Yes/No]</span> |
-| List State | <span class="fill-in">[Fill in]</span> | O(?) per key | <span class="fill-in">[Yes/No]</span> |
-| Map State | <span class="fill-in">[Fill in]</span> | O(?) per key | <span class="fill-in">[Yes/No]</span> |
+| State Type  | When to Use                            | Space Complexity | TTL Required?                         |
+|-------------|----------------------------------------|------------------|---------------------------------------|
+| Value State | <span class="fill-in">[Fill in]</span> | O(?) per key     | <span class="fill-in">[Yes/No]</span> |
+| List State  | <span class="fill-in">[Fill in]</span> | O(?) per key     | <span class="fill-in">[Yes/No]</span> |
+| Map State   | <span class="fill-in">[Fill in]</span> | O(?) per key     | <span class="fill-in">[Yes/No]</span> |
 
 **Scenario:** User session tracking for 1M active users
 
@@ -2514,13 +2536,13 @@ Your answer: <span class="fill-in">[Fill in - explain the fundamental difference
 
 **Without looking at your notes, classify these scenarios:**
 
-| Scenario | Window Type | Watermark Strategy | State Needed? | Why? |
-|----------|-------------|-------------------|---------------|------|
-| Hourly sales reports | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
-| Fraud detection: 3 failed logins in 5 min | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
-| User browsing sessions | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
-| Real-time dashboard (update every 10s) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
-| IoT sensors with spotty connectivity | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| Scenario                                          | Window Type                            | Watermark Strategy                     | State Needed?                         | Why?                                   |
+|---------------------------------------------------|----------------------------------------|----------------------------------------|---------------------------------------|----------------------------------------|
+| Hourly sales reports                              | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| Fraud detection: 3 failed logins in 5 min         | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| User browsing sessions                            | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| Real-time dashboard (update every 10s)            | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
+| IoT sensors with spotty connectivity              | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
 | Stream-stream join (correlate orders + shipments) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
@@ -2768,6 +2790,7 @@ Your explanation:
     - Latency: <span class="fill-in">[Estimate end-to-end]</span>
 
 **Draw your pipeline architecture:**
+
 ```
 [Event Sources] → [?] → [?] → [Output]
 

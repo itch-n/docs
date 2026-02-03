@@ -32,7 +32,6 @@
 6. **When should you use JWT vs sessions?**
     - Your answer: <span class="fill-in">[Fill in after practice]</span>
 
-
 </div>
 
 ---
@@ -100,7 +99,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 - Your answer: <span class="fill-in">[Fill in]</span>
 - Verified: <span class="fill-in">[Fill in after implementation]</span>
-
 
 </div>
 
@@ -201,14 +199,14 @@ public class SecureJWTAuth {
 
 #### Performance & Security Comparison
 
-| Aspect | Insecure (Creds Every Request) | Secure (JWT) | Improvement |
-|--------|-------------------------------|--------------|-------------|
-| Credential exposure | Every request | Login only | 100x less |
-| Revocation | Change password | Revoke token | Immediate |
-| Expiration | None | Built-in | Auto-logout |
-| Tampering protection | None | HMAC signature | Detectable |
-| Scalability | Database hit every request | No database lookup | 10-100x faster |
-| Audit trail | Difficult | Token ID trackable | Complete |
+| Aspect               | Insecure (Creds Every Request) | Secure (JWT)       | Improvement    |
+|----------------------|--------------------------------|--------------------|----------------|
+| Credential exposure  | Every request                  | Login only         | 100x less      |
+| Revocation           | Change password                | Revoke token       | Immediate      |
+| Expiration           | None                           | Built-in           | Auto-logout    |
+| Tampering protection | None                           | HMAC signature     | Detectable     |
+| Scalability          | Database hit every request     | No database lookup | 10-100x faster |
+| Audit trail          | Difficult                      | Token ID trackable | Complete       |
 
 **Your calculation:** If a user makes 1,000 API calls per day:
 
@@ -301,13 +299,13 @@ public class RBACBlog {
 
 #### Security Comparison
 
-| Attack Vector | No Authorization | With RBAC | Prevented? |
-|---------------|------------------|-----------|------------|
-| Viewer deletes posts | Succeeds | Blocked | ✓ |
-| Editor deletes other's posts | Succeeds | Blocked | ✓ |
-| User promotes self to admin | Succeeds | Blocked | ✓ |
-| Audit trail of actions | None | Complete | ✓ |
-| Privilege escalation | Easy | Impossible | ✓ |
+| Attack Vector                | No Authorization | With RBAC  | Prevented? |
+|------------------------------|------------------|------------|------------|
+| Viewer deletes posts         | Succeeds         | Blocked    | ✓          |
+| Editor deletes other's posts | Succeeds         | Blocked    | ✓          |
+| User promotes self to admin  | Succeeds         | Blocked    | ✓          |
+| Audit trail of actions       | None             | Complete   | ✓          |
+| Privilege escalation         | Easy             | Impossible | ✓          |
 
 **After implementing, explain in your own words:**
 
@@ -414,14 +412,14 @@ public class SecureSecretsManagement {
 
 #### Security Impact Analysis
 
-| Risk | Hardcoded | Secrets Manager | Mitigation |
-|------|-----------|-----------------|------------|
-| Git leak | Exposed forever | Not in git | ✓ |
-| Code review leak | Visible | Not visible | ✓ |
-| Rotation cost | Redeploy | API call | ✓ |
-| Audit capability | None | Full logging | ✓ |
-| Blast radius | All environments | Isolated | ✓ |
-| Post-breach response | Manual everywhere | Rotate instantly | ✓ |
+| Risk                 | Hardcoded         | Secrets Manager  | Mitigation |
+|----------------------|-------------------|------------------|------------|
+| Git leak             | Exposed forever   | Not in git       | ✓          |
+| Code review leak     | Visible           | Not visible      | ✓          |
+| Rotation cost        | Redeploy          | API call         | ✓          |
+| Audit capability     | None              | Full logging     | ✓          |
+| Blast radius         | All environments  | Isolated         | ✓          |
+| Post-breach response | Manual everywhere | Rotate instantly | ✓          |
 
 **Real-world impact:** In 2019, 50,000+ hardcoded secrets leaked on GitHub led to major breaches.
 
@@ -1181,9 +1179,11 @@ public class BrokenJWTValidator {
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug 1 (Line 9):** No null/length check on token or parts. Attacker can send malformed token causing ArrayIndexOutOfBoundsException or NullPointerException.
+**Bug 1 (Line 9):** No null/length check on token or parts. Attacker can send malformed token causing
+ArrayIndexOutOfBoundsException or NullPointerException.
 
 **Fix:**
+
 ```java
 if (token == null || token.isEmpty()) return null;
 String[] parts = token.split("\\.");
@@ -1193,6 +1193,7 @@ if (parts.length != 3) return null;  // JWT must have 3 parts
 **Bug 2 (Lines 12-16):** NEVER VALIDATES SIGNATURE! This is critical - attacker can forge any token!
 
 **Fix:**
+
 ```java
 // Before extracting payload, verify signature
 String toVerify = parts[0] + "." + parts[1];
@@ -1205,6 +1206,7 @@ if (!expectedSig.equals(parts[2])) {
 **Bug 3 (Line 18):** No expiration check. Token valid forever even after user logout or password change.
 
 **Fix:**
+
 ```java
 long exp = extractExpiration(decodedPayload);
 if (System.currentTimeMillis() / 1000 > exp) {
@@ -1217,6 +1219,7 @@ if (System.currentTimeMillis() / 1000 > exp) {
 - Bug 1: Denial of service, crashes
 - Bug 2: **Complete authentication bypass** - attacker can impersonate any user!
 - Bug 3: Stolen tokens work forever, can't revoke access
+
 </details>
 
 ---
@@ -1277,6 +1280,7 @@ public class BrokenRBAC {
 **Bug 1 (Line 13):** NullPointerException if user has no roles. `userRoles.get(userId)` returns null.
 
 **Fix:**
+
 ```java
 Set<Role> roles = userRoles.get(userId);
 if (roles == null || roles.isEmpty()) {
@@ -1287,6 +1291,7 @@ if (roles == null || roles.isEmpty()) {
 **Bug 2 (Lines 23-26):** NO PERMISSION CHECK BEFORE DELETION! Classic authorization bypass.
 
 **Fix:**
+
 ```java
 public void deleteResource_Buggy(String resourceId, String userId) {
     // MUST check permission first
@@ -1362,7 +1367,8 @@ public class TimingAttackVulnerable {
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug:** Both use non-constant-time comparison. String comparison returns early on first mismatch, leaking information about which characters are correct.
+**Bug:** Both use non-constant-time comparison. String comparison returns early on first mismatch, leaking information
+about which characters are correct.
 
 **Attack:** Attacker measures response times:
 
@@ -1372,6 +1378,7 @@ public class TimingAttackVulnerable {
 - Repeat for each character → Bruteforce key character-by-character!
 
 **Fix - Constant-time comparison:**
+
 ```java
 public boolean validateAPIKey_Secure(String providedKey) {
     if (providedKey == null || providedKey.length() != VALID_API_KEY.length()) {
@@ -1389,6 +1396,7 @@ public boolean validateAPIKey_Secure(String providedKey) {
 ```
 
 Or use Java's built-in:
+
 ```java
 import java.security.MessageDigest;
 
@@ -1400,7 +1408,8 @@ public boolean validateAPIKey_Secure(String providedKey) {
 }
 ```
 
-**Key lesson:** String/token comparisons MUST be constant-time to prevent timing attacks. This applies to passwords, API keys, HMAC signatures, etc.
+**Key lesson:** String/token comparisons MUST be constant-time to prevent timing attacks. This applies to passwords, API
+keys, HMAC signatures, etc.
 </details>
 
 ---
@@ -1466,7 +1475,8 @@ public class SecretLeakage {
 
 **Bug 2 (Line 12):** Prints connection URL with password to console/logs!
 
-**Bug 3 (Lines 17-18):** SQLException stack trace may contain connection URL with password. `e.printStackTrace()` goes to stderr (often logged).
+**Bug 3 (Lines 17-18):** SQLException stack trace may contain connection URL with password. `e.printStackTrace()` goes
+to stderr (often logged).
 
 **Bug 4 (Line 24):** Logging full JWT token. If logs compromised, attacker can impersonate user.
 
@@ -1755,7 +1765,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery of security patterns through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery of security patterns through explanation and application. You cannot move forward until you
+can confidently complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -1806,6 +1817,7 @@ If you scored below 7 or answered "No" to either question, revise your explanati
 - Refresh strategy: <span class="fill-in">[How to handle expiration?]</span>
 
 **2. Authorization model:**
+
 ```
 Role Hierarchy:
 
@@ -1841,12 +1853,13 @@ Role Hierarchy:
 **Without looking at your notes, answer:**
 
 **JWT Structure:**
+
 ```
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMTIzIn0.signature
 ```
 
-| Part | Name | Contains | Encoded? | Signed? |
-|------|------|----------|----------|---------|
+| Part   | Name                             | Contains                         | Encoded?                              | Signed?                               |
+|--------|----------------------------------|----------------------------------|---------------------------------------|---------------------------------------|
 | Part 1 | <span class="fill-in">[?]</span> | <span class="fill-in">[?]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Yes/No]</span> |
 | Part 2 | <span class="fill-in">[?]</span> | <span class="fill-in">[?]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Yes/No]</span> |
 | Part 3 | <span class="fill-in">[?]</span> | <span class="fill-in">[?]</span> | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Yes/No]</span> |
@@ -1866,11 +1879,13 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMTIzIn0.signature
 **Security scenario:**
 
 An attacker obtains this token:
+
 ```
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMTIzIiwicm9sZSI6InZpZXdlciIsImV4cCI6MTczNTY4MDAwMH0.xyz
 ```
 
 Attacker decodes payload to:
+
 ```json
 {
   "sub": "user123",
@@ -1938,13 +1953,13 @@ public class RBACChallenge {
 
 **Threat analysis:**
 
-| Attack Vector | Can attacker succeed? | Why/Why not? | Mitigation |
-|---------------|---------------------|--------------|------------|
-| Replay captured token | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[How to prevent?]</span> |
-| Modify token payload | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[What stops this?]</span> |
-| Bruteforce HMAC secret | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[What makes it hard?]</span> |
-| Use token after logout | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[Stateless problem?]</span> |
-| Timing attack on validation | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[How to prevent?]</span> |
+| Attack Vector               | Can attacker succeed?                 | Why/Why not?                           | Mitigation                                         |
+|-----------------------------|---------------------------------------|----------------------------------------|----------------------------------------------------|
+| Replay captured token       | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[How to prevent?]</span>     |
+| Modify token payload        | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[What stops this?]</span>    |
+| Bruteforce HMAC secret      | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[What makes it hard?]</span> |
+| Use token after logout      | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[Stateless problem?]</span>  |
+| Timing attack on validation | <span class="fill-in">[Yes/No]</span> | <span class="fill-in">[Explain]</span> | <span class="fill-in">[How to prevent?]</span>     |
 
 **For each "Yes" answer:**
 
@@ -1962,6 +1977,7 @@ Your answer: <span class="fill-in">[Explain the trade-offs of different approach
 **Scenario:** Your microservices need to access database passwords, API keys, and encryption keys.
 
 **Option A:** Environment variables
+
 ```bash
 export DB_PASSWORD="secret123"
 export API_KEY="sk_live_xyz"
@@ -1980,6 +1996,7 @@ export API_KEY="sk_live_xyz"
 3. <span class="fill-in">[Fill in]</span>
 
 **Option B:** Secrets Manager (Vault/AWS Secrets Manager)
+
 ```java
 String password = secretsManager.getSecret("db_password");
 ```
@@ -2069,6 +2086,7 @@ If you found less than 5, review the Debugging Challenges section.
 - No input validation (null checks)
 - No audit logging
 - No rate limiting
+
 </details>
 
 ---

@@ -28,7 +28,6 @@
 5. **What breaks binary search?**
     - Your answer: <span class="fill-in">[Fill in after testing]</span>
 
-
 </div>
 
 ---
@@ -98,7 +97,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 - Your answer: <span class="fill-in">[Fill in - consider integer overflow]</span>
 - Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
-
 </div>
 
 ---
@@ -159,12 +157,12 @@ public static int binarySearch(int[] nums, int target) {
 
 #### Performance Comparison
 
-| Array Size | Linear Search (O(n)) | Binary Search (O(log n)) | Speedup |
-|------------|----------------------|--------------------------|---------|
-| n = 100    | 100 ops             | 7 ops                    | 14x     |
-| n = 1,000  | 1,000 ops           | 10 ops                   | 100x    |
-| n = 10,000 | 10,000 ops          | 14 ops                   | 714x    |
-| n = 1,000,000 | 1,000,000 ops    | 20 ops                   | 50,000x |
+| Array Size    | Linear Search (O(n)) | Binary Search (O(log n)) | Speedup |
+|---------------|----------------------|--------------------------|---------|
+| n = 100       | 100 ops              | 7 ops                    | 14x     |
+| n = 1,000     | 1,000 ops            | 10 ops                   | 100x    |
+| n = 10,000    | 10,000 ops           | 14 ops                   | 714x    |
+| n = 1,000,000 | 1,000,000 ops        | 20 ops                   | 50,000x |
 
 **Your calculation:** For n = 16,384, binary search needs _____ comparisons.
 
@@ -196,6 +194,7 @@ Step 2: left=4, right=6, mid=5, nums[5]=11 → FOUND!
 - So each comparison eliminates half the remaining elements!
 
 **Logarithmic growth visualization:**
+
 ```
 n = 1,024 → log₂(1,024) = 10 steps
 n = 2,048 → log₂(2,048) = 11 steps  (doubled n, only +1 step!)
@@ -292,11 +291,13 @@ private int findChildIndex(K searchKey) {
 ```
 
 **Visual:** Given keys `[10, 20, 30]`, searching for `25`:
+
 ```
 Children:  [<10]  [10-20)  [20-30)  [≥30]
 Keys:         10      20       30
 Indices:   0      1       2        3
 ```
+
 Result: child index 2 (between 20 and 30)
 
 ### Common Pitfalls
@@ -813,15 +814,19 @@ public static int binarySearch_Buggy(int[] nums, int target) {
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug 1 (Line 7):** `right` should be `nums.length - 1`, not `nums.length`. Array indices are 0-based, so valid range is 0 to length-1. Using `nums.length` will cause ArrayIndexOutOfBoundsException.
+**Bug 1 (Line 7):** `right` should be `nums.length - 1`, not `nums.length`. Array indices are 0-based, so valid range is
+0 to length-1. Using `nums.length` will cause ArrayIndexOutOfBoundsException.
 
-**Bug 2 (Line 10):** `(left + right) / 2` can overflow when left and right are large integers. Should use `left + (right - left) / 2` to avoid overflow.
+**Bug 2 (Line 10):** `(left + right) / 2` can overflow when left and right are large integers. Should use
+`left + (right - left) / 2` to avoid overflow.
 
 **Correct version:**
+
 ```java
 int right = nums.length - 1;  // Fix Bug 1
 int mid = left + (right - left) / 2;  // Fix Bug 2
 ```
+
 </details>
 
 ---
@@ -872,9 +877,12 @@ public static int findFirst_Buggy(int[] nums, int target) {
 
 **Bug (Line 12):** Should be `right = mid - 1`, not `right = mid`.
 
-**Why:** When `nums[mid] == target`, we want to search the left half for an earlier occurrence. But if we set `right = mid`, and if `mid` happens to equal `left` (when left and right differ by 1), the loop never terminates because mid stays the same.
+**Why:** When `nums[mid] == target`, we want to search the left half for an earlier occurrence. But if we set
+`right = mid`, and if `mid` happens to equal `left` (when left and right differ by 1), the loop never terminates because
+mid stays the same.
 
 **Example trace with bug:**
+
 ```
 nums = [5, 7, 7, 8, 8, 8, 10], target = 8
 left=3, right=5, mid=4, nums[4]=8 → right=4
@@ -883,12 +891,14 @@ left=3, right=3, mid=3, nums[3]=8 → right=3  ← INFINITE LOOP!
 ```
 
 **Correct version:**
+
 ```java
 if (nums[mid] == target) {
     result = mid;
     right = mid - 1;  // Continue searching left half
 }
 ```
+
 </details>
 
 ---
@@ -946,9 +956,11 @@ public static int searchRotated_Buggy(int[] nums, int target) {
 
 **Bug:** Should be `nums[left] <= nums[mid]` (with equals), not `nums[left] < nums[mid]`.
 
-**Why:** When left == mid (happens when there are only 2 elements left and mid rounds down), the condition `nums[left] < nums[mid]` is false (3 is not < 3), so we incorrectly assume the right half is sorted.
+**Why:** When left == mid (happens when there are only 2 elements left and mid rounds down), the condition
+`nums[left] < nums[mid]` is false (3 is not < 3), so we incorrectly assume the right half is sorted.
 
 **Example trace with bug:**
+
 ```
 nums = [3, 1], target = 1
 left=0, right=1, mid=0
@@ -960,6 +972,7 @@ target=1 >= nums[mid]=3? FALSE
 ```
 
 **Correct version:**
+
 ```java
 if (nums[left] <= nums[mid]) {  // Include equals case
     // Left half is sorted
@@ -970,6 +983,7 @@ if (nums[left] <= nums[mid]) {  // Include equals case
     }
 }
 ```
+
 </details>
 
 ---
@@ -1021,6 +1035,7 @@ public static int searchInsert_Buggy(int[] nums, int target) {
 **Two correct approaches:**
 
 **Approach 1: Use `left <= right`**
+
 ```java
 while (left <= right) {
     int mid = left + (right - left) / 2;
@@ -1036,6 +1051,7 @@ return left;  // left is the insert position
 ```
 
 **Approach 2: Use `left < right` with different pointer update**
+
 ```java
 while (left < right) {
     int mid = left + (right - left) / 2;
@@ -1090,11 +1106,14 @@ public static int findMin_Buggy(int[] nums) {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug 1:** `left = mid` should be `left = mid + 1`. When `nums[mid] > nums[right]`, the minimum is in the right half, but NOT at mid (since nums[mid] is large), so we can safely skip mid.
+**Bug 1:** `left = mid` should be `left = mid + 1`. When `nums[mid] > nums[right]`, the minimum is in the right half,
+but NOT at mid (since nums[mid] is large), so we can safely skip mid.
 
-**Bug 2:** `right = mid - 1` should be `right = mid`. When `nums[mid] <= nums[right]`, the minimum could BE at mid, so we can't skip it.
+**Bug 2:** `right = mid - 1` should be `right = mid`. When `nums[mid] <= nums[right]`, the minimum could BE at mid, so
+we can't skip it.
 
 **Trace with bugs:**
+
 ```
 nums = [3, 4, 5, 1, 2]
 left=0, right=4, mid=2, nums[2]=5, nums[4]=2
@@ -1107,6 +1126,7 @@ return nums[2]=5  (WRONG! Should be 1)
 ```
 
 **Correct version:**
+
 ```java
 if (nums[mid] > nums[right]) {
     left = mid + 1;  // Min is definitely in right half
@@ -1114,6 +1134,7 @@ if (nums[mid] > nums[right]) {
     right = mid;     // Min could be at mid
 }
 ```
+
 </details>
 
 ---
@@ -1323,7 +1344,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -1378,14 +1400,14 @@ Step 3: [Continue until found]
 
 **Without looking at your notes, classify these problems:**
 
-| Problem | Pattern | Why? |
-|---------|---------|------|
-| Find target in sorted array | <span class="fill-in">[Classic/Rotated/2D/Answer?]</span> | <span class="fill-in">[Explain]</span> |
-| Find minimum in rotated array | <span class="fill-in">[Classic/Rotated/2D/Answer?]</span> | <span class="fill-in">[Explain]</span> |
-| Search in row-sorted matrix | <span class="fill-in">[Classic/Rotated/2D/Answer?]</span> | <span class="fill-in">[Explain]</span> |
-| Find integer square root | <span class="fill-in">[Classic/Rotated/2D/Answer?]</span> | <span class="fill-in">[Explain]</span> |
+| Problem                         | Pattern                                                   | Why?                                   |
+|---------------------------------|-----------------------------------------------------------|----------------------------------------|
+| Find target in sorted array     | <span class="fill-in">[Classic/Rotated/2D/Answer?]</span> | <span class="fill-in">[Explain]</span> |
+| Find minimum in rotated array   | <span class="fill-in">[Classic/Rotated/2D/Answer?]</span> | <span class="fill-in">[Explain]</span> |
+| Search in row-sorted matrix     | <span class="fill-in">[Classic/Rotated/2D/Answer?]</span> | <span class="fill-in">[Explain]</span> |
+| Find integer square root        | <span class="fill-in">[Classic/Rotated/2D/Answer?]</span> | <span class="fill-in">[Explain]</span> |
 | Find first occurrence of target | <span class="fill-in">[Classic/Rotated/2D/Answer?]</span> | <span class="fill-in">[Explain]</span> |
-| Search in fully sorted matrix | <span class="fill-in">[Classic/Rotated/2D/Answer?]</span> | <span class="fill-in">[Explain]</span> |
+| Search in fully sorted matrix   | <span class="fill-in">[Classic/Rotated/2D/Answer?]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1397,12 +1419,12 @@ If you scored below 5/6, review the patterns and try again.
 
 **Complete this table from memory:**
 
-| Pattern | Time Complexity | Space Complexity | Why? |
-|---------|----------------|------------------|------|
-| Classic Binary Search | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Rotated Array Search | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| 2D Matrix (fully sorted) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Binary Search on Answer | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Pattern                  | Time Complexity | Space Complexity | Why?                                   |
+|--------------------------|-----------------|------------------|----------------------------------------|
+| Classic Binary Search    | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
+| Rotated Array Search     | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
+| 2D Matrix (fully sorted) | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
+| Binary Search on Answer  | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why is binary search O(log n) while linear search is O(n)?
 
@@ -1561,7 +1583,8 @@ Your answer: <span class="fill-in">[Can you still use binary search? Give an exa
 - Pattern: <span class="fill-in">[Which variant?]</span>
 - Key insight: <span class="fill-in">[Staircase or binary search?]</span>
 
-**Verification:** Could you start implementing these without looking up the solution? <span class="fill-in">[Yes/No]</span>
+**Verification:** Could you start implementing these without looking up the
+solution? <span class="fill-in">[Yes/No]</span>
 
 ---
 

@@ -28,7 +28,6 @@
 5. **What's the space-time tradeoff with tries?**
     - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
-
 </div>
 
 ---
@@ -170,10 +169,10 @@ public List<String> autocomplete_Trie(String prefix) {
 #### Performance Comparison
 
 | Dictionary Size | Prefix Length | HashMap (O(n*m)) | Trie (O(p+k)) | Speedup |
-|-----------------|---------------|------------------|----------------|---------|
-| n = 1,000       | m = 5         | 5,000 ops       | 5 + k ops      | 1000x   |
-| n = 10,000      | m = 5         | 50,000 ops      | 5 + k ops      | 10000x  |
-| n = 100,000     | m = 5         | 500,000 ops     | 5 + k ops      | 100000x |
+|-----------------|---------------|------------------|---------------|---------|
+| n = 1,000       | m = 5         | 5,000 ops        | 5 + k ops     | 1000x   |
+| n = 10,000      | m = 5         | 50,000 ops       | 5 + k ops     | 10000x  |
+| n = 100,000     | m = 5         | 500,000 ops      | 5 + k ops     | 100000x |
 
 **Your calculation:** For n = 50,000 and prefix length 4, the speedup is approximately _____ times faster.
 
@@ -299,11 +298,11 @@ public List<String> findWords_Trie(char[][] board, String[] words) {
 
 #### Performance Comparison
 
-| Dictionary Size | Grid Size | Brute Force | Trie with Pruning | Speedup |
-|-----------------|-----------|-------------|-------------------|---------|
-| 100 words       | 3x3       | ~100,000 ops| ~1,000 ops        | 100x    |
-| 1,000 words     | 4x4       | ~10,000,000 | ~10,000 ops       | 1000x   |
-| 10,000 words    | 5x5       | Timeout     | ~100,000 ops      | 100x+   |
+| Dictionary Size | Grid Size | Brute Force  | Trie with Pruning | Speedup |
+|-----------------|-----------|--------------|-------------------|---------|
+| 100 words       | 3x3       | ~100,000 ops | ~1,000 ops        | 100x    |
+| 1,000 words     | 4x4       | ~10,000,000  | ~10,000 ops       | 1000x   |
+| 10,000 words    | 5x5       | Timeout      | ~100,000 ops      | 100x+   |
 
 **Key insight:** Trie eliminates redundant work by sharing prefixes and enabling early stopping.
 
@@ -921,13 +920,15 @@ public void insert_Buggy(String word) {
 <summary>Click to verify your answers</summary>
 
 **Bug 1:** Missing node creation! Should be:
+
 ```java
 if (current.children[index] == null) {
     current.children[index] = new TrieNode();
 }
 ```
 
-**Bug 2:** Missing `current.isEndOfWord = true;` after the loop. Without this, search will fail even though word was inserted.
+**Bug 2:** Missing `current.isEndOfWord = true;` after the loop. Without this, search will fail even though word was
+inserted.
 
 **Result:** Without bug fixes, search("app") would return false because isEndOfWord is never set to true.
 </details>
@@ -976,11 +977,13 @@ public boolean search_Buggy(String word) {
 **Bug:** Should return `current.isEndOfWord`, not just `true`.
 
 **Correct:**
+
 ```java
 return current.isEndOfWord;
 ```
 
-**Why:** We traversed all characters successfully, but that only means the prefix exists. We must check if it's marked as an actual word ending.
+**Why:** We traversed all characters successfully, but that only means the prefix exists. We must check if it's marked
+as an actual word ending.
 
 **Result:** Without fix, search("app") returns true even though "app" wasn't inserted (only "apple" was).
 </details>
@@ -1046,15 +1049,18 @@ private void collectWords(TrieNode node, String currentWord, List<String> result
 <summary>Click to verify your answers</summary>
 
 **Bug 1:** Missing check if prefix itself is a word. After navigating to prefix, add:
+
 ```java
 if (current.isEndOfWord) {
     results.add(prefix);
 }
 ```
 
-**Bug 2:** The isEndOfWord check should come BEFORE recursing to children, not after. This ensures parent words are added before children (proper DFS order).
+**Bug 2:** The isEndOfWord check should come BEFORE recursing to children, not after. This ensures parent words are
+added before children (proper DFS order).
 
 **Correct order:**
+
 ```java
 private void collectWords(TrieNode node, String currentWord, List<String> results) {
     if (node.isEndOfWord) {
@@ -1068,6 +1074,7 @@ private void collectWords(TrieNode node, String currentWord, List<String> result
     }
 }
 ```
+
 </details>
 
 ---
@@ -1134,6 +1141,7 @@ private boolean deleteHelper(TrieNode node, String word, int index) {
 2. It has no children
 
 **Correct implementation:**
+
 ```java
 private boolean deleteHelper(TrieNode node, String word, int index) {
     if (index == word.length()) {
@@ -1231,9 +1239,11 @@ private void dfs_Buggy(char[][] board, int i, int j, TrieNode node,
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug:** Missing boundary and visited checks at the START of the function. Current code checks after accessing array, causing ArrayIndexOutOfBoundsException.
+**Bug:** Missing boundary and visited checks at the START of the function. Current code checks after accessing array,
+causing ArrayIndexOutOfBoundsException.
 
 **Correct:**
+
 ```java
 private void dfs(char[][] board, int i, int j, TrieNode node,
                 Set<String> result, boolean[][] visited) {
@@ -1462,7 +1472,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -1513,14 +1524,14 @@ Root:
 
 **Without looking at your notes, classify these problems:**
 
-| Problem | Data Structure (Trie/HashMap/Array) | Why? |
-|---------|-------------------------------------|------|
-| Check if word exists in dictionary | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Autocomplete with prefix | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Find all anagrams of word | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Problem                                 | Data Structure (Trie/HashMap/Array)    | Why?                                   |
+|-----------------------------------------|----------------------------------------|----------------------------------------|
+| Check if word exists in dictionary      | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Autocomplete with prefix                | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Find all anagrams of word               | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 | Word search in 2D grid (multiple words) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Count words with given prefix | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Longest common prefix of strings | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Count words with given prefix           | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Longest common prefix of strings        | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1532,12 +1543,12 @@ If you scored below 5/6, review the patterns and try again.
 
 **Complete this table from memory:**
 
-| Operation | Trie Time | Trie Space | HashMap Time | HashMap Space |
-|-----------|-----------|------------|--------------|---------------|
-| Insert word of length m | O(?) | O(?) | O(?) | O(?) |
-| Search word of length m | O(?) | O(?) | O(?) | O(?) |
-| Prefix search (find all with prefix p, k results) | O(?) | O(?) | O(?) | O(?) |
-| Delete word of length m | O(?) | O(?) | O(?) | O(?) |
+| Operation                                         | Trie Time | Trie Space | HashMap Time | HashMap Space |
+|---------------------------------------------------|-----------|------------|--------------|---------------|
+| Insert word of length m                           | O(?)      | O(?)       | O(?)         | O(?)          |
+| Search word of length m                           | O(?)      | O(?)       | O(?)         | O(?)          |
+| Prefix search (find all with prefix p, k results) | O(?)      | O(?)       | O(?)         | O(?)          |
+| Delete word of length m                           | O(?)      | O(?)       | O(?)         | O(?)          |
 
 **Deep question:** When does trie use LESS space than storing words in array?
 
@@ -1551,7 +1562,8 @@ Your answer: <span class="fill-in">[Fill in - explain pointer overhead]</span>
 
 ### Gate 5: Trade-off Decision
 
-**Scenario:** You're building an autocomplete system for 1 million product names. Average name length is 15 characters. Users type prefix and expect instant suggestions.
+**Scenario:** You're building an autocomplete system for 1 million product names. Average name length is 15 characters.
+Users type prefix and expect instant suggestions.
 
 **Option A:** Hash Set with linear scan
 

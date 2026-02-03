@@ -28,7 +28,6 @@
 3. **When does each pattern work?**
     - Your answers: <span class="fill-in">[Fill in after solving problems]</span>
 
-
 </div>
 
 ---
@@ -69,7 +68,8 @@
 
 - **Must you sort first?** <span class="fill-in">[Yes/No - Why?]</span>
 - **How do you check if intervals overlap?** <span class="fill-in">[Fill in the condition]</span>
-- **How many intervals in final result?** <span class="fill-in">[Your prediction: <span class="fill-in">___</span>]</span>
+- **How many intervals in final result?
+  ** <span class="fill-in">[Your prediction: <span class="fill-in">___</span>]</span>
 
 **Scenario 3:** Next greater element for `[2, 1, 2, 4, 3]`
 
@@ -105,7 +105,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 - Your prediction: <span class="fill-in">[Fill in]</span>
 - Verified: <span class="fill-in">[Fill in after implementation]</span>
-
 
 </div>
 
@@ -168,11 +167,11 @@ public static int findSingle_XOR(int[] nums) {
 
 #### Performance Comparison
 
-| Array Size | HashSet Space | XOR Space | Space Saved |
-|------------|---------------|-----------|-------------|
-| n = 1,000  | ~500 integers | 1 integer | 99.8%       |
-| n = 10,000 | ~5,000 integers | 1 integer | 99.98%    |
-| n = 1,000,000 | ~500,000 integers | 1 integer | 99.9998% |
+| Array Size    | HashSet Space     | XOR Space | Space Saved |
+|---------------|-------------------|-----------|-------------|
+| n = 1,000     | ~500 integers     | 1 integer | 99.8%       |
+| n = 10,000    | ~5,000 integers   | 1 integer | 99.98%      |
+| n = 1,000,000 | ~500,000 integers | 1 integer | 99.9998%    |
 
 **Why Does XOR Work?**
 
@@ -183,6 +182,7 @@ public static int findSingle_XOR(int[] nums) {
 - XOR is commutative and associative
 
 Example with `[2, 3, 2, 4, 3]`:
+
 ```
 2 XOR 3 XOR 2 XOR 4 XOR 3
 = (2 XOR 2) XOR (3 XOR 3) XOR 4  // Rearrange
@@ -290,13 +290,14 @@ public static int[][] merge_Optimized(int[][] intervals) {
 
 | Array Size | Brute Force (O(n²)) | Sort + Merge (O(n log n)) | Speedup |
 |------------|---------------------|---------------------------|---------|
-| n = 100    | ~10,000 ops        | ~700 ops                  | 14x     |
-| n = 1,000  | ~1,000,000 ops     | ~10,000 ops               | 100x    |
-| n = 10,000 | ~100,000,000 ops   | ~130,000 ops              | 770x    |
+| n = 100    | ~10,000 ops         | ~700 ops                  | 14x     |
+| n = 1,000  | ~1,000,000 ops      | ~10,000 ops               | 100x    |
+| n = 10,000 | ~100,000,000 ops    | ~130,000 ops              | 770x    |
 
 **Why Does Sorting Help?**
 
 After sorting by start time, intervals are in order:
+
 ```
 Unsorted: [[8,10], [1,3], [15,18], [2,6]]
 Sorted:   [[1,3], [2,6], [8,10], [15,18]]
@@ -388,9 +389,9 @@ public static int[] nextGreater_Stack(int[] nums) {
 
 | Array Size | Brute Force (O(n²)) | Monotonic Stack (O(n)) | Speedup |
 |------------|---------------------|------------------------|---------|
-| n = 100    | ~5,000 ops         | ~200 ops               | 25x     |
-| n = 1,000  | ~500,000 ops       | ~2,000 ops             | 250x    |
-| n = 10,000 | ~50,000,000 ops    | ~20,000 ops            | 2,500x  |
+| n = 100    | ~5,000 ops          | ~200 ops               | 25x     |
+| n = 1,000  | ~500,000 ops        | ~2,000 ops             | 250x    |
+| n = 10,000 | ~50,000,000 ops     | ~20,000 ops            | 2,500x  |
 
 **Why Does Monotonic Stack Work?**
 
@@ -1128,9 +1129,11 @@ public static int hammingWeight_Buggy(int n) {
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug:** Using `n > 0` stops too early for negative numbers. Signed right shift (`>>`) preserves the sign bit, so negative numbers never become 0.
+**Bug:** Using `n > 0` stops too early for negative numbers. Signed right shift (`>>`) preserves the sign bit, so
+negative numbers never become 0.
 
 **Better fix:** Use unsigned right shift (`>>>`) or check all 32 bits explicitly:
+
 ```java
 while (n != 0) {  // Check n != 0, not n > 0
     if ((n & 1) == 1) {
@@ -1141,12 +1144,14 @@ while (n != 0) {  // Check n != 0, not n > 0
 ```
 
 **Alternative:** Use `n & (n-1)` trick that works for any integer:
+
 ```java
 while (n != 0) {
     count++;
     n = n & (n - 1);  // Remove rightmost 1 bit
 }
 ```
+
 </details>
 
 ---
@@ -1198,15 +1203,18 @@ public static int[][] merge_Buggy(int[][] intervals) {
 
 **Bug 1:** Overlap check is actually correct (`intervals[i][0] <= current[1]`).
 
-**Bug 2:** Should be `current[1] = Math.max(current[1], intervals[i][1])`. Without max, if the new interval ends before current ends, we'd shrink current incorrectly.
+**Bug 2:** Should be `current[1] = Math.max(current[1], intervals[i][1])`. Without max, if the new interval ends before
+current ends, we'd shrink current incorrectly.
 
 Example: `[[1,4], [2,3]]` should merge to `[1,4]`, not `[1,3]`.
 
 **Bug 3:** The last interval (`current`) is never added to the result! Need to add it after the loop:
+
 ```java
 merged.add(current);  // Add this line before return
 return merged.toArray(new int[0][]);
 ```
+
 </details>
 
 ---
@@ -1257,9 +1265,11 @@ public static int subarraySum_Buggy(int[] nums, int k) {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug:** Missing the check for when `currentSum == k`. This checks if the entire subarray from index 0 to current equals k.
+**Bug:** Missing the check for when `currentSum == k`. This checks if the entire subarray from index 0 to current equals
+k.
 
 **Correct:**
+
 ```java
 for (int num : nums) {
     currentSum += num;
@@ -1280,7 +1290,8 @@ for (int num : nums) {
 }
 ```
 
-**Alternative (better):** Initialize the map with `prefixSumCount.put(0, 1)` before the loop. This handles the case where the entire prefix equals k.
+**Alternative (better):** Initialize the map with `prefixSumCount.put(0, 1)` before the loop. This handles the case
+where the entire prefix equals k.
 </details>
 
 ---
@@ -1325,15 +1336,18 @@ public static int[] nextGreater_Buggy(int[] nums) {
 
 **Bug:** Should be `result[idx] = nums[i]`, not `result[i] = nums[i]`.
 
-We're finding the next greater element for `idx`, not for `i`. The index `idx` comes from the stack (popped element), and `nums[i]` is its next greater element.
+We're finding the next greater element for `idx`, not for `i`. The index `idx` comes from the stack (popped element),
+and `nums[i]` is its next greater element.
 
 **Correct:**
+
 ```java
 while (!stack.isEmpty() && nums[stack.peek()] < nums[i]) {
     int idx = stack.pop();
     result[idx] = nums[i];  // Fix: idx, not i
 }
 ```
+
 </details>
 
 ---
@@ -1366,6 +1380,7 @@ public static boolean isPowerOfTwo_Buggy(int n) {
 - `n = -16`: Negative powers of 2 also pass (wrong!)
 
 **Correct:**
+
 ```java
 return n > 0 && (n & (n - 1)) == 0;
 ```
@@ -1375,6 +1390,7 @@ return n > 0 && (n & (n - 1)) == 0;
 - Power of 2 has exactly one bit set: 8 = `1000`, 16 = `10000`
 - `n - 1` flips all bits after the rightmost 1: 8-1 = `0111`, 16-1 = `01111`
 - `n & (n-1)` turns off the rightmost 1 bit, resulting in 0 for powers of 2
+
 </details>
 
 ---
@@ -1422,9 +1438,11 @@ public static int[][] intervalIntersection_Buggy(
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug:** Need to check if `start <= end` before adding the interval. If there's no overlap, `start > end`, which is invalid.
+**Bug:** Need to check if `start <= end` before adding the interval. If there's no overlap, `start > end`, which is
+invalid.
 
 **Correct:**
+
 ```java
 int start = Math.max(firstList[i][0], secondList[j][0]);
 int end = Math.min(firstList[i][1], secondList[j][1]);
@@ -1638,7 +1656,8 @@ Before moving on:
 
 ## Understanding Gates (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -1720,14 +1739,14 @@ Continue until complete...
 
 **Without looking at your notes, classify these problems:**
 
-| Problem | Pattern | Key Technique | Why? |
-|---------|---------|---------------|------|
+| Problem                                      | Pattern                                | Key Technique                          | Why?                                   |
+|----------------------------------------------|----------------------------------------|----------------------------------------|----------------------------------------|
 | Find two numbers appearing once (rest twice) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Merge meeting time slots | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Count subarrays with sum K | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Largest rectangle in histogram | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Check if number is power of 4 | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Range sum query (immutable array) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Merge meeting time slots                     | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Count subarrays with sum K                   | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Largest rectangle in histogram               | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Check if number is power of 4                | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Range sum query (immutable array)            | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1739,12 +1758,12 @@ If you scored below 5/6, review the patterns and try again.
 
 **Complete this table from memory:**
 
-| Pattern | Time Complexity | Space Complexity | Why? |
-|---------|----------------|------------------|------|
-| Bit Manipulation (XOR all) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Merge Intervals (with sort) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Prefix Sum (build + query) | O(?) per query | O(?) | <span class="fill-in">[Explain]</span> |
-| Monotonic Stack | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Pattern                     | Time Complexity | Space Complexity | Why?                                   |
+|-----------------------------|-----------------|------------------|----------------------------------------|
+| Bit Manipulation (XOR all)  | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
+| Merge Intervals (with sort) | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
+| Prefix Sum (build + query)  | O(?) per query  | O(?)             | <span class="fill-in">[Explain]</span> |
+| Monotonic Stack             | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
 
 **Deep questions:**
 
@@ -1999,7 +2018,8 @@ Array: `[3, 1, 4, 2, 5]`
 
 **If any score < 7:** Review the sections where you struggled, then retry this gate.
 
-**If all scores ≥ 7:** Congratulations! You've mastered advanced DSA topics. You're ready to tackle complex algorithm problems!
+**If all scores ≥ 7:** Congratulations! You've mastered advanced DSA topics. You're ready to tackle complex algorithm
+problems!
 
 ---
 

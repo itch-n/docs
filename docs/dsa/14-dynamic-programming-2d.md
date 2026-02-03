@@ -28,7 +28,6 @@
 5. **How do you know when you need 2D instead of 1D?**
     - Your answer: <span class="fill-in">[Fill in after learning the pattern]</span>
 
-
 </div>
 
 ---
@@ -183,9 +182,9 @@ public static int lcs_DP(String s1, String s2) {
 
 | String Lengths | Recursive (2^(m+n)) | 2D DP (m×n) | Speedup |
 |----------------|---------------------|-------------|---------|
-| m=10, n=10     | ~1,000,000         | 100         | 10,000x |
-| m=15, n=15     | ~1,000,000,000     | 225         | 4.4M x  |
-| m=20, n=20     | ~1,000,000,000,000 | 400         | 2.5B x  |
+| m=10, n=10     | ~1,000,000          | 100         | 10,000x |
+| m=15, n=15     | ~1,000,000,000      | 225         | 4.4M x  |
+| m=20, n=20     | ~1,000,000,000,000  | 400         | 2.5B x  |
 
 **Your calculation:** For m = 25, n = 25, the speedup is approximately _____ times faster.
 
@@ -827,7 +826,8 @@ public class GameTheoryClient {
 
 ## Debugging Challenges
 
-**Your task:** Find and fix bugs in broken 2D DP implementations. This tests your understanding of state transitions and edge cases.
+**Your task:** Find and fix bugs in broken 2D DP implementations. This tests your understanding of state transitions and
+edge cases.
 
 ### Challenge 1: Broken LCS Implementation
 
@@ -878,9 +878,11 @@ public static int lcs_Buggy(String s1, String s2) {
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug 1 (Line 4):** Should be `int[][] dp = new int[m + 1][n + 1]`. We need extra row/column for the empty string base case.
+**Bug 1 (Line 4):** Should be `int[][] dp = new int[m + 1][n + 1]`. We need extra row/column for the empty string base
+case.
 
-**Bug 2 (Line 8):** Should be `s1.charAt(i - 1) == s2.charAt(j - 1)`. The DP indices are 1-based but string indices are 0-based.
+**Bug 2 (Line 8):** Should be `s1.charAt(i - 1) == s2.charAt(j - 1)`. The DP indices are 1-based but string indices are
+0-based.
 
 **Bug 3 (Line 15):** With Bug 1 unfixed, `dp[m][n]` is out of bounds. After fixing Bug 1, this is correct.
 
@@ -939,9 +941,11 @@ public static int editDistance_Buggy(String word1, String word2) {
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug 1 (Line 15):** Should be `word1.charAt(i - 1) == word2.charAt(j - 1)`. DP uses 1-based indexing, strings use 0-based.
+**Bug 1 (Line 15):** Should be `word1.charAt(i - 1) == word2.charAt(j - 1)`. DP uses 1-based indexing, strings use
+0-based.
 
 **Bug 2 (Line 21):** Each operation (insert, delete, replace) costs 1, so should be:
+
 ```java
 dp[i][j] = 1 + Math.min(insert, Math.min(delete, replace));
 ```
@@ -994,14 +998,17 @@ public static int uniquePaths_Buggy(int m, int n) {
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug 1 (Line 8):** Should be `dp[i][0] = 1`. There's exactly ONE way to reach any cell in the first column (move down only).
+**Bug 1 (Line 8):** Should be `dp[i][0] = 1`. There's exactly ONE way to reach any cell in the first column (move down
+only).
 
-**Bug 2 (Line 13):** Should be `dp[i][j] = dp[i-1][j] + dp[i][j-1]` (addition, not multiplication). We're COUNTING paths, not multiplying them.
+**Bug 2 (Line 13):** Should be `dp[i][j] = dp[i-1][j] + dp[i][j-1]` (addition, not multiplication). We're COUNTING
+paths, not multiplying them.
 
 **Why addition?** The number of ways to reach cell (i,j) is the sum of:
 
 - Ways to reach (i-1,j) [coming from above]
 - Ways to reach (i,j-1) [coming from left]
+
 </details>
 
 ---
@@ -1059,9 +1066,11 @@ public static int knapsack_Buggy(int[] weights, int[] values, int capacity) {
 
 **Bug 2 (Line 5):** Should start at `i = 1`, which is actually correct! But with Bug 1 fixed, we need the +1 dimension.
 
-**Bug 3 (Line 11):** Should be `weights[i - 1]` and `values[i - 1]`. The DP table has n+1 rows but arrays have n elements, so there's an offset.
+**Bug 3 (Line 11):** Should be `weights[i - 1]` and `values[i - 1]`. The DP table has n+1 rows but arrays have n
+elements, so there's an offset.
 
 **The complete fix:**
+
 ```java
 for (int i = 1; i <= n; i++) {  // Note: <= n
     for (int w = 1; w <= capacity; w++) {
@@ -1074,6 +1083,7 @@ for (int i = 1; i <= n; i++) {  // Note: <= n
 }
 return dp[n][capacity];  // Not n-1
 ```
+
 </details>
 
 ---
@@ -1122,6 +1132,7 @@ public static int uniquePathsWithObstacles_Buggy(int[][] obstacleGrid) {
 - **Fix:** <span class="fill-in">[How to handle obstacles in initialization?]</span>
 
 **Test case to expose:**
+
 ```
 Grid:
 0 0 0
@@ -1135,9 +1146,11 @@ Buggy result: <span class="fill-in">[Fill in]</span>
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug:** Must check for obstacles during initialization. If there's an obstacle in the first row/column, all cells AFTER it are unreachable (can't be reached).
+**Bug:** Must check for obstacles during initialization. If there's an obstacle in the first row/column, all cells AFTER
+it are unreachable (can't be reached).
 
 **Fix:**
+
 ```java
 // Initialize first row - stop at first obstacle
 for (int j = 0; j < n; j++) {
@@ -1367,7 +1380,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -1399,7 +1413,8 @@ If you scored below 7 or answered "No" to either question, revise your explanati
 
 **Task:** Design the DP state for a new problem without implementing it.
 
-**Problem:** Minimum number of coins to make amount N, using coins of denominations in array `coins[]`. Each coin can be used unlimited times.
+**Problem:** Minimum number of coins to make amount N, using coins of denominations in array `coins[]`. Each coin can be
+used unlimited times.
 
 **Your state design:**
 
@@ -1430,9 +1445,11 @@ If you scored below 7 or answered "No" to either question, revise your explanati
 - Recurrence: `dp[i] = min(dp[i - coin] + 1)` for each coin
 - Base: `dp[0] = 0`
 
-**Why 1D?** We're building up amounts from 0 to N. We don't need to track which coin we're considering separately—we try all coins for each amount.
+**Why 1D?** We're building up amounts from 0 to N. We don't need to track which coin we're considering separately—we try
+all coins for each amount.
 
-**Compare to 0/1 Knapsack (which IS 2D):** In knapsack, each item can only be used ONCE, so we need to track "using first i items" as a separate dimension. Here, coins are unlimited, so 1D suffices.
+**Compare to 0/1 Knapsack (which IS 2D):** In knapsack, each item can only be used ONCE, so we need to track "using
+first i items" as a separate dimension. Here, coins are unlimited, so 1D suffices.
 </details>
 
 ---
@@ -1453,6 +1470,7 @@ If you scored below 7 or answered "No" to either question, revise your explanati
 ```
 
 **Your completed table:**
+
 ```
 [Fill in all the ? cells]
 ```
@@ -1475,6 +1493,7 @@ If you scored below 7 or answered "No" to either question, revise your explanati
 <summary>Click to verify your work</summary>
 
 **Completed table:**
+
 ```
        ""  A  C  B  D
     ""  0  0  0  0  0
@@ -1497,14 +1516,14 @@ If you scored below 7 or answered "No" to either question, revise your explanati
 
 **Without looking at your notes, classify these problems:**
 
-| Problem | 1D or 2D? | Pattern Type | Why? |
-|---------|-----------|--------------|------|
+| Problem                        | 1D or 2D?                             | Pattern Type                                                  | Why?                                   |
+|--------------------------------|---------------------------------------|---------------------------------------------------------------|----------------------------------------|
 | Longest Increasing Subsequence | <span class="fill-in">[1D/2D?]</span> | <span class="fill-in">[Grid/String/Knapsack/Interval?]</span> | <span class="fill-in">[Explain]</span> |
-| Edit Distance | <span class="fill-in">[1D/2D?]</span> | <span class="fill-in">[Pattern?]</span> | <span class="fill-in">[Explain]</span> |
-| House Robber | <span class="fill-in">[1D/2D?]</span> | <span class="fill-in">[Pattern?]</span> | <span class="fill-in">[Explain]</span> |
-| Unique Paths in Grid | <span class="fill-in">[1D/2D?]</span> | <span class="fill-in">[Pattern?]</span> | <span class="fill-in">[Explain]</span> |
-| 0/1 Knapsack | <span class="fill-in">[1D/2D?]</span> | <span class="fill-in">[Pattern?]</span> | <span class="fill-in">[Explain]</span> |
-| Coin Change (unlimited) | <span class="fill-in">[1D/2D?]</span> | <span class="fill-in">[Pattern?]</span> | <span class="fill-in">[Explain]</span> |
+| Edit Distance                  | <span class="fill-in">[1D/2D?]</span> | <span class="fill-in">[Pattern?]</span>                       | <span class="fill-in">[Explain]</span> |
+| House Robber                   | <span class="fill-in">[1D/2D?]</span> | <span class="fill-in">[Pattern?]</span>                       | <span class="fill-in">[Explain]</span> |
+| Unique Paths in Grid           | <span class="fill-in">[1D/2D?]</span> | <span class="fill-in">[Pattern?]</span>                       | <span class="fill-in">[Explain]</span> |
+| 0/1 Knapsack                   | <span class="fill-in">[1D/2D?]</span> | <span class="fill-in">[Pattern?]</span>                       | <span class="fill-in">[Explain]</span> |
+| Coin Change (unlimited)        | <span class="fill-in">[1D/2D?]</span> | <span class="fill-in">[Pattern?]</span>                       | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1516,12 +1535,12 @@ If you scored below 5/6, review the patterns and try again.
 
 **Complete this table from memory:**
 
-| Problem | Dimensions | Time | Space | Can optimize space? |
-|---------|-----------|------|-------|---------------------|
-| LCS (m, n) | <span class="fill-in">[Fill]</span> | O(?) | O(?) | <span class="fill-in">[Yes/No - How?]</span> |
-| Edit Distance | <span class="fill-in">[Fill]</span> | O(?) | O(?) | <span class="fill-in">[Yes/No - How?]</span> |
-| Unique Paths (m, n) | <span class="fill-in">[Fill]</span> | O(?) | O(?) | <span class="fill-in">[Yes/No - How?]</span> |
-| 0/1 Knapsack (n, capacity) | <span class="fill-in">[Fill]</span> | O(?) | O(?) | <span class="fill-in">[Yes/No - How?]</span> |
+| Problem                    | Dimensions                          | Time | Space | Can optimize space?                          |
+|----------------------------|-------------------------------------|------|-------|----------------------------------------------|
+| LCS (m, n)                 | <span class="fill-in">[Fill]</span> | O(?) | O(?)  | <span class="fill-in">[Yes/No - How?]</span> |
+| Edit Distance              | <span class="fill-in">[Fill]</span> | O(?) | O(?)  | <span class="fill-in">[Yes/No - How?]</span> |
+| Unique Paths (m, n)        | <span class="fill-in">[Fill]</span> | O(?) | O(?)  | <span class="fill-in">[Yes/No - How?]</span> |
+| 0/1 Knapsack (n, capacity) | <span class="fill-in">[Fill]</span> | O(?) | O(?)  | <span class="fill-in">[Yes/No - How?]</span> |
 
 **Deep question 1:** Why can many 2D DP problems be optimized to O(n) space?
 
@@ -1535,7 +1554,8 @@ Your answer: <span class="fill-in">[Fill in - what prevents space optimization?]
 
 ### Gate 6: Recurrence Design (The Hardest Test)
 
-**Problem:** You're given a triangle (array of arrays). Find the minimum path sum from top to bottom. You can move to adjacent numbers on the row below.
+**Problem:** You're given a triangle (array of arrays). Find the minimum path sum from top to bottom. You can move to
+adjacent numbers on the row below.
 
 ```
 Example:
@@ -1581,7 +1601,7 @@ Example:
     ```
     dp[i][j] = triangle[i][j] + min(dp[i-1][j-1], dp[i-1][j])
     ```
-    (But watch bounds: j-1 and j must exist in row i-1)
+   (But watch bounds: j-1 and j must exist in row i-1)
 
 4. **Base case:** `dp[0][0] = triangle[0][0]` (the top)
 
@@ -1596,6 +1616,7 @@ Example:
 - Start from bottom row
 - Work upward: `dp[i][j] = triangle[i][j] + min(dp[i+1][j], dp[i+1][j+1])`
 - Answer at `dp[0][0]`
+
 </details>
 
 ---
@@ -1647,7 +1668,8 @@ public static int minPathSum(int[][] grid) {
 
 **Bug 1 (Line 5):** Should be `dp[0][0] = grid[0][0]`. We need to include the starting cell's value!
 
-**Bug 2 (Line 13):** Should be `dp[0][j] = dp[0][j-1] + grid[0][j]`. We're initializing row 0, not column 0, so second index should be `[0][j]`, not `[j][0]`.
+**Bug 2 (Line 13):** Should be `dp[0][j] = dp[0][j-1] + grid[0][j]`. We're initializing row 0, not column 0, so second
+index should be `[0][j]`, not `[j][0]`.
 
 **Bug 3 (Line 18):** Should use `Math.min`, not `Math.max`. We want the MINIMUM path sum.
 
@@ -1658,6 +1680,7 @@ public static int minPathSum(int[][] grid) {
 - Found all 4 in < 5 min: Expert level
 - Found 3-4 in < 5 min: Good understanding
 - Found 2 or took > 5 min: Review bug patterns
+
 </details>
 
 ---

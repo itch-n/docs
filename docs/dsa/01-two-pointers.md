@@ -28,7 +28,6 @@
 5. **When does this pattern fail?**
     - Your answer: <span class="fill-in">[Fill in after trying unsorted arrays]</span>
 
-
 </div>
 
 ---
@@ -154,9 +153,9 @@ public static boolean hasPairSum_TwoPointers(int[] nums, int target) {
 
 | Array Size | Brute Force (O(n²)) | Two Pointers (O(n)) | Speedup |
 |------------|---------------------|---------------------|---------|
-| n = 100    | 10,000 ops         | 100 ops             | 100x    |
-| n = 1,000  | 1,000,000 ops      | 1,000 ops           | 1,000x  |
-| n = 10,000 | 100,000,000 ops    | 10,000 ops          | 10,000x |
+| n = 100    | 10,000 ops          | 100 ops             | 100x    |
+| n = 1,000  | 1,000,000 ops       | 1,000 ops           | 1,000x  |
+| n = 10,000 | 100,000,000 ops     | 10,000 ops          | 10,000x |
 
 **Your calculation:** For n = 5,000, the speedup is approximately _____ times faster.
 
@@ -623,7 +622,9 @@ public static boolean isPalindrome_Buggy(String s) {
 
 **Bug 1 (Line 7):** `right` should be `s.length() - 1`, not `s.length()`. Array indices are 0-based.
 
-**Bug 2 (Line 7 again):** Even after fixing Bug 1, there's an off-by-one error. When accessing `s.charAt(right)` in the first iteration with right = s.length() - 1, it works. But the real issue is that we're not properly checking the condition.
+**Bug 2 (Line 7 again):** Even after fixing Bug 1, there's an off-by-one error. When accessing `s.charAt(right)` in the
+first iteration with right = s.length() - 1, it works. But the real issue is that we're not properly checking the
+condition.
 
 **Actually, after fixing Bug 1, the code works!** The second "bug" was a trick - once you fix the index, it's correct.
 </details>
@@ -670,9 +671,11 @@ public static int removeDuplicates_Buggy(int[] nums) {
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug 1:** Should be `slow++` BEFORE `nums[slow] = nums[fast]`. Current code overwrites the unique element before advancing.
+**Bug 1:** Should be `slow++` BEFORE `nums[slow] = nums[fast]`. Current code overwrites the unique element before
+advancing.
 
 **Correct:**
+
 ```java
 if (nums[fast] != nums[slow]) {
     slow++;
@@ -726,6 +729,7 @@ public static boolean hasCycle_Buggy(ListNode head) {
 **Bug:** The check `if (slow == fast)` should be INSIDE the while loop, not after!
 
 **Correct:**
+
 ```java
 while (fast != null && fast.next != null) {
     slow = slow.next;
@@ -736,7 +740,8 @@ while (fast != null && fast.next != null) {
 return false;  // No cycle found
 ```
 
-**Why:** If there's a cycle, slow and fast will meet inside the loop. Checking after means we exit the loop (which only happens when there's NO cycle), so we'd never detect the cycle.
+**Why:** If there's a cycle, slow and fast will meet inside the loop. Checking after means we exit the loop (which only
+happens when there's NO cycle), so we'd never detect the cycle.
 </details>
 
 ---
@@ -771,9 +776,11 @@ public static void moveZeroes_Buggy(int[] nums) {
 <details markdown>
 <summary>Click to verify your answer</summary>
 
-**Bug:** When `slow == fast`, we're copying a number onto itself. Then we increment slow, leaving the original position unchanged. We need to ZERO OUT the original position OR use a swap.
+**Bug:** When `slow == fast`, we're copying a number onto itself. Then we increment slow, leaving the original position
+unchanged. We need to ZERO OUT the original position OR use a swap.
 
 **Fix Option 1 - Use swap:**
+
 ```java
 if (nums[fast] != 0) {
     // Swap nums[slow] and nums[fast]
@@ -785,6 +792,7 @@ if (nums[fast] != 0) {
 ```
 
 **Fix Option 2 - Zero out after first pass:**
+
 ```java
 // ... existing code ...
 // After the loop, fill remaining with zeros
@@ -792,6 +800,7 @@ for (int i = slow; i < nums.length; i++) {
     nums[i] = 0;
 }
 ```
+
 </details>
 
 ---
@@ -947,7 +956,6 @@ Two Pointers Pattern Selection
     - Pattern: <span class="fill-in">[Which variant?]</span>
     - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
-
 ---
 
 ## Review Checklist
@@ -985,7 +993,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -1040,14 +1049,14 @@ Step 3: [Continue until found or exhausted]
 
 **Without looking at your notes, classify these problems:**
 
-| Problem | Pattern (Opposite/Same/Different Speed) | Why? |
-|---------|----------------------------------------|------|
-| Find if array is palindrome | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Remove all instances of value | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Find middle of linked list | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Partition array around pivot | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Detect cycle in linked list | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Find pair with given difference | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Problem                         | Pattern (Opposite/Same/Different Speed) | Why?                                   |
+|---------------------------------|-----------------------------------------|----------------------------------------|
+| Find if array is palindrome     | <span class="fill-in">[Fill in]</span>  | <span class="fill-in">[Explain]</span> |
+| Remove all instances of value   | <span class="fill-in">[Fill in]</span>  | <span class="fill-in">[Explain]</span> |
+| Find middle of linked list      | <span class="fill-in">[Fill in]</span>  | <span class="fill-in">[Explain]</span> |
+| Partition array around pivot    | <span class="fill-in">[Fill in]</span>  | <span class="fill-in">[Explain]</span> |
+| Detect cycle in linked list     | <span class="fill-in">[Fill in]</span>  | <span class="fill-in">[Explain]</span> |
+| Find pair with given difference | <span class="fill-in">[Fill in]</span>  | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1059,11 +1068,11 @@ If you scored below 5/6, review the patterns and try again.
 
 **Complete this table from memory:**
 
-| Pattern | Time Complexity | Space Complexity | Why? |
-|---------|----------------|------------------|------|
-| Opposite Direction | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Same Direction | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Different Speed | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Pattern            | Time Complexity | Space Complexity | Why?                                   |
+|--------------------|-----------------|------------------|----------------------------------------|
+| Opposite Direction | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
+| Same Direction     | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
+| Different Speed    | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why is two pointers O(n) while nested loops are O(n²)?
 
@@ -1122,7 +1131,7 @@ public static int removeDuplicates(int[] nums) {
 - Expected: `3` (array becomes `[1, 2, 3, ?, ?]`)
 
 **Verification:**
-  
+
 - [ ] Implemented correctly without looking
 - [ ] Handles edge cases (empty array, single element)
 - [ ] Time complexity is O(n)

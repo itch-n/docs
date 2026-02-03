@@ -28,7 +28,6 @@
 5. **What makes a problem suitable for backtracking?**
     - Your answer: <span class="fill-in">[Fill in after learning the pattern]</span>
 
-
 </div>
 
 ---
@@ -172,11 +171,11 @@ private static void backtrack(int[] nums, int start,
 
 #### Performance Comparison
 
-| Problem Type | Brute Force | Backtracking | Advantage |
-|--------------|-------------|--------------|-----------|
-| All subsets (n=10) | 10,240 ops | 10,240 ops | Same without pruning |
-| Subsets with sum ≤ K | 10,240 ops | ~5,000 ops | 2x faster with pruning |
-| N-Queens (n=8) | 16,777,216 ops | ~2,000 ops | 8,000x faster! |
+| Problem Type         | Brute Force    | Backtracking | Advantage              |
+|----------------------|----------------|--------------|------------------------|
+| All subsets (n=10)   | 10,240 ops     | 10,240 ops   | Same without pruning   |
+| Subsets with sum ≤ K | 10,240 ops     | ~5,000 ops   | 2x faster with pruning |
+| N-Queens (n=8)       | 16,777,216 ops | ~2,000 ops   | 8,000x faster!         |
 
 **Your calculation:** For N-Queens with n=4, brute force tries _____ placements, backtracking tries approximately _____.
 
@@ -804,9 +803,11 @@ private static void backtrack(int[] nums, List<Integer> current,
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug 1 (Line 11):** Should be `result.add(new ArrayList<>(current))`, not `result.add(current)`. Without copying, all results will reference the same list object, which gets modified during backtracking!
+**Bug 1 (Line 11):** Should be `result.add(new ArrayList<>(current))`, not `result.add(current)`. Without copying, all
+results will reference the same list object, which gets modified during backtracking!
 
 **Bug 2 (After line 20):** Missing the backtrack step! Should have:
+
 ```java
 current.remove(current.size() - 1);  // Undo choice
 used[i] = false;                      // Undo state
@@ -862,9 +863,11 @@ private static void backtrack(int[] nums, int start,
 <details markdown>
 <summary>Click to verify your answers</summary>
 
-**Bug 1:** Must sort the array first! Add `Arrays.sort(nums);` before calling backtrack. Sorting groups duplicates together so we can skip them.
+**Bug 1:** Must sort the array first! Add `Arrays.sort(nums);` before calling backtrack. Sorting groups duplicates
+together so we can skip them.
 
 **Bug 2:** Missing duplicate check. After line 15, add:
+
 ```java
 if (i > start && nums[i] == nums[i - 1]) {
     continue;  // Skip duplicates at same level
@@ -937,6 +940,7 @@ private static void backtrack(int row, int n, char[][] board,
 <summary>Click to verify your answer</summary>
 
 **Bug:** Missing backtrack cleanup after the recursive call! After line 37, should add:
+
 ```java
 // Remove queen (backtrack)
 board[row][col] = '.';
@@ -945,7 +949,8 @@ diag1.remove(d1);
 diag2.remove(d2);
 ```
 
-Without this cleanup, the queen placement and constraint tracking aren't properly undone, causing incorrect solutions or missing valid solutions.
+Without this cleanup, the queen placement and constraint tracking aren't properly undone, causing incorrect solutions or
+missing valid solutions.
 </details>
 
 ---
@@ -999,15 +1004,18 @@ private static void backtrack(int[] candidates, int target, int start,
 <summary>Click to verify your answer</summary>
 
 **Bug:** Pruning should happen BEFORE recursion, not after! In the for loop, add:
+
 ```java
 if (candidates[i] > target) {
     break;  // All remaining candidates are too large (sorted array)
 }
 ```
 
-This should be added right after the for loop starts (before line 23). Since the array is sorted, once a candidate exceeds the target, all subsequent candidates will too, so we can break early.
+This should be added right after the for loop starts (before line 23). Since the array is sorted, once a candidate
+exceeds the target, all subsequent candidates will too, so we can break early.
 
 **Better version of the loop:**
+
 ```java
 for (int i = start; i < candidates.length; i++) {
     if (candidates[i] > target) break;  // Prune early!
@@ -1017,6 +1025,7 @@ for (int i = start; i < candidates.length; i++) {
     current.remove(current.size() - 1);
 }
 ```
+
 </details>
 
 ---
@@ -1074,6 +1083,7 @@ private static void backtrack(int[] nums, List<Integer> current,
 <summary>Click to verify your answer</summary>
 
 **Bug:** Missing duplicate check! After line 20, add:
+
 ```java
 // Skip duplicates: if same as previous element and previous not used
 if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]) {
@@ -1291,7 +1301,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -1346,14 +1357,14 @@ Step 3: [Mark where backtracking happens]
 
 **Without looking at your notes, classify these problems:**
 
-| Problem | Pattern (Permutation/Combination/Constraint/Grid) | Why? |
-|---------|---------------------------------------------------|------|
-| Generate all ways to pick 3 from 5 items | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Generate all orderings of [A,B,C] | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Place 8 queens on chessboard | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Find word in 2D grid | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Generate all subsets of array | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Find combinations that sum to K | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
+| Problem                                  | Pattern (Permutation/Combination/Constraint/Grid) | Why?                                   |
+|------------------------------------------|---------------------------------------------------|----------------------------------------|
+| Generate all ways to pick 3 from 5 items | <span class="fill-in">[Fill in]</span>            | <span class="fill-in">[Explain]</span> |
+| Generate all orderings of [A,B,C]        | <span class="fill-in">[Fill in]</span>            | <span class="fill-in">[Explain]</span> |
+| Place 8 queens on chessboard             | <span class="fill-in">[Fill in]</span>            | <span class="fill-in">[Explain]</span> |
+| Find word in 2D grid                     | <span class="fill-in">[Fill in]</span>            | <span class="fill-in">[Explain]</span> |
+| Generate all subsets of array            | <span class="fill-in">[Fill in]</span>            | <span class="fill-in">[Explain]</span> |
+| Find combinations that sum to K          | <span class="fill-in">[Fill in]</span>            | <span class="fill-in">[Explain]</span> |
 
 **Score:** ___/6 correct
 
@@ -1365,12 +1376,12 @@ If you scored below 5/6, review the patterns and try again.
 
 **Complete this table from memory:**
 
-| Pattern | Time Complexity | Space Complexity | Why? |
-|---------|----------------|------------------|------|
-| Permutations (n elements) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Subsets (n elements) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| N-Queens (n×n board) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Combination Sum | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Pattern                   | Time Complexity | Space Complexity | Why?                                   |
+|---------------------------|-----------------|------------------|----------------------------------------|
+| Permutations (n elements) | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
+| Subsets (n elements)      | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
+| N-Queens (n×n board)      | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
+| Combination Sum           | O(?)            | O(?)             | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why does backtracking with pruning perform better than brute force enumeration?
 

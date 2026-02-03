@@ -28,7 +28,6 @@
 5. **What's the base case pattern for tree recursion?**
     - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
-
 </div>
 
 ---
@@ -59,6 +58,7 @@
 ### Scenario Predictions
 
 **Scenario 1:** Calculate height of this tree:
+
 ```
        5
       / \
@@ -277,11 +277,11 @@ private static int calculateHeight(TreeNode root, int[] maxDiameter) {
 
 #### Performance Comparison
 
-| Tree Size | Brute Force (O(n²)) | Optimized (O(n)) | Speedup |
-|-----------|---------------------|------------------|---------|
-| n = 100   | ~10,000 ops        | 100 ops          | 100x    |
-| n = 1,000 | ~1,000,000 ops     | 1,000 ops        | 1,000x  |
-| n = 10,000| ~100,000,000 ops   | 10,000 ops       | 10,000x |
+| Tree Size  | Brute Force (O(n²)) | Optimized (O(n)) | Speedup |
+|------------|---------------------|------------------|---------|
+| n = 100    | ~10,000 ops         | 100 ops          | 100x    |
+| n = 1,000  | ~1,000,000 ops      | 1,000 ops        | 1,000x  |
+| n = 10,000 | ~100,000,000 ops    | 10,000 ops       | 10,000x |
 
 **Your calculation:** For n = 5,000, the speedup is approximately _____ times faster.
 
@@ -845,7 +845,8 @@ public class TreeConstructionClient {
 
 ## Debugging Challenges
 
-**Your task:** Find and fix bugs in broken tree recursion implementations. This tests your understanding of recursion flow.
+**Your task:** Find and fix bugs in broken tree recursion implementations. This tests your understanding of recursion
+flow.
 
 ### Challenge 1: Broken Tree Height
 
@@ -886,11 +887,13 @@ public static int height_Buggy(TreeNode root) {
 **Bug 1:** Missing base case! Should check `if (root == null) return 0;` at the start.
 
 **Bug 2:** Missing the "+1" for the current node. Should be:
+
 ```java
 return 1 + Math.max(leftHeight, rightHeight);
 ```
 
 **Complete correct version:**
+
 ```java
 public static int height(TreeNode root) {
     if (root == null) return 0;
@@ -901,6 +904,7 @@ public static int height(TreeNode root) {
     return 1 + Math.max(leftHeight, rightHeight);
 }
 ```
+
 </details>
 
 ---
@@ -932,6 +936,7 @@ private static int height(TreeNode root) {
 
 - **Bug explanation:** <span class="fill-in">[What case is this code missing?]</span>
 - **Example that breaks it:**
+
 ```
     Tree:     1
              /
@@ -951,6 +956,7 @@ private static int height(TreeNode root) {
 **Bug:** The diameter might NOT pass through the root! It could be entirely in the left or right subtree.
 
 **Example:**
+
 ```
     1
    /
@@ -958,9 +964,11 @@ private static int height(TreeNode root) {
  / \
 3   4
 ```
+
 The longest path is 3 → 2 → 4 (length 2), which is entirely in the left subtree of node 1.
 
 **Correct approach:**
+
 ```java
 public static int diameter(TreeNode root) {
     if (root == null) return 0;
@@ -1015,6 +1023,7 @@ public static boolean hasPathSum_Buggy(TreeNode root, int targetSum) {
 - **Bug 2 fix:** <span class="fill-in">[Fill in the correct operator]</span>
 
 **Test case:**
+
 ```
 Tree:     5
          / \
@@ -1022,6 +1031,7 @@ Tree:     5
        /
       11
 ```
+
 Target: 9 (path 5 → 4, but 4 is not a leaf!)
 
 - Expected: false (no root-to-leaf path sums to 9)
@@ -1036,9 +1046,11 @@ Target: 9 (path 5 → 4, but 4 is not a leaf!)
 
 **Bug 2:** Should use `||` not `&&`. We're checking if EITHER subtree has a valid path, not both!
 
-**Why:** We only need ONE path that sums to target. Using `&&` means BOTH subtrees must have valid paths, which is wrong.
+**Why:** We only need ONE path that sums to target. Using `&&` means BOTH subtrees must have valid paths, which is
+wrong.
 
 **Complete correct version:**
+
 ```java
 public static boolean hasPathSum(TreeNode root, int targetSum) {
     if (root == null) return false;
@@ -1053,6 +1065,7 @@ public static boolean hasPathSum(TreeNode root, int targetSum) {
            hasPathSum(root.right, remaining);
 }
 ```
+
 </details>
 
 ---
@@ -1084,6 +1097,7 @@ public static TreeNode lowestCommonAncestor_Buggy(TreeNode root,
 - **Bug explanation:** <span class="fill-in">[What should happen when root equals p or q?]</span>
 
 **Test case:**
+
 ```
 Tree:     3
          / \
@@ -1107,6 +1121,7 @@ p = node 5, q = node 1
 **Why it matters:** If we find p or q, we should return it immediately. The LCA logic depends on this!
 
 **Correct base case:**
+
 ```java
 if (root == null || root == p || root == q) return root;
 ```
@@ -1114,12 +1129,13 @@ if (root == null || root == p || root == q) return root;
 **Why this works:**
 
 - If root is p, then either:
-  1. q is in a subtree of p → LCA is p
-  2. q is elsewhere → p will be returned up
+    1. q is in a subtree of p → LCA is p
+    2. q is elsewhere → p will be returned up
 - When both left and right are non-null, current root is LCA
 - When only one side is non-null, LCA is in that subtree
 
 **Complete correct version:**
+
 ```java
 public static TreeNode lowestCommonAncestor(TreeNode root,
                                             TreeNode p, TreeNode q) {
@@ -1132,6 +1148,7 @@ public static TreeNode lowestCommonAncestor(TreeNode root,
     return left != null ? left : right;
 }
 ```
+
 </details>
 
 ---
@@ -1179,6 +1196,7 @@ private static int height(TreeNode root) {
 **Better approach:** Return -1 to signal imbalance, actual height otherwise.
 
 **Optimized version:**
+
 ```java
 public static boolean isBalanced(TreeNode root) {
     return checkBalance(root) != -1;
@@ -1229,6 +1247,7 @@ public static int minDepth_Buggy(TreeNode root) {
 - **Edge case that breaks:** <span class="fill-in">[What kind of tree structure fails?]</span>
 
 **Test case:**
+
 ```
 Tree:     1
          /
@@ -1250,6 +1269,7 @@ Tree:     1
 **Bug:** When a node has only one child, taking the min incorrectly uses 0 from the null child!
 
 **Example trace:**
+
 ```
 Tree:  1
       /
@@ -1491,7 +1511,8 @@ Before moving to the next topic:
 
 ## Understanding Gate (Must Pass Before Continuing)
 
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently complete this section.
+**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
+complete this section.
 
 ### Gate 1: Explain to a Junior Developer
 
@@ -1517,12 +1538,12 @@ If you scored below 7 or answered "No" to either question, revise your explanati
 
 **Task:** For each problem, write the correct base case WITHOUT looking at code.
 
-| Problem | Base Case | Why? |
-|---------|-----------|------|
+| Problem     | Base Case                      | Why?                                   |
+|-------------|--------------------------------|----------------------------------------|
 | Tree Height | `if (root == null) return ___` | <span class="fill-in">[Explain]</span> |
-| Path Sum | `if (root == null) return ___` | <span class="fill-in">[Explain]</span> |
-| LCA | `if (root == null || ...) return ___` | <span class="fill-in">[Explain]</span> |
-| Min Depth | `if (root == null) return ___` | <span class="fill-in">[Explain]</span> |
+| Path Sum    | `if (root == null) return ___` | <span class="fill-in">[Explain]</span> |
+| LCA         | `if (root == null              |                                        | ...) return ___` | <span class="fill-in">[Explain]</span> |
+| Min Depth   | `if (root == null) return ___` | <span class="fill-in">[Explain]</span> |
 | Is Balanced | `if (root == null) return ___` | <span class="fill-in">[Explain]</span> |
 
 **Verification:**
@@ -1576,14 +1597,14 @@ Final result: <span class="fill-in">___</span>
 
 **Without looking at your notes, classify these problems:**
 
-| Problem | Pattern (Height/Diameter/LCA/Path/Construction) | Key Insight |
-|---------|------------------------------------------------|-------------|
-| Max depth of binary tree | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Why this pattern?]</span> |
-| Diameter of binary tree | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[What makes it tricky?]</span> |
-| Path Sum II (all paths) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[What technique needed?]</span> |
-| Lowest Common Ancestor | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[What signals LCA?]</span> |
-| Build tree from traversals | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Key insight?]</span> |
-| Balanced binary tree | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[What to track?]</span> |
+| Problem                    | Pattern (Height/Diameter/LCA/Path/Construction) | Key Insight                                           |
+|----------------------------|-------------------------------------------------|-------------------------------------------------------|
+| Max depth of binary tree   | <span class="fill-in">[Fill in]</span>          | <span class="fill-in">[Why this pattern?]</span>      |
+| Diameter of binary tree    | <span class="fill-in">[Fill in]</span>          | <span class="fill-in">[What makes it tricky?]</span>  |
+| Path Sum II (all paths)    | <span class="fill-in">[Fill in]</span>          | <span class="fill-in">[What technique needed?]</span> |
+| Lowest Common Ancestor     | <span class="fill-in">[Fill in]</span>          | <span class="fill-in">[What signals LCA?]</span>      |
+| Build tree from traversals | <span class="fill-in">[Fill in]</span>          | <span class="fill-in">[Key insight?]</span>           |
+| Balanced binary tree       | <span class="fill-in">[Fill in]</span>          | <span class="fill-in">[What to track?]</span>         |
 
 **Score:** ___/6 correct
 
@@ -1595,14 +1616,14 @@ If you scored below 5/6, review the patterns and try again.
 
 **Complete this table from memory:**
 
-| Problem | Time | Space (recursion stack) | Why this complexity? |
-|---------|------|-------------------------|----------------------|
-| Height | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Diameter (naive) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Diameter (optimized) | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Path Sum | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| LCA | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
-| Tree Construction | O(?) | O(?) | <span class="fill-in">[Explain]</span> |
+| Problem              | Time | Space (recursion stack) | Why this complexity?                   |
+|----------------------|------|-------------------------|----------------------------------------|
+| Height               | O(?) | O(?)                    | <span class="fill-in">[Explain]</span> |
+| Diameter (naive)     | O(?) | O(?)                    | <span class="fill-in">[Explain]</span> |
+| Diameter (optimized) | O(?) | O(?)                    | <span class="fill-in">[Explain]</span> |
+| Path Sum             | O(?) | O(?)                    | <span class="fill-in">[Explain]</span> |
+| LCA                  | O(?) | O(?)                    | <span class="fill-in">[Explain]</span> |
+| Tree Construction    | O(?) | O(?)                    | <span class="fill-in">[Explain]</span> |
 
 **Deep question:** Why is the naive diameter O(n²) but the optimized version O(n)?
 
@@ -1640,13 +1661,13 @@ Your answer: <span class="fill-in">[Fill in - explain the fundamental difference
 
 **Task:** Identify the bug category WITHOUT looking at the debugging section.
 
-| Bug Description | Category | How to Prevent? |
-|----------------|----------|-----------------|
-| Forgot `if (root == null) return 0;` | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Prevention strategy]</span> |
+| Bug Description                            | Category                               | How to Prevent?                                    |
+|--------------------------------------------|----------------------------------------|----------------------------------------------------|
+| Forgot `if (root == null) return 0;`       | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Prevention strategy]</span> |
 | Used `\|\|` instead of `&&` for leaf check | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Prevention strategy]</span> |
-| Forgot `+ 1` in height calculation | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Prevention strategy]</span> |
-| Only checked diameter through root | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Prevention strategy]</span> |
-| Recalculated height at every node | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Prevention strategy]</span> |
+| Forgot `+ 1` in height calculation         | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Prevention strategy]</span> |
+| Only checked diameter through root         | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Prevention strategy]</span> |
+| Recalculated height at every node          | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Prevention strategy]</span> |
 
 **Verification:**
 
@@ -1716,12 +1737,14 @@ public static TreeNode lowestCommonAncestor(TreeNode root,
 **Scenario:** You need to check if a tree is balanced (height difference ≤ 1).
 
 **Option A:** Calculate height at each node, check balance
+
 ```java
 // Check balance, then recursively check subtrees
 // Time: O(n²), Space: O(h)
 ```
 
 **Option B:** Calculate height and check balance in one pass
+
 ```java
 // Return -1 for imbalance, height otherwise
 // Time: O(n), Space: O(h)
@@ -1787,12 +1810,12 @@ Example:
 
 **Identify which helper pattern each problem needs:**
 
-| Problem | Pattern Needed | Why? |
-|---------|----------------|------|
+| Problem                             | Pattern Needed                                                                 | Why?                                   |
+|-------------------------------------|--------------------------------------------------------------------------------|----------------------------------------|
 | Max path sum (any node to any node) | <span class="fill-in">[Global variable? Extra parameter? Return tuple?]</span> | <span class="fill-in">[Explain]</span> |
-| Count paths with sum k | <span class="fill-in">[Global? Backtracking? Map?]</span> | <span class="fill-in">[Explain]</span> |
-| Serialize/deserialize tree | <span class="fill-in">[What state to track?]</span> | <span class="fill-in">[Explain]</span> |
-| Verify BST | <span class="fill-in">[What to pass down/up?]</span> | <span class="fill-in">[Explain]</span> |
+| Count paths with sum k              | <span class="fill-in">[Global? Backtracking? Map?]</span>                      | <span class="fill-in">[Explain]</span> |
+| Serialize/deserialize tree          | <span class="fill-in">[What state to track?]</span>                            | <span class="fill-in">[Explain]</span> |
+| Verify BST                          | <span class="fill-in">[What to pass down/up?]</span>                           | <span class="fill-in">[Explain]</span> |
 
 **Verification:**
 
