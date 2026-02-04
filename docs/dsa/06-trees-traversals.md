@@ -1231,27 +1231,22 @@ Answer after solving problems:
 - Use when: <span class="fill-in">[Deep trees, production code]</span>
 
 ### Your Decision Tree
+```mermaid
+flowchart LR
+    Start["Tree Traversal Selection"]
 
-```
-Tree Traversal Selection
-│
-├─ What order do you need?
-│   │
-│   ├─ Left, Root, Right (sorted in BST)?
-│   │   └─ Use: Inorder ✓
-│   │
-│   ├─ Root, Left, Right (copy/serialize)?
-│   │   └─ Use: Preorder ✓
-│   │
-│   ├─ Left, Right, Root (delete/cleanup)?
-│   │   └─ Use: Postorder ✓
-│   │
-│   └─ Level by level (BFS)?
-│       └─ Use: Level-Order ✓
-│
-└─ Implementation choice?
-    ├─ Recursive → Simpler, but O(h) space
-    └─ Iterative → More code, but safer
+    Q1{"What order do you need?"}
+    Start --> Q1
+    Q2{"Left, Root, Right<br/>(sorted in BST)?"}
+    Q3{"Root, Left, Right<br/>(copy/serialize)?"}
+    Q4{"Left, Right, Root<br/>(delete/cleanup)?"}
+    Q5{"Level by level<br/>(BFS)?"}
+    Q6{"Implementation choice?"}
+    Start --> Q6
+    N7["Simpler, but O(h) space"]
+    Q6 -->|"Recursive"| N7
+    N8["More code, but safer"]
+    Q6 -->|"Iterative"| N8
 ```
 
 

@@ -1176,24 +1176,20 @@ Answer after solving problems:
 - Task scheduling: <span class="fill-in">[Why queue?]</span>
 
 ### Your Decision Tree
+```mermaid
+flowchart LR
+    Start["Stack vs Queue Selection"]
 
-```
-Stack vs Queue Selection
-│
-├─ Need to track most recent?
-│   └─ Use: Stack ✓
-│
-├─ Need to process in order?
-│   └─ Use: Queue ✓
-│
-├─ Need to find next greater/smaller?
-│   └─ Use: Monotonic Stack ✓
-│
-├─ Need to access both ends?
-│   └─ Use: Deque ✓
-│
-└─ Need min/max with updates?
-    └─ Use: Monotonic Deque ✓
+    Q1{"Need to track most recent?"}
+    Start --> Q1
+    Q2{"Need to process in order?"}
+    Start --> Q2
+    Q3{"Need to find next greater/smaller?"}
+    Start --> Q3
+    Q4{"Need to access both ends?"}
+    Start --> Q4
+    Q5{"Need min/max with updates?"}
+    Start --> Q5
 ```
 
 

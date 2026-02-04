@@ -847,27 +847,22 @@ Answer for each pattern:
 ### Your Decision Tree
 
 Build this after solving practice problems:
+```mermaid
+flowchart LR
+    Start["Two Pointers Pattern Selection"]
 
-```
-Two Pointers Pattern Selection
-│
-├─ Is data sorted?
-│   ├─ YES → Continue
-│   └─ NO → Can you sort? Or use same-direction for partitioning
-│
-├─ What are you searching for?
-│   │
-│   ├─ Pair with property (sum, product)?
-│   │   └─ Use: Opposite direction ✓
-│   │
-│   ├─ Modify array in-place?
-│   │   └─ Use: Same direction (slow/fast) ✓
-│   │
-│   ├─ Linked list property (cycle, middle, kth)?
-│   │   └─ Use: Different speed ✓
-│   │
-│   └─ Check palindrome?
-│       └─ Use: Opposite direction ✓
+    Q1{"Is data sorted?"}
+    Start --> Q1
+    N2["Continue"]
+    Q1 -->|"YES"| N2
+    N3["Can you sort? Or use same-direction for partitioning"]
+    Q1 -->|"NO"| N3
+    Q4{"What are you searching for?"}
+    Start --> Q4
+    Q5{"Pair with property<br/>(sum, product)?"}
+    Q6{"Modify array in-place?"}
+    Q7{"Linked list property<br/>(cycle, middle, kth)?"}
+    Q8{"Check palindrome?"}
 ```
 
 

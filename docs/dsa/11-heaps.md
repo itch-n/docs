@@ -1194,25 +1194,20 @@ Answer for each pattern:
 ### Your Decision Tree
 
 Build this after solving practice problems:
+```mermaid
+flowchart LR
+    Start["Heap Pattern Selection"]
 
-```
-Heap Pattern Selection
-│
-├─ Need Kth largest/smallest?
-│   └─ Use: Min-heap of size K (for largest) ✓
-│        Max-heap of size K (for smallest) ✓
-│
-├─ Merge K sorted sequences?
-│   └─ Use: Min-heap with K elements ✓
-│
-├─ Need top K frequent?
-│   └─ Use: Frequency map + heap ✓
-│
-├─ Need running median?
-│   └─ Use: Two heaps (max + min) ✓
-│
-└─ Need all elements sorted?
-    └─ Consider: Heap sort vs other sorts ✓
+    Q1{"Need Kth largest/smallest?"}
+    Start --> Q1
+    Q2{"Merge K sorted sequences?"}
+    Start --> Q2
+    Q3{"Need top K frequent?"}
+    Start --> Q3
+    Q4{"Need running median?"}
+    Start --> Q4
+    Q5{"Need all elements sorted?"}
+    Start --> Q5
 ```
 
 

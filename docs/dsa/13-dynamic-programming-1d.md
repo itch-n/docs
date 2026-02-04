@@ -1282,27 +1282,24 @@ Answer after solving problems:
 - Use when: <span class="fill-in">[Simple iteration order, need all states]</span>
 
 ### Your Decision Tree
+```mermaid
+flowchart LR
+    Start[""]
 
-```
-
-1D DP Pattern Selection
-│
-├─ Depends on previous 1-2 states?
-│   └─ Use: Fibonacci-style DP ✓
-│         Space optimize to O(1)
-│
-├─ Take/skip decision at each element?
-│   └─ Use: Decision DP ✓
-│         Often need sum constraint
-│
-├─ String problem?
-│   ├─ Build character by character → String DP ✓
-│   ├─ Subsequence → 2D DP (next topic)
-│   └─ Expand from center → O(1) space
-│
-└─ State machine (multiple states)?
-    └─ Use: Multiple DP arrays ✓
-          Track each state separately
+    Q1{"Depends on previous 1-2 states?"}
+    Start --> Q1
+    Q2{"Take/skip decision at each element?"}
+    Start --> Q2
+    Q3{"String problem?"}
+    Start --> Q3
+    N4(["String DP ✓"])
+    Q3 -->|"Build character by character"| N4
+    N5["2D DP<br/>(next topic)"]
+    Q3 -->|"Subsequence"| N5
+    N6["O(1) space"]
+    Q3 -->|"Expand from center"| N6
+    Q7{"State machine<br/>(multiple states)?"}
+    Start --> Q7
 ```
 
 

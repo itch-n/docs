@@ -156,6 +156,7 @@ public Map<String, Double> avgSalaryByCity() {
 ```
 
 **Row storage characteristics:**
+
 - ✅ Point lookups: Excellent (single disk read)
 - ✅ Insert/Update full row: Excellent (single write)
 - ❌ Column scans: Poor (read unnecessary data)
@@ -216,6 +217,7 @@ public Map<String, Double> avgSalaryByCity() {
 ```
 
 **Column storage characteristics:**
+
 - ❌ Point lookups: Poor (must read from N columns)
 - ❌ Insert/Update: Complex (update N separate files)
 - ✅ Column scans: Excellent (only read needed columns)
@@ -241,6 +243,7 @@ Best For        OLTP                   OLAP
 ```
 
 **Key insight:**
+
 - **OLTP:** "Give me order #12345" → Need entire row → Use row storage
 - **OLAP:** "Show revenue by category" → Need specific columns → Use column storage
 
@@ -803,58 +806,56 @@ Column store (compressed):
 
 ## Decision Framework
 
-### When to Use Row Storage
+**Your task:** Build decision trees for when to use each storage layout.
 
-**Use row storage when:**
-- ✅ **Point lookups by key** ("Get user #12345")
-- ✅ **Insert/update full records** (OLTP transactions)
-- ✅ **Need full row access** (most queries touch all columns)
-- ✅ **Small table scans** (< 100k rows)
+### Question 1: OLTP or OLAP Workload?
 
-**Examples:**
-- E-commerce order processing
-- User authentication/sessions
-- Banking transactions
-- Social media user profiles
+Answer after implementing and benchmarking:
 
-### When to Use Column Storage
+- **My workload type:** <span class="fill-in">[Fill in]</span>
+- **Why does this matter?** <span class="fill-in">[Fill in]</span>
+- **Performance difference I observed:** <span class="fill-in">[Fill in]</span>
 
-**Use column storage when:**
-- ✅ **Aggregate queries** ("AVG salary by department")
-- ✅ **Selective column access** (only need 2-3 out of 50 columns)
-- ✅ **Large table scans** (millions+ rows)
-- ✅ **Read-heavy analytics** (dashboards, reports)
-- ✅ **Time-series data** (metrics, logs, events)
+### Question 2: Query Patterns
 
-**Examples:**
-- Business intelligence dashboards
-- Data warehouse analytics
-- Log analysis (ELK stack)
-- Metrics/monitoring (Prometheus)
-- Machine learning feature stores
+Answer:
 
----
+- **Do I need full rows?** <span class="fill-in">[Yes/No - when?]</span>
+- **Do I need selective columns?** <span class="fill-in">[Yes/No - how many?]</span>
+- **Which is faster for my queries?** <span class="fill-in">[Fill in after testing]</span>
 
-## Real-World Examples
+### Question 3: Data Volume and Compression
 
-### Row-Oriented Databases
-- **MySQL InnoDB** - OLTP transactions
-- **PostgreSQL** - General-purpose OLTP
-- **MongoDB** - Document store (row-like)
-- **Cassandra** - Wide column store (but row-oriented within partition)
+Answer:
 
-### Column-Oriented Databases
-- **Apache Parquet** - File format for Hadoop/Spark
-- **ClickHouse** - Real-time analytics
-- **Amazon Redshift** - Data warehouse
-- **Google BigQuery** - Serverless data warehouse
-- **Apache Druid** - Real-time analytics
-- **Snowflake** - Cloud data warehouse
+- **Table size:** <span class="fill-in">[Small/Medium/Large - how many rows?]</span>
+- **Column cardinality:** <span class="fill-in">[High/Low - does it matter?]</span>
+- **Compression benefits observed:** <span class="fill-in">[Fill in after implementation]</span>
 
-### Hybrid Approaches
-- **Apache Kudu** - Supports both row and column scans
-- **InfluxDB** - Time-series with column-like storage
-- **TimescaleDB** - PostgreSQL extension with columnar compression
+### Your Decision Tree
+
+Build this after understanding trade-offs:
+
+```mermaid
+flowchart LR
+    Start["Storage Layout Selection"]
+
+    Start --> Q1{"What's the primary<br/>workload?"}
+    Q1 -->|"OLTP<br/>(Transactions)"| Q2{"Query pattern?"}
+    Q1 -->|"OLAP<br/>(Analytics)"| Q3{"Data volume?"}
+
+    Q2 -->|"Point lookups<br/>(by key)"| A1(["Use Row Storage ✓"])
+    Q2 -->|"Full row scans"| A2(["Use Row Storage ✓"])
+    Q2 -->|"Few columns<br/>from many rows"| Q3
+
+    Q3 -->|"< 1M rows"| A3["Either works<br/>(test both)"]
+    Q3 -->|"> 1M rows"| Q4{"How many columns<br/>accessed?"}
+
+    Q4 -->|"Most/All columns"| A4["Row Storage<br/>(less overhead)"]
+    Q4 -->|"Few columns<br/>(< 20%)"| A5(["Use Column Storage ✓"])
+
+    A3 --> A6["Benchmark with<br/>real queries"]
+```
 
 ---
 
@@ -876,3 +877,65 @@ Before moving to the next topic:
     - [ ] Can identify OLTP vs OLAP workloads
     - [ ] Know when to use each storage layout
     - [ ] Understand the trade-offs
+
+# APPENDIX
+
+## Real world technologies
+
+### When to Use Row Storage
+
+**Use row storage when:**
+
+- ✅ **Point lookups by key** ("Get user #12345")
+- ✅ **Insert/update full records** (OLTP transactions)
+- ✅ **Need full row access** (most queries touch all columns)
+- ✅ **Small table scans** (< 100k rows)
+
+**Real-world examples:**
+
+- E-commerce order processing → MySQL InnoDB, PostgreSQL
+- User authentication/sessions → PostgreSQL, MongoDB
+- Banking transactions → Oracle, SQL Server
+- Social media user profiles → MySQL, MongoDB
+
+### When to Use Column Storage
+
+**Use column storage when:**
+
+- ✅ **Aggregate queries** ("AVG salary by department")
+- ✅ **Selective column access** (only need 2-3 out of 50 columns)
+- ✅ **Large table scans** (millions+ rows)
+- ✅ **Read-heavy analytics** (dashboards, reports)
+- ✅ **Time-series data** (metrics, logs, events)
+
+**Real-world examples:**
+
+- Business intelligence dashboards → ClickHouse, Redshift
+- Data warehouse analytics → Snowflake, BigQuery
+- Log analysis → ClickHouse, Druid
+- Metrics/monitoring → Prometheus, InfluxDB
+- Machine learning feature stores → Parquet files
+
+### Database Examples
+
+**Row-Oriented:**
+
+- **MySQL InnoDB** - OLTP transactions
+- **PostgreSQL** - General-purpose OLTP
+- **MongoDB** - Document store (row-like)
+- **Cassandra** - Wide column store (row-oriented within partition)
+
+**Column-Oriented:**
+
+- **Apache Parquet** - File format for Hadoop/Spark
+- **ClickHouse** - Real-time analytics
+- **Amazon Redshift** - Data warehouse
+- **Google BigQuery** - Serverless data warehouse
+- **Apache Druid** - Real-time analytics
+- **Snowflake** - Cloud data warehouse
+
+**Hybrid Approaches:**
+
+- **Apache Kudu** - Supports both row and column scans
+- **InfluxDB** - Time-series with column-like storage
+- **TimescaleDB** - PostgreSQL extension with columnar compression

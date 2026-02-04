@@ -2139,30 +2139,44 @@ Answer after implementation:
 ### Your Decision Tree
 
 Build this after solving practice scenarios:
+```mermaid
+flowchart LR
+    Start["Stream Processing Pattern Selection"]
 
-```
-Stream Processing Pattern Selection
-│
-├─ What's the data arrival pattern?
-│   ├─ In-order, low latency → Simple windowing
-│   ├─ Out-of-order, bounded → Watermarks + allowed lateness
-│   └─ Out-of-order, unbounded → Session windows or approximation
-│
-├─ What operations do you need?
-│   ├─ Simple aggregation → Windowing only
-│   ├─ Cross-event logic → Stateful processing
-│   ├─ Multiple streams → Stream joins
-│   └─ Enrichment → Stateful with reference data
-│
-├─ What's the consistency requirement?
-│   ├─ Best effort → At-most-once
-│   ├─ No duplicates OK → At-least-once + dedup
-│   └─ Exactly-once → Full transactional processing
-│
-└─ What's the latency requirement?
-    ├─ Sub-second → Drop late data, smaller windows
-    ├─ Seconds → Watermarks with small lateness
-    └─ Minutes → Large lateness window, accurate results
+    Q1{"What's the data arrival pattern?"}
+    Start --> Q1
+    N2["Simple windowing"]
+    Q1 -->|"In-order,<br/>low latency"| N2
+    N3["Watermarks + allowed lateness"]
+    Q1 -->|"Out-of-order,<br/>bounded"| N3
+    N4["Session windows or approximation"]
+    Q1 -->|"Out-of-order,<br/>unbounded"| N4
+    Q5{"What operations do you need?"}
+    Start --> Q5
+    N6["Windowing only"]
+    Q5 -->|"Simple aggregation"| N6
+    N7["Stateful processing"]
+    Q5 -->|"Cross-event logic"| N7
+    N8["Stream joins"]
+    Q5 -->|"Multiple streams"| N8
+    N9["Stateful with reference data"]
+    Q5 -->|"Enrichment"| N9
+    Q10{"What's the consistency requirement?"}
+    Start --> Q10
+    N11["At-most-once"]
+    Q10 -->|"Best effort"| N11
+    N12["At-least-once + dedup"]
+    Q10 -->|"No duplicates OK"| N12
+    N13["Full transactional processing"]
+    Q10 -->|"Exactly-once"| N13
+    Q14{"What's the latency requirement?"}
+    Start --> Q14
+    N15["Drop late data, smaller windows"]
+    Q14 -->|"Sub-second"| N15
+    N16["Watermarks with small lateness"]
+    Q14 -->|"Seconds"| N16
+    N17["Large lateness window, accurate results"]
+    Q14 -->|"Minutes"| N17
 ```
 
 

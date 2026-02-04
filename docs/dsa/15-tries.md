@@ -1313,27 +1313,38 @@ Answer after solving problems:
 - Implement: <span class="fill-in">[Recursive deletion with cleanup]</span>
 
 ### Your Decision Tree
+```mermaid
+flowchart LR
+    Start["Trie Pattern Selection"]
 
-```
-Trie Pattern Selection
-│
-├─ Basic operations?
-│   ├─ Insert/search/prefix → Basic Trie ✓
-│   └─ With deletion → Trie with delete ✓
-│
-├─ Multiple word search?
-│   ├─ In grid → Trie + DFS ✓
-│   └─ In stream → Trie + automaton ✓
-│
-├─ Prefix-based queries?
-│   ├─ Find all with prefix → Autocomplete ✓
-│   ├─ Count with prefix → Trie with counts ✓
-│   └─ Sum with prefix → MapSum trie ✓
-│
-└─ String operations?
-    ├─ Longest common prefix → Trie traversal ✓
-    ├─ Replace with root → Dictionary trie ✓
-    └─ Longest word → Trie with validation ✓
+    Q1{"Basic operations?"}
+    Start --> Q1
+    N2(["Basic Trie ✓"])
+    Q1 -->|"Insert/search/prefix"| N2
+    N3(["Trie with delete ✓"])
+    Q1 -->|"With deletion"| N3
+    Q4{"Multiple word search?"}
+    Start --> Q4
+    N5(["Trie + DFS ✓"])
+    Q4 -->|"In grid"| N5
+    N6(["Trie + automaton ✓"])
+    Q4 -->|"In stream"| N6
+    Q7{"Prefix-based queries?"}
+    Start --> Q7
+    N8(["Autocomplete ✓"])
+    Q7 -->|"Find all with prefix"| N8
+    N9(["Trie with counts ✓"])
+    Q7 -->|"Count with prefix"| N9
+    N10(["MapSum trie ✓"])
+    Q7 -->|"Sum with prefix"| N10
+    Q11{"String operations?"}
+    Start --> Q11
+    N12(["Trie traversal ✓"])
+    Q11 -->|"Longest common prefix"| N12
+    N13(["Dictionary trie ✓"])
+    Q11 -->|"Replace with root"| N13
+    N14(["Trie with validation ✓"])
+    Q11 -->|"Longest word"| N14
 ```
 
 

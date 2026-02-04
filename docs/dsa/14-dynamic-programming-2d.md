@@ -1214,27 +1214,36 @@ Answer after solving problems:
 - Take or skip: <span class="fill-in">[Compare options]</span>
 
 ### Your Decision Tree
+```mermaid
+flowchart LR
+    Start["2D DP Pattern Selection"]
 
-```
-2D DP Pattern Selection
-│
-├─ Two strings?
-│   ├─ Common subsequence → LCS ✓
-│   ├─ Transform one to other → Edit distance ✓
-│   └─ Pattern matching → Wildcard/regex DP ✓
-│
-├─ Grid problem?
-│   ├─ Count paths → Path counting DP ✓
-│   ├─ Minimize cost → Min path sum ✓
-│   └─ Maximize value → Max path DP ✓
-│
-├─ Interval/range [i,j]?
-│   ├─ Palindrome → Palindrome DP ✓
-│   ├─ Burst/merge → Interval DP ✓
-│   └─ Game theory → Min-max DP ✓
-│
-└─ Items with capacity?
-    └─ Knapsack variants ✓
+    Q1{"Two strings?"}
+    Start --> Q1
+    N2(["LCS ✓"])
+    Q1 -->|"Common subsequence"| N2
+    N3(["Edit distance ✓"])
+    Q1 -->|"Transform one to other"| N3
+    N4(["Wildcard/regex DP ✓"])
+    Q1 -->|"Pattern matching"| N4
+    Q5{"Grid problem?"}
+    Start --> Q5
+    N6(["Path counting DP ✓"])
+    Q5 -->|"Count paths"| N6
+    N7(["Min path sum ✓"])
+    Q5 -->|"Minimize cost"| N7
+    N8(["Max path DP ✓"])
+    Q5 -->|"Maximize value"| N8
+    Q9{"Interval/range [i,j]?"}
+    Start --> Q9
+    N10(["Palindrome DP ✓"])
+    Q9 -->|"Palindrome"| N10
+    N11(["Interval DP ✓"])
+    Q9 -->|"Burst/merge"| N11
+    N12(["Min-max DP ✓"])
+    Q9 -->|"Game theory"| N12
+    Q13{"Items with capacity?"}
+    Start --> Q13
 ```
 
 

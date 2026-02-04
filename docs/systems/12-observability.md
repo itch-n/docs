@@ -2281,32 +2281,48 @@ Answer after implementation:
 ### Your Decision Tree
 
 Build this after solving practice scenarios:
+```mermaid
+flowchart LR
+    Start["Observability Pattern Selection"]
 
-```
-Observability Pattern Selection
-│
-├─ What are you trying to understand?
-│   ├─ System health → Metrics (RED/USE)
-│   ├─ Why something failed → Logs + Traces
-│   ├─ Performance bottleneck → Traces + Metrics
-│   └─ Business analytics → Metrics + Logs
-│
-├─ What's the cardinality?
-│   ├─ Low (< 100 unique values) → Metric labels
-│   ├─ Medium (100-10K) → Logs with indexing
-│   └─ High (> 10K) → Sampling + traces
-│
-├─ What's the query pattern?
-│   ├─ Time-series aggregation → Metrics
-│   ├─ Full-text search → Logs
-│   ├─ Causality tracking → Traces
-│   └─ Ad-hoc exploration → Logs + Traces
-│
-└─ What's the retention need?
-    ├─ Real-time only → Metrics (short retention)
-    ├─ Debugging (days) → Logs + Traces
-    ├─ Compliance (years) → Logs (archive)
-    └─ Trending (months) → Metrics (downsampled)
+    Q1{"What are you trying to understand?"}
+    Start --> Q1
+    N2["Metrics<br/>(RED/USE)"]
+    Q1 -->|"System health"| N2
+    N3["Logs + Traces"]
+    Q1 -->|"Why something failed"| N3
+    N4["Traces + Metrics"]
+    Q1 -->|"Performance bottleneck"| N4
+    N5["Metrics + Logs"]
+    Q1 -->|"Business analytics"| N5
+    Q6{"What's the cardinality?"}
+    Start --> Q6
+    N7["Metric labels"]
+    Q6 -->|"Low (< 100 unique values)"| N7
+    N8["Logs with indexing"]
+    Q6 -->|"Medium (100-10K)"| N8
+    N9["Sampling + traces"]
+    Q6 -->|"High (> 10K)"| N9
+    Q10{"What's the query pattern?"}
+    Start --> Q10
+    N11["Metrics"]
+    Q10 -->|"Time-series aggregation"| N11
+    N12["Logs"]
+    Q10 -->|"Full-text search"| N12
+    N13["Traces"]
+    Q10 -->|"Causality tracking"| N13
+    N14["Logs + Traces"]
+    Q10 -->|"Ad-hoc exploration"| N14
+    Q15{"What's the retention need?"}
+    Start --> Q15
+    N16["Metrics<br/>(short retention)"]
+    Q15 -->|"Real-time only"| N16
+    N17["Logs + Traces"]
+    Q15 -->|"Debugging (days)"| N17
+    N18["Logs<br/>(archive)"]
+    Q15 -->|"Compliance (years)"| N18
+    N19["Metrics<br/>(downsampled)"]
+    Q15 -->|"Trending (months)"| N19
 ```
 
 

@@ -1891,42 +1891,21 @@ After finding and fixing all bugs:
 ### 3. Your Decision Tree
 
 Build your decision tree after practicing:
+```mermaid
+flowchart LR
+    Start["What consistency do you need?"]
 
+    N1["?"]
+    Start -->|"Strong consistency (ACID)"| N1
+    N2["?"]
+    Start -->|"Eventual consistency acceptable"| N2
+    N3["?"]
+    Start -->|"Long-running transactions"| N3
+    N4["?"]
+    Start -->|"Need audit trail"| N4
+    N5["?"]
+    Start -->|"Highly distributed services"| N5
 ```
-What consistency do you need?
-├─ Strong consistency (ACID) → ?
-├─ Eventual consistency acceptable → ?
-├─ Long-running transactions → ?
-├─ Need audit trail → ?
-└─ Highly distributed services → ?
-```
-
-### 4. Kill Switch - Don't use when:
-
-**Two-Phase Commit:**
-
-1. <span class="fill-in">[When does 2PC fail? Fill in]</span>
-2. <span class="fill-in">[Another failure case]</span>
-
-**Saga Pattern:**
-
-1. <span class="fill-in">[When does Saga fail? Fill in]</span>
-2. <span class="fill-in">[Another failure case]</span>
-
-**Event Sourcing:**
-
-1. <span class="fill-in">[When does event sourcing fail? Fill in]</span>
-2. <span class="fill-in">[Another failure case]</span>
-
-### 5. Rule of Three - Alternatives
-
-For each scenario, identify alternatives and compare:
-
-**Scenario: E-commerce order processing**
-
-1. Option A: <span class="fill-in">[Fill in]</span>
-2. Option B: <span class="fill-in">[Fill in]</span>
-3. Option C: <span class="fill-in">[Fill in]</span>
 
 ---
 

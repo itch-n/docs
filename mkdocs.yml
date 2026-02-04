@@ -14,6 +14,7 @@ extra_css:
 
 plugins:
     - search
+    - mermaid2
 
 nav:
   - Home: index.md

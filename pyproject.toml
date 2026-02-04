@@ -9,4 +9,5 @@ dependencies = [
     "mkdocs-cinder>=1.2.0",
     "mkdocs-roamlinks-plugin>=0.3.2",
     "pymdown-extensions>=10.20.1",
+    "mkdocs-mermaid2-plugin>=1.1.1",
 ]

@@ -1525,41 +1525,19 @@ After finding and fixing all bugs:
 ### 3. Your Decision Tree
 
 Build your decision tree after practicing:
+```mermaid
+flowchart LR
+    Start["What is your priority?"]
 
+    N1["?"]
+    Start -->|"Allow burst traffic"| N1
+    N2["?"]
+    Start -->|"Smooth traffic flow"| N2
+    N3["?"]
+    Start -->|"Simple and memory efficient"| N3
+    N4["?"]
+    Start -->|"Accurate rate limiting"| N4
 ```
-What is your priority?
-├─ Allow burst traffic → ?
-├─ Smooth traffic flow → ?
-├─ Simple and memory efficient → ?
-└─ Accurate rate limiting → ?
-```
-
-### 4. Kill Switch - Don't use when:
-
-**Token Bucket:**
-
-1. <span class="fill-in">[When does token bucket fail? Fill in]</span>
-2. <span class="fill-in">[Another failure case]</span>
-
-**Leaky Bucket:**
-
-1. <span class="fill-in">[When does leaky bucket fail? Fill in]</span>
-2. <span class="fill-in">[Another failure case]</span>
-
-**Sliding Window:**
-
-1. <span class="fill-in">[When does sliding window fail? Fill in]</span>
-2. <span class="fill-in">[Another failure case]</span>
-
-### 5. Rule of Three - Alternatives
-
-For each scenario, identify alternatives and compare:
-
-**Scenario: Public API with burst traffic**
-
-1. Option A: <span class="fill-in">[Fill in]</span>
-2. Option B: <span class="fill-in">[Fill in]</span>
-3. Option C: <span class="fill-in">[Fill in]</span>
 
 ---
 

@@ -1656,42 +1656,21 @@ After finding and fixing all bugs:
 ### 3. Your Decision Tree
 
 Build your decision tree after practicing:
+```mermaid
+flowchart LR
+    Start["What is your communication pattern?"]
 
+    N1["?"]
+    Start -->|"One-to-one async processing"| N1
+    N2["?"]
+    Start -->|"Multiple workers needed"| N2
+    N3["?"]
+    Start -->|"Broadcast to multiple consumers"| N3
+    N4["?"]
+    Start -->|"Urgent messages need priority"| N4
+    N5["?"]
+    Start -->|"Need retry and failure handling"| N5
 ```
-What is your communication pattern?
-├─ One-to-one async processing → ?
-├─ Multiple workers needed → ?
-├─ Broadcast to multiple consumers → ?
-├─ Urgent messages need priority → ?
-└─ Need retry and failure handling → ?
-```
-
-### 4. Kill Switch - Don't use when:
-
-**Message Queues:**
-
-1. <span class="fill-in">[When do message queues fail? Fill in]</span>
-2. <span class="fill-in">[Another failure case]</span>
-
-**Pub-Sub:**
-
-1. <span class="fill-in">[When does pub-sub fail? Fill in]</span>
-2. <span class="fill-in">[Another failure case]</span>
-
-**Priority Queue:**
-
-1. <span class="fill-in">[When does priority queue fail? Fill in]</span>
-2. <span class="fill-in">[Another failure case]</span>
-
-### 5. Rule of Three - Alternatives
-
-For each scenario, identify alternatives and compare:
-
-**Scenario: Async task processing**
-
-1. Option A: <span class="fill-in">[Fill in]</span>
-2. Option B: <span class="fill-in">[Fill in]</span>
-3. Option C: <span class="fill-in">[Fill in]</span>
 
 ---
 

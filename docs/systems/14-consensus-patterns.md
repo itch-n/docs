@@ -2301,31 +2301,46 @@ Answer after implementation:
 ### Your Decision Tree
 
 Build this after solving practice scenarios:
+```mermaid
+flowchart LR
+    Start["Consensus Pattern Selection"]
 
-```
-Consensus Pattern Selection
-│
-├─ Need single coordinator?
-│   ├─ YES → Leader Election
-│   │   ├─ Simple cluster? → Bully algorithm
-│   │   └─ Production system? → Raft
-│   └─ NO → Continue to Q2
-│
-├─ Q2: What's the consistency requirement?
-│   ├─ Strong consistency → Raft or Paxos
-│   ├─ Eventual consistency → Quorum with R=1, W=1
-│   └─ Tunable consistency → Quorum with configurable R/W
-│
-├─ Q3: What's the failure scenario?
-│   ├─ Network partitions → Raft (CP in CAP)
-│   ├─ Node failures → Quorum with hints
-│   └─ Split-brain → Leader election with fencing
-│
-└─ Q4: What's the use case?
-    ├─ Configuration management → Raft (etcd, ZooKeeper)
-    ├─ Distributed database → Quorum consensus
-    ├─ Job coordination → Distributed locks
-    └─ Cache invalidation → No consensus needed (best-effort)
+    Q1{"Need single coordinator?"}
+    Start --> Q1
+    N2["Leader Election"]
+    Q1 -->|"YES"| N2
+    N3["Bully algorithm"]
+    Q1 -->|"Simple cluster?"| N3
+    N4["Raft"]
+    Q1 -->|"Production system?"| N4
+    N5["Continue to Q2"]
+    Q1 -->|"NO"| N5
+    Q6{"What's the consistency requirement?"}
+    Start --> Q6
+    N7["Raft or Paxos"]
+    Q6 -->|"Strong consistency"| N7
+    N8["Quorum with R=1, W=1"]
+    Q6 -->|"Eventual consistency"| N8
+    N9["Quorum with configurable R/W"]
+    Q6 -->|"Tunable consistency"| N9
+    Q10{"What's the failure scenario?"}
+    Start --> Q10
+    N11["Raft<br/>(CP in CAP)"]
+    Q10 -->|"Network partitions"| N11
+    N12["Quorum with hints"]
+    Q10 -->|"Node failures"| N12
+    N13["Leader election with fencing"]
+    Q10 -->|"Split-brain"| N13
+    Q14{"What's the use case?"}
+    Start --> Q14
+    N15["Raft<br/>(etcd, ZooKeeper)"]
+    Q14 -->|"Configuration management"| N15
+    N16["Quorum consensus"]
+    Q14 -->|"Distributed database"| N16
+    N17["Distributed locks"]
+    Q14 -->|"Job coordination"| N17
+    N18["No consensus needed<br/>(best-effort)"]
+    Q14 -->|"Cache invalidation"| N18
 ```
 
 

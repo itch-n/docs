@@ -1583,29 +1583,42 @@ Answer after implementation:
 ### Your Decision Tree
 
 Build this after solving practice scenarios:
+```mermaid
+flowchart LR
+    Start["Security Pattern Selection"]
 
-```
-Security Pattern Selection
-│
-├─ What are you securing?
-│   ├─ User sessions → JWT or Session-based
-│   ├─ API endpoints → API Keys or JWT
-│   └─ Resources → RBAC or ABAC
-│
-├─ What's the architecture?
-│   ├─ Monolith → Session-based + RBAC
-│   ├─ Microservices → JWT + RBAC
-│   └─ Serverless → JWT + API Keys
-│
-├─ What's the threat model?
-│   ├─ External attackers → Strong encryption, rotation
-│   ├─ Internal threats → Audit logging, least privilege
-│   └─ Compliance (PCI/HIPAA) → Secrets management, encryption at rest
-│
-└─ Performance requirements?
-    ├─ High throughput → Stateless (JWT, API keys)
-    ├─ Strong consistency → Stateful (Sessions, central auth)
-    └─ Offline support → JWT with refresh tokens
+    Q1{"What are you securing?"}
+    Start --> Q1
+    N2["JWT or Session-based"]
+    Q1 -->|"User sessions"| N2
+    N3["API Keys or JWT"]
+    Q1 -->|"API endpoints"| N3
+    N4["RBAC or ABAC"]
+    Q1 -->|"Resources"| N4
+    Q5{"What's the architecture?"}
+    Start --> Q5
+    N6["Session-based + RBAC"]
+    Q5 -->|"Monolith"| N6
+    N7["JWT + RBAC"]
+    Q5 -->|"Microservices"| N7
+    N8["JWT + API Keys"]
+    Q5 -->|"Serverless"| N8
+    Q9{"What's the threat model?"}
+    Start --> Q9
+    N10["Strong encryption, rotation"]
+    Q9 -->|"External attackers"| N10
+    N11["Audit logging, least privilege"]
+    Q9 -->|"Internal threats"| N11
+    N12["Secrets management, encryption at rest"]
+    Q9 -->|"Compliance (PCI/HIPAA)"| N12
+    Q13{"Performance requirements?"}
+    Start --> Q13
+    N14["Stateless<br/>(JWT, API keys)"]
+    Q13 -->|"High throughput"| N14
+    N15["Stateful<br/>(Sessions, central auth)"]
+    Q13 -->|"Strong consistency"| N15
+    N16["JWT with refresh tokens"]
+    Q13 -->|"Offline support"| N16
 ```
 
 

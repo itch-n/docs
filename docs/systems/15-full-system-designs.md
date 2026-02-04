@@ -2019,13 +2019,18 @@ public class FullSystemDesignsClient {
 - Queue type: <span class="fill-in">[Fill in]</span>
 
 ### 3. Your Decision Tree
+```mermaid
+flowchart LR
+    Start["What are you building?"]
 
-```
-What are you building?
-├─ URL shortener-like → Key generation, sharding, caching
-├─ Social feed-like → Fan-out, timeline generation
-├─ File storage-like → Object storage, metadata DB
-└─ Real-time updates → WebSockets, message queues
+    N1["Key generation, sharding, caching"]
+    Start -->|"URL shortener-like"| N1
+    N2["Fan-out, timeline generation"]
+    Start -->|"Social feed-like"| N2
+    N3["Object storage, metadata DB"]
+    Start -->|"File storage-like"| N3
+    N4["WebSockets, message queues"]
+    Start -->|"Real-time updates"| N4
 ```
 
 ### 4. Scaling Considerations

@@ -1053,27 +1053,34 @@ Answer for different scenarios:
 ### Your Decision Tree
 
 Build this after solving practice problems:
+```mermaid
+flowchart LR
+    Start["Sliding Window Pattern Selection"]
 
-```
-Sliding Window Pattern Selection
-│
-├─ Is subarray/substring contiguous?
-│   ├─ NO → Use other technique (DP, backtracking)
-│   └─ YES → Continue
-│
-├─ Is window size known?
-│   ├─ YES (fixed k) → Use fixed window ✓
-│   └─ NO (find optimal) → Use dynamic window ✓
-│
-├─ What to track in window?
-│   ├─ Sum/Count → Variables O(1) space ✓
-│   ├─ Unique elements → HashSet O(k) space ✓
-│   ├─ Frequencies → HashMap/Array O(k) space ✓
-│   └─ Maximum → Deque O(k) space ✓
-│
-└─ Shrink condition?
-    ├─ Fixed: Always shrink after expanding
-    └─ Dynamic: Shrink while constraint violated
+    Q1{"Is subarray/substring contiguous?"}
+    Start --> Q1
+    N2["Use other technique<br/>(DP, backtracking)"]
+    Q1 -->|"NO"| N2
+    N3["Continue"]
+    Q1 -->|"YES"| N3
+    Q4{"Is window size known?"}
+    Start --> Q4
+    N5(["Use fixed window ✓"])
+    Q4 -->|"YES (fixed k)"| N5
+    N6(["Use dynamic window ✓"])
+    Q4 -->|"NO (find optimal)"| N6
+    Q7{"What to track in window?"}
+    Start --> Q7
+    N8(["Variables O(1) space ✓"])
+    Q7 -->|"Sum/Count"| N8
+    N9(["HashSet O(k) space ✓"])
+    Q7 -->|"Unique elements"| N9
+    N10(["HashMap/Array O(k) space ✓"])
+    Q7 -->|"Frequencies"| N10
+    N11(["Deque O(k) space ✓"])
+    Q7 -->|"Maximum"| N11
+    Q12{"Shrink condition?"}
+    Start --> Q12
 ```
 
 

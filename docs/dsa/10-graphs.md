@@ -1826,30 +1826,34 @@ Answer for different scenarios:
 ### Your Decision Tree
 
 Build this after solving practice problems:
+```mermaid
+flowchart LR
+    Start["Graph Algorithm Selection"]
 
-```
-Graph Algorithm Selection
-│
-├─ Need shortest path?
-│   ├─ Unweighted → BFS ✓
-│   └─ Weighted (non-negative) → Dijkstra's Algorithm ✓
-│
-├─ Need to explore all paths?
-│   └─ Use DFS ✓
-│
-├─ Need ordering with dependencies?
-│   └─ Topological Sort ✓
-│
-├─ Need to connect all nodes minimally?
-│   └─ Minimum Spanning Tree (Prim's/Kruskal's) ✓
-│
-├─ Detect cycle?
-│   ├─ Directed → DFS with states ✓
-│   └─ Undirected → DFS with parent OR Union-Find ✓
-│
-└─ Connected components?
-    ├─ Static → DFS/BFS ✓
-    └─ Dynamic → Union-Find ✓
+    Q1{"Need shortest path?"}
+    Start --> Q1
+    N2(["BFS ✓"])
+    Q1 -->|"Unweighted"| N2
+    N3(["Dijkstra's Algorithm ✓"])
+    Q1 -->|"Weighted (non-negative)"| N3
+    Q4{"Need to explore all paths?"}
+    Start --> Q4
+    Q5{"Need ordering with dependencies?"}
+    Start --> Q5
+    Q6{"Need to connect all nodes minimally?"}
+    Start --> Q6
+    Q7{"Detect cycle?"}
+    Start --> Q7
+    N8(["DFS with states ✓"])
+    Q7 -->|"Directed"| N8
+    N9(["DFS with parent OR Union-Find ✓"])
+    Q7 -->|"Undirected"| N9
+    Q10{"Connected components?"}
+    Start --> Q10
+    N11(["DFS/BFS ✓"])
+    Q10 -->|"Static"| N11
+    N12(["Union-Find ✓"])
+    Q10 -->|"Dynamic"| N12
 ```
 
 

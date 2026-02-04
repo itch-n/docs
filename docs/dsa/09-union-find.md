@@ -1281,26 +1281,34 @@ Answer after solving problems:
 - Weights/ratios: <span class="fill-in">[For transitive relationships]</span>
 
 ### Your Decision Tree
+```mermaid
+flowchart LR
+    Start["Union-Find Pattern Selection"]
 
-```
-Union-Find Pattern Selection
-│
-├─ Basic connectivity?
-│   └─ Use: Standard union-find ✓
-│
-├─ Cycle detection?
-│   ├─ Undirected → Union-find ✓
-│   └─ Directed → DFS (not union-find)
-│
-├─ Dynamic components?
-│   ├─ Number of islands → Union-find ✓
-│   ├─ Provinces/groups → Union-find ✓
-│   └─ Merging accounts → Union-find ✓
-│
-└─ Weighted relationships?
-    ├─ Division equations → Weighted UF ✓
-    ├─ Distance/ratio → Weighted UF ✓
-    └─ Equality constraints → Basic UF ✓
+    Q1{"Basic connectivity?"}
+    Start --> Q1
+    Q2{"Cycle detection?"}
+    Start --> Q2
+    N3(["Union-find ✓"])
+    Q2 -->|"Undirected"| N3
+    N4["DFS<br/>(not union-find)"]
+    Q2 -->|"Directed"| N4
+    Q5{"Dynamic components?"}
+    Start --> Q5
+    N6(["Union-find ✓"])
+    Q5 -->|"Number of islands"| N6
+    N7(["Union-find ✓"])
+    Q5 -->|"Provinces/groups"| N7
+    N8(["Union-find ✓"])
+    Q5 -->|"Merging accounts"| N8
+    Q9{"Weighted relationships?"}
+    Start --> Q9
+    N10(["Weighted UF ✓"])
+    Q9 -->|"Division equations"| N10
+    N11(["Weighted UF ✓"])
+    Q9 -->|"Distance/ratio"| N11
+    N12(["Basic UF ✓"])
+    Q9 -->|"Equality constraints"| N12
 ```
 
 

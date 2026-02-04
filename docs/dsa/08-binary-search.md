@@ -1181,23 +1181,24 @@ Answer after solving problems:
 - Minimize/maximize: <span class="fill-in">[Binary search with validation]</span>
 
 ### Your Decision Tree
+```mermaid
+flowchart LR
+    Start["Binary Search Pattern Selection"]
 
-```
-Binary Search Pattern Selection
-│
-├─ Standard sorted array?
-│   └─ Use: Classic binary search ✓
-│
-├─ Rotated sorted array?
-│   └─ Use: Modified binary search ✓
-│
-├─ 2D matrix?
-│   ├─ Fully sorted → Treat as 1D ✓
-│   ├─ Row-sorted → Search each row ✓
-│   └─ Row & col sorted → Staircase search ✓
-│
-└─ Not searching in array?
-    └─ Use: Binary search on answer ✓
+    Q1{"Standard sorted array?"}
+    Start --> Q1
+    Q2{"Rotated sorted array?"}
+    Start --> Q2
+    Q3{"2D matrix?"}
+    Start --> Q3
+    N4(["Treat as 1D ✓"])
+    Q3 -->|"Fully sorted"| N4
+    N5(["Search each row ✓"])
+    Q3 -->|"Row-sorted"| N5
+    N6(["Staircase search ✓"])
+    Q3 -->|"Row & col sorted"| N6
+    Q7{"Not searching in array?"}
+    Start --> Q7
 ```
 
 

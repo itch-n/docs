@@ -1141,24 +1141,28 @@ Answer after solving problems:
 - Approach: <span class="fill-in">[Mark visited, unmark on backtrack]</span>
 
 ### Your Decision Tree
+```mermaid
+flowchart LR
+    Start["Backtracking Pattern Selection"]
 
-```
-Backtracking Pattern Selection
-│
-├─ Generating sequences?
-│   ├─ All orderings → Permutations ✓
-│   ├─ All selections → Combinations/Subsets ✓
-│   └─ With size K → Combinations with constraint ✓
-│
-├─ Constraint satisfaction?
-│   ├─ Board placement → N-Queens pattern ✓
-│   ├─ Sudoku-like → Try digits with validation ✓
-│   └─ Grid search → DFS with visited tracking ✓
-│
-└─ Optimization?
-    ├─ Prune invalid branches early ✓
-    ├─ Use memoization if overlapping ✓
-    └─ Sort input if helpful for pruning ✓
+    Q1{"Generating sequences?"}
+    Start --> Q1
+    N2(["Permutations ✓"])
+    Q1 -->|"All orderings"| N2
+    N3(["Combinations/Subsets ✓"])
+    Q1 -->|"All selections"| N3
+    N4(["Combinations with constraint ✓"])
+    Q1 -->|"With size K"| N4
+    Q5{"Constraint satisfaction?"}
+    Start --> Q5
+    N6(["N-Queens pattern ✓"])
+    Q5 -->|"Board placement"| N6
+    N7(["Try digits with validation ✓"])
+    Q5 -->|"Sudoku-like"| N7
+    N8(["DFS with visited tracking ✓"])
+    Q5 -->|"Grid search"| N8
+    Q9{"Optimization?"}
+    Start --> Q9
 ```
 
 

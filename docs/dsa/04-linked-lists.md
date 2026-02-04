@@ -1300,25 +1300,24 @@ Answer after solving problems:
 - Use cases: <span class="fill-in">[List problems you solved]</span>
 
 ### Your Decision Tree
+```mermaid
+flowchart LR
+    Start["Linked List Pattern Selection"]
 
-```
-Linked List Pattern Selection
-│
-├─ Need to reverse?
-│   └─ Use: Three pointers (prev, curr, next) ✓
-│
-├─ Detect cycle or find middle?
-│   └─ Use: Floyd's algorithm (slow/fast) ✓
-│
-├─ Merge sorted lists?
-│   ├─ Two lists → Use: Iterative merge ✓
-│   └─ K lists → Use: Min heap ✓
-│
-├─ Remove node from end?
-│   └─ Use: Two pointers with gap ✓
-│
-└─ Remove duplicates?
-    └─ Use: Single pointer ✓
+    Q1{"Need to reverse?"}
+    Start --> Q1
+    Q2{"Detect cycle or find middle?"}
+    Start --> Q2
+    Q3{"Merge sorted lists?"}
+    Start --> Q3
+    N4(["Use: Iterative merge ✓"])
+    Q3 -->|"Two lists"| N4
+    N5(["Use: Min heap ✓"])
+    Q3 -->|"K lists"| N5
+    Q6{"Remove node from end?"}
+    Start --> Q6
+    Q7{"Remove duplicates?"}
+    Start --> Q7
 ```
 
 

@@ -1495,33 +1495,26 @@ After finding and fixing all bugs:
 - Examples: <span class="fill-in">[Histogram, temperatures]</span>
 
 ### Your Decision Trees
+```mermaid
+flowchart LR
+    Start["Advanced Pattern Selection"]
 
-```
-Advanced Pattern Selection
-
-Bit Manipulation:
-├─ XOR all → Find single/missing element ✓
-├─ Check bits → Count 1s, power of 2 ✓
-├─ Bit masks → Subset operations ✓
-└─ No +/- → Use XOR and AND ✓
-
-Intervals:
-├─ Overlapping? → Merge intervals ✓
-├─ Insert new? → Insert interval ✓
-├─ Intersection? → Two pointers ✓
-└─ Min rooms? → Sweep line or heap ✓
-
-Prefix Sum:
-├─ Range queries → 1D/2D prefix sum ✓
-├─ Subarray sum → HashMap + prefix ✓
-├─ Equal 0s/1s → Convert to sum=0 ✓
-└─ Product except self → Prefix/suffix ✓
-
-Monotonic Stack:
-├─ Next greater/smaller → Decreasing/increasing stack ✓
-├─ Rectangle area → Increasing stack ✓
-├─ Trap water → Stack or two pointers ✓
-└─ Remove digits → Monotonic stack ✓
+    N1(["Find single/missing element ✓"])
+    N2(["Count 1s, power of 2 ✓"])
+    N3(["Subset operations ✓"])
+    N4(["Use XOR and AND ✓"])
+    N5(["Merge intervals ✓"])
+    N6(["Insert interval ✓"])
+    N7(["Two pointers ✓"])
+    N8(["Sweep line or heap ✓"])
+    N9(["1D/2D prefix sum ✓"])
+    N10(["HashMap + prefix ✓"])
+    N11(["Convert to sum=0 ✓"])
+    N12(["Prefix/suffix ✓"])
+    N13(["Decreasing/increasing stack ✓"])
+    N14(["Increasing stack ✓"])
+    N15(["Stack or two pointers ✓"])
+    N16(["Monotonic stack ✓"])
 ```
 
 

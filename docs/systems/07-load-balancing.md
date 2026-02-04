@@ -1407,42 +1407,21 @@ After finding and fixing all bugs:
 ### 3. Your Decision Tree
 
 Build your decision tree after practicing:
+```mermaid
+flowchart LR
+    Start["What is your priority?"]
 
+    N1["?"]
+    Start -->|"Simple and fair distribution"| N1
+    N2["?"]
+    Start -->|"Consider server load"| N2
+    N3["?"]
+    Start -->|"Heterogeneous servers"| N3
+    N4["?"]
+    Start -->|"Session persistence"| N4
+    N5["?"]
+    Start -->|"Minimal redistribution on changes"| N5
 ```
-What is your priority?
-├─ Simple and fair distribution → ?
-├─ Consider server load → ?
-├─ Heterogeneous servers → ?
-├─ Session persistence → ?
-└─ Minimal redistribution on changes → ?
-```
-
-### 4. Kill Switch - Don't use when:
-
-**Round Robin:**
-
-1. <span class="fill-in">[When does round robin fail? Fill in]</span>
-2. <span class="fill-in">[Another failure case]</span>
-
-**Least Connections:**
-
-1. <span class="fill-in">[When does least connections fail? Fill in]</span>
-2. <span class="fill-in">[Another failure case]</span>
-
-**Consistent Hashing:**
-
-1. <span class="fill-in">[When does consistent hashing fail? Fill in]</span>
-2. <span class="fill-in">[Another failure case]</span>
-
-### 5. Rule of Three - Alternatives
-
-For each scenario, identify alternatives and compare:
-
-**Scenario: Distribute requests across web servers**
-
-1. Option A: <span class="fill-in">[Fill in]</span>
-2. Option B: <span class="fill-in">[Fill in]</span>
-3. Option C: <span class="fill-in">[Fill in]</span>
 
 ---
 

@@ -1311,21 +1311,20 @@ Answer:
 
 Build this after understanding trade-offs:
 
-```
-Storage Engine Selection
-│
-├─ Write-heavy workload (>70% writes)?
-│   ├─ YES → Continue to Q2
-│   └─ NO → Continue to Q3
-│
-├─ Q2: Need strong consistency?
-│   ├─ YES → Consider B+Tree (but optimize for writes)
-│   └─ NO → Use LSM Tree ✓
-│
-└─ Q3: Read-heavy workload?
-    ├─ YES, mostly point lookups → Use B+Tree ✓
-    ├─ YES, many range scans → Use B+Tree ✓
-    └─ Mixed workload → [Your decision here based on testing]
+```mermaid
+flowchart LR
+    Start["Storage Engine Selection"]
+
+    Start --> Q1{"Write-heavy workload<br/>(>70% writes)?"}
+    Q1 -->|"YES"| Q2{"Need strong<br/>consistency?"}
+    Q1 -->|"NO"| Q3{"Read-heavy<br/>workload?"}
+
+    Q2 -->|"YES"| A1["Consider B+Tree<br/>(but optimize for writes)"]
+    Q2 -->|"NO"| A2(["Use LSM Tree ✓"])
+
+    Q3 -->|"YES, mostly<br/>point lookups"| A3(["Use B+Tree ✓"])
+    Q3 -->|"YES, many<br/>range scans"| A4(["Use B+Tree ✓"])
+    Q3 -->|"Mixed<br/>workload"| A5["Your decision here<br/>based on testing"]
 ```
 
 ## Practice

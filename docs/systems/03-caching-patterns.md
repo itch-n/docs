@@ -1536,24 +1536,34 @@ After finding and fixing all bugs:
 ### 3. Your Decision Tree
 
 Build this after solving practice scenarios:
+```mermaid
+flowchart LR
+    Start["Should I use caching?"]
 
-```
-Should I use caching?
-│
-├─ What's the access pattern?
-│   ├─ Recent items accessed again → ?
-│   ├─ Popular items accessed frequently → ?
-│   └─ Mixed/unknown → ?
-│
-├─ What's the write pattern?
-│   ├─ Consistency critical → ?
-│   ├─ Performance critical → ?
-│   └─ Mixed → ?
-│
-└─ Other considerations?
-    ├─ Memory constraints → ?
-    ├─ Data freshness requirements → ?
-    └─ Failure tolerance → ?
+    Q1{"What's the access pattern?"}
+    Start --> Q1
+    N2["?"]
+    Q1 -->|"Recent items accessed again"| N2
+    N3["?"]
+    Q1 -->|"Popular items accessed frequently"| N3
+    N4["?"]
+    Q1 -->|"Mixed/unknown"| N4
+    Q5{"What's the write pattern?"}
+    Start --> Q5
+    N6["?"]
+    Q5 -->|"Consistency critical"| N6
+    N7["?"]
+    Q5 -->|"Performance critical"| N7
+    N8["?"]
+    Q5 -->|"Mixed"| N8
+    Q9{"Other considerations?"}
+    Start --> Q9
+    N10["?"]
+    Q9 -->|"Memory constraints"| N10
+    N11["?"]
+    Q9 -->|"Data freshness requirements"| N11
+    N12["?"]
+    Q9 -->|"Failure tolerance"| N12
 ```
 
 

@@ -1157,30 +1157,23 @@ Answer for each pattern:
 ### Your Decision Tree
 
 Build this after solving practice problems:
+```mermaid
+flowchart LR
+    Start["Hash Table Pattern Selection"]
 
-```
-Hash Table Pattern Selection
-│
-├─ What do you need?
-│   │
-│   ├─ Fast lookup by key?
-│   │   └─ Use: HashMap ✓
-│   │
-│   ├─ Fast membership test?
-│   │   └─ Use: HashSet ✓
-│   │
-│   ├─ Count frequencies?
-│   │   └─ Use: HashMap<Key, Integer> ✓
-│   │
-│   ├─ Group by property?
-│   │   └─ Use: HashMap<Key, List<Value>> ✓
-│   │
-│   └─ Track window state?
-│       └─ Use: HashMap with sliding window ✓
-│
-└─ Space constraint?
-    ├─ Yes → Consider alternatives
-    └─ No → Hash table is usually best choice
+    Q1{"What do you need?"}
+    Start --> Q1
+    Q2{"Fast lookup by key?"}
+    Q3{"Fast membership test?"}
+    Q4{"Count frequencies?"}
+    Q5{"Group by property?"}
+    Q6{"Track window state?"}
+    Q7{"Space constraint?"}
+    Start --> Q7
+    N8["Consider alternatives"]
+    Q7 -->|"Yes"| N8
+    N9["Hash table is usually best choice"]
+    Q7 -->|"No"| N9
 ```
 
 

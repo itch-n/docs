@@ -2436,30 +2436,44 @@ Answer after implementation:
 ### Your Decision Tree
 
 Build this after solving practice scenarios:
+```mermaid
+flowchart LR
+    Start["Concurrency Pattern Selection"]
 
-```
-Concurrency Pattern Selection
-│
-├─ What's the workload?
-│   ├─ Many independent tasks → Use thread pool
-│   ├─ Shared mutable state → Need synchronization
-│   └─ Message passing → Use BlockingQueue
-│
-├─ Need synchronization?
-│   ├─ Simple critical section → synchronized
-│   ├─ Advanced features → ReentrantLock
-│   ├─ Read-heavy → ReadWriteLock
-│   └─ High contention → Lock-free (Atomic)
-│
-├─ Thread pool sizing?
-│   ├─ CPU-bound → cores + 1
-│   ├─ I/O-bound → cores * 2 or more
-│   └─ Mixed → Test and measure
-│
-└─ Queue sizing?
-    ├─ Bounded → Prevent memory exhaustion
-    ├─ Unbounded → Risk OOM, but never blocks producers
-    └─ SynchronousQueue → Direct handoff, no buffering
+    Q1{"What's the workload?"}
+    Start --> Q1
+    N2["Use thread pool"]
+    Q1 -->|"Many independent tasks"| N2
+    N3["Need synchronization"]
+    Q1 -->|"Shared mutable state"| N3
+    N4["Use BlockingQueue"]
+    Q1 -->|"Message passing"| N4
+    Q5{"Need synchronization?"}
+    Start --> Q5
+    N6["synchronized"]
+    Q5 -->|"Simple critical section"| N6
+    N7["ReentrantLock"]
+    Q5 -->|"Advanced features"| N7
+    N8["ReadWriteLock"]
+    Q5 -->|"Read-heavy"| N8
+    N9["Lock-free<br/>(Atomic)"]
+    Q5 -->|"High contention"| N9
+    Q10{"Thread pool sizing?"}
+    Start --> Q10
+    N11["cores + 1"]
+    Q10 -->|"CPU-bound"| N11
+    N12["cores * 2 or more"]
+    Q10 -->|"I/O-bound"| N12
+    N13["Test and measure"]
+    Q10 -->|"Mixed"| N13
+    Q14{"Queue sizing?"}
+    Start --> Q14
+    N15["Prevent memory exhaustion"]
+    Q14 -->|"Bounded"| N15
+    N16["Risk OOM, but never blocks producers"]
+    Q14 -->|"Unbounded"| N16
+    N17["Direct handoff, no buffering"]
+    Q14 -->|"SynchronousQueue"| N17
 ```
 
 

@@ -1623,41 +1623,19 @@ After finding and fixing all bugs:
 ### 3. Your Decision Tree
 
 Build your decision tree after practicing:
+```mermaid
+flowchart LR
+    Start["What kind of API are you building?"]
 
+    N1["?"]
+    Start -->|"Public web API for third parties"| N1
+    N2["?"]
+    Start -->|"Mobile app backend"| N2
+    N3["?"]
+    Start -->|"Service-to-service communication"| N3
+    N4["?"]
+    Start -->|"Complex data fetching with relationships"| N4
 ```
-What kind of API are you building?
-├─ Public web API for third parties → ?
-├─ Mobile app backend → ?
-├─ Service-to-service communication → ?
-└─ Complex data fetching with relationships → ?
-```
-
-### 4. Kill Switch - Don't use when:
-
-**REST:**
-
-1. <span class="fill-in">[When does REST fail? Fill in]</span>
-2. <span class="fill-in">[Another failure case]</span>
-
-**GraphQL:**
-
-1. <span class="fill-in">[When does GraphQL fail? Fill in]</span>
-2. <span class="fill-in">[Another failure case]</span>
-
-**RPC:**
-
-1. <span class="fill-in">[When does RPC fail? Fill in]</span>
-2. <span class="fill-in">[Another failure case]</span>
-
-### 5. Rule of Three - Alternatives
-
-For each API paradigm, identify alternatives and compare:
-
-**Scenario: Building a mobile app backend**
-
-1. Option A: <span class="fill-in">[Fill in]</span>
-2. Option B: <span class="fill-in">[Fill in]</span>
-3. Option C: <span class="fill-in">[Fill in]</span>
 
 ---
 

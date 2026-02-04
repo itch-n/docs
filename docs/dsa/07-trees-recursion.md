@@ -1345,28 +1345,24 @@ Answer after solving problems:
 - Example: <span class="fill-in">[Diameter, max path sum]</span>
 
 ### Your Decision Tree
+```mermaid
+flowchart LR
+    Start["Tree Recursion Pattern Selection"]
 
-```
-Tree Recursion Pattern Selection
-│
-├─ What are you calculating?
-│   │
-│   ├─ Single metric (height, count)?
-│   │   └─ Use: Direct recursion ✓
-│   │
-│   ├─ Path-based (sum, all paths)?
-│   │   └─ Use: Backtracking recursion ✓
-│   │
-│   ├─ Find node(s) (LCA, search)?
-│   │   └─ Use: Search recursion ✓
-│   │
-│   └─ Build structure?
-│       └─ Use: Construction recursion ✓
-│
-└─ How to track state?
-    ├─ No extra state → Direct recursion
-    ├─ Track max/min → Helper with array/class
-    └─ Track path → Backtracking with list
+    Q1{"What are you calculating?"}
+    Start --> Q1
+    Q2{"Single metric<br/>(height, count)?"}
+    Q3{"Path-based<br/>(sum, all paths)?"}
+    Q4{"Find node(s)<br/>(LCA, search)?"}
+    Q5{"Build structure?"}
+    Q6{"How to track state?"}
+    Start --> Q6
+    N7["Direct recursion"]
+    Q6 -->|"No extra state"| N7
+    N8["Helper with array/class"]
+    Q6 -->|"Track max/min"| N8
+    N9["Backtracking with list"]
+    Q6 -->|"Track path"| N9
 ```
 
 

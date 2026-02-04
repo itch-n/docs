@@ -1664,42 +1664,21 @@ After finding and fixing all bugs:
 ### 3. Your Decision Tree
 
 Build your decision tree after practicing:
+```mermaid
+flowchart LR
+    Start["What is your bottleneck?"]
 
+    N1["?"]
+    Start -->|"Read traffic"| N1
+    N2["?"]
+    Start -->|"Write traffic"| N2
+    N3["?"]
+    Start -->|"Data size"| N3
+    N4["?"]
+    Start -->|"Query patterns"| N4
+    N5["?"]
+    Start -->|"Operational complexity"| N5
 ```
-What is your bottleneck?
-├─ Read traffic → ?
-├─ Write traffic → ?
-├─ Data size → ?
-├─ Query patterns → ?
-└─ Operational complexity → ?
-```
-
-### 4. Kill Switch - Don't use when:
-
-**Sharding:**
-
-1. <span class="fill-in">[When does sharding fail? Fill in]</span>
-2. <span class="fill-in">[Another failure case]</span>
-
-**Replication:**
-
-1. <span class="fill-in">[When does replication fail? Fill in]</span>
-2. <span class="fill-in">[Another failure case]</span>
-
-**Partitioning:**
-
-1. <span class="fill-in">[When does partitioning fail? Fill in]</span>
-2. <span class="fill-in">[Another failure case]</span>
-
-### 5. Rule of Three - Alternatives
-
-For each scenario, identify alternatives and compare:
-
-**Scenario: Social network with 100M users**
-
-1. Option A: <span class="fill-in">[Fill in]</span>
-2. Option B: <span class="fill-in">[Fill in]</span>
-3. Option C: <span class="fill-in">[Fill in]</span>
 
 ---
 
