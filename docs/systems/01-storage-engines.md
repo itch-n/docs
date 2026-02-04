@@ -1835,22 +1835,27 @@ Your explanation:
 
 # APPENDIX: The Historical Evolution - From First Principles
 
-> **Why this appendix exists**: The main chapter teaches B+Trees and LSM Trees side-by-side. But historically, B+Trees came first and dominated for 30 years. Understanding this evolution provides deeper intuition about why these designs exist.
+> **Why this appendix exists**: The main chapter teaches B+Trees and LSM Trees side-by-side. But historically, B+Trees
+> came first and dominated for 30 years. Understanding this evolution provides deeper intuition about why these designs
+> exist.
 
 ---
 
 ## The Historical Truth
 
 **1970s-2000s**: If you said "database storage engine," you meant **B+Tree**.
+
 - Oracle, MySQL, PostgreSQL, SQL Server - all B+Trees
 - Learned in every databases class
 - The default, the standard, the only choice
 
 **2006**: Google's BigTable paper changes everything
+
 - Describes LSM-style architecture for web-scale writes
 - Solves write amplification problem in B+Trees
 
 **2008-2012**: NoSQL movement adopts LSM Trees
+
 - Cassandra, HBase, RocksDB, LevelDB
 - Narrative: "B+Trees are old SQL. LSM Trees are modern NoSQL."
 
@@ -1862,7 +1867,8 @@ Your explanation:
 
 Let's trace the path that led to these designs, starting from the simplest possible database.
 
-**How to use this section:** At each level, **try to predict what will break** before reading ahead. This builds the intuition for why each innovation was necessary.
+**How to use this section:** At each level, **try to predict what will break** before reading ahead. This builds the
+intuition for why each innovation was necessary.
 
 ---
 
@@ -1875,6 +1881,7 @@ Let's trace the path that led to these designs, starting from the simplest possi
 You're building the simplest possible database. You decide to just append every write to a file.
 
 **Prediction Challenge:**
+
 1. What operation will become slow as the database grows? <span class="fill-in">[Reads/Writes/Both?]</span>
 2. Why? <span class="fill-in">[Your reasoning]</span>
 3. At what scale does it become unbearable? <span class="fill-in">[100 records? 1M records?]</span>
@@ -1885,6 +1892,7 @@ You're building the simplest possible database. You decide to just append every 
 **Answer**: Reads become O(N) - must scan entire file for every lookup.
 
 **Math**: With 1M records at 1 microsecond per comparison:
+
 - Average search time: 500,000 comparisons = **500ms** 🐌
 - This is unacceptable for any interactive application (target: <100ms)
 
@@ -1913,6 +1921,7 @@ public class SimpleDB {
 ```
 
 **Characteristics**:
+
 - ✅ Writes: O(1) - just append
 - ✅ Simple to implement
 - ❌ Reads: O(N) - must scan entire file
@@ -1931,6 +1940,7 @@ public class SimpleDB {
 We fixed reads by keeping the file sorted (enabling binary search). But what's the cost?
 
 **Prediction Challenge:**
+
 1. How does insert performance change? <span class="fill-in">[Better/Worse/Same?]</span>
 2. Why? <span class="fill-in">[What must happen to maintain sorted order?]</span>
 3. For 1M records, what's the average cost of one insert? <span class="fill-in">[How many records moved?]</span>
@@ -1941,6 +1951,7 @@ We fixed reads by keeping the file sorted (enabling binary search). But what's t
 **Answer**: Inserts become O(N) - must shift data to maintain sorted order.
 
 **Math**: With 1M records:
+
 - Binary search finds position: log₂(1M) = 20 comparisons (fast)
 - Shift half the file on average: 500,000 records moved
 - Each record = 100 bytes → **50MB rewritten per insert** 🐌
@@ -1978,6 +1989,7 @@ public class SortedFileDB {
 ```
 
 **Characteristics**:
+
 - ✅ Reads: O(log N) - binary search
 - ❌ Writes: O(N) - must shift data to maintain sort order
 - ❌ Every insert rewrites half the file on average
@@ -1992,10 +2004,13 @@ public class SortedFileDB {
 
 **⚠️ STOP: Before reading the code below, predict the problem:**
 
-Binary Search Trees (BST) give us O(log N) for both reads and writes. Perfect! But what happens when we put this on disk?
+Binary Search Trees (BST) give us O(log N) for both reads and writes. Perfect! But what happens when we put this on
+disk?
 
 **Prediction Challenge:**
-1. How many disk seeks are needed to search a BST with 1M records? <span class="fill-in">[Hint: What's the tree height?]</span>
+
+1. How many disk seeks are needed to search a BST with 1M
+   records? <span class="fill-in">[Hint: What's the tree height?]</span>
 2. If each disk seek takes 10ms, how long does one search take? <span class="fill-in">[Calculate total time]</span>
 3. What's inefficient about storing each BST node on disk? <span class="fill-in">[Think about disk page sizes]</span>
 
@@ -2005,12 +2020,14 @@ Binary Search Trees (BST) give us O(log N) for both reads and writes. Perfect! B
 **Answer**: BST creates a TALL tree with TINY nodes - terrible for disk I/O.
 
 **Math**: With 1M records:
+
 - Tree height: log₂(1M) ≈ 20 levels
 - Each level = 1 disk seek
 - Disk seek time: ~10ms
 - **Total: 20 × 10ms = 200ms per query** 🐌
 
 **Inefficiency**:
+
 - BST node size: ~32 bytes (2 pointers + key + value)
 - Disk page size: 4KB
 - **Wasting 99% of each disk read!**
@@ -2047,17 +2064,20 @@ public class BSTDB {
 **But... when you put this on disk:**
 
 **Problem 1: Each node is tiny**
+
 - Node size: 2 pointers (16 bytes) + key (8 bytes) + value (8 bytes) = ~32 bytes
 - Disk page size: 4KB
 - Wasting 99% of each disk read!
 
 **Problem 2: Tree is TALL**
+
 - For 1M records: height = log₂(1M) ≈ 20 levels
 - Each level = 1 disk seek
 - Disk seek time on HDD: ~10ms
 - **Total: 20 seeks × 10ms = 200ms per query** 🐌
 
 **Problem 3: Can become unbalanced**
+
 - If inserts are sorted: tree becomes linked list
 - O(log N) becomes O(N) worst case
 
@@ -2102,6 +2122,7 @@ Result: 6-7x faster!
 **The key insight**: Each disk read should fetch as much useful data as possible. Wide nodes = short tree = fewer seeks.
 
 **B-Tree characteristics**:
+
 - ✅ Reads: O(log N) with minimal disk seeks
 - ✅ Writes: O(log N) with in-place updates
 - ✅ Self-balancing
@@ -2168,6 +2189,7 @@ public List<V> rangeQuery(K start, K end) {
 ### The Google Problem (mid-2000s)
 
 **Workload**: Indexing the web for Google Search
+
 - **Write volume**: Billions of page updates per day
 - **Write pattern**: Mostly inserts (new pages discovered)
 - **Read pattern**: Batch processing MapReduce jobs (can tolerate some latency)
@@ -2194,6 +2216,7 @@ public void insert(K key, V value) {
 ```
 
 **The math that broke B+Trees**:
+
 - 1 billion inserts per day
 - 40KB average I/O per insert (due to write amplification)
 - **= 40TB of disk I/O per day**
@@ -2201,6 +2224,7 @@ public void insert(K key, V value) {
 - **Write amplification: 400x**
 
 **Additional problem**:
+
 - B+Trees do **random I/O** (tree traversal jumps around disk)
 - On spinning disks: random I/O = **100x slower** than sequential I/O
 - Random seeks kill throughput
@@ -2227,10 +2251,12 @@ When do you pay the cost of sorting?
 ```
 
 **B+Tree philosophy**: Keep data sorted all the time
+
 - Insert cost: O(log N) - must maintain sort order immediately
 - Read cost: O(log N) - data is always sorted
 
 **LSM Tree philosophy**: Sort in batches, not per-write
+
 - Insert cost: O(log M) - just update in-memory buffer (M << N)
 - Read cost: O(K × log S) - check multiple sorted files
 - Amortize sorting cost over many writes
@@ -2289,6 +2315,7 @@ public void write(K key, V value) {
 ```
 
 **Benefit**:
+
 - Batched writes: 1000 inserts → 1 sequential flush
 - **100-1000x less I/O** than B+Tree
 - Sequential writes (fast on HDDs)
@@ -2316,6 +2343,7 @@ public V read(K key) {
 ```
 
 **Trade-off**:
+
 - ❌ Reads are slower (check multiple places)
 - ✅ But acceptable for **write-heavy** workloads
 
@@ -2392,6 +2420,7 @@ public void recover() {
 ```
 
 **WAL characteristics**:
+
 - Append-only (sequential writes - fast)
 - Only stores recent uncommitted data
 - Deleted after flush
@@ -2427,17 +2456,20 @@ public void backgroundSave() {
 ```
 
 **Advantages**:
+
 - ⚡ Extremely fast: O(1) for hash operations
 - No disk I/O latency (microseconds vs milliseconds)
 - Simple architecture
 
 **Disadvantages**:
+
 - 💰 RAM is 30-50x more expensive than SSD
 - 📏 Limited capacity: can't store more than RAM
 - ❌ Data loss risk: if crash before persistence
 - ❌ No range queries (hash table, not sorted)
 
 **When to use**:
+
 - **Cache** (can rebuild from database if lost)
 - **Session storage** (acceptable to lose some sessions)
 - **Real-time counters** (like/view counts)
@@ -2445,6 +2477,7 @@ public void backgroundSave() {
 - **Pub/sub** (transient messages)
 
 **When NOT to use**:
+
 - ❌ Primary data store (too expensive, data loss risk)
 - ❌ Large datasets (> available RAM)
 - ❌ Requires durability guarantees
@@ -2453,15 +2486,16 @@ public void backgroundSave() {
 
 ## Complete Comparison Table
 
-| Storage Engine | Write Speed | Read Speed | Range Queries | Capacity | Durability | Best For |
-|----------------|-------------|------------|---------------|----------|------------|----------|
-| **Heap File** | ⚡⚡⚡ O(1) | 🐌 O(N) | ❌ No | Unlimited | ✓ | Append-only logs |
-| **Sorted File** | 🐌 O(N) | ⚡⚡ O(log N) | ✓ | Unlimited | ✓ | Read-only data |
-| **B+Tree** | ⚡ O(log N) | ⚡⚡⚡ O(log N) | ✓✓✓ Excellent | Unlimited | ✓ (with WAL) | Read-heavy OLTP |
-| **LSM Tree** | ⚡⚡⚡ O(log M) | ⚡⚡ O(K×log S) | ✓✓ Good | Unlimited | ✓ (with WAL) | Write-heavy OLTP |
-| **Redis (RAM)** | ⚡⚡⚡ O(1) | ⚡⚡⚡ O(1) | ❌ Limited | RAM-bound | ⚠️ Optional | Cache, sessions |
+| Storage Engine  | Write Speed  | Read Speed    | Range Queries | Capacity  | Durability   | Best For         |
+|-----------------|--------------|---------------|---------------|-----------|--------------|------------------|
+| **Heap File**   | ⚡⚡⚡ O(1)     | 🐌 O(N)       | ❌ No          | Unlimited | ✓            | Append-only logs |
+| **Sorted File** | 🐌 O(N)      | ⚡⚡ O(log N)   | ✓             | Unlimited | ✓            | Read-only data   |
+| **B+Tree**      | ⚡ O(log N)   | ⚡⚡⚡ O(log N)  | ✓✓✓ Excellent | Unlimited | ✓ (with WAL) | Read-heavy OLTP  |
+| **LSM Tree**    | ⚡⚡⚡ O(log M) | ⚡⚡ O(K×log S) | ✓✓ Good       | Unlimited | ✓ (with WAL) | Write-heavy OLTP |
+| **Redis (RAM)** | ⚡⚡⚡ O(1)     | ⚡⚡⚡ O(1)      | ❌ Limited     | RAM-bound | ⚠️ Optional  | Cache, sessions  |
 
 Where:
+
 - N = total number of records
 - M = MemTable size (typically 1K-100K)
 - K = number of SSTables
@@ -2517,27 +2551,27 @@ Modern day: Hybrid approaches
 ## Key Takeaways
 
 1. **B+Trees came first** (1972) and dominated for 30+ years
-   - Optimize for disk seeks (main bottleneck on HDDs)
-   - Perfect for balanced read/write workloads
+    - Optimize for disk seeks (main bottleneck on HDDs)
+    - Perfect for balanced read/write workloads
 
 2. **LSM Trees emerged** (popularized 2006) to solve specific problem
-   - Google needed massive write throughput for web indexing
-   - B+Tree write amplification became bottleneck
-   - LSM Trees trade read performance for write performance
+    - Google needed massive write throughput for web indexing
+    - B+Tree write amplification became bottleneck
+    - LSM Trees trade read performance for write performance
 
 3. **WAL is separate** from storage engine choice
-   - Both B+Trees and LSM Trees use WAL for durability
-   - It's about crash recovery, not core structure
+    - Both B+Trees and LSM Trees use WAL for durability
+    - It's about crash recovery, not core structure
 
 4. **In-memory engines** (Redis) are different trade-off entirely
-   - RAM vs disk capacity
-   - Speed vs durability
-   - Use for caching, not primary storage
+    - RAM vs disk capacity
+    - Speed vs durability
+    - Use for caching, not primary storage
 
 5. **No universal "best"**
-   - B+Tree: read-heavy, range queries, OLTP
-   - LSM Tree: write-heavy, insert-heavy, analytics ingestion
-   - Redis: extremely low latency, acceptable data loss
+    - B+Tree: read-heavy, range queries, OLTP
+    - LSM Tree: write-heavy, insert-heavy, analytics ingestion
+    - Redis: extremely low latency, acceptable data loss
 
 The lesson: **Understand the workload, then choose the tool.**
 
@@ -2546,6 +2580,7 @@ The lesson: **Understand the workload, then choose the tool.**
 ## Real-World Examples
 
 **B+Tree Storage Engines**:
+
 - MySQL InnoDB
 - PostgreSQL
 - SQLite
@@ -2553,6 +2588,7 @@ The lesson: **Understand the workload, then choose the tool.**
 - Oracle Database
 
 **LSM Tree Storage Engines**:
+
 - Cassandra
 - HBase
 - RocksDB (used by MyRocks, CockroachDB, TiDB)
@@ -2560,9 +2596,11 @@ The lesson: **Understand the workload, then choose the tool.**
 - ScyllaDB
 
 **Hybrid (supports both)**:
+
 - MongoDB (WiredTiger can use either)
 
 **In-Memory**:
+
 - Redis
 - Memcached
 - VoltDB
