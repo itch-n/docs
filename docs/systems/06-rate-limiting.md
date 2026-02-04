@@ -997,8 +997,7 @@ public class BrokenTokenBucket {
         // Refill tokens
         long now = System.currentTimeMillis();
         long elapsed = now - lastRefillTime;
-        int tokensToAdd = (int)(elapsed * refillRate);  // BUG: What's wrong here?
-
+        int tokensToAdd = (int)(elapsed * refillRate);
         tokens = Math.min(capacity, tokens + tokensToAdd);
         lastRefillTime = now;
 
@@ -1017,7 +1016,6 @@ public class BrokenTokenBucket {
 - **Bug location:** <span class="fill-in">[Which line?]</span>
 - **Bug explanation:** <span class="fill-in">[What's wrong with the calculation?]</span>
 - **Bug manifestation:** <span class="fill-in">[What happens? Too many/few tokens?]</span>
-- **Test case:** elapsed = 2000ms (2 seconds), refillRate = 2 tokens/sec
     - Current calculation: `2000 * 2 = 4000` tokens! <span class="fill-in">[Why is this wrong?]</span>
     - Expected: <span class="fill-in">[How many tokens should be added?]</span>
 - **Fix:** <span class="fill-in">[Correct the formula]</span>
@@ -1058,18 +1056,15 @@ public class RacyTokenBucket {
     private final int capacity = 100;
     private final double refillRate = 10.0;
 
-    public boolean tryAcquire() {  // BUG: Missing what?
-        refill();
+    public boolean tryAcquire() {        refill();
 
         if (tokens >= 1) {
-            tokens--;  // BUG: Race condition here!
-            return true;
+            tokens--;            return true;
         }
         return false;
     }
 
-    private void refill() {  // BUG: Missing what?
-        long now = System.currentTimeMillis();
+    private void refill() {        long now = System.currentTimeMillis();
         double elapsed = (now - lastRefillTime) / 1000.0;
         tokens = Math.min(capacity, tokens + elapsed * refillRate);
         lastRefillTime = now;
@@ -1139,14 +1134,12 @@ public class BrokenFixedWindow {
         long now = System.currentTimeMillis();
 
         // Reset window if needed
-        if (now - windowStart > windowMs) {  // BUG: > or >=?
-            counter = 0;
+        if (now - windowStart > windowMs) {            counter = 0;
             windowStart = now;
         }
 
         // Check limit
-        if (counter <= maxRequests) {  // BUG: <= or <?
-            counter++;
+        if (counter <= maxRequests) {            counter++;
             return true;
         }
 
@@ -1164,7 +1157,6 @@ public class BrokenFixedWindow {
     - Expected: Allow 10 requests (counter 0-9)
     - Actual: <span class="fill-in">[How many requests allowed?]</span>
     - Fix: <span class="fill-in">[Should be < or <= ?]</span>
-- **Test case:** maxRequests = 3
     - Counter values: 0, 1, 2, 3 → <span class="fill-in">[How many increments? Is 4 requests allowed?]</span>
 
 <details markdown>
@@ -1220,8 +1212,6 @@ public class LeakyWindowLog {
     public synchronized boolean tryAcquire() {
         long now = System.currentTimeMillis();
 
-        // BUG: What happens if this loop never runs?
-        // BUG: What happens if many old timestamps accumulate?
         while (!requestLog.isEmpty() && requestLog.peek() < now - windowMs) {
             requestLog.poll();
         }
@@ -1231,7 +1221,6 @@ public class LeakyWindowLog {
             return true;
         }
 
-        // BUG: What happens when request is rejected?
         return false;
     }
 }
@@ -1306,7 +1295,6 @@ public class BrokenSlidingCounter {
         double elapsed = now - windowStart;
         double ratio = elapsed / windowMs;
 
-        // BUG: Is this formula correct?
         double weightedCount = previousCount * ratio + currentCount;
 
         if (weightedCount < maxRequests) {
@@ -1396,15 +1384,13 @@ public class BrokenLeakyBucket {
         long now = System.currentTimeMillis();
         long elapsed = now - lastLeakTime;
 
-        // BUG: Is this calculation correct?
         int requestsToLeak = (int)(elapsed * leakRate);
 
         for (int i = 0; i < requestsToLeak && !bucket.isEmpty(); i++) {
             bucket.poll();
         }
 
-        lastLeakTime = now;  // BUG: Should we always update?
-    }
+        lastLeakTime = now;    }
 }
 ```
 
@@ -1640,39 +1626,6 @@ For each scenario, identify alternatives and compare:
 - [ ] Can explain trade-offs between algorithms
 - [ ] Built decision tree for algorithm selection
 - [ ] Completed practice scenarios
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Backend Developer
-
-**Scenario:** A backend developer asks you to choose a rate limiting algorithm for their API.
-
-**Your explanation (write it out):**
-
-> "Rate limiting is..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-> "The four main algorithms are..."
->
-> <span class="fill-in">[Fill in brief explanation of token bucket, leaky bucket, fixed window, sliding window]</span>
-
-> "For your API, I would recommend... because..."
->
-> <span class="fill-in">[Fill in your recommendation with reasoning]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could you explain the trade-offs clearly? <span class="fill-in">[Yes/No]</span>
-- Did you mention memory, accuracy, and burst handling? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 

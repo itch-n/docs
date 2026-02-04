@@ -1574,12 +1574,10 @@ public static Map<Long, Map<String, Long>> tumblingWindow_Buggy(
     Map<Long, Map<String, Long>> windows = new TreeMap<>();
 
     for (Event<String, String> event : events) {
-        // BUG 1: Window calculation issue
         long windowStart = event.timestamp / windowSize;
 
         Map<String, Long> window = windows.computeIfAbsent(windowStart, k -> new HashMap<>());
 
-        // BUG 2: Count logic issue
         window.put(event.key, 1L);
     }
 
@@ -1589,17 +1587,11 @@ public static Map<Long, Map<String, Long>> tumblingWindow_Buggy(
 
 **Your debugging:**
 
-- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 1 explanation:** <span class="fill-in">[What's wrong with window calculation?]</span>
-- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
-- **Test case:** Events at [1500ms, 2500ms] with windowSize=1000ms
+- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
     - Current output: <span class="fill-in">[What windows?]</span>
     - Expected output: <span class="fill-in">[What windows?]</span>
 
-- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 2 explanation:** <span class="fill-in">[What happens to the count?]</span>
-- **Bug 2 fix:** <span class="fill-in">[How to fix?]</span>
-- **Test case:** Events [("user1", 1000), ("user1", 1100), ("user1", 1200)]
+- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
     - Current count: <span class="fill-in">[What do you get?]</span>
     - Expected count: <span class="fill-in">[Should be?]</span>
 
@@ -1642,14 +1634,12 @@ public void processEvent_Buggy(Event<String, String> event) {
     long windowStart = (event.eventTime / windowSize) * windowSize;
     long windowEnd = windowStart + windowSize;
 
-    // BUG 1: Late data check is wrong
     if (event.eventTime < currentWatermark) {
         System.out.println("LATE DATA: " + event.key);
         lateEventCount++;
         return; // Drop event
     }
 
-    // BUG 2: Window closing logic issue
     if (currentWatermark > windowEnd) {
         // Window already closed, don't accept event
         return;
@@ -1755,13 +1745,11 @@ public class ValueState_Buggy<K, S> {
     }
 
     public S get(K key, long currentTime) {
-        // BUG: TTL check doesn't clean up expired state
         if (state.containsKey(key)) {
             Long lastTime = lastAccess.get(key);
             if (currentTime - lastTime > ttlMs) {
                 // State expired, return null
-                return null;  // BUG HERE: What's missing?
-            }
+                return null;            }
             return state.get(key);
         }
         return null;
@@ -1851,7 +1839,6 @@ public static List<WindowResult<String>> sessionWindow_Buggy(
         String key = entry.getKey();
         List<Event<String, String>> keyEvents = entry.getValue();
 
-        // BUG: No sorting! Events may be out of order
         // keyEvents.sort(Comparator.comparingLong(e -> e.timestamp));
 
         long sessionStart = keyEvents.get(0).timestamp;
@@ -1859,7 +1846,6 @@ public static List<WindowResult<String>> sessionWindow_Buggy(
         long count = 0;
 
         for (Event<String, String> event : keyEvents) {
-            // BUG: Gap check is wrong
             if (event.timestamp - lastTimestamp >= gapMs) {
                 // Close current session
                 results.add(new WindowResult<>(key, sessionStart, lastTimestamp, count));
@@ -1958,7 +1944,6 @@ if (keyEvents.isEmpty()) {
 public List<String> processLeft_Buggy(Event<String, String> event) {
     List<String> results = new ArrayList<>();
 
-    // BUG 1: Store in state AFTER looking for matches
     List<Event<String, String>> rightEvents = rightState.get(event.key, event.timestamp);
 
     if (rightEvents != null) {
@@ -1970,7 +1955,6 @@ public List<String> processLeft_Buggy(Event<String, String> event) {
         }
     }
 
-    // BUG: Storing AFTER matching means we miss reverse joins
     leftState.append(event.key, event, event.timestamp);
 
     return results;
@@ -2181,37 +2165,6 @@ Stream Processing Pattern Selection
     └─ Minutes → Large lateness window, accurate results
 ```
 
-### The "Kill Switch" - Stream Processing Anti-Patterns
-
-**Don't do this:**
-
-1. **Large state without cleanup** - <span class="fill-in">[Set TTL, use cleanup triggers]</span>
-2. **No backpressure handling** - <span class="fill-in">[Rate limit, buffer with spillover]</span>
-3. **Ignoring late data** - <span class="fill-in">[Understand arrival patterns first]</span>
-4. **Synchronous external calls** - <span class="fill-in">[Use async I/O or batching]</span>
-5. **No monitoring of watermarks** - <span class="fill-in">[Track lag, late events]</span>
-6. **Infinite session windows** - <span class="fill-in">[Set max session duration]</span>
-7. **Stateful operations without checkpoints** - <span class="fill-in">[Enable fault tolerance]</span>
-
-### The Rule of Three: Alternatives
-
-**Option 1: Batch Processing (e.g., Spark)**
-
-- Pros: <span class="fill-in">[Simple, high throughput, SQL support]</span>
-- Cons: <span class="fill-in">[Higher latency, no real-time]</span>
-- Use when: <span class="fill-in">[Hourly/daily jobs, historical data]</span>
-
-**Option 2: Stream Processing (e.g., Flink, Kafka Streams)**
-
-- Pros: <span class="fill-in">[Low latency, exactly-once, stateful]</span>
-- Cons: <span class="fill-in">[Complex, operational overhead]</span>
-- Use when: <span class="fill-in">[Real-time, event-driven, sub-second]</span>
-
-**Option 3: Micro-Batch (e.g., Spark Streaming)**
-
-- Pros: <span class="fill-in">[Balance latency/throughput, Spark ecosystem]</span>
-- Cons: <span class="fill-in">[Not true streaming, higher latency than pure streaming]</span>
-- Use when: <span class="fill-in">[Second-level latency OK, existing Spark]</span>
 
 ---
 
@@ -2360,41 +2313,6 @@ Before moving to the next topic:
     - [ ] Could implement exactly-once processing
     - [ ] Know common streaming pitfalls
     - [ ] Can debug watermark issues
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks you about stream processing.
-
-**Your explanation (write it out):**
-
-> "Stream processing is..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-**Follow-up questions they ask:**
-
-**Q1: "What's the difference between a tumbling window and a sliding window?"**
-
-Your answer: <span class="fill-in">[Fill in - use an analogy]</span>
-
-**Q2: "Why do we need watermarks? Can't we just process events as they arrive?"**
-
-Your answer: <span class="fill-in">[Fill in - explain the late data problem]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
-- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 

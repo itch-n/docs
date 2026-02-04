@@ -775,8 +775,7 @@ private static void backtrack(int[] nums, List<Integer> current,
                               boolean[] used, List<List<Integer>> result) {
     // Base case
     if (current.size() == nums.length) {
-        result.add(current);  // BUG 1: What's wrong here?
-        return;
+        result.add(current);        return;
     }
 
     for (int i = 0; i < nums.length; i++) {
@@ -785,20 +784,15 @@ private static void backtrack(int[] nums, List<Integer> current,
         used[i] = true;
         current.add(nums[i]);
         backtrack(nums, current, used, result);
-        // BUG 2: Missing something here!
     }
 }
 ```
 
 **Your debugging:**
 
-- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 1 explanation:** <span class="fill-in">[What's wrong?]</span>
-- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
+- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
 
-- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 2 explanation:** <span class="fill-in">[What's missing?]</span>
-- **Bug 2 fix:** <span class="fill-in">[What code should be added?]</span>
+- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -827,7 +821,6 @@ Without these lines, the algorithm never properly backtracks and explores other 
  */
 public static List<List<Integer>> subsetsWithDup_Buggy(int[] nums) {
     List<List<Integer>> result = new ArrayList<>();
-    // BUG 1: Missing something before backtracking!
     backtrack(nums, 0, new ArrayList<>(), result);
     return result;
 }
@@ -838,7 +831,6 @@ private static void backtrack(int[] nums, int start,
     result.add(new ArrayList<>(current));
 
     for (int i = start; i < nums.length; i++) {
-        // BUG 2: Missing duplicate check!
         current.add(nums[i]);
         backtrack(nums, i + 1, current, result);
         current.remove(current.size() - 1);
@@ -909,8 +901,7 @@ private static void backtrack(int row, int n, char[][] board,
 
     for (int col = 0; col < n; col++) {
         int d1 = row - col;
-        int d2 = row + col;  // BUG: Is this diagonal calculation correct?
-
+        int d2 = row + col;
         if (cols.contains(col) || diag1.contains(d1) || diag2.contains(d2)) {
             continue;
         }
@@ -923,16 +914,13 @@ private static void backtrack(int row, int n, char[][] board,
 
         backtrack(row + 1, n, board, cols, diag1, diag2, result);
 
-        // BUG: Missing backtrack cleanup!
     }
 }
 ```
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[Which line or lines?]</span>
-- **Bug explanation:** <span class="fill-in">[What's missing?]</span>
-- **Bug fix:** <span class="fill-in">[Fill in the missing code]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Hint:** What happens after the recursive call?
 
@@ -976,12 +964,10 @@ private static void backtrack(int[] candidates, int target, int start,
         return;
     }
 
-    if (target < 0) {  // BUG: Pruning too late!
-        return;
+    if (target < 0) {        return;
     }
 
     for (int i = start; i < candidates.length; i++) {
-        // BUG: Should prune earlier - before recursion!
         current.add(candidates[i]);
         backtrack(candidates, target - candidates[i], i, current, result);
         current.remove(current.size() - 1);
@@ -1055,7 +1041,6 @@ private static void backtrack(int[] nums, List<Integer> current,
     for (int i = 0; i < nums.length; i++) {
         if (used[i]) continue;
 
-        // BUG: Missing duplicate check!
         // Should skip if: same as previous && previous not used
 
         used[i] = true;
@@ -1176,34 +1161,6 @@ Backtracking Pattern Selection
     └─ Sort input if helpful for pruning ✓
 ```
 
-### The "Kill Switch" - When NOT to use Backtracking
-
-**Don't use backtracking when:**
-
-1. <span class="fill-in">[Solution space too large without pruning]</span>
-2. <span class="fill-in">[Can solve with DP or greedy]</span>
-3. <span class="fill-in">[Only need one solution and can find it directly]</span>
-4. <span class="fill-in">[No way to validate partial solutions]</span>
-
-### The Rule of Three: Alternatives
-
-**Option 1: Backtracking**
-
-- Pros: <span class="fill-in">[Explores all solutions, can prune]</span>
-- Cons: <span class="fill-in">[Exponential time complexity]</span>
-- Use when: <span class="fill-in">[Need all solutions or constraint satisfaction]</span>
-
-**Option 2: Dynamic Programming**
-
-- Pros: <span class="fill-in">[Polynomial time if applicable]</span>
-- Cons: <span class="fill-in">[Need optimal substructure]</span>
-- Use when: <span class="fill-in">[Counting or optimization, not enumeration]</span>
-
-**Option 3: Greedy**
-
-- Pros: <span class="fill-in">[Fast, simple]</span>
-- Cons: <span class="fill-in">[Doesn't work for all problems]</span>
-- Use when: <span class="fill-in">[Greedy choice property holds]</span>
 
 ---
 
@@ -1296,31 +1253,6 @@ Before moving to the next topic:
     - [ ] Could recognize pattern in new problem
     - [ ] Could explain to someone else
     - [ ] Understand when to prune branches
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks you about backtracking.
-
-**Your explanation (write it out):**
-
-> "Backtracking is a technique where..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
-- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 

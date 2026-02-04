@@ -946,7 +946,6 @@ public class StampedeLRUCache<K, V> {
         V value = cache.get(key);
 
         if (value == null) {
-            // BUG: No synchronization!
             // If 1000 threads miss cache at same time,
             // all 1000 will query database for same key!
             value = database.read(key);
@@ -965,9 +964,6 @@ public class StampedeLRUCache<K, V> {
 
 - **Bug location:** <span class="fill-in">[Which lines?]</span>
 - **Bug explanation:** <span class="fill-in">[What happens with concurrent requests?]</span>
-- **Bug impact:** <span class="fill-in">[How does this affect database?]</span>
-- **Fix approach 1 (Locking):** <span class="fill-in">[How to fix with synchronized?]</span>
-- **Fix approach 2 (Better):** <span class="fill-in">[How to fix with double-checked locking or other pattern?]</span>
 
 **Test case to expose the bug:**
 
@@ -1043,7 +1039,6 @@ public class StaleWriteBackCache<K, V> {
     private final Database<K, V> database;
 
     public V get(K key) {
-        // BUG: Wrong order of checks!
         V value = cache.get(key);
         if (value != null) return value;
 
@@ -1152,7 +1147,6 @@ public class TTLCache<K, V> {
 
         // Check expiration
         if (entry == null || entry.isExpired()) {
-            // BUG: At 10:00 AM, 1000 items all expire at once
             // All requests hit database simultaneously!
             V value = database.read(key);
             if (value != null) {
@@ -1180,8 +1174,6 @@ What happens?
 
 - **Expected:** Smooth database load
 - **Actual:** <span class="fill-in">[What happens to database?]</span>
-- **Fix approach 1:** <span class="fill-in">[Add jitter to TTL]</span>
-- **Fix approach 2:** <span class="fill-in">[Implement probabilistic early expiration]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1274,7 +1266,6 @@ public class BuggyLFUCache<K, V> {
         Node<K, V> node = cache.get(key);
         if (node == null) return null;
 
-        // BUG: Frequency update is incomplete!
         updateFrequency(node);
         return node.value;
     }
@@ -1285,7 +1276,6 @@ public class BuggyLFUCache<K, V> {
         // Remove from current frequency list
         freqMap.get(freq).remove(node.key);
 
-        // BUG: What if freqMap.get(freq) is now empty?
         // And what if freq == minFreq?
 
         // Increment frequency
@@ -1306,7 +1296,6 @@ public class BuggyLFUCache<K, V> {
 
 - **Bug 1:** <span class="fill-in">[What happens to minFreq?]</span>
 - **Bug 2:** <span class="fill-in">[What about empty frequency lists?]</span>
-- **Test case:**
 
 ```
 Cache capacity = 2
@@ -1386,7 +1375,6 @@ public class InvalidationCache<K, V> {
     }
 
     public void update(K key, V newValue) {
-        // BUG: Race condition between these two operations!
 
         // Thread 1: Writes to database
         database.write(key, newValue);
@@ -1416,9 +1404,6 @@ T3: Thread 1 invalidates cache
     - Too late! Thread 2 already returned stale data
 ```
 
-- **Fix approach 1:** <span class="fill-in">[Invalidate before write]</span>
-- **Fix approach 2:** <span class="fill-in">[Use versioning]</span>
-- **Fix approach 3:** <span class="fill-in">[Use cache-aside with write-through]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1571,35 +1556,6 @@ Should I use caching?
     └─ Failure tolerance → ?
 ```
 
-### The "Kill Switch" - Don't use caching when:
-
-1. <span class="fill-in">[When does caching hurt more than help?]</span>
-2. <span class="fill-in">[Fill in after understanding trade-offs]</span>
-3. <span class="fill-in">[Fill in after practice]</span>
-4. <span class="fill-in">[Fill in]</span>
-5. <span class="fill-in">[Fill in]</span>
-
-### The Rule of Three: Alternatives
-
-For each scenario, compare three approaches:
-
-**Option 1: Caching**
-
-- Pros: <span class="fill-in">[Fill in]</span>
-- Cons: <span class="fill-in">[Fill in]</span>
-- Use when: <span class="fill-in">[Fill in]</span>
-
-**Option 2: Database Indexing**
-
-- Pros: <span class="fill-in">[Fill in]</span>
-- Cons: <span class="fill-in">[Fill in]</span>
-- Use when: <span class="fill-in">[Fill in]</span>
-
-**Option 3: Read Replicas**
-
-- Pros: <span class="fill-in">[Fill in]</span>
-- Cons: <span class="fill-in">[Fill in]</span>
-- Use when: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -1696,31 +1652,6 @@ Before moving to the next topic:
     - [ ] Could implement LFU from memory
     - [ ] Could design cache for new scenario
     - [ ] Understand when NOT to use caching
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Product Manager
-
-**Scenario:** Your PM asks why we need caching and what the trade-offs are.
-
-**Your explanation (write it out):**
-
-> "Caching is a technique where..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
-- Did you explain the trade-offs (not just benefits)? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 
@@ -1928,7 +1859,6 @@ public class BuggyCache<K, V> {
 
     public synchronized void put(K key, V value) {
         if (cache.size() >= capacity) {
-            // BUG: What's wrong here?
             K firstKey = cache.keySet().iterator().next();
             cache.remove(firstKey);
         }

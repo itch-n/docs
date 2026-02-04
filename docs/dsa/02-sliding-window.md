@@ -737,8 +737,7 @@ public static double maxAverage_Buggy(int[] nums, int k) {
     int windowSum = 0;
 
     // Build first window
-    for (int i = 0; i <= k; i++) {  // BUG 1: Off-by-one error
-        windowSum += nums[i];
+    for (int i = 0; i <= k; i++) {        windowSum += nums[i];
     }
 
     double maxAvg = windowSum / k;
@@ -746,8 +745,7 @@ public static double maxAverage_Buggy(int[] nums, int k) {
     // Slide window
     for (int i = k; i < nums.length; i++) {
         windowSum = windowSum - nums[i - k] + nums[i];
-        maxAvg = Math.max(maxAvg, windowSum / k);  // BUG 2: Integer division issue
-    }
+        maxAvg = Math.max(maxAvg, windowSum / k);    }
 
     return maxAvg;
 }
@@ -755,13 +753,9 @@ public static double maxAverage_Buggy(int[] nums, int k) {
 
 **Your debugging:**
 
-- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 1 explanation:** <span class="fill-in">[What's wrong with the loop condition?]</span>
-- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
+- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
 
-- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 2 explanation:** <span class="fill-in">[What type mismatch causes incorrect results?]</span>
-- **Bug 2 fix:** <span class="fill-in">[How to ensure correct division?]</span>
+- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
 
 **Test case to expose bugs:**
 
@@ -815,8 +809,7 @@ public static int longestSubstring_Buggy(String s) {
         }
 
         window.add(c);
-        maxLen = Math.max(maxLen, window.size());  // BUG: Using window.size() instead of right - left + 1
-    }
+        maxLen = Math.max(maxLen, window.size());    }
 
     return maxLen;
 }
@@ -824,9 +817,7 @@ public static int longestSubstring_Buggy(String s) {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[Which line has the logic error?]</span>
-- **Bug explanation:** <span class="fill-in">[Why is window.size() not always correct?]</span>
-- **Bug fix:** <span class="fill-in">[What should the calculation be?]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Trace through example:**
 
@@ -868,8 +859,7 @@ public static int minSubArrayLen_Buggy(int target, int[] nums) {
     for (int right = 0; right < nums.length; right++) {
         sum += nums[right];
 
-        if (sum >= target) {  // BUG: Should be WHILE, not IF!
-            minLen = Math.min(minLen, right - left + 1);
+        if (sum >= target) {            minLen = Math.min(minLen, right - left + 1);
             sum -= nums[left];
             left++;
         }
@@ -883,7 +873,6 @@ public static int minSubArrayLen_Buggy(int target, int[] nums) {
 
 - **Bug location:** <span class="fill-in">[What's wrong with the condition?]</span>
 - **Bug explanation:** <span class="fill-in">[Why does IF fail but WHILE works?]</span>
-- **Bug impact:** <span class="fill-in">[What kind of results do you get?]</span>
 
 **Test case to expose bug:**
 
@@ -941,9 +930,7 @@ public static int longestKDistinct_Buggy(String s, int k) {
         char c = s.charAt(right);
         window.put(c, window.getOrDefault(c, 0) + 1);
 
-        if (window.size() > k) {  // BUG 1: Checking wrong condition
-            // BUG 2: Not properly removing from window
-            char leftChar = s.charAt(left);
+        if (window.size() > k) {            char leftChar = s.charAt(left);
             window.put(leftChar, window.get(leftChar) - 1);
             left++;
         }
@@ -1089,34 +1076,6 @@ Sliding Window Pattern Selection
     └─ Dynamic: Shrink while constraint violated
 ```
 
-### The "Kill Switch" - When NOT to use Sliding Window
-
-**Don't use sliding window when:**
-
-1. <span class="fill-in">[Need non-contiguous elements - use DP instead]</span>
-2. <span class="fill-in">[Need all subsets/permutations - use backtracking]</span>
-3. <span class="fill-in">[Data not linear (trees, graphs) - use DFS/BFS]</span>
-4. <span class="fill-in">[No concept of "window" or "range" in problem]</span>
-
-### The Rule of Three: Alternatives
-
-**Option 1: Sliding Window**
-
-- Pros: <span class="fill-in">[O(n) time, elegant solution]</span>
-- Cons: <span class="fill-in">[Only works on contiguous subarrays]</span>
-- Use when: <span class="fill-in">[Subarray/substring optimization problem]</span>
-
-**Option 2: Two Pointers (no window)**
-
-- Pros: <span class="fill-in">[More flexible, works on sorted arrays]</span>
-- Cons: <span class="fill-in">[May not track window state efficiently]</span>
-- Use when: <span class="fill-in">[Pair finding, partitioning, sorted data]</span>
-
-**Option 3: Brute Force (nested loops)**
-
-- Pros: <span class="fill-in">[Simple, works for any constraint]</span>
-- Cons: <span class="fill-in">[O(n²) or O(n³) time complexity]</span>
-- Use when: <span class="fill-in">[Very small input, one-time calculation]</span>
 
 ---
 
@@ -1214,32 +1173,6 @@ Before moving to the next topic:
     - [ ] Could recognize pattern in new problem
     - [ ] Could explain to someone else
     - [ ] Understand difference from two pointers
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks you about sliding window.
-
-**Your explanation (write it out):**
-
-> "Sliding window is a pattern where..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
-- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
-- Did you explain the difference from two pointers? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to any question, revise your explanation.
 
 ---
 

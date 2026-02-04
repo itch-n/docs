@@ -908,16 +908,13 @@ private void splitLeaf(LeafNode leaf) {
         newLeaf.values.add(leaf.values.get(i));
     }
 
-    // BUG 1: What's wrong with how we remove keys from old leaf?
     for (int i = midpoint; i < leaf.keys.size(); i++) {
         leaf.keys.remove(i);
         leaf.values.remove(i);
     }
 
-    // BUG 2: Missing critical pointer update!
     // newLeaf.next = ???
 
-    // BUG 3: What if leaf is the root?
     InternalNode parent = (InternalNode) leaf.parent;
     parent.keys.add(newLeaf.keys.get(0));
     parent.children.add(newLeaf);
@@ -926,17 +923,9 @@ private void splitLeaf(LeafNode leaf) {
 
 **Your debugging:**
 
-- **Bug 1 location:** <span class="fill-in">[Which lines?]</span>
-- **Bug 1 explanation:** <span class="fill-in">[What happens when you remove while iterating?]</span>
-- **Bug 1 fix:** <span class="fill-in">[How to correctly remove elements?]</span>
-
-- **Bug 2 location:** <span class="fill-in">[What's missing?]</span>
-- **Bug 2 explanation:** <span class="fill-in">[Why must leaf nodes be linked?]</span>
-- **Bug 2 fix:** <span class="fill-in">[Write the correct code]</span>
-
-- **Bug 3 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 3 explanation:** <span class="fill-in">[What if leaf.parent is null?]</span>
-- **Bug 3 fix:** <span class="fill-in">[How to handle root split?]</span>
+- Bug 1: <span class="fill-in">[What's the bug?]</span>
+- Bug 2: <span class="fill-in">[What's the bug?]</span>
+- Bug 3: <span class="fill-in">[What's the bug?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1003,7 +992,6 @@ public void compact() {
 
     TreeMap<K, V> merged = new TreeMap<>();
 
-    // BUG 1: Wrong iteration order!
     for (int i = sstables.size() - 1; i >= 0; i--) {
         SSTable<K, V> table = sstables.get(i);
         for (Map.Entry<K, V> entry : table.entrySet()) {
@@ -1014,7 +1002,6 @@ public void compact() {
     // Create compacted SSTable
     SSTable<K, V> compacted = new SSTable<>(merged);
 
-    // BUG 2: What about the sstables list?
     sstables.add(compacted);
 
     System.out.println("Compacted into 1 SSTable");
@@ -1023,14 +1010,8 @@ public void compact() {
 
 **Your debugging:**
 
-- **Bug 1:** <span class="fill-in">[What's wrong with iterating newest to oldest?]</span>
-- **Bug 1 explanation:** <span class="fill-in">[Which value should win for duplicate keys?]</span>
-- **Bug 1 test case:** Insert key=5 with "Old", then update to "New". After compaction, what do you get?
-- **Bug 1 fix:** <span class="fill-in">[Correct the iteration order]</span>
-
-- **Bug 2:** <span class="fill-in">[What's wrong with line 18?]</span>
-- **Bug 2 explanation:** <span class="fill-in">[What happens to old SSTables?]</span>
-- **Bug 2 fix:** <span class="fill-in">[Write the correct code]</span>
+- Bug 1: <span class="fill-in">[What's the bug?]</span>
+- Bug 2: <span class="fill-in">[What's the bug?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1078,7 +1059,6 @@ private LeafNode findLeaf(K key) {
     while (!current.isLeaf()) {
         InternalNode internal = (InternalNode) current;
 
-        // BUG: Wrong child selection logic!
         int i = 0;
         while (i < internal.keys.size() && key.compareTo(internal.keys.get(i)) > 0) {
             i++;
@@ -1093,10 +1073,7 @@ private LeafNode findLeaf(K key) {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[Which lines?]</span>
-- **Bug explanation:** <span class="fill-in">[What happens with keys equal to internal node keys?]</span>
-- **Test case:** Tree has keys [10, 20, 30]. Search for key=20. Which child do you visit?
-- **Bug fix:** <span class="fill-in">[Should comparison be >= or >?]</span>
+- Bug: <span class="fill-in">[What's the bug?]</span>
 
 **Trace through manually:**
 
@@ -1159,7 +1136,6 @@ public class LSMTree<K extends Comparable<K>, V> {
     public void put(K key, V value) {
         memTable.put(key, value);
 
-        // BUG: What's missing here?
         if (memTable.size() >= memTableSize) {
             flush();
         }
@@ -1168,7 +1144,6 @@ public class LSMTree<K extends Comparable<K>, V> {
     private void flush() {
         SSTable<K, V> newTable = new SSTable<>(memTable);
         sstables.add(newTable);
-        // BUG: Missing critical step!
         System.out.println("Flushed to SSTable");
     }
 }
@@ -1176,12 +1151,7 @@ public class LSMTree<K extends Comparable<K>, V> {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[What's missing in flush()?]</span>
-- **Bug explanation:** <span class="fill-in">[What happens to MemTable after flush?]</span>
-- **Test case:** Insert 250 items. How many times does flush() run? How many items in memTable?
-- **Expected:** MemTable has 50 items after 250 inserts (flushed 200)
-- **Actual:** <span class="fill-in">[What really happens?]</span>
-- **Bug fix:** <span class="fill-in">[Write the missing code]</span>
+- Bug: <span class="fill-in">[What's the bug?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1231,7 +1201,6 @@ public List<V> rangeQuery(K startKey, K endKey) {
         for (int i = 0; i < leaf.keys.size(); i++) {
             K key = leaf.keys.get(i);
 
-            // BUG: Wrong range check!
             if (key.compareTo(startKey) >= 0) {
                 results.add(leaf.values.get(i));
             }
@@ -1246,11 +1215,7 @@ public List<V> rangeQuery(K startKey, K endKey) {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[Which line?]</span>
-- **Bug explanation:** <span class="fill-in">[What's missing from the range check?]</span>
-- **Test case:** Tree has keys [1,3,5,7,9,11,13,15]. rangeQuery(5, 10). Expected: [5,7,9].
-  Actual: <span class="fill-in">[What?]</span>
-- **Bug fix:** <span class="fill-in">[Add missing condition]</span>
+- Bug: <span class="fill-in">[What's the bug?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -1363,44 +1328,6 @@ Storage Engine Selection
     ├─ YES, many range scans → Use B+Tree ✓
     └─ Mixed workload → [Your decision here based on testing]
 ```
-
-### The "Kill Switch" - When NOT to use each
-
-**Don't use B+Tree when:**
-
-1. <span class="fill-in">[Fill in]</span>
-2. <span class="fill-in">[Fill in]</span>
-3. <span class="fill-in">[Fill in]</span>
-
-**Don't use LSM Tree when:**
-
-1. <span class="fill-in">[Fill in]</span>
-2. <span class="fill-in">[Fill in]</span>
-3. <span class="fill-in">[Fill in]</span>
-
-### The Rule of Three: Alternative Approaches
-
-For any storage decision, consider:
-
-**Option 1: B+Tree**
-
-- Pros: <span class="fill-in">[Fill in]</span>
-- Cons: <span class="fill-in">[Fill in]</span>
-- Use when: <span class="fill-in">[Fill in]</span>
-
-**Option 2: LSM Tree**
-
-- Pros: <span class="fill-in">[Fill in]</span>
-- Cons: <span class="fill-in">[Fill in]</span>
-- Use when: <span class="fill-in">[Fill in]</span>
-
-**Option 3:** <span class="fill-in">[What's a third option? Hash index? Column store?]</span>
-
-- Pros: <span class="fill-in">[Fill in]</span>
-- Cons: <span class="fill-in">[Fill in]</span>
-- Use when: <span class="fill-in">[Fill in]</span>
-
----
 
 ## Practice
 
@@ -1517,7 +1444,6 @@ Before moving to the next topic:
 
 - [ ] **Decision Making**
     - [ ] Built complete decision tree
-    - [ ] Identified "kill switch" for each
     - [ ] Solved all 3 practice scenarios
     - [ ] Can justify each design choice
 
@@ -1525,313 +1451,6 @@ Before moving to the next topic:
     - [ ] Could implement both from memory
     - [ ] Could explain trade-offs in an interview
     - [ ] Know when to use each without looking at notes
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Database Engineer
-
-**Scenario:** A database engineer asks you about storage engines for a new service.
-
-**Your explanation (write it out):**
-
-> "B+Trees and LSM Trees are two fundamental storage engine architectures..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 4-5 sentences max]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation help someone make a real architectural decision? <span class="fill-in">[Yes/No]</span>
-- Did you explain the fundamental trade-off (write vs read performance)? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
-
----
-
-### Gate 2: Whiteboard Exercise
-
-**Task:** Draw how B+Tree and LSM Tree handle the same write operation, showing the structural differences.
-
-**Draw both approaches for inserting key=42:**
-
-```
-B+Tree Insert (key=42):
-Step 1: [Your drawing - show tree structure]
-        _________________________________
-
-Step 2: [Show traversal from root to leaf]
-        _________________________________
-
-Step 3: [Show potential node split if needed]
-        _________________________________
-
-
-LSM Tree Insert (key=42):
-Step 1: [Your drawing - show MemTable]
-        _________________________________
-
-Step 2: [Show what happens at flush threshold]
-        _________________________________
-
-Step 3: [Show SSTable creation]
-        _________________________________
-```
-
-**Verification:**
-
-- [ ] Drew B+Tree structure correctly (internal nodes vs leaf nodes)
-- [ ] Showed leaf linking in B+Tree
-- [ ] Drew LSM architecture (MemTable + SSTables)
-- [ ] Explained why LSM is faster for this operation
-
----
-
-### Gate 3: Pattern Recognition Test
-
-**Without looking at your notes, classify these workloads:**
-
-| Workload                                          | Best Engine (B+Tree/LSM)               | Why?                                   |
-|---------------------------------------------------|----------------------------------------|----------------------------------------|
-| Time-series sensor data (high write rate)         | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Banking transactions (needs consistency)          | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Analytics with date range queries                 | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Social media feeds (mostly recent reads)          | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Key-value cache (50/50 read/write)                | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-| Inventory system (read-heavy, occasional updates) | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Explain]</span> |
-
-**Score:** ___/6 correct
-
-If you scored below 5/6, review the decision framework and try again.
-
----
-
-### Gate 4: Complexity Analysis
-
-**Complete this table from memory:**
-
-| Operation       | B+Tree | LSM Tree | Why Different?                                                      |
-|-----------------|--------|----------|---------------------------------------------------------------------|
-| Insert (single) | O(?)   | O(?)     | <span class="fill-in">[Explain]</span>                              |
-| Search (single) | O(?)   | O(?)     | <span class="fill-in">[Explain]</span>                              |
-| Range query     | O(?)   | O(?)     | <span class="fill-in">[Explain]</span>                              |
-| Compaction      | N/A    | O(?)     | <span class="fill-in">[Explain why B+Tree doesn't need this]</span> |
-
-**Deep questions:**
-
-1. **Why is LSM Tree write O(log M) instead of O(log N)?**
-    - Your answer: <span class="fill-in">[Fill in - explain M vs N]</span>
-
-2. **What is "write amplification" and which engine has more?**
-    - Your answer: <span class="fill-in">[Fill in - define and compare]</span>
-
-3. **What is "read amplification" and which engine has more?**
-    - Your answer: <span class="fill-in">[Fill in - define and compare]</span>
-
----
-
-### Gate 5: Trade-off Decision
-
-**Scenario:** You're designing storage for a monitoring system that collects 1M metrics/second. Reads are infrequent (
-only for dashboards and alerts).
-
-**Option A:** B+Tree
-
-- Write cost: <span class="fill-in">[Fill in - operations per insert]</span>
-- Read cost: <span class="fill-in">[Fill in]</span>
-- Pros: <span class="fill-in">[Fill in]</span>
-- Cons: <span class="fill-in">[Fill in]</span>
-
-**Option B:** LSM Tree
-
-- Write cost: <span class="fill-in">[Fill in - operations per insert]</span>
-- Read cost: <span class="fill-in">[Fill in]</span>
-- Pros: <span class="fill-in">[Fill in]</span>
-- Cons: <span class="fill-in">[Fill in]</span>
-
-**Your decision:** I would choose <span class="fill-in">[A/B]</span> because...
-
-<span class="fill-in">[Fill in your reasoning - consider write volume, read patterns, and compaction strategy]</span>
-
-**What would make you change your decision?**
-
-- Scenario change 1: <span class="fill-in">[Fill in - what if reads increased 100x?]</span>
-- Scenario change 2: <span class="fill-in">[Fill in - what if range queries became critical?]</span>
-
----
-
-### Gate 6: Implementation from Memory (Final Test)
-
-**Set a 15-minute timer. Implement the core operations without looking at notes:**
-
-```java
-/**
- * Implement: LSM Tree put and get operations
- */
-public class LSMTree<K extends Comparable<K>, V> {
-    private TreeMap<K, V> memTable;
-    private List<SSTable<K, V>> sstables;
-    private final int memTableSize;
-
-    // Your implementation here:
-
-    public void put(K key, V value) {
-        // TODO: Implement
-
-
-
-
-    }
-
-    public V get(K key) {
-        // TODO: Implement
-
-
-
-
-        return null;
-    }
-
-    private void flush() {
-        // TODO: Implement
-
-
-
-    }
-}
-```
-
-**After implementing, test with:**
-
-- Insert 150 keys with memTableSize=50
-- Expected: 3 SSTables created
-- Read key that exists in MemTable
-- Read key that exists in oldest SSTable
-
-**Verification:**
-
-- [ ] Implemented put() correctly with flush logic
-- [ ] Implemented get() to check MemTable then SSTables
-- [ ] Handles flush threshold correctly
-- [ ] Returns correct values after flush
-
----
-
-### Gate 7: Architectural Reasoning
-
-**The ultimate test: Design a hybrid approach.**
-
-**Task:** Design a storage engine that combines B+Tree and LSM Tree advantages.
-
-Your design:
-
-```
-Hybrid Storage Engine:
-
-Component 1: <span class="fill-in">[What would you use for writes?]</span>
-    - Structure: <span class="fill-in">[Describe]</span>
-    - Purpose: <span class="fill-in">[Why this choice?]</span>
-
-Component 2: <span class="fill-in">[What would you use for reads?]</span>
-    - Structure: <span class="fill-in">[Describe]</span>
-    - Purpose: <span class="fill-in">[Why this choice?]</span>
-
-Background Process: <span class="fill-in">[What maintains the system?]</span>
-    - Frequency: <span class="fill-in">[How often?]</span>
-    - Operation: <span class="fill-in">[What does it do?]</span>
-
-Trade-offs: <span class="fill-in">[What did you sacrifice? What did you gain?]</span>
-```
-
-**Real-world comparison:**
-
-- Does your design resemble any real database? <span class="fill-in">[Research: RocksDB, WiredTiger, LevelDB]</span>
-- What did you discover? <span class="fill-in">[Fill in after researching]</span>
-
----
-
-### Gate 8: Bug Prevention Checklist
-
-**From your debugging experience, create a checklist for code reviews:**
-
-**B+Tree Implementation Checklist:**
-
-- [ ] <span class="fill-in">[Fill in - node split edge cases]</span>
-- [ ] <span class="fill-in">[Fill in - leaf linking]</span>
-- [ ] <span class="fill-in">[Fill in - boundary conditions in search]</span>
-- [ ] <span class="fill-in">[Fill in]</span>
-
-**LSM Tree Implementation Checklist:**
-
-- [ ] <span class="fill-in">[Fill in - MemTable clearing after flush]</span>
-- [ ] <span class="fill-in">[Fill in - SSTable iteration order in compaction]</span>
-- [ ] <span class="fill-in">[Fill in - read amplification mitigation]</span>
-- [ ] <span class="fill-in">[Fill in]</span>
-
-**General Storage Engine Checklist:**
-
-- [ ] <span class="fill-in">[Fill in]</span>
-- [ ] <span class="fill-in">[Fill in]</span>
-
----
-
-### Gate 9: Teaching Check
-
-**The ultimate test of understanding is teaching.**
-
-**Task:** Explain write amplification to someone who has never heard of it.
-
-Your explanation:
-
-> "Write amplification happens when..."
->
-> <span class="fill-in">[Fill in - use an analogy, then explain the technical concept]</span>
-
-**Examples you would use:**
-
-1. <span class="fill-in">[Real-world analogy]</span>
-2. <span class="fill-in">[B+Tree example with numbers]</span>
-3. <span class="fill-in">[LSM Tree example with numbers]</span>
-
-**Why it matters:**
-
-- Impact on SSD lifetime: <span class="fill-in">[Explain]</span>
-- Impact on performance: <span class="fill-in">[Explain]</span>
-
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
-- [ ] Implement B+Tree insert, search, and range query from memory
-- [ ] Implement LSM Tree put, get, flush, and compact from memory
-- [ ] Explain when and why to use each storage engine
-- [ ] Identify the correct engine for new workloads without hesitation
-- [ ] Analyze write and read amplification
-- [ ] Debug common storage engine bugs
-- [ ] Design compaction strategies for LSM Trees
-- [ ] Teach these concepts to someone else
-
-**Self-assessment score:** ___/10
-
-**Benchmark results completed:**
-
-- Write performance ratio (LSM vs B+Tree): <span class="fill-in">___</span>x faster
-- Read performance ratio (B+Tree vs LSM): <span class="fill-in">___</span>x faster
-- Understood why: <span class="fill-in">[Yes/No]</span>
-
-**If score < 8:** Review the sections where you struggled, then retry this gate.
-
-**If score ≥ 8:** Congratulations! You've mastered storage engines. Proceed to the next topic.
-
----
-
----
 
 # APPENDIX: The Historical Evolution - From First Principles
 

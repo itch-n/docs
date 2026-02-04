@@ -1303,21 +1303,18 @@ they involve interactions between services.
 // Buggy cache implementation
 static class Cache {
     private final Map<String, String> cache = new ConcurrentHashMap<>();
-    // BUG: No size limit!
 
     public String get(String key) {
         return cache.get(key);
     }
 
     public void put(String key, String value) {
-        cache.put(key, value);  // BUG: Grows forever
-    }
+        cache.put(key, value);    }
 }
 
 // Buggy database access
 static class DatabaseShards {
     public String get(String shortCode) {
-        // BUG: Creates new connection every time
         Connection conn = DriverManager.getConnection(url);
         // ... query database
         conn.close();
@@ -1422,7 +1419,6 @@ public class TwitterFeed {
     public void followUser(long followerId, long followeeId) {
         userGraph.addFollow(followerId, followeeId);
 
-        // BUG: Backfill happens AFTER follow is recorded
         // If followee posts tweet between addFollow and backfill,
         // tweet is missed!
         List<Tweet> recentTweets = tweetStore.getUserTweets(followeeId, 100);
@@ -1433,7 +1429,6 @@ public class TwitterFeed {
     public void fanoutTweet(Tweet tweet) {
         List<Long> followers = userGraph.getFollowers(tweet.userId);
 
-        // BUG: Fan-out is slow and synchronous
         // If user posts 2 tweets quickly, second tweet might
         // fan out before first one completes
         for (Long followerId : followers) {
@@ -1554,7 +1549,6 @@ public class Pastebin {
     public String createPaste(String content, PasteOptions options) {
         String key = generateKey();
 
-        // BUG: Storing large content in SQL database
         // SQL is optimized for small rows, not BLOBs
         metadataStore.save(new PasteMetadata(key, content, options));
 
@@ -1562,11 +1556,9 @@ public class Pastebin {
     }
 
     public Paste getPaste(String key) {
-        // BUG: Every request loads full content from DB
         // Even for 10MB pastes
         PasteMetadata metadata = metadataStore.get(key);
 
-        // BUG: Cache stores large pastes in memory
         // 100 * 10MB pastes = 1GB memory
         if (!metadata.isPrivate) {
             cache.put(key, metadata.content);
@@ -1701,7 +1693,6 @@ public String getOriginalURL(String shortCode) {
         url = database.get(shortCode);
     }
 
-    // BUG: Async analytics call can fail silently
     analytics.trackClick(shortCode);  // Fire and forget
 
     return url;
@@ -1709,11 +1700,9 @@ public String getOriginalURL(String shortCode) {
 
 // Analytics Service
 public void trackClick(String shortCode) {
-    // BUG: In-memory counter lost on restart
     stats.computeIfAbsent(shortCode, k -> new URLAnalytics())
          .incrementClicks();
 
-    // BUG: Persists to DB every 5 minutes
     // Crashes between saves lose data
     if (shouldFlush()) {
         persistToDB();
@@ -2122,32 +2111,6 @@ What are you building?
 -   [ ] Can explain scaling strategies for each system
 -   [ ] Can identify bottlenecks and solutions
 -   [ ] Completed practice system designs
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery of full system design by demonstrating integration of all concepts. You cannot move forward
-until you can confidently complete this section.
-
-### Gate 1: Explain System Trade-offs
-
-**Scenario:** A product manager asks you to design a system similar to Twitter but optimized for 1 billion users.
-
-**Your explanation (write it out):**
-
-> "For a system at this scale, the key trade-offs are..."
->
-> <span class="fill-in">[Fill in - discuss consistency vs availability, latency vs throughput, cost vs performance - 4-5 sentences]</span>
-
-**Self-assessment:**
-
-- Trade-off clarity score (1-10): <span class="fill-in">___</span>
-- Did you mention specific technologies (Redis, Kafka, etc.)? <span class="fill-in">[Yes/No]</span>
-- Did you quantify the trade-offs (e.g., "100ms latency increase for 99.99%
-  availability")? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 8 or answered "No" to either question, revise your explanation.
 
 ---
 

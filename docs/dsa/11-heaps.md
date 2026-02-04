@@ -787,14 +787,12 @@ public class TwoHeapsClient {
  */
 public static int findKthLargest_Buggy(int[] nums, int k) {
     PriorityQueue<Integer> maxHeap = new PriorityQueue<>(
-        Collections.reverseOrder()  // BUG 1: Is this the right heap type?
-    );
+        Collections.reverseOrder()    );
 
     for (int num : nums) {
         maxHeap.offer(num);
         if (maxHeap.size() > k) {
-            maxHeap.poll();  // BUG 2: What does poll() remove from max-heap?
-        }
+            maxHeap.poll();        }
     }
 
     return maxHeap.peek();
@@ -803,9 +801,7 @@ public static int findKthLargest_Buggy(int[] nums, int k) {
 
 **Your debugging:**
 
-- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 1 explanation:** <span class="fill-in">[Should we use max-heap or min-heap for Kth largest?]</span>
-- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
+- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
 
 - **Bug 2 location:** <span class="fill-in">[Which line?]</span>
 - **Bug 2 explanation:** <span class="fill-in">[What gets removed? Is this what we want?]</span>
@@ -872,15 +868,13 @@ static class MedianFinder_Buggy {
         } else {
             minHeap.offer(num);
         }
-        // BUG 1: Missing something critical here!
     }
 
     public double findMedian() {
         if (maxHeap.size() > minHeap.size()) {
             return maxHeap.peek();
         } else if (minHeap.size() > maxHeap.size()) {
-            return minHeap.peek();  // BUG 2: Is this correct?
-        } else {
+            return minHeap.peek();        } else {
             return (maxHeap.peek() + minHeap.peek()) / 2;
         }
     }
@@ -959,16 +953,13 @@ static class MinHeap_Buggy {
     private List<Integer> heap = new ArrayList<>();
 
     private int parent(int i) {
-        return i / 2;  // BUG 1: Off by one?
-    }
+        return i / 2;    }
 
     private int leftChild(int i) {
-        return 2 * i;  // BUG 2: Zero-indexed array issue?
-    }
+        return 2 * i;    }
 
     private int rightChild(int i) {
-        return 2 * i + 1;  // BUG 3: Related to leftChild bug
-    }
+        return 2 * i + 1;    }
 
     public void insert(int val) {
         heap.add(val);
@@ -1074,8 +1065,7 @@ This is why some people prefer 1-indexed - simpler formulas!
 public static int[][] kClosest_Buggy(int[][] points, int k) {
     PriorityQueue<int[]> minHeap = new PriorityQueue<>(
         (a, b) -> (a[0]*a[0] + a[1]*a[1]) - (b[0]*b[0] + b[1]*b[1])
-    );  // BUG: Min-heap or max-heap for K closest?
-
+    );
     for (int[] point : points) {
         minHeap.offer(point);
         if (minHeap.size() > k) {
@@ -1093,9 +1083,7 @@ public static int[][] kClosest_Buggy(int[][] points, int k) {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[Which line?]</span>
-- **Bug explanation:** <span class="fill-in">[Why is min-heap wrong here?]</span>
-- **Bug fix:** <span class="fill-in">[What comparator should we use?]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Think about it:**
 
@@ -1227,34 +1215,6 @@ Heap Pattern Selection
     └─ Consider: Heap sort vs other sorts ✓
 ```
 
-### The "Kill Switch" - When NOT to use Heaps
-
-**Don't use heaps when:**
-
-1. <span class="fill-in">[Need all elements in sorted order? Sort might be better]</span>
-2. <span class="fill-in">[K is very large? Different approach needed]</span>
-3. <span class="fill-in">[Need to find element by value? Use hash table]</span>
-4. <span class="fill-in">[Don't need priority access? Use array/list]</span>
-
-### The Rule of Three: Alternatives
-
-**Option 1: Heap (Priority Queue)**
-
-- Pros: <span class="fill-in">[O(log n) insert/delete, O(1) peek]</span>
-- Cons: <span class="fill-in">[Not sorted, just maintains priority]</span>
-- Use when: <span class="fill-in">[Need repeated min/max access]</span>
-
-**Option 2: Sorting**
-
-- Pros: <span class="fill-in">[All elements sorted]</span>
-- Cons: <span class="fill-in">[O(n log n) upfront, can't add efficiently]</span>
-- Use when: <span class="fill-in">[Need all sorted once]</span>
-
-**Option 3: Quick Select**
-
-- Pros: <span class="fill-in">[O(n) average for Kth element]</span>
-- Cons: <span class="fill-in">[Modifies array, no repeated access]</span>
-- Use when: <span class="fill-in">[One-time Kth element query]</span>
 
 ---
 
@@ -1347,31 +1307,6 @@ Before moving to the next topic:
     - [ ] Could recognize pattern in new problem
     - [ ] Could explain to someone else
     - [ ] Understand PriorityQueue in Java
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks you about heaps and when to use them.
-
-**Your explanation (write it out):**
-
-> "A heap is a data structure that..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
-- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 

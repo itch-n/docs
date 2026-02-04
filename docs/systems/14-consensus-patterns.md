@@ -1805,7 +1805,6 @@ public class BuggyLeaderElection {
 
         int votesReceived = 1; // Vote for self
 
-        // BUG 1: Something wrong with vote counting
         for (Map.Entry<Integer, Node> entry : nodes.entrySet()) {
             int nodeId = entry.getKey();
             if (nodeId != candidateId) {
@@ -1814,7 +1813,6 @@ public class BuggyLeaderElection {
             }
         }
 
-        // BUG 2: Wrong comparison operator
         if (votesReceived > majoritySize) {  // Should this be > or >= ?
             becomeLeader(candidateId);
         }
@@ -1824,13 +1822,9 @@ public class BuggyLeaderElection {
 
 **Your debugging:**
 
-- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 1 explanation:** <span class="fill-in">[What happens when vote is denied?]</span>
-- **Bug 1 fix:** <span class="fill-in">[How to fix?]</span>
+- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
 
-- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 2 explanation:** <span class="fill-in">[When does > fail vs >= ?]</span>
-- **Bug 2 fix:** <span class="fill-in">[Which operator is correct?]</span>
+- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
 
 **Split-brain scenario:**
 
@@ -1889,7 +1883,6 @@ public class BuggyRaftReplication {
         LogEntry entry = new LogEntry(leader.currentTerm, command, newIndex);
         leader.log.add(entry);
 
-        // BUG: Replicate to nodes
         int replicatedCount = 0;  // Forgot to count leader!
 
         for (Map.Entry<Integer, RaftNode> e : nodes.entrySet()) {
@@ -1913,9 +1906,7 @@ public class BuggyRaftReplication {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[Which line?]</span>
-- **Bug explanation:** <span class="fill-in">[Why can commits be lost?]</span>
-- **Bug fix:** <span class="fill-in">[What should the count start at?]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Failure scenario:**
 
@@ -1964,7 +1955,6 @@ public class BuggyRequestVote {
             return false; // Reject outdated candidate
         }
 
-        // BUG: Update voter's term
         voter.currentTerm = candidateTerm;
         // Missing: What should happen to voter.votedFor?
 
@@ -1981,9 +1971,7 @@ public class BuggyRequestVote {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[Which lines?]</span>
-- **Bug explanation:** <span class="fill-in">[What state is not reset?]</span>
-- **Bug fix:** <span class="fill-in">[What's missing after term update?]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Failure scenario:**
 
@@ -2036,7 +2024,6 @@ public class BuggyAppendEntries {
             return false;
         }
 
-        // BUG: Missing log consistency check!
         // Should verify follower has entry at prevLogIndex with prevLogTerm
 
         // Append entries
@@ -2051,9 +2038,7 @@ public class BuggyAppendEntries {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[What's missing?]</span>
-- **Bug explanation:** <span class="fill-in">[What log inconsistency can occur?]</span>
-- **Bug fix:** <span class="fill-in">[What check is needed?]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Failure scenario:**
 
@@ -2104,7 +2089,6 @@ public class BuggyDistributedLock {
     public Lock tryAcquire(String resourceId, String ownerId) {
         Lock existingLock = locks.get(resourceId);
 
-        // BUG: No expiration check!
         if (existingLock != null) {
             if (!existingLock.ownerId.equals(ownerId)) {
                 return null; // Lock held by someone else
@@ -2123,9 +2107,7 @@ public class BuggyDistributedLock {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[Which line?]</span>
-- **Bug explanation:** <span class="fill-in">[When does deadlock occur?]</span>
-- **Bug fix:** <span class="fill-in">[What check is missing?]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Failure scenario:**
 
@@ -2185,7 +2167,6 @@ public class BuggyQuorumRead {
             }
         }
 
-        // BUG: Return first response
         if (!responses.isEmpty()) {
             return responses.get(0);  // Wrong! Might be stale!
         }
@@ -2197,9 +2178,7 @@ public class BuggyQuorumRead {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[Which line?]</span>
-- **Bug explanation:** <span class="fill-in">[Why can this return stale data?]</span>
-- **Bug fix:** <span class="fill-in">[What should be returned instead?]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Inconsistency scenario:**
 
@@ -2349,51 +2328,6 @@ Consensus Pattern Selection
     └─ Cache invalidation → No consensus needed (best-effort)
 ```
 
-### The "Kill Switch" - When NOT to use each
-
-**Don't use Leader Election when:**
-
-1. <span class="fill-in">[High write throughput needed - leader bottleneck]</span>
-2. <span class="fill-in">[Multi-region writes - leader far from writers]</span>
-3. <span class="fill-in">[Can tolerate temporary inconsistency]</span>
-
-**Don't use Raft when:**
-
-1. <span class="fill-in">[Very large clusters (>7 nodes) - election overhead]</span>
-2. <span class="fill-in">[Don't need ordered log - simpler consensus works]</span>
-3. <span class="fill-in">[Network partitions common - may have availability issues]</span>
-
-**Don't use Distributed Locks when:**
-
-1. <span class="fill-in">[Lock holder crashes - deadlock risk]</span>
-2. <span class="fill-in">[Network delays unpredictable - lock expiry issues]</span>
-3. <span class="fill-in">[Operations are idempotent - don't need lock]</span>
-
-**Don't use Quorum when:**
-
-1. <span class="fill-in">[Small cluster (< 3 nodes) - can't form majority]</span>
-2. <span class="fill-in">[Read latency critical - quorum reads slower]</span>
-3. <span class="fill-in">[Strong consistency with single writer - just use leader]</span>
-
-### The Rule of Three: Alternatives
-
-**Option 1: Raft (Leader-based)**
-
-- Pros: <span class="fill-in">[Strong consistency, ordered log, understandable]</span>
-- Cons: <span class="fill-in">[Leader bottleneck, election downtime, complex implementation]</span>
-- Use when: <span class="fill-in">[Configuration management, log replication]</span>
-
-**Option 2: Quorum (Leaderless)**
-
-- Pros: <span class="fill-in">[High availability, tunable consistency, multi-datacenter]</span>
-- Cons: <span class="fill-in">[Conflict resolution needed, read repair overhead, eventual consistency by default]</span>
-- Use when: <span class="fill-in">[Distributed databases, high throughput]</span>
-
-**Option 3: Distributed Locks (Coordination)**
-
-- Pros: <span class="fill-in">[Simple mutual exclusion, works across services, fencing prevents errors]</span>
-- Cons: <span class="fill-in">[Deadlock risk, latency overhead, requires lock service]</span>
-- Use when: <span class="fill-in">[Job scheduling, leader election, resource allocation]</span>
 
 ---
 
@@ -2517,45 +2451,6 @@ Before moving to the next topic:
     -   [ ] Understand Raft log replication
     -   [ ] Know how to prevent split-brain
     -   [ ] Can calculate quorum sizes for requirements
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery of consensus patterns through explanation and application. You cannot move forward until
-you can confidently complete this section.
-
-### Gate 1: Explain to a Systems Engineer
-
-**Scenario:** A backend engineer asks you about distributed consensus for a new service.
-
-**Your explanation (write it out):**
-
-> "Distributed consensus is..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-**When to use each pattern:**
-
-> "Use leader election when..."
->
-> <span class="fill-in">[Fill in - 1 sentence]</span>
-
-> "Use Raft when..."
->
-> <span class="fill-in">[Fill in - 1 sentence]</span>
-
-> "Use quorum consensus when..."
->
-> <span class="fill-in">[Fill in - 1 sentence]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation convince someone to use Raft vs Paxos? <span class="fill-in">[Yes/No]</span>
-- Did you explain the split-brain problem? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 

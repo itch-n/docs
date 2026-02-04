@@ -856,24 +856,18 @@ flow.
  * This has 2 BUGS. Find them!
  */
 public static int height_Buggy(TreeNode root) {
-    // BUG 1: Missing something important at the start?
 
     int leftHeight = height_Buggy(root.left);
     int rightHeight = height_Buggy(root.right);
 
-    return Math.max(leftHeight, rightHeight);  // BUG 2: What's missing here?
-}
+    return Math.max(leftHeight, rightHeight);}
 ```
 
 **Your debugging:**
 
-- **Bug 1 location:** <span class="fill-in">[Which line is missing?]</span>
-- **Bug 1 explanation:** <span class="fill-in">[What happens when root is null?]</span>
-- **Bug 1 fix:** <span class="fill-in">[What should be added?]</span>
+- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
 
-- **Bug 2 location:** <span class="fill-in">[Line 9 - what's wrong?]</span>
-- **Bug 2 explanation:** <span class="fill-in">[Why is the height calculation incorrect?]</span>
-- **Bug 2 fix:** <span class="fill-in">[What should the return statement be?]</span>
+- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
 
 **Test case to expose bugs:**
 
@@ -922,7 +916,6 @@ public static int diameter_Buggy(TreeNode root) {
     int leftHeight = height(root.left);
     int rightHeight = height(root.right);
 
-    // BUG: Only considering diameter through root!
     return leftHeight + rightHeight;
 }
 
@@ -1001,14 +994,12 @@ public static int diameter(TreeNode root) {
 public static boolean hasPathSum_Buggy(TreeNode root, int targetSum) {
     if (root == null) return false;
 
-    // BUG 1: Is this the correct leaf check?
     if (root.left == null || root.right == null) {
         return root.val == targetSum;
     }
 
     int remaining = targetSum - root.val;
 
-    // BUG 2: Something wrong with this logic
     return hasPathSum_Buggy(root.left, remaining) &&
            hasPathSum_Buggy(root.right, remaining);
 }
@@ -1081,7 +1072,6 @@ public static TreeNode lowestCommonAncestor_Buggy(TreeNode root,
                                                    TreeNode p, TreeNode q) {
     if (root == null) return null;
 
-    // BUG: Should we return immediately when we find p or q?
     TreeNode left = lowestCommonAncestor_Buggy(root.left, p, q);
     TreeNode right = lowestCommonAncestor_Buggy(root.right, p, q);
 
@@ -1166,7 +1156,6 @@ public static boolean isBalanced_Buggy(TreeNode root) {
     int leftHeight = height(root.left);
     int rightHeight = height(root.right);
 
-    // BUG: Similar to diameter problem - what's inefficient here?
     return Math.abs(leftHeight - rightHeight) <= 1 &&
            isBalanced_Buggy(root.left) &&
            isBalanced_Buggy(root.right);
@@ -1237,7 +1226,6 @@ public static int minDepth_Buggy(TreeNode root) {
     int leftDepth = minDepth_Buggy(root.left);
     int rightDepth = minDepth_Buggy(root.right);
 
-    // BUG: This seems logical, but breaks on an edge case!
     return 1 + Math.min(leftDepth, rightDepth);
 }
 ```
@@ -1381,34 +1369,6 @@ Tree Recursion Pattern Selection
     └─ Track path → Backtracking with list
 ```
 
-### The "Kill Switch" - When NOT to use Recursion
-
-**Don't use recursion when:**
-
-1. <span class="fill-in">[Tree is very deep? Risk stack overflow]</span>
-2. <span class="fill-in">[Need iterative control? Use explicit stack]</span>
-3. <span class="fill-in">[Performance critical? Recursion has overhead]</span>
-4. <span class="fill-in">[Tail recursion not optimized? Use iteration]</span>
-
-### The Rule of Three: Alternatives
-
-**Option 1: Pure Recursion**
-
-- Pros: <span class="fill-in">[Clean code, natural for trees]</span>
-- Cons: <span class="fill-in">[Stack space, potential overflow]</span>
-- Use when: <span class="fill-in">[Reasonable depth, clarity matters]</span>
-
-**Option 2: Recursion with Memoization**
-
-- Pros: <span class="fill-in">[Avoid recomputation, faster]</span>
-- Cons: <span class="fill-in">[Extra space, added complexity]</span>
-- Use when: <span class="fill-in">[Overlapping subproblems]</span>
-
-**Option 3: Iterative with Stack**
-
-- Pros: <span class="fill-in">[No stack overflow, explicit control]</span>
-- Cons: <span class="fill-in">[More complex code]</span>
-- Use when: <span class="fill-in">[Deep trees, production code]</span>
 
 ---
 
@@ -1506,31 +1466,6 @@ Before moving to the next topic:
     - [ ] Could recognize pattern in new problem
     - [ ] Could explain to someone else
     - [ ] Understand recursion stack and space complexity
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks you about tree recursion.
-
-**Your explanation (write it out):**
-
-> "Tree recursion is a pattern where..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by someone new to trees? <span class="fill-in">[Yes/No]</span>
-- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 

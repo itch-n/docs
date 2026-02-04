@@ -874,22 +874,16 @@ public static ListNode reverseList_Buggy(ListNode head) {
     while (curr != null) {
         ListNode next = curr.next;
         curr.next = prev;
-        curr = next;           // BUG 1: What's missing?
-    }
+        curr = next;    }
 
-    return curr;  // BUG 2: Wrong return value!
-}
+    return curr;}
 ```
 
 **Your debugging:**
 
-- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 1 explanation:** <span class="fill-in">[What pointer update is missing?]</span>
-- **Bug 1 fix:** <span class="fill-in">[What should be added?]</span>
+- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
 
-- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 2 explanation:** <span class="fill-in">[What does curr point to at the end?]</span>
-- **Bug 2 fix:** <span class="fill-in">[What should we return instead?]</span>
+- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
 
 **Trace through example:**
 
@@ -943,8 +937,7 @@ public static ListNode detectCycle_Buggy(ListNode head) {
             slow = head;
             while (slow != fast) {
                 slow = slow.next;
-                fast = fast.next.next;  // BUG: What's wrong here?
-            }
+                fast = fast.next.next;            }
             return slow;
         }
     }
@@ -955,9 +948,7 @@ public static ListNode detectCycle_Buggy(ListNode head) {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[Which line?]</span>
-- **Bug explanation:** <span class="fill-in">[Why does this cause NullPointerException?]</span>
-- **Bug fix:** <span class="fill-in">[How should fast move in the second phase?]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Trace through example:**
 
@@ -1009,7 +1000,6 @@ public static ListNode mergeTwoLists_Buggy(ListNode l1, ListNode l2) {
             curr.next = l2;
             l2 = l2.next;
         }
-        // BUG: Missing something here!
     }
 
     // Attach remaining nodes
@@ -1022,9 +1012,7 @@ public static ListNode mergeTwoLists_Buggy(ListNode l1, ListNode l2) {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[What's missing in the while loop?]</span>
-- **Bug explanation:** <span class="fill-in">[What happens to curr? Why does this cause problems?]</span>
-- **Bug fix:** <span class="fill-in">[What statement should be added?]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Trace through example:**
 
@@ -1075,13 +1063,11 @@ public static ListNode removeNthFromEnd_Buggy(ListNode head, int n) {
     ListNode slow = dummy;
 
     // Move fast n steps ahead
-    for (int i = 0; i < n; i++) {  // BUG 1: Should be n or n+1?
-        fast = fast.next;
+    for (int i = 0; i < n; i++) {        fast = fast.next;
     }
 
     // Move both until fast reaches end
-    while (fast != null) {  // BUG 2: Should check fast or fast.next?
-        slow = slow.next;
+    while (fast != null) {        slow = slow.next;
         fast = fast.next;
     }
 
@@ -1163,7 +1149,6 @@ public static ListNode reverseFirstK_Buggy(ListNode head, int k) {
         count++;
     }
 
-    // BUG: This creates a cycle!
     tail.next = curr;
 
     return prev;  // New head after reversing first k
@@ -1172,9 +1157,7 @@ public static ListNode reverseFirstK_Buggy(ListNode head, int k) {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[Which line creates the cycle?]</span>
-- **Bug explanation:** <span class="fill-in">[Why does tail.next = curr create a cycle?]</span>
-- **Bug fix:** <span class="fill-in">[What's the issue and how to fix it?]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Trace through example:**
 
@@ -1219,8 +1202,7 @@ public static ListNode findMiddle_Buggy(ListNode head) {
     ListNode slow = head;
     ListNode fast = head;
 
-    while (fast.next != null) {  // BUG: What if head is null? What about fast.next.next?
-        slow = slow.next;
+    while (fast.next != null) {        slow = slow.next;
         fast = fast.next.next;
     }
 
@@ -1339,34 +1321,6 @@ Linked List Pattern Selection
     └─ Use: Single pointer ✓
 ```
 
-### The "Kill Switch" - When NOT to use Linked Lists
-
-**Don't use linked lists when:**
-
-1. <span class="fill-in">[Need random access? Use array instead?]</span>
-2. <span class="fill-in">[Memory overhead matters? Each node has pointer overhead]</span>
-3. <span class="fill-in">[Cache locality important? Arrays are better]</span>
-4. <span class="fill-in">[Need to search frequently? O(n) is slow]</span>
-
-### The Rule of Three: Alternatives
-
-**Option 1: Linked List**
-
-- Pros: <span class="fill-in">[O(1) insertion/deletion at known position]</span>
-- Cons: <span class="fill-in">[O(n) access, extra space for pointers]</span>
-- Use when: <span class="fill-in">[Frequent insertions/deletions]</span>
-
-**Option 2: Dynamic Array (ArrayList)**
-
-- Pros: <span class="fill-in">[O(1) random access, cache friendly]</span>
-- Cons: <span class="fill-in">[O(n) insertion/deletion in middle]</span>
-- Use when: <span class="fill-in">[Frequent access, rare modifications]</span>
-
-**Option 3: Doubly Linked List**
-
-- Pros: <span class="fill-in">[Bidirectional traversal, O(1) deletion with node reference]</span>
-- Cons: <span class="fill-in">[Extra space for prev pointer]</span>
-- Use when: <span class="fill-in">[Need to traverse backwards]</span>
 
 ---
 
@@ -1464,31 +1418,6 @@ Before moving to the next topic:
     - [ ] Could recognize pattern in new problem
     - [ ] Could explain to someone else
     - [ ] Understand pointer manipulation deeply
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks you about linked list pointer manipulation.
-
-**Your explanation (write it out):**
-
-> "Linked list operations work by..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by someone new to programming? <span class="fill-in">[Yes/No]</span>
-- Did you use analogies or visual examples? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 

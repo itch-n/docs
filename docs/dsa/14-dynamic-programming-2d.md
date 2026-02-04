@@ -839,35 +839,26 @@ edge cases.
 public static int lcs_Buggy(String s1, String s2) {
     int m = s1.length();
     int n = s2.length();
-    int[][] dp = new int[m][n];  // BUG 1: What's wrong with dimensions?
-
+    int[][] dp = new int[m][n];
     for (int i = 1; i <= m; i++) {
         for (int j = 1; j <= n; j++) {
-            if (s1.charAt(i) == s2.charAt(j)) {  // BUG 2: Index issue?
-                dp[i][j] = dp[i-1][j-1] + 1;
+            if (s1.charAt(i) == s2.charAt(j)) {                dp[i][j] = dp[i-1][j-1] + 1;
             } else {
                 dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
             }
         }
     }
 
-    return dp[m][n];  // BUG 3: Out of bounds?
-}
+    return dp[m][n];}
 ```
 
 **Your debugging:**
 
-- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 1 explanation:** <span class="fill-in">[Why will this fail?]</span>
-- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
+- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
 
-- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 2 explanation:** <span class="fill-in">[What error occurs?]</span>
-- **Bug 2 fix:** <span class="fill-in">[How to correct the index?]</span>
+- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
 
-- **Bug 3 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 3 explanation:** <span class="fill-in">[Why is this wrong?]</span>
-- **Bug 3 fix:** <span class="fill-in">[What should it be?]</span>
+- Bug 3: <span class="fill-in">[What\'s the bug?]</span>
 
 **Test case to expose bugs:**
 
@@ -909,14 +900,12 @@ public static int editDistance_Buggy(String word1, String word2) {
 
     for (int i = 1; i <= m; i++) {
         for (int j = 1; j <= n; j++) {
-            if (word1.charAt(i) == word2.charAt(j)) {  // BUG 1: Index issue
-                dp[i][j] = dp[i-1][j-1];
+            if (word1.charAt(i) == word2.charAt(j)) {                dp[i][j] = dp[i-1][j-1];
             } else {
                 int insert = dp[i][j-1];
                 int delete = dp[i-1][j];
                 int replace = dp[i-1][j-1];
-                dp[i][j] = Math.min(insert, Math.min(delete, replace));  // BUG 2: Missing something?
-            }
+                dp[i][j] = Math.min(insert, Math.min(delete, replace));            }
         }
     }
 
@@ -966,13 +955,11 @@ public static int uniquePaths_Buggy(int m, int n) {
     int[][] dp = new int[m][n];
 
     // Initialize first row and column
-    for (int i = 0; i < m; i++) dp[i][0] = 0;  // BUG 1: What should this be?
-    for (int j = 0; j < n; j++) dp[0][j] = 1;
+    for (int i = 0; i < m; i++) dp[i][0] = 0;    for (int j = 0; j < n; j++) dp[0][j] = 1;
 
     for (int i = 1; i < m; i++) {
         for (int j = 1; j < n; j++) {
-            dp[i][j] = dp[i-1][j] * dp[i][j-1];  // BUG 2: Wrong operation?
-        }
+            dp[i][j] = dp[i-1][j] * dp[i][j-1];        }
     }
 
     return dp[m-1][n-1];
@@ -1022,16 +1009,13 @@ paths, not multiplying them.
  */
 public static int knapsack_Buggy(int[] weights, int[] values, int capacity) {
     int n = weights.length;
-    int[][] dp = new int[n][capacity + 1];  // BUG 1: Array size issue?
-
-    for (int i = 1; i < n; i++) {  // BUG 2: Should start at 1?
-        for (int w = 1; w <= capacity; w++) {
+    int[][] dp = new int[n][capacity + 1];
+    for (int i = 1; i < n; i++) {        for (int w = 1; w <= capacity; w++) {
             // Don't take item i
             dp[i][w] = dp[i-1][w];
 
             // Take item i (if it fits)
-            if (weights[i] <= w) {  // BUG 3: Correct index?
-                int takeValue = values[i] + dp[i-1][w - weights[i]];
+            if (weights[i] <= w) {                int takeValue = values[i] + dp[i-1][w - weights[i]];
                 dp[i][w] = Math.max(dp[i][w], takeValue);
             }
         }
@@ -1102,13 +1086,11 @@ public static int uniquePathsWithObstacles_Buggy(int[][] obstacleGrid) {
 
     // Initialize first row
     for (int j = 0; j < n; j++) {
-        dp[0][j] = 1;  // BUG: What if there's an obstacle?
-    }
+        dp[0][j] = 1;    }
 
     // Initialize first column
     for (int i = 0; i < m; i++) {
-        dp[i][0] = 1;  // BUG: Same problem
-    }
+        dp[i][0] = 1;    }
 
     for (int i = 1; i < m; i++) {
         for (int j = 1; j < n; j++) {
@@ -1255,34 +1237,6 @@ Answer after solving problems:
     └─ Knapsack variants ✓
 ```
 
-### The "Kill Switch" - When NOT to use 2D DP
-
-**Don't use when:**
-
-1. <span class="fill-in">[Can reduce to 1D with tricks]</span>
-2. <span class="fill-in">[Greedy works - simpler]</span>
-3. <span class="fill-in">[Space is O(n²) and n is huge]</span>
-4. <span class="fill-in">[No clear recurrence relation]</span>
-
-### The Rule of Three: Alternatives
-
-**Option 1: 2D DP**
-
-- Pros: <span class="fill-in">[Handles complex state]</span>
-- Cons: <span class="fill-in">[O(n²) space, slower]</span>
-- Use when: <span class="fill-in">[Two dimensions needed]</span>
-
-**Option 2: 1D DP**
-
-- Pros: <span class="fill-in">[Less space, faster]</span>
-- Cons: <span class="fill-in">[Not always possible]</span>
-- Use when: <span class="fill-in">[Can optimize space]</span>
-
-**Option 3: DFS with Memo**
-
-- Pros: <span class="fill-in">[More intuitive]</span>
-- Cons: <span class="fill-in">[Stack overhead]</span>
-- Use when: <span class="fill-in">[Complex recurrence]</span>
 
 ---
 
@@ -1375,37 +1329,6 @@ Before moving to the next topic:
     - [ ] Could recognize pattern in new problem
     - [ ] Could explain to someone else
     - [ ] Understand space optimization techniques
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks you about 2D DP and how it's different from 1D DP.
-
-**Your explanation (write it out):**
-
-> "2D Dynamic Programming is..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 4-5 sentences max]</span>
-
-**Follow-up: Explain when you need 2D instead of 1D:**
-
-> "You need 2D DP when..."
->
-> <span class="fill-in">[Fill in - what makes a problem require two dimensions?]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by someone who knows 1D DP? <span class="fill-in">[Yes/No]</span>
-- Did you use concrete examples? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 
@@ -1635,27 +1558,7 @@ public static int minPathSum(int[][] grid) {
     int n = grid[0].length;
     int[][] dp = new int[m][n];
 
-    dp[0][0] = 0;  // BUG 1
-
-    for (int i = 1; i < m; i++) {
-        dp[i][0] = dp[i-1][0] + grid[i][0];
-    }
-    for (int j = 1; j < n; j++) {
-        dp[0][j] = dp[0][j-1] + grid[j][0];  // BUG 2
-    }
-
-    for (int i = 1; i < m; i++) {
-        for (int j = 1; j < n; j++) {
-            dp[i][j] = grid[i][j] + Math.max(dp[i-1][j], dp[i][j-1]);  // BUG 3
-        }
-    }
-
-    return dp[m][n];  // BUG 4
-}
-```
-
-**Your findings:**
-
+    dp[0][0] = 0;
 1. Bug 1: <span class="fill-in">[What's wrong?]</span> → Fix: <span class="fill-in">[What should it be?]</span>
 2. Bug 2: <span class="fill-in">[What's wrong?]</span> → Fix: <span class="fill-in">[What should it be?]</span>
 3. Bug 3: <span class="fill-in">[What's wrong?]</span> → Fix: <span class="fill-in">[What should it be?]</span>

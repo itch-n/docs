@@ -930,18 +930,14 @@ public synchronized Server getNextServer_Buggy() {
     }
 
     Server server = servers.get(currentIndex);
-    currentIndex = currentIndex + 1;  // BUG: What happens when index exceeds size?
-
+    currentIndex = currentIndex + 1;
     return server;
 }
 ```
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[Which line?]</span>
-- **Bug explanation:** <span class="fill-in">[What error occurs?]</span>
-- **Bug fix:** <span class="fill-in">[How to fix?]</span>
-- **Test case:** servers = [S1, S2, S3], after 3 requests what happens?
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 <details markdown>
 <summary>Click to verify your answer</summary>
@@ -978,7 +974,6 @@ public Server getNextServer_Buggy() {
         }
     }
 
-    // BUG: What if multiple threads execute this simultaneously?
     minServer.activeConnections++;
 
     return minServer.server;
@@ -987,8 +982,7 @@ public Server getNextServer_Buggy() {
 public void releaseConnection_Buggy(Server server) {
     for (ServerWithStats s : servers) {
         if (s.server.equals(server)) {
-            s.activeConnections--;  // BUG: Same race condition issue
-            break;
+            s.activeConnections--;            break;
         }
     }
 }
@@ -1071,7 +1065,6 @@ public ConsistentHashingLoadBalancer_Buggy(List<Server> servers, int virtualNode
     this.virtualNodesPerServer = virtualNodesPerServer;
 
     for (Server server : servers) {
-        // BUG: Not using virtual nodes properly
         int hash = hash(server.id);
         ring.put(hash, server);
     }
@@ -1134,7 +1127,6 @@ public Server getServer_Buggy(String key) {
 
     int hash = hash(key);
 
-    // BUG: What if ceilingEntry returns null?
     Map.Entry<Integer, Server> entry = ring.ceilingEntry(hash);
     return entry.getValue();  // NullPointerException!
 }
@@ -1199,7 +1191,6 @@ public Server getNextServer_Buggy() {
 
         WeightedServer ws = servers.get(currentIndex);
 
-        // BUG: This doesn't give smooth distribution
         if (ws.currentWeight < ws.weight) {
             ws.currentWeight++;
             return ws.server;
@@ -1272,12 +1263,10 @@ public class HealthAwareLoadBalancer {
     private List<Server> healthyServers;
 
     public Server getNextServer() {
-        // BUG 1: healthyServers can be modified by health check thread
         if (healthyServers.isEmpty()) {
             throw new IllegalStateException("No healthy servers");
         }
 
-        // BUG 2: Server might fail between check and return
         int index = currentIndex++ % healthyServers.size();
         return healthyServers.get(index);
     }
@@ -1285,10 +1274,8 @@ public class HealthAwareLoadBalancer {
     // Health check thread updates this
     public void updateHealthStatus(Server server, boolean healthy) {
         if (healthy && !healthyServers.contains(server)) {
-            healthyServers.add(server);  // BUG 1: Not synchronized
-        } else if (!healthy) {
-            healthyServers.remove(server);  // BUG 1: Not synchronized
-        }
+            healthyServers.add(server);        } else if (!healthy) {
+            healthyServers.remove(server);        }
     }
 }
 ```
@@ -1522,45 +1509,6 @@ For each scenario, identify alternatives and compare:
 - [ ] Can explain trade-offs between algorithms
 - [ ] Built decision tree for algorithm selection
 - [ ] Completed practice scenarios
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks you about load balancing algorithms.
-
-**Your explanation (write it out):**
-
-> "Load balancing is..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-**Explain each algorithm:**
-
-> "Round robin is best for..."
->
-> <span class="fill-in">[Fill in - when to use and why]</span>
-
-> "Least connections is better than round robin when..."
->
-> <span class="fill-in">[Fill in - key difference]</span>
-
-> "Consistent hashing solves the problem of..."
->
-> <span class="fill-in">[Fill in - main benefit]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by someone new to distributed systems? <span class="fill-in">[Yes/No]</span>
-- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 

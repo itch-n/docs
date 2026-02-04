@@ -1306,7 +1306,6 @@ public class BrokenSagaCompensation {
             return SagaResult.success();
 
         } catch (Exception e) {
-            // BUG: Compensation in wrong order!
             for (SagaStep step : completedSteps) {
                 step.compensate();  // What's wrong with this?
             }
@@ -1381,7 +1380,6 @@ public class NonIdempotentCompensation extends CompensatingAction {
 
     @Override
     public void compensate() throws Exception {
-        // BUG: Adding back without checking if already compensated
         inventory.add(productId, quantity);
     }
 }
@@ -1578,7 +1576,6 @@ public class CompensationFailure {
             // Try to compensate step 1
             try {
                 paymentService.refund(customerId, 100);
-                // BUG: What if refund fails? Payment gateway down!
                 throw new Exception("Payment gateway timeout");
 
             } catch (Exception compensationError) {
@@ -1999,38 +1996,6 @@ For each scenario, identify alternatives and compare:
 - [ ] Can explain trade-offs between patterns
 - [ ] Built decision tree for pattern selection
 - [ ] Completed practice scenarios
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks about distributed transactions.
-
-**Your explanation (write it out):**
-
-> "Distributed transactions are..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-**Now explain the difference between 2PC and Saga:**
-
-> "2PC is like... while Saga is like..."
->
-> <span class="fill-in">[Fill in with analogy]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by someone who doesn't know distributed
-  systems? <span class="fill-in">[Yes/No]</span>
-- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 

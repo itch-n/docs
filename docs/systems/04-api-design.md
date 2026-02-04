@@ -1053,13 +1053,9 @@ public class UserController {
 
 **Your debugging:**
 
-- **Bug 1 location:** <span class="fill-in">[Which line/annotation?]</span>
-- **Bug 1 explanation:** <span class="fill-in">[What's wrong with the v2 route?]</span>
-- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
+- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
 
-- **Bug 2 location:** <span class="fill-in">[Which method?]</span>
-- **Bug 2 explanation:** <span class="fill-in">[What happens when v1 clients try to update?]</span>
-- **Bug 2 fix:** <span class="fill-in">[How to handle both versions?]</span>
+- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -1118,12 +1114,9 @@ public Response updateUserV2(String id, @RequestBody UpdateUserV2Request req) {
 @GetMapping("/users/{userId}/posts")
 public PaginatedResponse getPosts(
     @PathParam("userId") String userId,
-    @RequestParam("page") int page,          // BUG 1: Missing something?
-    @RequestParam("limit") int limit         // BUG 2: Validation issue
-) {
+    @RequestParam("page") int page,    @RequestParam("limit") int limit) {
     // Calculate offset
-    int offset = page * limit;  // BUG 3: Off by one?
-
+    int offset = page * limit;
     List<Post> posts = database.query(
         "SELECT * FROM posts WHERE user_id = ? LIMIT ? OFFSET ?",
         userId, limit, offset
@@ -1203,14 +1196,12 @@ int offset = (page - 1) * limit;
  */
 
 // Operation 1: Get user profile
-@PostMapping("/users/{id}/profile")  // BUG: Wrong method?
-public User getProfile(@PathParam("id") String id) {
+@PostMapping("/users/{id}/profile")public User getProfile(@PathParam("id") String id) {
     return database.getUser(id);
 }
 
 // Operation 2: Update user's email
-@GetMapping("/users/{id}/updateEmail")  // BUG: Wrong method?
-public Response updateEmail(
+@GetMapping("/users/{id}/updateEmail")public Response updateEmail(
     @PathParam("id") String id,
     @RequestParam("email") String newEmail
 ) {
@@ -1221,15 +1212,13 @@ public Response updateEmail(
 }
 
 // Operation 3: Delete user
-@PostMapping("/users/{id}/delete")  // BUG: Wrong method?
-public Response deleteUser(@PathParam("id") String id) {
+@PostMapping("/users/{id}/delete")public Response deleteUser(@PathParam("id") String id) {
     database.deleteUser(id);
     return Response.ok("User deleted");
 }
 
 // Operation 4: Partial update of user
-@PutMapping("/users/{id}")  // BUG: Wrong method for partial update?
-public Response partialUpdate(
+@PutMapping("/users/{id}")public Response partialUpdate(
     @PathParam("id") String id,
     @RequestBody Map<String, Object> updates
 ) {
@@ -1318,25 +1307,20 @@ public Response createUser(@RequestBody CreateUserRequest req) {
     try {
         // Validation
         if (req.email == null) {
-            return Response.status(500).body("Error");  // BUG 1: Wrong status
-        }
+            return Response.status(500).body("Error");        }
 
         if (!req.email.contains("@")) {
-            return Response.status(200).body(null);  // BUG 2: Wrong status
-        }
+            return Response.status(200).body(null);        }
 
         // Check duplicate
         User existing = database.findByEmail(req.email);
         if (existing != null) {
-            return Response.status(400).body("Error");  // BUG 3: Wrong status + vague message
-        }
+            return Response.status(400).body("Error");        }
 
         // Create user
         User user = database.createUser(req);
-        return Response.status(200).body(user);  // BUG 4: Wrong status for creation
-
+        return Response.status(200).body(user);
     } catch (Exception e) {
-        // BUG 5: What's wrong with this?
         return Response.status(500).body("Something went wrong");
     }
 }
@@ -1738,43 +1722,6 @@ For each API paradigm, identify alternatives and compare:
 - [ ] Can explain trade-offs between approaches
 - [ ] Built decision tree for API selection
 - [ ] Completed practice scenarios
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks you about REST API design.
-
-**Your explanation (write it out):**
-
-> "REST is an architectural style where..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 4-5 sentences max]</span>
-
-**Follow-up questions to answer:**
-
-1. Why do we version APIs?
-    - Your answer: <span class="fill-in">[Fill in]</span>
-
-2. What's the difference between PUT and PATCH?
-    - Your answer: <span class="fill-in">[Fill in]</span>
-
-3. Why use different HTTP status codes instead of just 200 and 500?
-    - Your answer: <span class="fill-in">[Fill in]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by someone from a different tech
-  background? <span class="fill-in">[Yes/No]</span>
-- Did you use examples? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 

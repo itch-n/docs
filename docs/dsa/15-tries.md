@@ -891,25 +891,19 @@ public void insert_Buggy(String word) {
         int index = c - 'a';
 
         if (current.children[index] == null) {
-            // BUG 1: What's missing here?
         }
 
         current = current.children[index];
     }
 
-    // BUG 2: Missing something critical - what happens after loop?
 }
 ```
 
 **Your debugging:**
 
-- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 1 explanation:** <span class="fill-in">[What's wrong?]</span>
-- **Bug 1 fix:** <span class="fill-in">[What code is missing?]</span>
+- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
 
-- **Bug 2 location:** <span class="fill-in">[After the loop]</span>
-- **Bug 2 explanation:** <span class="fill-in">[What's missing?]</span>
-- **Bug 2 fix:** <span class="fill-in">[What should be added?]</span>
+- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
 
 **Test case to expose the bug:**
 
@@ -955,15 +949,12 @@ public boolean search_Buggy(String word) {
         current = current.children[index];
     }
 
-    return true;  // BUG: What's wrong with this return?
-}
+    return true;}
 ```
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[Which line?]</span>
-- **Bug explanation:** <span class="fill-in">[What's the problem?]</span>
-- **Bug fix:** <span class="fill-in">[What should it return?]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Test case to expose the bug:**
 
@@ -1010,7 +1001,6 @@ public List<String> autocomplete_Buggy(String prefix) {
         current = current.children[index];
     }
 
-    // BUG 1: Missing check - what if prefix itself is a word?
 
     // Collect all words
     collectWords(current, prefix, results);
@@ -1018,7 +1008,6 @@ public List<String> autocomplete_Buggy(String prefix) {
 }
 
 private void collectWords(TrieNode node, String currentWord, List<String> results) {
-    // BUG 2: Wrong order - when should we add the word?
     for (int i = 0; i < 26; i++) {
         if (node.children[i] != null) {
             collectWords(node.children[i], currentWord + (char)('a' + i), results);
@@ -1097,8 +1086,7 @@ private boolean deleteHelper(TrieNode node, String word, int index) {
         }
 
         node.isEndOfWord = false;
-        return true;  // BUG: When should we actually delete the node?
-    }
+        return true;    }
 
     char c = word.charAt(index);
     int idx = c - 'a';
@@ -1112,7 +1100,6 @@ private boolean deleteHelper(TrieNode node, String word, int index) {
 
     if (shouldDeleteChild) {
         node.children[idx] = null;  // Delete child
-        // BUG: Should we delete current node too? When?
     }
 
     return false;  // Don't delete this node
@@ -1199,7 +1186,6 @@ private boolean isEmpty(TrieNode node) {
  */
 private void dfs_Buggy(char[][] board, int i, int j, TrieNode node,
                       Set<String> result, boolean[][] visited) {
-    // BUG: Missing boundary and visited checks here!
 
     char c = board[i][j];
 
@@ -1226,9 +1212,7 @@ private void dfs_Buggy(char[][] board, int i, int j, TrieNode node,
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[What's missing at the start?]</span>
-- **Bug explanation:** <span class="fill-in">[What will happen?]</span>
-- **Bug fix:** <span class="fill-in">[What checks are needed?]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Test case:**
 
@@ -1352,34 +1336,6 @@ Trie Pattern Selection
     └─ Longest word → Trie with validation ✓
 ```
 
-### The "Kill Switch" - When NOT to use Tries
-
-**Don't use trie when:**
-
-1. <span class="fill-in">[Small dictionary - hash set simpler]</span>
-2. <span class="fill-in">[No prefix queries - hash table better]</span>
-3. <span class="fill-in">[Memory constrained - hash set more compact]</span>
-4. <span class="fill-in">[Single word lookup - hash table O(1) vs O(m)]</span>
-
-### The Rule of Three: Alternatives
-
-**Option 1: Trie**
-
-- Pros: <span class="fill-in">[Prefix queries O(m), space-efficient for common prefixes]</span>
-- Cons: <span class="fill-in">[More complex, pointer overhead]</span>
-- Use when: <span class="fill-in">[Many prefix queries, common prefixes]</span>
-
-**Option 2: Hash Set**
-
-- Pros: <span class="fill-in">[Simple, O(1) lookup, less space]</span>
-- Cons: <span class="fill-in">[No prefix queries]</span>
-- Use when: <span class="fill-in">[Just membership testing]</span>
-
-**Option 3: Sorted Array + Binary Search**
-
-- Pros: <span class="fill-in">[Less space, can do prefix queries]</span>
-- Cons: <span class="fill-in">[Slower insert/delete]</span>
-- Use when: <span class="fill-in">[Static dictionary]</span>
 
 ---
 
@@ -1467,31 +1423,6 @@ Before moving to the next topic:
     - [ ] Could recognize pattern in new problem
     - [ ] Could explain to someone else
     - [ ] Understand space complexity of tries
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks you about tries.
-
-**Your explanation (write it out):**
-
-> "A trie is a data structure where..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
-- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 

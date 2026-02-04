@@ -873,8 +873,7 @@ public class AdvancedUnionFindClient {
  */
 public int find_Buggy(int x) {
     if (parent[x] != x) {
-        return find_Buggy(parent[x]);  // BUG: What's missing?
-    }
+        return find_Buggy(parent[x]);    }
     return parent[x];
 }
 ```
@@ -883,7 +882,6 @@ public int find_Buggy(int x) {
 
 - **Bug location:** <span class="fill-in">[Which line?]</span>
 - **Bug explanation:** <span class="fill-in">[What optimization is missing?]</span>
-- **Bug impact:** <span class="fill-in">[How does this affect performance?]</span>
 - **Bug fix:** <span class="fill-in">[What should the code be?]</span>
 
 **Test case to measure impact:**
@@ -928,10 +926,8 @@ public boolean union_Buggy(int x, int y) {
     if (rootX == rootY) return false;
 
     if (rank[rootX] < rank[rootY]) {
-        parent[x] = rootY;  // BUG 1: Should this be x or rootX?
-    } else if (rank[rootX] > rank[rootY]) {
-        parent[y] = rootX;  // BUG 2: Should this be y or rootY?
-    } else {
+        parent[x] = rootY;    } else if (rank[rootX] > rank[rootY]) {
+        parent[y] = rootX;    } else {
         parent[rootY] = rootX;
         rank[rootX]++;
     }
@@ -992,8 +988,7 @@ public boolean hasCycle_Buggy(int n, int[][] edges) {
         int v = edge[1];
 
         if (uf.find(u) == uf.find(v)) {
-            uf.union(u, v);  // BUG: What's wrong with this?
-            return true;
+            uf.union(u, v);            return true;
         }
 
         uf.union(u, v);
@@ -1072,7 +1067,6 @@ public class UnionFind_Buggy {
             rank[rootX]++;
         }
 
-        // BUG: What's missing here?
         return true;
     }
 
@@ -1130,11 +1124,9 @@ public boolean union_Buggy(int x, int y) {
 
     if (rank[rootX] < rank[rootY]) {
         parent[rootX] = rootY;
-        rank[rootY]++;  // BUG 1: Should we increment here?
-    } else if (rank[rootX] > rank[rootY]) {
+        rank[rootY]++;    } else if (rank[rootX] > rank[rootY]) {
         parent[rootY] = rootX;
-        rank[rootX]++;  // BUG 2: Should we increment here?
-    } else {
+        rank[rootX]++;    } else {
         parent[rootY] = rootX;
         rank[rootX]++;  // This one is correct
     }
@@ -1194,8 +1186,7 @@ public int find_Buggy(int x) {
     while (parent[x] != x) {
         int next = parent[x];
         parent[x] = root;
-        x = next;  // BUG: What happens if we forget this line?
-    }
+        x = next;    }
 
     return root;
 }
@@ -1208,8 +1199,7 @@ public int find_ActualBuggy(int x) {
     }
 
     // Attempted path compression
-    while (parent[x] != root) {  // BUG: What's wrong here?
-        parent[x] = root;
+    while (parent[x] != root) {        parent[x] = root;
         x = parent[x];
     }
 
@@ -1313,34 +1303,6 @@ Union-Find Pattern Selection
     └─ Equality constraints → Basic UF ✓
 ```
 
-### The "Kill Switch" - When NOT to use Union-Find
-
-**Don't use union-find when:**
-
-1. <span class="fill-in">[Need to split components - UF only merges]</span>
-2. <span class="fill-in">[Need path information - use DFS/BFS]</span>
-3. <span class="fill-in">[Directed graph cycles - use DFS]</span>
-4. <span class="fill-in">[Need intermediate nodes - use graph traversal]</span>
-
-### The Rule of Three: Alternatives
-
-**Option 1: Union-Find**
-
-- Pros: <span class="fill-in">[Near O(1) operations, simple for connectivity]</span>
-- Cons: <span class="fill-in">[Can't split, no path info]</span>
-- Use when: <span class="fill-in">[Dynamic connectivity, no splits]</span>
-
-**Option 2: DFS/BFS**
-
-- Pros: <span class="fill-in">[More flexible, path info]</span>
-- Cons: <span class="fill-in">[O(V+E) per query]</span>
-- Use when: <span class="fill-in">[Static graph, need paths]</span>
-
-**Option 3: Adjacency List**
-
-- Pros: <span class="fill-in">[Most flexible]</span>
-- Cons: <span class="fill-in">[Slower connectivity checks]</span>
-- Use when: <span class="fill-in">[Need full graph operations]</span>
 
 ---
 
@@ -1428,32 +1390,6 @@ Before moving to the next topic:
     - [ ] Could recognize pattern in new problem
     - [ ] Could explain to someone else
     - [ ] Understand inverse Ackermann function complexity
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks you about union-find.
-
-**Your explanation (write it out):**
-
-> "Union-Find is a data structure that..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
-- Did you explain both "union" and "find" operations? <span class="fill-in">[Yes/No]</span>
-- Did you mention why it's fast? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to any question, revise your explanation.
 
 ---
 

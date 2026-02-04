@@ -1850,7 +1850,6 @@ public class BrokenBankAccount {
     private int balance = 1000;
 
     public boolean withdraw(int amount) {
-        // BUG: Check-then-act race condition!
         if (balance >= amount) {
             // What if another thread withdraws here?
             balance -= amount;
@@ -1938,7 +1937,6 @@ public class DeadlockTransfer {
         final ReentrantLock lock = new ReentrantLock();
     }
 
-    // BUG: No consistent lock ordering!
     public static boolean transfer(Account from, Account to, int amount) {
         from.lock.lock();  // Thread 1 locks acc1
         try {
@@ -2029,8 +2027,7 @@ public static boolean transfer(Account from, Account to, int amount) {
  * Worker thread may never see the updated flag.
  */
 public class BrokenShutdown {
-    private boolean stopRequested = false;  // BUG: Not volatile!
-
+    private boolean stopRequested = false;
     // Background worker thread
     public void backgroundWork() {
         long count = 0;
@@ -2134,7 +2131,6 @@ public class StarvationExample {
     private final ExecutorService executor = Executors.newFixedThreadPool(2);
 
     public void processWithSubtasks() throws Exception {
-        // BUG: Submitting dependent tasks to same pool!
         executor.submit(() -> {
             System.out.println("Task 1: Starting");
 
@@ -2143,7 +2139,6 @@ public class StarvationExample {
             Future<String> subtask2 = executor.submit(() -> "Subtask 2");
 
             try {
-                // BUG: Blocking on subtasks that can't execute!
                 subtask1.get();  // Waits forever if pool is full
                 subtask2.get();
             } catch (Exception e) {
@@ -2260,7 +2255,6 @@ public class ABAStack<T> {
         }
     }
 
-    // BUG: ABA problem can occur here!
     public T pop() {
         while (true) {
             Node<T> current = head.get();  // Read A
@@ -2468,37 +2462,6 @@ Concurrency Pattern Selection
     └─ SynchronousQueue → Direct handoff, no buffering
 ```
 
-### The "Kill Switch" - Concurrency Anti-Patterns
-
-**Don't do this:**
-
-1. **Creating threads manually** - <span class="fill-in">[Use thread pools instead]</span>
-2. **Synchronized on String literals** - <span class="fill-in">[Strings are interned, global lock]</span>
-3. **Nested locks without ordering** - <span class="fill-in">[Causes deadlocks]</span>
-4. **Catching InterruptedException and ignoring** - <span class="fill-in">[Prevents proper shutdown]</span>
-5. **Using Thread.stop()** - <span class="fill-in">[Unsafe, deprecated, corrupts state]</span>
-6. **Unbounded thread creation** - <span class="fill-in">[OOM, CPU thrashing]</span>
-7. **Busy waiting (while loops)** - <span class="fill-in">[Wastes CPU, use wait/notify or BlockingQueue]</span>
-
-### The Rule of Three: Alternatives
-
-**Option 1: Locks (ReentrantLock)**
-
-- Pros: <span class="fill-in">[Simple mental model, guaranteed mutual exclusion, fair ordering]</span>
-- Cons: <span class="fill-in">[Performance overhead, can deadlock, blocking]</span>
-- Use when: <span class="fill-in">[Complex critical sections, most use cases]</span>
-
-**Option 2: Lock-Free (Atomic/CAS)**
-
-- Pros: <span class="fill-in">[No blocking, high performance under contention, progress guarantee]</span>
-- Cons: <span class="fill-in">[Complex to implement, limited to simple operations, ABA problem]</span>
-- Use when: <span class="fill-in">[High contention, simple operations like counters]</span>
-
-**Option 3: Immutable + Message Passing**
-
-- Pros: <span class="fill-in">[No synchronization needed, easy to reason about, functional style]</span>
-- Cons: <span class="fill-in">[Memory overhead (copying), not always applicable]</span>
-- Use when: <span class="fill-in">[Can afford immutability, actor model, functional programming]</span>
 
 ---
 
@@ -2630,31 +2593,6 @@ Before moving to the next topic:
     - [ ] Could design thread pool configuration for given workload
     - [ ] Understand concurrency bugs (deadlock, race conditions, starvation)
     - [ ] Know how to debug concurrency issues
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks you about thread safety.
-
-**Your explanation (write it out):**
-
-> "Thread safety means..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
-- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 

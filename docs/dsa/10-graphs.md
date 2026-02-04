@@ -1306,12 +1306,10 @@ public static int countComponents_Buggy(int n, int[][] edges) {
 
     for (int i = 0; i < n; i++) {
         if (!visited[i]) {
-            dfs(graph, i, visited);  // BUG 1: What's missing here?
-        }
+            dfs(graph, i, visited);        }
     }
 
-    return count;  // BUG 2: What's wrong with the count?
-}
+    return count;}
 
 private static void dfs(Map<Integer, List<Integer>> graph, int node, boolean[] visited) {
     visited[node] = true;
@@ -1326,13 +1324,9 @@ private static void dfs(Map<Integer, List<Integer>> graph, int node, boolean[] v
 
 **Your debugging:**
 
-- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 1 explanation:** <span class="fill-in">[What's the problem?]</span>
-- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
+- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
 
-- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 2 explanation:** <span class="fill-in">[Why is count always 0?]</span>
-- **Bug 2 fix:** <span class="fill-in">[How to fix?]</span>
+- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
 
 **Test case:**
 
@@ -1384,11 +1378,9 @@ public static int shortestPath_Buggy(Map<Integer, List<Integer>> graph, int star
     int distance = 0;
 
     queue.offer(start);
-    // BUG: Missing something crucial here!
 
     while (!queue.isEmpty()) {
-        int node = queue.poll();  // BUG: Wrong level processing!
-
+        int node = queue.poll();
         if (node == end) return distance;
 
         for (int neighbor : graph.getOrDefault(node, new ArrayList<>())) {
@@ -1485,7 +1477,6 @@ private static boolean dfsTopSort(Map<Integer, List<Integer>> graph, int node,
         if (visited[neighbor] == 1) {
             return false;  // Cycle detected
         }
-        // BUG: What's missing for unvisited neighbors?
         if (visited[neighbor] == 0) {
             dfsTopSort(graph, neighbor, visited, stack);
         }
@@ -1499,9 +1490,7 @@ private static boolean dfsTopSort(Map<Integer, List<Integer>> graph, int node,
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[Which line in dfsTopSort?]</span>
-- **Bug explanation:** <span class="fill-in">[What happens if recursive call detects cycle?]</span>
-- **Bug fix:** <span class="fill-in">[What code is missing?]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Test case with cycle:**
 
@@ -1563,7 +1552,6 @@ public static int dijkstra_Buggy(Map<Integer, List<int[]>> graph, int start, int
         int[] curr = pq.poll();
         int d = curr[0], node = curr[1];
 
-        // BUG: Missing a critical optimization check here!
 
         if (node == end) return d;
 
@@ -1646,8 +1634,7 @@ public static Map<Integer, List<Integer>> buildGraph_Buggy(int n, int[][] edges)
 
     for (int[] edge : edges) {
         int u = edge[0], v = edge[1];
-        graph.get(u).add(v);  // BUG: Is this enough for undirected graph?
-    }
+        graph.get(u).add(v);    }
 
     return graph;
 }
@@ -1656,7 +1643,6 @@ public static Map<Integer, List<Integer>> buildGraph_Buggy(int n, int[][] edges)
 **Your debugging:**
 
 - **Bug:** <span class="fill-in">[What's missing for undirected graphs?]</span>
-- **Test case:** edges = [[0,1], [1,2]], try to find path from 2 to 0
 - **What happens:** <span class="fill-in">[Can you find the path with buggy graph?]</span>
 
 <details markdown>
@@ -1692,11 +1678,9 @@ public static int primMST_Buggy(Map<Integer, List<int[]>> graph, int n) {
 
     pq.offer(new int[]{0, 0});  // Start from node 0 with cost 0
 
-    while (!visited.isEmpty() && visited.size() < n) {  // BUG 1: Wrong condition!
-        int[] curr = pq.poll();
+    while (!visited.isEmpty() && visited.size() < n) {        int[] curr = pq.poll();
         int cost = curr[0], node = curr[1];
 
-        // BUG 2: Missing visited check here!
 
         visited.add(node);
         totalCost += cost;
@@ -1868,54 +1852,6 @@ Graph Algorithm Selection
     └─ Dynamic → Union-Find ✓
 ```
 
-### The "Kill Switch" - When NOT to use
-
-**Don't use DFS when:**
-
-1. <span class="fill-in">[Need shortest path - use BFS instead]</span>
-2. <span class="fill-in">[Graph has cycles and you don't track visited - infinite loop]</span>
-
-**Don't use BFS when:**
-
-1. <span class="fill-in">[Memory is very limited - DFS more space efficient]</span>
-2. <span class="fill-in">[Need to explore all paths - DFS better for backtracking]</span>
-
-**Don't use Topological Sort when:**
-
-1. <span class="fill-in">[Graph has cycles - no valid topological ordering]</span>
-2. <span class="fill-in">[Graph is undirected - topological sort only for DAGs]</span>
-
-**Don't use Dijkstra when:**
-
-1. <span class="fill-in">[Negative edge weights exist - use Bellman-Ford]</span>
-2. <span class="fill-in">[Unweighted graph - BFS is simpler and O(V+E)]</span>
-3. <span class="fill-in">[Need all-pairs shortest paths - use Floyd-Warshall]</span>
-
-**Don't use MST when:**
-
-1. <span class="fill-in">[Graph is directed - MST only for undirected graphs]</span>
-2. <span class="fill-in">[Don't need to connect all nodes - use shortest path instead]</span>
-3. <span class="fill-in">[Graph is disconnected - MST won't exist]</span>
-
-### The Rule of Three: Alternatives
-
-**Option 1: DFS**
-
-- Pros: <span class="fill-in">[Less memory, natural for recursion, backtracking]</span>
-- Cons: <span class="fill-in">[Not shortest path, stack overflow risk]</span>
-- Use when: <span class="fill-in">[Explore paths, detect cycles, connectivity]</span>
-
-**Option 2: BFS**
-
-- Pros: <span class="fill-in">[Shortest path, level-order, no stack overflow]</span>
-- Cons: <span class="fill-in">[More memory (queue), not natural for backtracking]</span>
-- Use when: <span class="fill-in">[Shortest path, minimum steps, multi-source]</span>
-
-**Option 3: Union-Find**
-
-- Pros: <span class="fill-in">[Fast connectivity queries, dynamic]</span>
-- Cons: <span class="fill-in">[Only for undirected, no path info]</span>
-- Use when: <span class="fill-in">[Dynamic connectivity, MST, cycle detection]</span>
 
 ---
 
@@ -2027,39 +1963,6 @@ Before moving to the next topic:
     - [ ] Could recognize pattern in new problem
     - [ ] Could explain to someone else
     - [ ] Understand why each algorithm works
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks you about graph algorithms.
-
-**Your explanation (write it out):**
-
-> "Graphs are used to represent relationships between entities. The main traversal algorithms are..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 4-5 sentences max]</span>
->
-> "Use DFS when..."
->
-> <span class="fill-in">[Fill in]</span>
->
-> "Use BFS when..."
->
-> <span class="fill-in">[Fill in]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
-- Did you explain when to use each algorithm? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 

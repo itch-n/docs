@@ -790,24 +790,18 @@ public static List<Integer> inorderRecursive_Buggy(TreeNode root) {
     List<Integer> result = new ArrayList<>();
 
     if (root != null) {  // Base case check
-        inorderRecursive_Buggy(root.left);   // BUG 1: What's missing?
-        result.add(root.val);
+        inorderRecursive_Buggy(root.left);        result.add(root.val);
         inorderRecursive_Buggy(root.right);
     }
 
-    return result;  // BUG 2: What does this return?
-}
+    return result;}
 ```
 
 **Your debugging:**
 
-- **Bug 1 location:** <span class="fill-in">[Which lines?]</span>
-- **Bug 1 explanation:** <span class="fill-in">[What's wrong with the recursive calls?]</span>
-- **Bug 1 fix:** <span class="fill-in">[How to fix?]</span>
+- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
 
-- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 2 explanation:** <span class="fill-in">[What gets returned? Why is the result empty?]</span>
-- **Bug 2 fix:** <span class="fill-in">[How should this work?]</span>
+- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
 
 **Test case:**
 
@@ -856,16 +850,14 @@ public static List<Integer> inorderIterative_Buggy(TreeNode root) {
     Stack<TreeNode> stack = new Stack<>();
     TreeNode curr = root;
 
-    while (!stack.isEmpty()) {  // BUG 1: Wrong loop condition!
-        while (curr != null) {
+    while (!stack.isEmpty()) {        while (curr != null) {
             stack.push(curr);
             curr = curr.left;
         }
 
         TreeNode node = stack.pop();
         result.add(node.val);
-        curr = curr.left;  // BUG 2: Wrong direction!
-    }
+        curr = curr.left;    }
 
     return result;
 }
@@ -934,7 +926,6 @@ public static List<Integer> postorderIterative_Buggy(TreeNode root) {
         TreeNode node = stack1.pop();
         stack2.push(node);
 
-        // BUG: Wrong order! What should the order be?
         if (node.right != null) stack1.push(node.right);
         if (node.left != null) stack1.push(node.left);
     }
@@ -993,7 +984,6 @@ public static List<List<Integer>> levelOrder_Buggy(TreeNode root) {
     while (!queue.isEmpty()) {
         List<Integer> level = new ArrayList<>();
 
-        // BUG 1: Not tracking level size correctly!
         while (!queue.isEmpty()) {  // Wrong loop!
             TreeNode node = queue.poll();
             level.add(node.val);
@@ -1011,9 +1001,7 @@ public static List<List<Integer>> levelOrder_Buggy(TreeNode root) {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[Which loop is wrong?]</span>
-- **Bug explanation:** <span class="fill-in">[What happens? Do all levels get mixed together?]</span>
-- **Bug fix:** <span class="fill-in">[How to track each level separately?]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Test case:**
 
@@ -1070,8 +1058,7 @@ public static List<Integer> traversal_Buggy(TreeNode root) {
     List<Integer> result = new ArrayList<>();
     if (root == null) return result;
 
-    Stack<TreeNode> stack = new Stack<>();  // BUG: Wrong data structure!
-    stack.push(root);
+    Stack<TreeNode> stack = new Stack<>();    stack.push(root);
 
     while (!stack.isEmpty()) {
         TreeNode node = stack.pop();
@@ -1143,8 +1130,7 @@ public static List<Integer> morrisTraversal_Buggy(TreeNode root) {
         } else {
             // Find predecessor
             TreeNode pred = curr.left;
-            while (pred.right != null) {  // BUG: What if pred.right == curr?
-                pred = pred.right;
+            while (pred.right != null) {                pred = pred.right;
             }
 
             // Create thread
@@ -1268,34 +1254,6 @@ Tree Traversal Selection
     └─ Iterative → More code, but safer
 ```
 
-### The "Kill Switch" - When NOT to use Tree Traversals
-
-**Don't use when:**
-
-1. <span class="fill-in">[Need to search for specific value? Use BST search instead]</span>
-2. <span class="fill-in">[Tree is extremely deep? Risk stack overflow with recursion]</span>
-3. <span class="fill-in">[Need random access? Trees don't support O(1) access]</span>
-4. <span class="fill-in">[Need sorted iteration frequently? Store in array instead]</span>
-
-### The Rule of Three: Alternatives
-
-**Option 1: Inorder Traversal**
-
-- Pros: <span class="fill-in">[Sorted order in BST, standard for iteration]</span>
-- Cons: <span class="fill-in">[Not useful for non-BST trees]</span>
-- Use when: <span class="fill-in">[Need sorted processing of BST]</span>
-
-**Option 2: Level-Order Traversal**
-
-- Pros: <span class="fill-in">[Shortest path, level-wise processing]</span>
-- Cons: <span class="fill-in">[More memory for wide trees]</span>
-- Use when: <span class="fill-in">[BFS needed, level matters]</span>
-
-**Option 3: Preorder/Postorder**
-
-- Pros: <span class="fill-in">[Structural operations, serialization]</span>
-- Cons: <span class="fill-in">[No sorted order guarantee]</span>
-- Use when: <span class="fill-in">[Copy, serialize, or delete tree]</span>
 
 ---
 
@@ -1393,31 +1351,6 @@ Before moving to the next topic:
     - [ ] Could recognize pattern in new problem
     - [ ] Could explain to someone else
     - [ ] Understand stack space vs heap space trade-offs
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks you about tree traversals.
-
-**Your explanation (write it out):**
-
-> "Tree traversals are different ways to visit every node in a tree..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
-- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 

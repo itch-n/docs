@@ -1107,8 +1107,7 @@ public static int hammingWeight_Buggy(int n) {
         if ((n & 1) == 1) {
             count++;
         }
-        n = n >> 1;  // BUG: What happens with negative numbers?
-    }
+        n = n >> 1;    }
 
     return count;
 }
@@ -1116,9 +1115,7 @@ public static int hammingWeight_Buggy(int n) {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[Which line?]</span>
-- **Bug explanation:** <span class="fill-in">[What's wrong? Try with n = -1]</span>
-- **Bug fix:** <span class="fill-in">[How to fix?]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Test case to expose the bug:**
 
@@ -1173,16 +1170,13 @@ public static int[][] merge_Buggy(int[][] intervals) {
     int[] current = intervals[0];
 
     for (int i = 1; i < intervals.length; i++) {
-        if (intervals[i][0] <= current[1]) {  // BUG 1: Overlap check
-            current[1] = intervals[i][1];      // BUG 2: Wrong merge logic
-        } else {
+        if (intervals[i][0] <= current[1]) {            current[1] = intervals[i][1];        } else {
             merged.add(current);
             current = intervals[i];
         }
     }
 
-    return merged.toArray(new int[0][]);  // BUG 3: Missing final interval!
-}
+    return merged.toArray(new int[0][]);}
 ```
 
 **Your debugging:**
@@ -1239,7 +1233,6 @@ public static int subarraySum_Buggy(int[] nums, int k) {
             count += prefixSumCount.get(currentSum - k);
         }
 
-        // BUG: Missing something before updating map!
 
         // Update map with current prefix sum
         prefixSumCount.put(currentSum,
@@ -1252,9 +1245,7 @@ public static int subarraySum_Buggy(int[] nums, int k) {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[What's missing?]</span>
-- **Bug explanation:** <span class="fill-in">[What case does this miss?]</span>
-- **Bug fix:** <span class="fill-in">[Add what check?]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Test case to expose the bug:**
 
@@ -1313,8 +1304,7 @@ public static int[] nextGreater_Buggy(int[] nums) {
     for (int i = 0; i < n; i++) {
         while (!stack.isEmpty() && nums[stack.peek()] < nums[i]) {
             int idx = stack.pop();
-            result[i] = nums[i];  // BUG: Wrong index!
-        }
+            result[i] = nums[i];        }
 
         stack.push(i);
     }
@@ -1360,8 +1350,7 @@ while (!stack.isEmpty() && nums[stack.peek()] < nums[i]) {
  * This has 1 EDGE CASE BUG.
  */
 public static boolean isPowerOfTwo_Buggy(int n) {
-    return (n & (n - 1)) == 0;  // BUG: Missing edge case check!
-}
+    return (n & (n - 1)) == 0;}
 ```
 
 **Your debugging:**
@@ -1412,7 +1401,6 @@ public static int[][] intervalIntersection_Buggy(
         int start = Math.max(firstList[i][0], secondList[j][0]);
         int end = Math.min(firstList[i][1], secondList[j][1]);
 
-        // BUG: Missing overlap check before adding!
         result.add(new int[]{start, end});
 
         // Move pointer of interval that ends first
@@ -1536,23 +1524,6 @@ Monotonic Stack:
 └─ Remove digits → Monotonic stack ✓
 ```
 
-### The "Kill Switch" - When NOT to use
-
-**Bit manipulation:**
-
-- Don't use when: <span class="fill-in">[Logic complex, readability suffers]</span>
-
-**Intervals:**
-
-- Don't use when: <span class="fill-in">[Not dealing with ranges]</span>
-
-**Prefix sum:**
-
-- Don't use when: <span class="fill-in">[Array is mutable, single query]</span>
-
-**Monotonic stack:**
-
-- Don't use when: <span class="fill-in">[Not finding next/previous boundary]</span>
 
 ---
 
@@ -1651,38 +1622,6 @@ Before moving on:
     - [ ] Could recognize pattern in new problem
     - [ ] Could explain to someone else
     - [ ] Understand why these techniques are "advanced"
-
----
-
-## Understanding Gates (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks you about advanced DSA techniques.
-
-**Your explanation (write it out):**
-
-> "Advanced techniques like bit manipulation, intervals, prefix sums, and monotonic stacks are..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 4-5 sentences max]</span>
-
-**For each pattern, explain in one sentence:**
-
-- **Bit manipulation:** <span class="fill-in">[Fill in]</span>
-- **Intervals:** <span class="fill-in">[Fill in]</span>
-- **Prefix sum:** <span class="fill-in">[Fill in]</span>
-- **Monotonic stack:** <span class="fill-in">[Fill in]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
-- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 

@@ -782,11 +782,9 @@ public class BinarySearchOnAnswerClient {
  */
 public static int binarySearch_Buggy(int[] nums, int target) {
     int left = 0;
-    int right = nums.length;  // BUG 1: What's wrong here?
-
+    int right = nums.length;
     while (left <= right) {
-        int mid = (left + right) / 2;  // BUG 2: What could go wrong?
-
+        int mid = (left + right) / 2;
         if (nums[mid] == target) {
             return mid;
         }
@@ -803,13 +801,9 @@ public static int binarySearch_Buggy(int[] nums, int target) {
 
 **Your debugging:**
 
-- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 1 explanation:** <span class="fill-in">[What's wrong?]</span>
-- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
+- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
 
-- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 2 explanation:** <span class="fill-in">[What error will occur with large numbers?]</span>
-- **Bug 2 fix:** <span class="fill-in">[How to fix?]</span>
+- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -848,8 +842,7 @@ public static int findFirst_Buggy(int[] nums, int target) {
 
         if (nums[mid] == target) {
             result = mid;
-            right = mid;  // BUG: What's wrong here?
-        } else if (nums[mid] < target) {
+            right = mid;        } else if (nums[mid] < target) {
             left = mid + 1;
         } else {
             right = mid - 1;
@@ -862,9 +855,7 @@ public static int findFirst_Buggy(int[] nums, int target) {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[Which line causes infinite loop?]</span>
-- **Bug explanation:** <span class="fill-in">[Why does it loop forever?]</span>
-- **Bug fix:** <span class="fill-in">[What should the line be?]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Test case to expose the bug:**
 
@@ -919,7 +910,6 @@ public static int searchRotated_Buggy(int[] nums, int target) {
 
         if (nums[mid] == target) return mid;
 
-        // BUG: Logic error in determining which half is sorted
         if (nums[left] < nums[mid]) {
             // Left half is sorted
             if (target >= nums[left] && target <= nums[mid]) {
@@ -999,8 +989,7 @@ public static int searchInsert_Buggy(int[] nums, int target) {
     int left = 0;
     int right = nums.length - 1;
 
-    while (left < right) {  // BUG: Should this be < or <=?
-        int mid = left + (right - left) / 2;
+    while (left < right) {        int mid = left + (right - left) / 2;
 
         if (nums[mid] == target) {
             return mid;
@@ -1011,8 +1000,7 @@ public static int searchInsert_Buggy(int[] nums, int target) {
         }
     }
 
-    return left;  // BUG: Is this always correct?
-}
+    return left;}
 ```
 
 **Your debugging:**
@@ -1084,10 +1072,8 @@ public static int findMin_Buggy(int[] nums) {
         int mid = left + (right - left) / 2;
 
         if (nums[mid] > nums[right]) {
-            left = mid;  // BUG: Should this be mid or mid+1?
-        } else {
-            right = mid - 1;  // BUG: Should this be mid-1 or mid?
-        }
+            left = mid;        } else {
+            right = mid - 1;        }
     }
 
     return nums[left];
@@ -1214,34 +1200,6 @@ Binary Search Pattern Selection
     └─ Use: Binary search on answer ✓
 ```
 
-### The "Kill Switch" - When NOT to use Binary Search
-
-**Don't use when:**
-
-1. <span class="fill-in">[Data is unsorted and can't be sorted]</span>
-2. <span class="fill-in">[Need all occurrences, not just one]</span>
-3. <span class="fill-in">[Small dataset where linear search is simpler]</span>
-4. <span class="fill-in">[No monotonic property to exploit]</span>
-
-### The Rule of Three: Alternatives
-
-**Option 1: Binary Search**
-
-- Pros: <span class="fill-in">[O(log n), very fast]</span>
-- Cons: <span class="fill-in">[Requires sorted data]</span>
-- Use when: <span class="fill-in">[Large sorted dataset]</span>
-
-**Option 2: Linear Search**
-
-- Pros: <span class="fill-in">[Works on unsorted, simple]</span>
-- Cons: <span class="fill-in">[O(n), slow for large data]</span>
-- Use when: <span class="fill-in">[Small dataset or unsorted]</span>
-
-**Option 3: Hash Table**
-
-- Pros: <span class="fill-in">[O(1) lookup, no sorting needed]</span>
-- Cons: <span class="fill-in">[Extra space, can't find ranges]</span>
-- Use when: <span class="fill-in">[Single lookups, space available]</span>
 
 ---
 
@@ -1339,31 +1297,6 @@ Before moving to the next topic:
     - [ ] Could recognize pattern in new problem
     - [ ] Could explain to someone else
     - [ ] Understand off-by-one errors and how to avoid them
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks you about binary search.
-
-**Your explanation (write it out):**
-
-> "Binary search is a pattern where..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
-- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 

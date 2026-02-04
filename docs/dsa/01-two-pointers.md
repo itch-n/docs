@@ -593,8 +593,7 @@ public class DifferentSpeedClient {
  */
 public static boolean isPalindrome_Buggy(String s) {
     int left = 0;
-    int right = s.length();  // BUG 1: What's wrong here?
-
+    int right = s.length();
     while (left < right) {
         if (s.charAt(left) != s.charAt(right)) {
             return false;
@@ -603,19 +602,14 @@ public static boolean isPalindrome_Buggy(String s) {
         right--;
     }
 
-    return true;  // BUG 2: Logic seems fine, but test with "racecar" - what happens?
-}
+    return true;}
 ```
 
 **Your debugging:**
 
-- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 1 explanation:** <span class="fill-in">[What's wrong?]</span>
-- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
+- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
 
-- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 2 explanation:** <span class="fill-in">[What error will occur?]</span>
-- **Bug 2 fix:** <span class="fill-in">[How to fix?]</span>
+- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -644,14 +638,12 @@ public static int removeDuplicates_Buggy(int[] nums) {
 
     while (fast < nums.length) {
         if (nums[fast] != nums[slow]) {
-            nums[slow] = nums[fast];  // BUG 1: What's wrong with this line?
-            slow++;
+            nums[slow] = nums[fast];            slow++;
         }
         fast++;
     }
 
-    return slow;  // BUG 2: Off by one? Test with [1,2,3]
-}
+    return slow;}
 ```
 
 **Your debugging:**
@@ -704,8 +696,7 @@ public static boolean hasCycle_Buggy(ListNode head) {
     while (fast != null && fast.next != null) {
         slow = slow.next;
         fast = fast.next.next;
-    }  // BUG: Missing something in the loop!
-
+    }
     if (slow == fast) return true;
     return false;
 }
@@ -713,9 +704,7 @@ public static boolean hasCycle_Buggy(ListNode head) {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[What's missing in the while loop?]</span>
-- **Bug explanation:** <span class="fill-in">[Why does this cause incorrect results?]</span>
-- **Bug fix:** <span class="fill-in">[What code should be in the loop?]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Trace through example:**
 
@@ -758,8 +747,7 @@ public static void moveZeroes_Buggy(int[] nums) {
 
     for (int fast = 0; fast < nums.length; fast++) {
         if (nums[fast] != 0) {
-            nums[slow] = nums[fast];  // BUG: What if slow == fast?
-            slow++;
+            nums[slow] = nums[fast];            slow++;
         }
     }
 }
@@ -882,33 +870,6 @@ Two Pointers Pattern Selection
 │       └─ Use: Opposite direction ✓
 ```
 
-### The "Kill Switch" - When NOT to use Two Pointers
-
-**Don't use two pointers when:**
-
-1. <span class="fill-in">[Fill in - what kind of problems?]</span>
-2. <span class="fill-in">[Fill in - what data structures?]</span>
-3. <span class="fill-in">[Fill in - what requirements break it?]</span>
-
-### The Rule of Three: Alternatives
-
-**Option 1: Two Pointers**
-
-- Pros: <span class="fill-in">[Fill in]</span>
-- Cons: <span class="fill-in">[Fill in]</span>
-- Use when: <span class="fill-in">[Fill in]</span>
-
-**Option 2: Hash Table**
-
-- Pros: <span class="fill-in">[Fill in]</span>
-- Cons: <span class="fill-in">[Fill in]</span>
-- Use when: <span class="fill-in">[Fill in]</span>
-
-**Option 3: Brute Force (Nested Loops)**
-
-- Pros: <span class="fill-in">[Fill in]</span>
-- Cons: <span class="fill-in">[Fill in]</span>
-- Use when: <span class="fill-in">[Fill in]</span>
 
 ---
 
@@ -988,31 +949,6 @@ Before moving to the next topic:
     - [ ] Could implement all patterns from memory
     - [ ] Could recognize pattern in new problem
     - [ ] Could explain to someone else
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks you about two pointers.
-
-**Your explanation (write it out):**
-
-> "Two pointers is a pattern where..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
-- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 

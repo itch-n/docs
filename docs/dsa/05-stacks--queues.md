@@ -812,26 +812,20 @@ public static boolean isValid_Buggy(String s) {
         if (c == '(' || c == '[' || c == '{') {
             stack.push(c);
         } else {
-            char open = stack.pop();  // BUG 1: What if stack is empty?
-            if (c == ')' && open != '(') return false;
+            char open = stack.pop();            if (c == ')' && open != '(') return false;
             if (c == ']' && open != '[') return false;
             if (c == '}' && open != '{') return false;
         }
     }
 
-    return true;  // BUG 2: Is this always correct?
-}
+    return true;}
 ```
 
 **Your debugging:**
 
-- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 1 explanation:** <span class="fill-in">[What error will occur?]</span>
-- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
+- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
 
-- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 2 explanation:** <span class="fill-in">[Test with "(((" - what happens?]</span>
-- **Bug 2 fix:** <span class="fill-in">[How to fix?]</span>
+- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
 
 <details markdown>
 <summary>Click to verify your answers</summary>
@@ -871,10 +865,8 @@ public static int[] nextGreaterElement_Buggy(int[] nums) {
     for (int i = 0; i < nums.length; i++) {
         while (!stack.isEmpty() && nums[i] > nums[stack.peek()]) {
             int idx = stack.pop();
-            result[i] = nums[i];  // BUG 1: Wrong index!
-        }
-        stack.push(nums[i]);  // BUG 2: Should push index or value?
-    }
+            result[i] = nums[i];        }
+        stack.push(nums[i]);    }
 
     return result;
 }
@@ -936,8 +928,7 @@ static class MinStack_Buggy {
 
     public void pop() {
         stack.pop();
-        minStack.pop();  // BUG: Always popping from minStack!
-    }
+        minStack.pop();    }
 
     public int getMin() {
         return minStack.peek();
@@ -947,9 +938,7 @@ static class MinStack_Buggy {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[What's wrong with pop()?]</span>
-- **Bug explanation:** <span class="fill-in">[Why does this break getMin()?]</span>
-- **Bug fix:** <span class="fill-in">[What code should be in pop()?]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Trace through example:**
 
@@ -1008,7 +997,6 @@ static class QueueWithStacks_Buggy {
     }
 
     public int dequeue() {
-        // BUG: Transferring on every dequeue!
         while (!inbox.isEmpty()) {
             outbox.push(inbox.pop());
         }
@@ -1070,8 +1058,7 @@ public static int[] maxSlidingWindow_Buggy(int[] nums, int k) {
 
     for (int i = 0; i < nums.length; i++) {
         // Remove indices outside window
-        while (!deque.isEmpty() && deque.peekFirst() <= i - k) {  // BUG 1: <= or <?
-            deque.pollFirst();
+        while (!deque.isEmpty() && deque.peekFirst() <= i - k) {            deque.pollFirst();
         }
 
         // Remove smaller elements
@@ -1082,8 +1069,7 @@ public static int[] maxSlidingWindow_Buggy(int[] nums, int k) {
         deque.offerLast(i);
 
         // Record maximum
-        if (i > k - 1) {  // BUG 2: > or >=?
-            result[i - k + 1] = nums[deque.peekFirst()];
+        if (i > k - 1) {            result[i - k + 1] = nums[deque.peekFirst()];
         }
     }
 
@@ -1210,34 +1196,6 @@ Stack vs Queue Selection
     └─ Use: Monotonic Deque ✓
 ```
 
-### The "Kill Switch" - When NOT to use Stacks/Queues
-
-**Don't use when:**
-
-1. <span class="fill-in">[Need random access? Use array/list]</span>
-2. <span class="fill-in">[Need to search? Use hash table]</span>
-3. <span class="fill-in">[Need sorted order? Use heap/tree]</span>
-4. <span class="fill-in">[Need both LIFO and FIFO? Use deque]</span>
-
-### The Rule of Three: Alternatives
-
-**Option 1: Stack**
-
-- Pros: <span class="fill-in">[O(1) push/pop, simple]</span>
-- Cons: <span class="fill-in">[Only access top, no random access]</span>
-- Use when: <span class="fill-in">[LIFO order needed]</span>
-
-**Option 2: Queue**
-
-- Pros: <span class="fill-in">[O(1) enqueue/dequeue, FIFO]</span>
-- Cons: <span class="fill-in">[Only access front/rear]</span>
-- Use when: <span class="fill-in">[FIFO order needed]</span>
-
-**Option 3: Deque**
-
-- Pros: <span class="fill-in">[O(1) at both ends, flexible]</span>
-- Cons: <span class="fill-in">[Slightly more complex]</span>
-- Use when: <span class="fill-in">[Need access to both ends]</span>
 
 ---
 
@@ -1335,31 +1293,6 @@ Before moving to the next topic:
     - [ ] Could recognize pattern in new problem
     - [ ] Could explain to someone else
     - [ ] Understand amortized analysis for queue with stacks
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks you about stacks and queues.
-
-**Your explanation (write it out):**
-
-> "Stacks and queues are..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
-- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 

@@ -16,7 +16,7 @@ Numbered sequences you work through at your own pace. Each topic follows the sam
 
 Build real implementations to understand how systems work:
 
-- [ ] **Storage Engines** - Implement B+Trees & LSM Trees ← Start here
+- [ ] **Storage Engines** - Implement B+Trees & LSM Trees
 - [ ] **Row vs Column Storage** - OLTP vs OLAP, columnar formats, compression
 - [ ] **Caching Patterns** - LRU, LFU, cache-aside, write-through
 - [ ] **API Design** - REST principles, versioning, pagination
@@ -36,7 +36,7 @@ Build real implementations to understand how systems work:
 
 Pattern-based approach from easy to advanced:
 
-- [ ] **Two Pointers** - Opposite directions, same direction, different speeds ← Start here
+- [ ] **Two Pointers** - Opposite directions, same direction, different speeds
 - [ ] **Sliding Window** - Fixed and variable window sizes for subarray problems
 - [ ] **Hash Tables** - Fast lookups, grouping, frequency counting
 - [ ] **Linked Lists** - Reversal, cycle detection, fast/slow pointers
@@ -65,9 +65,9 @@ Pattern-based approach from easy to advanced:
 
 ## Key Principles
 
-- **The Kill Switch:** Know when NOT to use each pattern or technology
-- **Three Alternatives:** Compare trade-offs, not features
 - **Implement First:** Build it to understand it, then explain it simply
+- **Debug to Learn:** Fix broken implementations to understand edge cases
+- **Practice Scenarios:** Apply concepts to real-world design problems
 
 ---
 

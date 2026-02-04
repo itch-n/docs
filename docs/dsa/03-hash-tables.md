@@ -742,14 +742,12 @@ public static int[] twoSum_Buggy(int[] nums, int target) {
     Map<Integer, Integer> map = new HashMap<>();
 
     for (int i = 0; i < nums.length; i++) {
-        map.put(nums[i], i);  // BUG 1: When should we add to map?
-    }
+        map.put(nums[i], i);    }
 
     for (int i = 0; i < nums.length; i++) {
         int complement = target - nums[i];
         if (map.containsKey(complement)) {
-            return new int[] {map.get(complement), i};  // BUG 2: Edge case issue
-        }
+            return new int[] {map.get(complement), i};        }
     }
 
     return new int[] {-1, -1};
@@ -758,9 +756,7 @@ public static int[] twoSum_Buggy(int[] nums, int target) {
 
 **Your debugging:**
 
-- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 1 explanation:** <span class="fill-in">[Why separate loops? What's inefficient?]</span>
-- **Bug 1 fix:** <span class="fill-in">[How to combine into one loop?]</span>
+- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
 
 - **Bug 2 location:** <span class="fill-in">[Which line?]</span>
 - **Bug 2 explanation:** _[What if nums[i] + nums[i] = target? Same index used twice!]_
@@ -813,8 +809,7 @@ public static Map<Character, Integer> countChars_Buggy(String s) {
     Map<Character, Integer> freq = new HashMap<>();
 
     for (char c : s.toCharArray()) {
-        int count = freq.get(c);  // BUG: What if c not in map yet?
-        freq.put(c, count + 1);
+        int count = freq.get(c);        freq.put(c, count + 1);
     }
 
     return freq;
@@ -823,9 +818,7 @@ public static Map<Character, Integer> countChars_Buggy(String s) {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[Which line?]</span>
-- **Bug explanation:** <span class="fill-in">[What error occurs?]</span>
-- **Bug fix:** <span class="fill-in">[Two different ways to fix]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Test case:**
 
@@ -876,8 +869,7 @@ public static List<List<String>> groupAnagrams_Buggy(String[] strs) {
     Map<String, List<String>> groups = new HashMap<>();
 
     for (String s : strs) {
-        String key = s.toLowerCase();  // BUG: Is lowercase enough for anagrams?
-
+        String key = s.toLowerCase();
         if (!groups.containsKey(key)) {
             groups.put(key, new ArrayList<>());
         }
@@ -890,9 +882,7 @@ public static List<List<String>> groupAnagrams_Buggy(String[] strs) {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[Which line?]</span>
-- **Bug explanation:** <span class="fill-in">[What makes strings anagrams? Same letters in different order!]</span>
-- **Bug fix:** <span class="fill-in">[How to create a key that's same for all anagrams?]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Test case:**
 
@@ -931,8 +921,7 @@ public static class BadHashCode {
 
     @Override
     public int hashCode() {
-        return 42;  // BUG: Why is this terrible?
-    }
+        return 42;    }
 
     @Override
     public boolean equals(Object o) {
@@ -993,19 +982,16 @@ public int hashCode() {
 public static int[] intersection_Buggy(int[] nums1, int[] nums2) {
     Set<Integer> set1 = new HashSet<>();
 
-    for (int num : nums1) {  // BUG 1: What if nums1 is null?
-        set1.add(num);
+    for (int num : nums1) {        set1.add(num);
     }
 
     Set<Integer> result = new HashSet<>();
-    for (int num : nums2) {  // BUG 2: What if nums2 is null?
-        if (set1.contains(num)) {
+    for (int num : nums2) {        if (set1.contains(num)) {
             result.add(num);
         }
     }
 
-    return result.stream().mapToInt(i -> i).toArray();  // BUG 3: result could be empty
-}
+    return result.stream().mapToInt(i -> i).toArray();}
 ```
 
 **Your debugging:**
@@ -1077,8 +1063,7 @@ public static int longestConsecutive_Buggy(int[] nums) {
         }
     }
 
-    return maxLength;  // BUG: What if nums is empty?
-}
+    return maxLength;}
 ```
 
 **Your debugging:**
@@ -1198,34 +1183,6 @@ Hash Table Pattern Selection
     └─ No → Hash table is usually best choice
 ```
 
-### The "Kill Switch" - When NOT to use Hash Tables
-
-**Don't use hash tables when:**
-
-1. <span class="fill-in">[Need sorted order? What to use instead?]</span>
-2. <span class="fill-in">[Space is critical constraint? What alternatives?]</span>
-3. <span class="fill-in">[Keys don't have good hash function? What happens?]</span>
-4. <span class="fill-in">[Need to maintain insertion order? What to use?]</span>
-
-### The Rule of Three: Alternatives
-
-**Option 1: Hash Table**
-
-- Pros: <span class="fill-in">[Fill in - average O(1) operations?]</span>
-- Cons: <span class="fill-in">[Fill in - space overhead, no order?]</span>
-- Use when: <span class="fill-in">[Fill in - lookup speed critical?]</span>
-
-**Option 2: Sorted Array + Binary Search**
-
-- Pros: <span class="fill-in">[Fill in - less space, sorted order?]</span>
-- Cons: <span class="fill-in">[Fill in - O(log n) lookup?]</span>
-- Use when: <span class="fill-in">[Fill in - data rarely changes?]</span>
-
-**Option 3: Linear Search**
-
-- Pros: <span class="fill-in">[Fill in - no extra space, simple?]</span>
-- Cons: <span class="fill-in">[Fill in - O(n) lookup?]</span>
-- Use when: <span class="fill-in">[Fill in - small dataset?]</span>
 
 ---
 
@@ -1323,31 +1280,6 @@ Before moving to the next topic:
     - [ ] Could recognize pattern in new problem
     - [ ] Could explain to someone else
     - [ ] Understand hash table internals (basic level)
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks you about hash tables.
-
-**Your explanation (write it out):**
-
-> "Hash tables are a data structure that..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
-- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 

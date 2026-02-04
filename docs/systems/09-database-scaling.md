@@ -1139,7 +1139,6 @@ public class BrokenHashSharding {
     private final List<DatabaseShard> shards;
 
     public DatabaseShard getShard(String key) {
-        // BUG: This hash function creates hotspots
         int hash = key.length() % shards.size();
         return shards.get(hash);
     }
@@ -1155,9 +1154,7 @@ public class BrokenHashSharding {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[Which line?]</span>
-- **Bug explanation:** <span class="fill-in">[Why does this cause hotspots?]</span>
-- **Bug fix:** <span class="fill-in">[What should the hash function be?]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 
 **Trace through example:**
 
@@ -1202,12 +1199,10 @@ public class BrokenReplication {
         // Write to master
         master.write(userId, newName);
 
-        // BUG: Async replication takes time!
         // Slaves don't have new data yet
     }
 
     public String getProfile(String userId) {
-        // BUG: Immediately reading from slave after write!
         Database slave = slaves.get(readIndex);
         readIndex = (readIndex + 1) % slaves.size();
         return slave.read(userId);
@@ -1288,16 +1283,13 @@ public class BrokenCrossShardQuery {
     public List<User> findAllUsersOver21() {
         List<User> results = new ArrayList<>();
 
-        // BUG 1: Serial queries - slow!
         for (DatabaseShard shard : shards) {
             List<User> shardResults = shard.query("age > 21");
             results.addAll(shardResults);
         }
 
-        // BUG 2: No pagination - memory explosion!
         // If 1M results * 1KB each = 1GB memory
 
-        // BUG 3: No timeout - one slow shard blocks everything
 
         return results;
     }
@@ -1480,7 +1472,6 @@ public class BrokenMasterFailover {
     public void handleMasterFailure() {
         System.out.println("Master failed! Promoting slave to master...");
 
-        // BUG: What if OLD master comes back online?
         master = slaves.get(0);  // Promote first slave
         slaves.remove(0);
 
@@ -1775,31 +1766,6 @@ For each scenario, identify alternatives and compare:
 - [ ] Can explain trade-offs between strategies
 - [ ] Built decision tree for strategy selection
 - [ ] Completed practice scenarios
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery of database scaling through explanation and application. You cannot move forward until you
-can confidently complete this section.
-
-### Gate 1: Explain to a Product Manager
-
-**Scenario:** Your PM asks why we need to spend money on database scaling.
-
-**Your explanation (write it out):**
-
-> "Database scaling is necessary because..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation convince a non-technical stakeholder? <span class="fill-in">[Yes/No]</span>
-- Did you mention business impact (cost, performance, reliability)? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 

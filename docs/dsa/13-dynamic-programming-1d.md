@@ -836,12 +836,10 @@ public static int climbStairs_Buggy(int n) {
     if (n == 1) return 1;
     if (n == 2) return 2;
 
-    int[] dp = new int[n];  // BUG 1: Array size issue?
-    dp[0] = 1;
+    int[] dp = new int[n];    dp[0] = 1;
     dp[1] = 2;
 
-    for (int i = 2; i <= n; i++) {  // BUG 2: Array bounds?
-        dp[i] = dp[i - 1] + dp[i - 2];
+    for (int i = 2; i <= n; i++) {        dp[i] = dp[i - 1] + dp[i - 2];
     }
 
     return dp[n];
@@ -850,13 +848,9 @@ public static int climbStairs_Buggy(int n) {
 
 **Your debugging:**
 
-- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 1 explanation:** <span class="fill-in">[What's wrong with array size?]</span>
-- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
+- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
 
-- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 2 explanation:** <span class="fill-in">[What error will occur?]</span>
-- **Bug 2 fix:** <span class="fill-in">[How to fix loop or return?]</span>
+- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
 
 **Test case to expose:**
 
@@ -923,11 +917,9 @@ public static int coinChange_Buggy(int[] coins, int amount) {
     Arrays.fill(dp, Integer.MAX_VALUE);
     dp[0] = 0;  // Base case: 0 coins for amount 0
 
-    for (int i = 0; i < amount; i++) {  // BUG 1: Wrong iteration range?
-        for (int coin : coins) {
+    for (int i = 0; i < amount; i++) {        for (int coin : coins) {
             if (i + coin <= amount) {
-                dp[i + coin] = Math.min(dp[i + coin], dp[i] + 1);  // BUG 2: Correct logic?
-            }
+                dp[i + coin] = Math.min(dp[i + coin], dp[i] + 1);            }
         }
     }
 
@@ -999,8 +991,7 @@ public static int rob_Buggy(int[] nums) {
 
     int[] dp = new int[nums.length];
     dp[0] = nums[0];
-    dp[1] = nums[1];  // BUG: Is this the correct base case?
-
+    dp[1] = nums[1];
     for (int i = 2; i < nums.length; i++) {
         dp[i] = Math.max(dp[i - 1], dp[i - 2] + nums[i]);
     }
@@ -1093,11 +1084,9 @@ public static boolean wordBreak_Buggy(String s, List<String> wordDict) {
     dp[0] = true;
 
     for (int i = 1; i <= s.length(); i++) {
-        for (int j = i; j >= 0; j--) {  // BUG 1: Should j start at i or 0?
-            if (dp[j] && dict.contains(s.substring(j, i))) {
+        for (int j = i; j >= 0; j--) {            if (dp[j] && dict.contains(s.substring(j, i))) {
                 dp[i] = true;
-                break;  // BUG 2: Is breaking early always safe?
-            }
+                break;            }
         }
     }
 
@@ -1176,7 +1165,6 @@ public static int change_Buggy(int amount, int[] coins) {
     int[] dp = new int[amount + 1];
     dp[0] = 1;  // One way to make 0: use no coins
 
-    // BUG: Wrong loop order!
     for (int i = 1; i <= amount; i++) {
         for (int coin : coins) {
             if (i >= coin) {
@@ -1317,34 +1305,6 @@ Answer after solving problems:
           Track each state separately
 ```
 
-### The "Kill Switch" - When NOT to use 1D DP
-
-**Don't use when:**
-
-1. <span class="fill-in">[Need 2D state - use 2D DP]</span>
-2. <span class="fill-in">[Greedy works - simpler and faster]</span>
-3. <span class="fill-in">[Can use math formula - O(1)]</span>
-4. <span class="fill-in">[State space too large - need optimization]</span>
-
-### The Rule of Three: Alternatives
-
-**Option 1: Dynamic Programming**
-
-- Pros: <span class="fill-in">[Optimal solution, polynomial time]</span>
-- Cons: <span class="fill-in">[Need optimal substructure]</span>
-- Use when: <span class="fill-in">[Overlapping subproblems]</span>
-
-**Option 2: Greedy**
-
-- Pros: <span class="fill-in">[Simpler, faster]</span>
-- Cons: <span class="fill-in">[Doesn't always work]</span>
-- Use when: <span class="fill-in">[Greedy choice property holds]</span>
-
-**Option 3: Recursion with Memoization**
-
-- Pros: <span class="fill-in">[More intuitive]</span>
-- Cons: <span class="fill-in">[Stack overhead]</span>
-- Use when: <span class="fill-in">[Complex recurrence]</span>
 
 ---
 
@@ -1442,31 +1402,6 @@ Before moving to the next topic:
     - [ ] Could recognize pattern in new problem
     - [ ] Could explain to someone else
     - [ ] Understand how to derive recurrence
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks: "What's the difference between recursion and dynamic programming?"
-
-**Your explanation (write it out):**
-
-> "Dynamic programming is..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
-- Did you explain both optimal substructure AND overlapping subproblems? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 

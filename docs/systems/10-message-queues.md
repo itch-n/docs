@@ -1169,7 +1169,6 @@ public class BuggyMessageQueue {
     }
 
     public void send(Message message) throws InterruptedException {
-        // BUG 1: Missing synchronization
         if (queue.size() >= capacity) {
             Thread.sleep(100); // Wait for space
         }
@@ -1177,7 +1176,6 @@ public class BuggyMessageQueue {
     }
 
     public Message receive() throws InterruptedException {
-        // BUG 2: Missing wait mechanism
         if (queue.isEmpty()) {
             return null; // What happens to waiting consumers?
         }
@@ -1188,14 +1186,10 @@ public class BuggyMessageQueue {
 
 **Your debugging:**
 
-- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 1 explanation:** <span class="fill-in">[What goes wrong?]</span>
-- **Bug 1 fix:** <span class="fill-in">[How to fix?]</span>
+- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
 - **Scenario that exposes bug:** <span class="fill-in">[Fill in]</span>
 
-- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 2 explanation:** <span class="fill-in">[What's the problem?]</span>
-- **Bug 2 fix:** <span class="fill-in">[How to fix?]</span>
+- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
 - **Why does it lose messages?** <span class="fill-in">[Fill in]</span>
 
 <details markdown>
@@ -1254,7 +1248,6 @@ public class BuggyConsumer {
                 Message msg = queue.receive();
                 processMessage(msg); // Long operation - 5 seconds
 
-                // BUG: What if processMessage throws exception?
                 // Message was already removed from queue!
 
             } catch (Exception e) {
@@ -1366,7 +1359,6 @@ public class BuggyPubSub {
         List<Subscriber> subscribers = topicSubscribers.get(topic);
         if (subscribers == null) return;
 
-        // BUG: Concurrent delivery breaks ordering!
         for (Subscriber sub : subscribers) {
             executor.submit(() -> {
                 sub.deliver(message);
@@ -1478,11 +1470,9 @@ public class BuggyDLQ {
             retryCount.put(msg.id, count);
 
             if (count < maxRetries) {
-                // BUG 1: Immediate retry causes busy loop
                 mainQueue.send(msg);
                 return false;
             } else {
-                // BUG 2: DLQ might be full - message lost!
                 dlq.send(msg);
                 retryCount.remove(msg.id);
                 return false;
@@ -1774,37 +1764,6 @@ For each scenario, identify alternatives and compare:
 
 ---
 
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks you about message queues.
-
-**Your explanation (write it out):**
-
-> "A message queue is a system where..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-**Now explain the difference between queue and pub-sub:**
-
-> "A queue delivers to one consumer, while pub-sub..."
->
-> <span class="fill-in">[Fill in - explain the key difference]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
-- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
-
----
-
 ### Gate 2: Whiteboard Exercise
 
 **Task:** Draw the flow of a message through a producer-consumer system with 3 workers, without looking at code.
@@ -1926,7 +1885,6 @@ public class Consumer {
                 processMessage(msg);
             } catch (Exception e) {
                 System.err.println("Failed: " + e);
-                // What's missing here?
             }
         }
     }

@@ -1820,7 +1820,6 @@ public class EndpointMetrics {
     private Counter totalRequests = new Counter("http_requests_total", Map.of());
 
     public void recordRequest(String endpoint, String method, int statusCode) {
-        // BUG: What's missing here?
         totalRequests.inc();
     }
 
@@ -1832,9 +1831,7 @@ public class EndpointMetrics {
 
 **Your debugging:**
 
-- **Bug location:** <span class="fill-in">[Which line?]</span>
-- **Bug explanation:** <span class="fill-in">[What's the problem?]</span>
-- **Bug fix:** <span class="fill-in">[How should metrics be structured?]</span>
+- Bug: <span class="fill-in">[What\'s the bug?]</span>
 - **Impact:** <span class="fill-in">[Why is this a problem in production?]</span>
 
 **Test scenario:**
@@ -1889,7 +1886,6 @@ public class CacheMetrics {
     private Map<String, Counter> cacheHitsByUser = new ConcurrentHashMap<>();
 
     public void recordCacheHit(String userId) {
-        // BUG: What happens with 1 million users?
         cacheHitsByUser
             .computeIfAbsent(userId,
                 k -> new Counter("cache_hits", Map.of("user_id", userId)))
@@ -1967,7 +1963,6 @@ public class LatencyHistogram {
         synchronized(allLatencies) {
             if (allLatencies.isEmpty()) return 0.0;
 
-            // BUG: This is O(n log n) every time!
             Collections.sort(allLatencies);
             int index = (int)(allLatencies.size() * 0.99);
             return allLatencies.get(index);
@@ -2051,7 +2046,6 @@ public class TraceSampler {
     private double sampleRate = 0.10; // 10%
 
     public boolean shouldSample(String traceId) {
-        // BUG: What happens with parent-child spans?
         return random.nextDouble() < sampleRate;
     }
 }
@@ -2147,7 +2141,6 @@ public class OrderService {
 // {"timestamp":"...", "level":"INFO", "message":"Payment charged"}
 // {"timestamp":"...", "level":"INFO", "message":"Order validated"}
 // {"timestamp":"...", "level":"INFO", "message":"Shipment created"}
-// BUG: Can you correlate these logs? Can you find a specific order?
 ```
 
 **Your debugging:**
@@ -2316,37 +2309,6 @@ Observability Pattern Selection
     └─ Trending (months) → Metrics (downsampled)
 ```
 
-### The "Kill Switch" - Observability Anti-Patterns
-
-**Don't do this:**
-
-1. **Log everything at DEBUG level in production** - <span class="fill-in">[Massive costs, poor signal-to-noise]</span>
-2. **No sampling on high-traffic traces** - <span class="fill-in">[Storage explosion, performance impact]</span>
-3. **High-cardinality metric labels** - <span class="fill-in">[Metric explosion, query slowness]</span>
-4. **No retention policy** - <span class="fill-in">[Infinite storage costs]</span>
-5. **Logging PII/secrets** - <span class="fill-in">[Security/compliance violations]</span>
-6. **No structured logging** - <span class="fill-in">[Can't parse or aggregate logs]</span>
-7. **Alerting on everything** - <span class="fill-in">[Alert fatigue, ignored pages]</span>
-
-### The Rule of Three: Alternatives
-
-**Option 1: Push-based (Prometheus)**
-
-- Pros: <span class="fill-in">[Service discovery, powerful queries, free/open-source]</span>
-- Cons: <span class="fill-in">[Pull model requires firewall changes, single point of failure]</span>
-- Use when: <span class="fill-in">[Kubernetes, microservices, cost-conscious]</span>
-
-**Option 2: Agent-based (Datadog, New Relic)**
-
-- Pros: <span class="fill-in">[Unified metrics/logs/traces, powerful UI, managed service]</span>
-- Cons: <span class="fill-in">[Cost scales with usage, vendor lock-in]</span>
-- Use when: <span class="fill-in">[Need full-featured platform, willing to pay]</span>
-
-**Option 3: Cloud-native (CloudWatch, Azure Monitor)**
-
-- Pros: <span class="fill-in">[Integrated with cloud, auto-instrumentation, pay-per-use]</span>
-- Cons: <span class="fill-in">[Vendor lock-in, limited cross-cloud]</span>
-- Use when: <span class="fill-in">[Single cloud provider, tight cloud integration]</span>
 
 ---
 
@@ -2486,31 +2448,6 @@ Before moving to the next topic:
     - [ ] Understand observability costs and trade-offs
     - [ ] Know how to debug with observability data
     - [ ] Can write runbooks for alerts
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery through explanation and application. You cannot move forward until you can confidently
-complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks you about observability.
-
-**Your explanation (write it out):**
-
-> "Observability is..."
->
-> <span class="fill-in">[Fill in your explanation in plain English - 3-4 sentences max]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
-- Did you explain all three pillars (metrics, logs, traces)? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 

@@ -227,7 +227,6 @@ public class SecureJWTAuth {
 public class NoAuthzBlog {
 
     public boolean deletePost(String postId, String userId) {
-        // BUG: No check if user has permission!
         // Any authenticated user can delete any post
         database.delete("posts", postId);
         return true;
@@ -329,7 +328,6 @@ public class RBACBlog {
 // INSECURE: Hardcoded credentials in source code
 public class HardcodedSecrets {
 
-    // BUG: Secret in source code!
     private static final String DB_PASSWORD = "super-secret-pwd-123";
 
     public Connection connectToDatabase() {
@@ -1139,18 +1137,15 @@ public class BrokenJWTValidator {
     private final String secret = "my-secret-key";
 
     public String validateToken_Buggy(String token) {
-        // BUG 1: What's missing before splitting?
         String[] parts = token.split("\\.");
 
         // Extract payload
         String payload = parts[1];
         String decodedPayload = base64Decode(payload);
 
-        // BUG 2: What critical check is missing?
         // Parse JSON to get user ID
         String userId = extractUserId(decodedPayload);
 
-        // BUG 3: What about expiration?
         return userId;
     }
 }
@@ -1158,17 +1153,11 @@ public class BrokenJWTValidator {
 
 **Your debugging:**
 
-- **Bug 1 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 1 explanation:** <span class="fill-in">[What if token is malformed?]</span>
-- **Bug 1 fix:** <span class="fill-in">[What validation is needed?]</span>
+- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
 
-- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 2 explanation:** <span class="fill-in">[Most critical security flaw - what's missing?]</span>
-- **Bug 2 fix:** <span class="fill-in">[What MUST be verified?]</span>
+- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
 
-- **Bug 3 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 3 explanation:** <span class="fill-in">[What timing issue exists?]</span>
-- **Bug 3 fix:** <span class="fill-in">[What field to check?]</span>
+- Bug 3: <span class="fill-in">[What\'s the bug?]</span>
 
 **Security impact:** What can an attacker do with these bugs?
 
@@ -1238,7 +1227,6 @@ public class BrokenRBAC {
     public boolean hasPermission_Buggy(String userId, Permission permission) {
         Set<Role> roles = userRoles.get(userId);
 
-        // BUG 1: What if user has no roles?
         for (Role role : roles) {
             Set<Permission> perms = rolePermissions.get(role);
             if (perms.contains(permission)) {
@@ -1250,7 +1238,6 @@ public class BrokenRBAC {
     }
 
     public void deleteResource_Buggy(String resourceId, String userId) {
-        // BUG 2: What's missing here?
         database.delete(resourceId);
         System.out.println("Deleted: " + resourceId);
     }
@@ -1325,7 +1312,6 @@ public class TimingAttackVulnerable {
     private static final String VALID_API_KEY = "sk_live_a1b2c3d4e5f6";
 
     public boolean validateAPIKey_Buggy(String providedKey) {
-        // BUG: What's wrong with this comparison?
         if (providedKey.equals(VALID_API_KEY)) {
             return true;
         }
@@ -1338,7 +1324,6 @@ public class TimingAttackVulnerable {
             return false;
         }
 
-        // BUG: Early return on mismatch
         for (int i = 0; i < VALID_API_KEY.length(); i++) {
             if (providedKey.charAt(i) != VALID_API_KEY.charAt(i)) {
                 return false;  // Returns immediately on first mismatch
@@ -1426,14 +1411,11 @@ public class SecretLeakage {
 
     public void connectToDatabase() {
         String connectionUrl = "jdbc:postgresql://db.example.com/mydb" +
-            "?user=dbuser&password=" + dbPassword;  // BUG 1: What's wrong?
-
-        System.out.println("Connecting to: " + connectionUrl);  // BUG 2: Logs what?
-
+            "?user=dbuser&password=" + dbPassword;
+        System.out.println("Connecting to: " + connectionUrl);
         try {
             Connection conn = DriverManager.getConnection(connectionUrl);
         } catch (SQLException e) {
-            // BUG 3: What gets logged in stack trace?
             e.printStackTrace();
             logger.error("Database connection failed: " + e.getMessage());
         }
@@ -1442,14 +1424,7 @@ public class SecretLeakage {
     public String generateJWT(String userId) {
         String secret = System.getenv("JWT_SECRET");
         String token = createToken(userId, secret);
-        logger.info("Generated token for user " + userId + ": " + token);  // BUG 4?
-        return token;
-    }
-}
-```
-
-**Your debugging:**
-
+        logger.info("Generated token for user " + userId + ": " + token);
 - **Bug 1:** <span class="fill-in">[What's exposed in the URL?]</span>
 - **Bug 2:** <span class="fill-in">[What gets printed to console?]</span>
 - **Bug 3:** <span class="fill-in">[What's in the SQLException details?]</span>
@@ -1633,37 +1608,6 @@ Security Pattern Selection
     └─ Offline support → JWT with refresh tokens
 ```
 
-### The "Kill Switch" - Security Anti-Patterns
-
-**Don't do this:**
-
-1. **Store passwords in plain text** - <span class="fill-in">[Always hash with bcrypt/argon2]</span>
-2. **Use weak secrets** - <span class="fill-in">[Minimum 32 bytes entropy]</span>
-3. **Hard-code credentials** - <span class="fill-in">[Use environment vars or secrets manager]</span>
-4. **Send tokens in URL** - <span class="fill-in">[Use headers or secure cookies]</span>
-5. **Never rotate secrets** - <span class="fill-in">[Rotate regularly, especially after breaches]</span>
-6. **Trust client-side validation** - <span class="fill-in">[Always validate on server]</span>
-7. **Use MD5/SHA1 for passwords** - <span class="fill-in">[Use bcrypt, scrypt, or argon2]</span>
-
-### The Rule of Three: Alternatives
-
-**Option 1: JWT (Stateless)**
-
-- Pros: <span class="fill-in">[Scalable, no server state, works across services]</span>
-- Cons: <span class="fill-in">[Can't revoke easily, token size, need refresh mechanism]</span>
-- Use when: <span class="fill-in">[Microservices, SPAs, mobile apps]</span>
-
-**Option 2: Session (Stateful)**
-
-- Pros: <span class="fill-in">[Easy to revoke, smaller cookies, server controls state]</span>
-- Cons: <span class="fill-in">[Requires session store, sticky sessions, doesn't scale horizontally easily]</span>
-- Use when: <span class="fill-in">[Monoliths, need immediate revocation, simpler security model]</span>
-
-**Option 3: OAuth2/OIDC (Delegated)**
-
-- Pros: <span class="fill-in">[Industry standard, handles complex flows, third-party integration]</span>
-- Cons: <span class="fill-in">[Complex implementation, relies on identity provider]</span>
-- Use when: <span class="fill-in">[Social login, enterprise SSO, third-party services]</span>
 
 ---
 
@@ -1760,39 +1704,6 @@ Before moving to the next topic:
     - [ ] Know common vulnerabilities (OWASP Top 10)
 
 ---
-
----
-
-## Understanding Gate (Must Pass Before Continuing)
-
-**Your task:** Prove mastery of security patterns through explanation and application. You cannot move forward until you
-can confidently complete this section.
-
-### Gate 1: Explain to a Junior Developer
-
-**Scenario:** A junior developer asks you about authentication vs authorization.
-
-**Your explanation (write it out):**
-
-> "Authentication is..."
->
-> <span class="fill-in">[Fill in your explanation - 2-3 sentences]</span>
->
-> "Authorization is..."
->
-> <span class="fill-in">[Fill in your explanation - 2-3 sentences]</span>
->
-> "Real-world example: When you go to a concert..."
->
-> <span class="fill-in">[Complete the analogy]</span>
-
-**Self-assessment:**
-
-- Clarity score (1-10): <span class="fill-in">___</span>
-- Could your explanation be understood by a non-technical person? <span class="fill-in">[Yes/No]</span>
-- Did you use analogies or real-world examples? <span class="fill-in">[Yes/No]</span>
-
-If you scored below 7 or answered "No" to either question, revise your explanation.
 
 ---
 
