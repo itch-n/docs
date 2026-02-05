@@ -1,4 +1,4 @@
-# 07. Security Patterns
+# Security Patterns
 
 > Authentication, authorization, and securing distributed systems
 

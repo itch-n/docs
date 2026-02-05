@@ -1,4 +1,4 @@
-# Backend Engineer Study Guide
+# Software Engineering Study Guide
 
 > A hands-on, fill-in-as-you-learn framework for systems design and algorithms
 
@@ -47,7 +47,7 @@ Pattern-based approach from easy to advanced:
 - [ ] **Trees - Recursion** - Height, diameter, LCA, path problems
 - [ ] **Binary Search** - Classic search, rotated arrays, 2D matrices
 - [ ] **Union-Find** - Disjoint sets for connectivity (before Graphs for MST algorithms)
-- [ ] **Graphs (DFS/BFS)** - Traversals, shortest path, MST
+- [ ] **Graphs (DFS/BFS)** - Traversals, shortest path
 - [ ] **Advanced Graph Algorithms** - Dijkstra, MST, Topological Sort, A*, SCC
 - [ ] **Heaps** - Priority queues, top K problems
 - [ ] **Backtracking** - Permutations, combinations, constraint satisfaction

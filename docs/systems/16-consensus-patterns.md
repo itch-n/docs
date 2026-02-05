@@ -1,4 +1,4 @@
-# 16. Consensus Patterns
+# Consensus Patterns
 
 > Leader election, Raft consensus, distributed locks, and quorum-based systems
 

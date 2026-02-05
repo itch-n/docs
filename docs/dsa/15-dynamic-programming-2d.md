@@ -1,4 +1,4 @@
-# 15. Dynamic Programming (2D)
+# Dynamic Programming (2D)
 
 > Solve problems with two-dimensional state space using tabulation or memoization
 

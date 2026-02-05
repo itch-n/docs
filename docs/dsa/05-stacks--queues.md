@@ -1,4 +1,4 @@
-# 05. Stacks & Queues
+# Stacks & Queues
 
 > LIFO and FIFO data structures for tracking state and processing order
 

@@ -1,4 +1,4 @@
-# 06. Trees - Traversals
+# Trees - Traversals
 
 > Visit every node in a tree using Inorder, Preorder, Postorder, or Level-Order
 

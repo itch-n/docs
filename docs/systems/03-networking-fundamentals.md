@@ -1,4 +1,4 @@
-# 03. Networking Fundamentals
+# Networking Fundamentals
 
 > TCP/IP vs UDP, HTTP versions, WebSockets, DNS, TLS, and load balancing
 

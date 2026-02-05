@@ -1,4 +1,4 @@
-# 08. Binary Search
+# Binary Search
 
 > Reduce O(n) to O(log n) by eliminating half the search space each step
 

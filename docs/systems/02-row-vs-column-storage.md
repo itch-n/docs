@@ -1,4 +1,4 @@
-# 02. Row vs Column Storage
+# Row vs Column Storage
 
 > OLTP vs OLAP - Why your database layout fundamentally changes the game
 

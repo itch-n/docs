@@ -1,4 +1,4 @@
-# 01. Two Pointers
+# Two Pointers
 
 > Reduce O(n²) to O(n) by using two indices moving through data
 

@@ -1,4 +1,4 @@
-# 05. Caching Patterns
+# Caching Patterns
 
 > Master LRU, LFU, and write policies for high-performance systems
 

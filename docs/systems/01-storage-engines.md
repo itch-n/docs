@@ -1,4 +1,4 @@
-# 01. Storage Engines
+# Storage Engines
 
 > B+Trees vs LSM Trees - The foundation of all database decisions
 

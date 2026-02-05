@@ -1,4 +1,4 @@
-# 17. Advanced Topics
+# Advanced Topics
 
 > Master bit manipulation, intervals, prefix sums, and monotonic stacks
 

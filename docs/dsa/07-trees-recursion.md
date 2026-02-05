@@ -1,4 +1,4 @@
-# 07. Trees - Recursion
+# Trees - Recursion
 
 > Solve tree problems using recursive divide-and-conquer approach
 

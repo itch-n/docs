@@ -1,4 +1,4 @@
-# 04. Search & Indexing
+# Search & Indexing
 
 > Inverted indexes, full-text search, ranking algorithms, and distributed search systems
 

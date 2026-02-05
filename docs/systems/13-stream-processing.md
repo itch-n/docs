@@ -1,4 +1,4 @@
-# 13. Stream Processing
+# Stream Processing
 
 > Real-time data processing with windowing, watermarks, and stateful operations
 

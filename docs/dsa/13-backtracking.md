@@ -1,4 +1,4 @@
-# 13. Backtracking
+# Backtracking
 
 > Explore all possible solutions by building candidates and abandoning them when they fail
 

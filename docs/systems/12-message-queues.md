@@ -1,4 +1,4 @@
-# 12. Message Queues
+# Message Queues
 
 > Asynchronous communication patterns for decoupled, scalable systems
 

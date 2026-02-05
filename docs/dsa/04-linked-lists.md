@@ -1,4 +1,4 @@
-# 04. Linked Lists
+# Linked Lists
 
 > Pointer manipulation for reversing, detecting cycles, and merging lists
 

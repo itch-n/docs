@@ -1,4 +1,4 @@
-# 12. Heaps (Priority Queues)
+# Heaps (Priority Queues)
 
 > O(log n) insert/delete with O(1) access to min/max element
 

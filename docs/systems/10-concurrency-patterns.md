@@ -1,4 +1,4 @@
-# 10. Concurrency Patterns
+# Concurrency Patterns
 
 > Locks, thread pools, synchronization, and async patterns - From threads to coroutines to reactive streams
 

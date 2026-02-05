@@ -1,4 +1,4 @@
-# 03. Hash Tables
+# Hash Tables
 
 > O(1) average lookup, insertion, and deletion using key-value mapping
 

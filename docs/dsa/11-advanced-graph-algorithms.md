@@ -1,4 +1,4 @@
-# 11. Advanced Graph Algorithms
+# Advanced Graph Algorithms
 
 > Dijkstra's shortest path, Minimum Spanning Tree, Topological Sort, and distributed graph processing
 

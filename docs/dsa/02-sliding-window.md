@@ -1,4 +1,4 @@
-# 02. Sliding Window
+# Sliding Window
 
 > Optimize subarray/substring problems from O(n²) to O(n)
 

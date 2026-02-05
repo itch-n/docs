@@ -1,4 +1,4 @@
-# 09. Load Balancing
+# Load Balancing
 
 > Distributing requests across multiple servers for scalability and reliability
 
