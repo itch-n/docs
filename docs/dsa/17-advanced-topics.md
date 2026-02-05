@@ -1,6 +1,6 @@
 # Advanced Topics
 
-> Master bit manipulation, intervals, prefix sums, and monotonic stacks
+> Master bit manipulation, intervals, and prefix sums
 
 ---
 
@@ -16,13 +16,12 @@
     - Bit manipulation: <span class="fill-in">[Fill in after implementation]</span>
     - Intervals: <span class="fill-in">[Fill in after implementation]</span>
     - Prefix sum: <span class="fill-in">[Fill in after implementation]</span>
-    - Monotonic stack: <span class="fill-in">[Fill in after implementation]</span>
+
 
 2. **Real-world analogies:**
     - Bit manipulation: "Like using switches that are either on or off..."
     - Intervals: "Like managing calendar appointments..."
     - Prefix sum: "Like keeping a running total..."
-    - Monotonic stack: "Like organizing plates by size..."
     - Your analogies: <span class="fill-in">[Fill in]</span>
 
 3. **When does each pattern work?**
@@ -50,10 +49,7 @@
     - Why that complexity? <span class="fill-in">[Fill in your reasoning]</span>
     - Verified: <span class="fill-in">[Actual]</span>
 
-3. **Monotonic stack for next greater element:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - How many times can each element be pushed/popped? <span class="fill-in">[Fill in]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
+
 
 ### Scenario Predictions
 
@@ -71,11 +67,7 @@
 - **How many intervals in final result?
   ** <span class="fill-in">[Your prediction: <span class="fill-in">___</span>]</span>
 
-**Scenario 3:** Next greater element for `[2, 1, 2, 4, 3]`
 
-- **Which type of stack?** <span class="fill-in">[Increasing/Decreasing]</span>
-- **Why that direction?** <span class="fill-in">[Fill in your reasoning]</span>
-- **When do you pop from stack?** <span class="fill-in">[Fill in]</span>
 
 ### Bit Manipulation Quiz
 
@@ -318,108 +310,6 @@ Now you only need to check if `current interval end >= next interval start`:
 
 </div>
 
----
-
-### Example 3: Next Greater Element
-
-**Problem:** For each element, find the next greater element to its right.
-
-#### Approach 1: Nested Loops (Naive)
-
-```java
-// Naive approach - For each element, search right
-public static int[] nextGreater_BruteForce(int[] nums) {
-    int n = nums.length;
-    int[] result = new int[n];
-
-    for (int i = 0; i < n; i++) {
-        result[i] = -1;  // Default: no greater element
-
-        // Search to the right
-        for (int j = i + 1; j < n; j++) {
-            if (nums[j] > nums[i]) {
-                result[i] = nums[j];
-                break;  // Found, stop searching
-            }
-        }
-    }
-
-    return result;
-}
-```
-
-**Analysis:**
-
-- Time: O(n²) - For each element, scan remaining elements
-- Space: O(1) - Only output array
-- For n = 10,000: Up to ~50,000,000 comparisons
-
-#### Approach 2: Monotonic Stack (Optimized)
-
-```java
-// Optimized approach - Use decreasing stack
-public static int[] nextGreater_Stack(int[] nums) {
-    int n = nums.length;
-    int[] result = new int[n];
-    Arrays.fill(result, -1);  // Default: no greater element
-
-    Stack<Integer> stack = new Stack<>();  // Store indices
-
-    for (int i = 0; i < n; i++) {
-        // Pop all elements smaller than current
-        while (!stack.isEmpty() && nums[stack.peek()] < nums[i]) {
-            int idx = stack.pop();
-            result[idx] = nums[i];  // Found next greater!
-        }
-
-        stack.push(i);  // Add current index
-    }
-
-    return result;
-}
-```
-
-**Analysis:**
-
-- Time: O(n) - Each element pushed and popped at most once
-- Space: O(n) - Stack storage
-- For n = 10,000: ~20,000 operations (push + pop)
-
-#### Performance Comparison
-
-| Array Size | Brute Force (O(n²)) | Monotonic Stack (O(n)) | Speedup |
-|------------|---------------------|------------------------|---------|
-| n = 100    | ~5,000 ops          | ~200 ops               | 25x     |
-| n = 1,000  | ~500,000 ops        | ~2,000 ops             | 250x    |
-| n = 10,000 | ~50,000,000 ops     | ~20,000 ops            | 2,500x  |
-
-**Why Does Monotonic Stack Work?**
-
-For array `[2, 1, 2, 4, 3]`:
-
-```
-i=0, num=2: Stack=[] → Push 0 → Stack=[0]
-i=1, num=1: Stack=[0], nums[0]=2 > 1 → Push 1 → Stack=[0,1]
-i=2, num=2: Stack=[0,1], nums[1]=1 < 2 → Pop 1, result[1]=2
-            Stack=[0], nums[0]=2 ≥ 2 → Push 2 → Stack=[0,2]
-i=3, num=4: Stack=[0,2], nums[2]=2 < 4 → Pop 2, result[2]=4
-            Stack=[0], nums[0]=2 < 4 → Pop 0, result[0]=4
-            Stack=[] → Push 3 → Stack=[3]
-i=4, num=3: Stack=[3], nums[3]=4 > 3 → Push 4 → Stack=[3,4]
-
-Result: [4, 2, 4, -1, -1]
-```
-
-**Key insight:** Each element is pushed once and popped once → O(n) total!
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why do we maintain a decreasing stack? <span class="fill-in">[Your answer]</span>
-- Why is each element processed only twice? <span class="fill-in">[Your answer]</span>
-
-</div>
 
 ---
 
@@ -918,170 +808,7 @@ public class PrefixSumClient {
 
 ---
 
-### Pattern 4: Monotonic Stack
 
-**Concept:** Maintain stack in monotonic (increasing/decreasing) order.
-
-**Use case:** Next greater element, largest rectangle, trap rain water.
-
-```java
-import java.util.*;
-
-public class MonotonicStack {
-
-    /**
-     * Problem: Next greater element
-     * Time: O(n), Space: O(n)
-     *
-     * TODO: Implement using monotonic decreasing stack
-     */
-    public static int[] nextGreaterElement(int[] nums) {
-        int n = nums.length;
-        int[] result = new int[n];
-        // TODO: Stack stores indices
-        // TODO: Maintain decreasing stack
-        // TODO: When nums[i] > stack.top(), found next greater
-
-        return result; // Replace with implementation
-    }
-
-    /**
-     * Problem: Daily temperatures (days until warmer)
-     * Time: O(n), Space: O(n)
-     *
-     * TODO: Implement using monotonic stack
-     */
-    public static int[] dailyTemperatures(int[] temperatures) {
-        // TODO: Similar to next greater element
-        // TODO: Store index difference instead of value
-
-        return new int[0]; // Replace with implementation
-    }
-
-    /**
-     * Problem: Largest rectangle in histogram
-     * Time: O(n), Space: O(n)
-     *
-     * TODO: Implement using monotonic increasing stack
-     */
-    public static int largestRectangleArea(int[] heights) {
-        // TODO: Stack stores indices
-        // TODO: Maintain increasing stack
-        // TODO: When heights[i] < stack.top(), compute area
-        // TODO: Width = current_index - left_boundary - 1
-        // TODO: Height = heights[stack.top()]
-
-        return 0; // Replace with implementation
-    }
-
-    /**
-     * Problem: Maximal rectangle in binary matrix
-     * Time: O(m*n), Space: O(n)
-     *
-     * TODO: Implement using largest rectangle for each row
-     */
-    public static int maximalRectangle(char[][] matrix) {
-        // TODO: Convert each row to histogram
-        // TODO: Apply largest rectangle algorithm
-
-        return 0; // Replace with implementation
-    }
-
-    /**
-     * Problem: Trap rain water
-     * Time: O(n), Space: O(1) with two pointers
-     *
-     * TODO: Implement using two pointers or monotonic stack
-     */
-    public static int trap(int[] height) {
-        // TODO: Method 1: Two pointers
-        // TODO: Method 2: Monotonic stack
-
-        return 0; // Replace with implementation
-    }
-
-    /**
-     * Problem: Remove K digits to make smallest number
-     * Time: O(n), Space: O(n)
-     *
-     * TODO: Implement using monotonic increasing stack
-     */
-    public static String removeKdigits(String num, int k) {
-        // TODO: Maintain increasing stack of digits
-        // TODO: Remove k larger digits
-        // TODO: Handle leading zeros
-
-        return ""; // Replace with implementation
-    }
-}
-```
-
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class MonotonicStackClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Monotonic Stack ===\n");
-
-        // Test 1: Next greater element
-        System.out.println("--- Test 1: Next Greater Element ---");
-        int[] arr1 = {2, 1, 2, 4, 3};
-        System.out.println("Array: " + Arrays.toString(arr1));
-        int[] nextGreater = MonotonicStack.nextGreaterElement(arr1);
-        System.out.println("Next greater: " + Arrays.toString(nextGreater));
-
-        // Test 2: Daily temperatures
-        System.out.println("\n--- Test 2: Daily Temperatures ---");
-        int[] temps = {73, 74, 75, 71, 69, 72, 76, 73};
-        System.out.println("Temperatures: " + Arrays.toString(temps));
-        int[] days = MonotonicStack.dailyTemperatures(temps);
-        System.out.println("Days to wait: " + Arrays.toString(days));
-
-        // Test 3: Largest rectangle
-        System.out.println("\n--- Test 3: Largest Rectangle in Histogram ---");
-        int[] heights = {2, 1, 5, 6, 2, 3};
-        System.out.println("Heights: " + Arrays.toString(heights));
-        int maxArea = MonotonicStack.largestRectangleArea(heights);
-        System.out.println("Largest rectangle area: " + maxArea);
-
-        // Test 4: Maximal rectangle
-        System.out.println("\n--- Test 4: Maximal Rectangle ---");
-        char[][] matrix = {
-            {'1','0','1','0','0'},
-            {'1','0','1','1','1'},
-            {'1','1','1','1','1'},
-            {'1','0','0','1','0'}
-        };
-        System.out.println("Matrix:");
-        for (char[] row : matrix) {
-            System.out.println("  " + Arrays.toString(row));
-        }
-        int maxRect = MonotonicStack.maximalRectangle(matrix);
-        System.out.println("Maximal rectangle: " + maxRect);
-
-        // Test 5: Trap rain water
-        System.out.println("\n--- Test 5: Trap Rain Water ---");
-        int[] elevation = {0,1,0,2,1,0,1,3,2,1,2,1};
-        System.out.println("Elevation: " + Arrays.toString(elevation));
-        int water = MonotonicStack.trap(elevation);
-        System.out.println("Water trapped: " + water);
-
-        // Test 6: Remove K digits
-        System.out.println("\n--- Test 6: Remove K Digits ---");
-        String num = "1432219";
-        int k = 3;
-        System.out.println("Number: " + num);
-        System.out.println("k = " + k);
-        String smallest = MonotonicStack.removeKdigits(num, k);
-        System.out.println("Smallest number: " + smallest);
-    }
-}
-```
-
----
 
 ## Debugging Challenges
 
@@ -1279,60 +1006,7 @@ for (int num : nums) {
 where the entire prefix equals k.
 </details>
 
----
 
-### Challenge 4: Broken Monotonic Stack
-
-```java
-/**
- * Find next greater element.
- * This has 1 LOGIC ERROR.
- */
-public static int[] nextGreater_Buggy(int[] nums) {
-    int n = nums.length;
-    int[] result = new int[n];
-    Arrays.fill(result, -1);
-
-    Stack<Integer> stack = new Stack<>();
-
-    for (int i = 0; i < n; i++) {
-        while (!stack.isEmpty() && nums[stack.peek()] < nums[i]) {
-            int idx = stack.pop();
-            result[i] = nums[i];        }
-
-        stack.push(i);
-    }
-
-    return result;
-}
-```
-
-**Your debugging:**
-
-- **Bug:** <span class="fill-in">[What's the logic error?]</span>
-- **Example:** Input `[2, 1, 2, 4, 3]`, output is <span class="fill-in">[Fill in - trace manually]</span>
-- **Expected:** `[4, 2, 4, -1, -1]`
-- **Actual:** <span class="fill-in">[What do you get?]</span>
-- **Fix:** <span class="fill-in">[How to correct it?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** Should be `result[idx] = nums[i]`, not `result[i] = nums[i]`.
-
-We're finding the next greater element for `idx`, not for `i`. The index `idx` comes from the stack (popped element),
-and `nums[i]` is its next greater element.
-
-**Correct:**
-
-```java
-while (!stack.isEmpty() && nums[stack.peek()] < nums[i]) {
-    int idx = stack.pop();
-    result[idx] = nums[i];  // Fix: idx, not i
-}
-```
-
-</details>
 
 ---
 
@@ -1482,96 +1156,6 @@ After finding and fixing all bugs:
 - Trade-off: <span class="fill-in">[O(n) space for O(1) queries]</span>
 - Examples: <span class="fill-in">[Subarray sum, range query]</span>
 
-**Monotonic stack when:**
-
-- Need: <span class="fill-in">[Next greater/smaller element]</span>
-- Pattern: <span class="fill-in">[Looking for boundary values]</span>
-- Examples: <span class="fill-in">[Histogram, temperatures]</span>
-
-### Your Decision Trees
-```mermaid
-flowchart LR
-    Start["Advanced Pattern Selection"]
-
-    N1(["Find single/missing element ✓"])
-    N2(["Count 1s, power of 2 ✓"])
-    N3(["Subset operations ✓"])
-    N4(["Use XOR and AND ✓"])
-    N5(["Merge intervals ✓"])
-    N6(["Insert interval ✓"])
-    N7(["Two pointers ✓"])
-    N8(["Sweep line or heap ✓"])
-    N9(["1D/2D prefix sum ✓"])
-    N10(["HashMap + prefix ✓"])
-    N11(["Convert to sum=0 ✓"])
-    N12(["Prefix/suffix ✓"])
-    N13(["Decreasing/increasing stack ✓"])
-    N14(["Increasing stack ✓"])
-    N15(["Stack or two pointers ✓"])
-    N16(["Monotonic stack ✓"])
-```
-
-
----
-
-## Practice
-
-### LeetCode Problems
-
-**Easy (Complete 4):**
-
-- [ ] [136. Single Number](https://leetcode.com/problems/single-number/)
-    - Pattern: <span class="fill-in">[Bit manipulation - XOR]</span>
-    - Your solution time: <span class="fill-in">___</span>
-    - Key insight: <span class="fill-in">[Fill in after solving]</span>
-
-- [ ] [191. Number of 1 Bits](https://leetcode.com/problems/number-of-1-bits/)
-    - Pattern: <span class="fill-in">[Bit counting]</span>
-    - Your solution time: <span class="fill-in">___</span>
-
-- [ ] [303. Range Sum Query](https://leetcode.com/problems/range-sum-query-immutable/)
-    - Pattern: <span class="fill-in">[Prefix sum]</span>
-    - Your solution time: <span class="fill-in">___</span>
-
-- [ ] [496. Next Greater Element I](https://leetcode.com/problems/next-greater-element-i/)
-    - Pattern: <span class="fill-in">[Monotonic stack]</span>
-    - Your solution time: <span class="fill-in">___</span>
-
-**Medium (Complete 6-8):**
-
-- [ ] [56. Merge Intervals](https://leetcode.com/problems/merge-intervals/)
-    - Pattern: <span class="fill-in">[Intervals]</span>
-    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
-
-- [ ] [57. Insert Interval](https://leetcode.com/problems/insert-interval/)
-    - Pattern: <span class="fill-in">[Intervals]</span>
-    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
-
-- [ ] [560. Subarray Sum Equals K](https://leetcode.com/problems/subarray-sum-equals-k/)
-    - Pattern: <span class="fill-in">[Prefix sum + hashmap]</span>
-    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
-
-- [ ] [739. Daily Temperatures](https://leetcode.com/problems/daily-temperatures/)
-    - Pattern: <span class="fill-in">[Monotonic stack]</span>
-    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
-
-- [ ] [84. Largest Rectangle in Histogram](https://leetcode.com/problems/largest-rectangle-in-histogram/)
-    - Pattern: <span class="fill-in">[Monotonic stack]</span>
-    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
-
-- [ ] [238. Product of Array Except Self](https://leetcode.com/problems/product-of-array-except-self/)
-    - Pattern: <span class="fill-in">[Prefix/suffix products]</span>
-    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
-
-**Hard (Optional):**
-
-- [ ] [42. Trapping Rain Water](https://leetcode.com/problems/trapping-rain-water/)
-    - Pattern: <span class="fill-in">[Monotonic stack or two pointers]</span>
-    - Key insight: <span class="fill-in">[Fill in after solving]</span>
-
-- [ ] [85. Maximal Rectangle](https://leetcode.com/problems/maximal-rectangle/)
-    - Pattern: <span class="fill-in">[Histogram + monotonic stack]</span>
-    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 ---
 

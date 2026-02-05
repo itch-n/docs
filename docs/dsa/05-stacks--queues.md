@@ -29,6 +29,16 @@
 5. **What problems require stacks vs queues?**
     - Your answer: <span class="fill-in">[Fill in after practice]</span>
 
+6. **What is a monotonic stack in one sentence?**
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+
+7. **Why is it useful for finding the "next greater element"?**
+    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    
+8. **Real-world analogy for monotonic stack:**
+    - Example: "A (decreasing) monotonic stack is like people of different heights standing in a line; when someone taller comes, they block the view of everyone shorter than them."
+    - Your analogy: <span class="fill-in">[Fill in]</span>
+
 </div>
 
 ---

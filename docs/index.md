@@ -32,7 +32,6 @@ Build real implementations to understand how systems work:
 - [ ] **Observability** - Metrics, logging, tracing, SLOs
 - [ ] **Distributed Transactions** - Saga pattern, idempotency
 - [ ] **Consensus Patterns** - Raft, leader election, distributed locks
-- [ ] **Full System Designs** - Apply everything (Instagram, Uber, etc.)
 
 ### [DSA](dsa/01-two-pointers.md) (17 Topics)
 

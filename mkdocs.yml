@@ -36,7 +36,6 @@ nav:
       - "14. Observability": systems/14-observability.md
       - "15. Distributed Transactions": systems/15-distributed-transactions.md
       - "16. Consensus Patterns": systems/16-consensus-patterns.md
-      - "17. Full System Designs": systems/17-full-system-designs.md
 
   - DSA:
       - "01. Two Pointers": dsa/01-two-pointers.md
