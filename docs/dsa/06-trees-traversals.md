@@ -1331,8 +1331,3 @@ Before moving to the next topic:
 - [ ] Choose between recursive, iterative, and Morris based on constraints
 - [ ] Teach this concept to someone else
 
-**Self-assessment score:** ___/10
-
-**If score < 8:** Review the sections where you struggled, then retry this gate.
-
-**If score ≥ 8:** Congratulations! You've mastered tree traversals. Proceed to the next topic.

@@ -1660,8 +1660,3 @@ Before moving to the next topic:
 - [ ] I design with "fail secure" principle
 - [ ] I understand the security/usability trade-off
 
-**Self-assessment score:** ___/10
-
-**If score < 8:** Review the sections where you struggled, then retry this gate.
-
-**If score ≥ 8:** Congratulations! You've mastered security patterns. Proceed to the next topic.

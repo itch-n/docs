@@ -2378,8 +2378,3 @@ Before moving to the next topic:
 - [ ] Debug systems using metrics, logs, and traces
 - [ ] Design observability for a new service
 
-**Self-assessment score:** ___/10
-
-**If score < 8:** Review the sections where you struggled, then retry this gate.
-
-**If score ≥ 8:** Congratulations! You've mastered observability. Proceed to the next topic.

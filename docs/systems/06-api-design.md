@@ -1716,21 +1716,9 @@ flowchart LR
 - [ ] Debug common API design mistakes
 - [ ] Teach API design concepts to others
 
-**Self-assessment score:** ___/10
-
-**Real-world readiness:**
-
-- Can you design a production API from scratch? <span class="fill-in">[Yes/No]</span>
-- Can you review and critique an existing API? <span class="fill-in">[Yes/No]</span>
-- Can you handle API versioning and migrations? <span class="fill-in">[Yes/No]</span>
-
-**If score < 8 or any "No" above:** Review the sections where you struggled, then retry this gate.
-
-**If score ≥ 8 and all "Yes":** Congratulations! You've mastered API design. Proceed to the next topic.
-
 ---
 
-### Your API Design Principles (Write Your Own)
+## Your API Design Principles (Write Your Own)
 
 Based on everything you've learned, write your personal API design checklist:
 

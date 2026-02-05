@@ -1403,14 +1403,3 @@ Before moving to the next topic:
 - [ ] Teach this concept to someone else
 - [ ] Solve new union-find problems independently
 
-**Self-assessment score:** ___/10
-
-**If score < 8:** Review the sections where you struggled, then retry this gate.
-
-**If score ≥ 8:** Congratulations! You've mastered union-find. Proceed to the next topic.
-
-**Reflection:**
-
-- What was the hardest part to understand? <span class="fill-in">[Fill in]</span>
-- What clicked for you? <span class="fill-in">[Fill in]</span>
-- How would you explain this to your past self before learning it? <span class="fill-in">[Fill in]</span>

@@ -1,6 +1,20 @@
-# Advanced Graph Algorithms
+# Graph Algorithms: Optimization & Ordering
 
-> Dijkstra's shortest path, Minimum Spanning Tree, Topological Sort, and distributed graph processing
+> Apply graph traversal to solve optimization problems: topological sort, shortest paths, and MST
+
+**Prerequisites:** ⚠️ Complete "Graphs: Traversal Patterns" first (DFS, BFS, cycle detection)
+
+**Interview Priority:**
+- ⭐⭐⭐ Topological Sort - CRITICAL (Course Schedule is top 20 most common)
+- ⭐⭐ Dijkstra's Algorithm - Good to know for weighted graphs
+- ⭐ MST (Kruskal/Prim) - Low frequency, study if time permits
+- ⭐⭐ Union-Find - Important for dynamic connectivity
+
+**What you'll learn:**
+- How to order tasks with dependencies (topological sort)
+- How to find shortest paths in weighted graphs (Dijkstra)
+- How to connect nodes with minimum cost (MST)
+- How to track dynamic connectivity (Union-Find)
 
 ---
 
@@ -8,29 +22,31 @@
 
 <div class="learner-section" markdown>
 
-**Your task:** After learning graph algorithms, explain them simply.
+**Your task:** After learning these algorithms, explain them simply.
 
 **Prompts to guide you:**
 
-1. **What does Dijkstra's algorithm find?**
+1. **What does Topological Sort give us?**
     - Your answer: <span class="fill-in">[Fill in after learning]</span>
 
-2. **Why do we need Minimum Spanning Trees?**
+2. **When do we need Topological Sort?**
+    - Your answer: <span class="fill-in">[Course prerequisites, build systems...]</span>
+
+3. **What does Dijkstra's algorithm find?**
     - Your answer: <span class="fill-in">[Fill in after learning]</span>
 
-3. **Real-world analogy for Dijkstra's algorithm:**
+4. **Real-world analogy for Dijkstra's algorithm:**
     - Example: "Dijkstra's algorithm is like finding the cheapest flight where..."
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
-4. **What is topological sorting used for?**
+5. **Why can't we use Dijkstra for negative weights?**
+    - Your answer: <span class="fill-in">[Fill in after practice]</span>
+
+6. **Why do we need Minimum Spanning Trees?**
     - Your answer: <span class="fill-in">[Fill in after learning]</span>
 
-5. **Real-world analogy for MST:**
-    - Example: "An MST is like connecting cities with the least amount of cable where..."
-    - Your analogy: <span class="fill-in">[Fill in]</span>
-
-6. **Why can't we use Dijkstra's for negative weights?**
-    - Your answer: <span class="fill-in">[Fill in after practice]</span>
+7. **What problem does Union-Find solve?**
+    - Your answer: <span class="fill-in">[Dynamic connectivity...]</span>
 
 </div>
 
@@ -40,24 +56,29 @@
 
 <div class="learner-section" markdown>
 
-**Your task:** Test your intuition about graph algorithms without looking at details.
+**Your task:** Test your intuition about these algorithms before diving deep.
 
 ### Complexity Predictions
 
-1. **Dijkstra's algorithm for shortest path:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-2. **Minimum Spanning Tree (Kruskal's):**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - What data structure: <span class="fill-in">[Your guess]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-3. **Topological Sort (DFS-based):**
+1. **Topological Sort (DFS-based):**
     - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
     - When does it fail: <span class="fill-in">[Your guess]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
+    - Verified: <span class="fill-in">[Actual: O(V+E)]</span>
+
+2. **Dijkstra's algorithm for shortest path:**
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - Verified: <span class="fill-in">[Actual: O((V+E)logV)]</span>
+
+3. **Minimum Spanning Tree (Kruskal's):**
+    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - What data structure: <span class="fill-in">[Union-Find]</span>
+    - Verified: <span class="fill-in">[Actual: O(ElogE)]</span>
+
+4. **Union-Find operations:**
+    - Find/Union complexity: <span class="fill-in">[Your guess: O(?)]</span>
+    - With optimizations: <span class="fill-in">[Path compression + union by rank]</span>
+    - Verified: <span class="fill-in">[Actual: O(α(n)) ≈ O(1)]</span>
 
 ### Scenario Predictions
 
@@ -78,6 +99,12 @@
 - **Algorithm:** <span class="fill-in">[MST? Shortest path?]</span>
 - **Goal:** <span class="fill-in">[Minimize what?]</span>
 - **Constraint:** <span class="fill-in">[All connected? No cycles?]</span>
+
+**Scenario 4:** Dynamic friend groups (social network)
+
+- **Algorithm:** <span class="fill-in">[Union-Find? DFS?]</span>
+- **Operations:** <span class="fill-in">[Add friendship, check if connected]</span>
+- **Why not DFS:** <span class="fill-in">[Union-Find is faster for dynamic updates]</span>
 
 </div>
 
@@ -198,7 +225,17 @@ Time: O((V + E) log V) with binary heap
 
 ## Core Concepts
 
+**Recommended study order:**
+1. ⭐⭐⭐ Topological Sort (Topic 3 below) - Most common in interviews
+2. ⭐⭐ Dijkstra's Algorithm (Topic 1 below) - Important for weighted graphs
+3. ⭐⭐ Union-Find (add after completing above) - Dynamic connectivity
+4. ⭐ MST (Topic 2 below) - Optional, low interview frequency
+
+---
+
 ### Topic 1: Dijkstra's Shortest Path Algorithm
+
+**Interview Priority: ⭐⭐ GOOD TO KNOW** - Appears in ~15% of graph problems
 
 **Concept:** Find shortest path from source to all other vertices in a weighted graph (non-negative weights).
 
@@ -400,6 +437,8 @@ Solution: Use Bellman-Ford for negative weights
 
 ### Topic 2: Minimum Spanning Tree (MST)
 
+**Interview Priority: ⭐ OPTIONAL** - Appears in <5% of interviews, study if time permits
+
 **Concept:** Subset of edges that connects all vertices with minimum total weight, no cycles.
 
 **MST Properties:**
@@ -574,6 +613,8 @@ class KruskalMST {
 ---
 
 ### Topic 3: Topological Sort
+
+**Interview Priority: ⭐⭐⭐ CRITICAL** - Course Schedule is in top 20 most common problems!
 
 **Concept:** Linear ordering of vertices in a directed acyclic graph (DAG) such that for every edge (u, v), u comes before v.
 
@@ -751,138 +792,147 @@ Cycle detected!
 
 ---
 
-### Topic 4: Distributed Graph Processing
+### Topic 4: Union-Find (Disjoint Set Union)
 
-**Concept:** Process large-scale graphs that don't fit on a single machine using frameworks like Pregel, GraphX.
+**Interview Priority: ⭐⭐ IMPORTANT** - Key data structure for dynamic connectivity (~10% of graph problems)
 
-**Challenges:**
+**Concept:** Efficiently track and merge disjoint sets, primarily used for dynamic connectivity problems.
 
-```
-Large graphs (billions of vertices, trillions of edges):
-- Don't fit in memory of single machine
-- Communication overhead between machines
-- Load balancing (hot vertices)
-- Fault tolerance
-
-Examples:
-- Social networks (Facebook: 3B+ users)
-- Web graphs (billions of pages)
-- Knowledge graphs
-```
-
-**Vertex-Centric Model (Pregel/BSP):**
+**Core Operations:**
 
 ```
-Think like a vertex:
+1. Find(x): Which set does element x belong to?
+   - Returns representative (root) of the set
 
-Each vertex:
-- Has state (value, neighbors)
-- Receives messages from neighbors
-- Computes new state
-- Sends messages to neighbors
+2. Union(x, y): Merge the sets containing x and y
+   - Connect roots of both sets
 
-Computation in supersteps:
-1. All vertices receive messages
-2. All vertices compute in parallel
-3. All vertices send messages
-4. Repeat until convergence (no messages) or max iterations
-```
-
-**PageRank Example (Distributed):**
-
-```
-PageRank: Rank web pages by importance
-
-Algorithm (vertex-centric):
-  For each superstep:
-    1. Receive rank contributions from in-neighbors
-    2. Sum contributions
-    3. Apply damping: rank = 0.15 + 0.85 × sum
-    4. Send rank/out-degree to each out-neighbor
-
-Iteration 1:
-Vertex A (out-degree=2):
-  rank = 1.0 (initial)
-  Send 0.5 to B, 0.5 to C
-
-Vertex B (out-degree=1):
-  rank = 1.0
-  Send 1.0 to C
-
-Iteration 2:
-Vertex A:
-  Receive nothing
-  rank = 0.15 + 0.85 × 0 = 0.15
-
-Vertex B:
-  Receive 0.5 from A
-  rank = 0.15 + 0.85 × 0.5 = 0.575
-
-Vertex C:
-  Receive 0.5 from A, 1.0 from B
-  rank = 0.15 + 0.85 × 1.5 = 1.425
-
-Continue until convergence...
-```
-
-**Graph Partitioning:**
-
-```
-Goal: Divide graph across machines to minimize communication
-
-Strategies:
-
-1. Random partitioning:
-   vertex_id % num_machines
-   + Simple
-   - Ignores structure, high communication
-
-2. Hash partitioning:
-   hash(vertex_id) % num_machines
-   + Balanced load
-   - Doesn't consider edges
-
-3. Edge-cut partitioning:
-   Minimize edges between partitions
-   + Less communication
-   - Harder to compute
-
-4. Vertex-cut partitioning:
-   Replicate high-degree vertices
-   + Better for power-law graphs
-   - Vertex duplication overhead
+3. Connected(x, y): Are x and y in the same set?
+   - Return Find(x) == Find(y)
 ```
 
 **Optimizations:**
 
-**1. Combiner (Reduce Communication):**
-```
-Without combiner:
-  Vertex sends 1M messages → Network overload
+1. **Path Compression** (in Find):
+   ```
+   Make every node point directly to root
+   Flattens tree structure
+   Time: O(α(n)) amortized per operation
+   ```
 
-With combiner:
-  Vertex combines messages locally → Send aggregated result
-  Example: Sum 1M values locally, send one sum
+2. **Union by Rank**:
+   ```
+   Always attach smaller tree under larger tree
+   Keeps tree balanced
+   ```
+
+**Implementation:**
+
+```java
+class UnionFind {
+    private int[] parent;
+    private int[] rank;
+
+    public UnionFind(int n) {
+        parent = new int[n];
+        rank = new int[n];
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;  // Each element is its own parent initially
+            rank[i] = 0;
+        }
+    }
+
+    // Find with path compression
+    public int find(int x) {
+        if (parent[x] != x) {
+            parent[x] = find(parent[x]);  // Path compression
+        }
+        return parent[x];
+    }
+
+    // Union by rank
+    public boolean union(int x, int y) {
+        int rootX = find(x);
+        int rootY = find(y);
+
+        if (rootX == rootY) {
+            return false;  // Already in same set
+        }
+
+        // Union by rank: attach smaller tree under larger
+        if (rank[rootX] < rank[rootY]) {
+            parent[rootX] = rootY;
+        } else if (rank[rootX] > rank[rootY]) {
+            parent[rootY] = rootX;
+        } else {
+            parent[rootY] = rootX;
+            rank[rootX]++;
+        }
+
+        return true;
+    }
+
+    public boolean connected(int x, int y) {
+        return find(x) == find(y);
+    }
+}
 ```
 
-**2. Asynchronous Processing:**
-```
-Synchronous (BSP):
-  Wait for ALL vertices before next superstep
-  Slow vertices delay everyone
+**Common Problems:**
 
-Asynchronous:
-  Process messages as they arrive
-  No global barriers
-  Faster convergence
+1. **Number of Connected Components**
+   - Start with n components
+   - Each union decreases count by 1
+   - Final count = n - (number of successful unions)
+
+2. **Detect Cycle in Undirected Graph**
+   - For each edge (u, v):
+     - If find(u) == find(v): cycle exists!
+     - Else: union(u, v)
+
+3. **Accounts Merge (LeetCode 721)**
+   - Union accounts with common emails
+   - Each component = one person
+
+**Example: Detect Redundant Connection**
+
+```
+Problem: Find edge that creates cycle in undirected graph
+
+Input: edges = [[1,2], [1,3], [2,3]]
+Output: [2,3] (creates cycle)
+
+Solution:
+UnionFind uf = new UnionFind(n);
+for (int[] edge : edges) {
+    if (!uf.union(edge[0], edge[1])) {
+        return edge;  // This edge creates cycle
+    }
+}
 ```
 
-**3. Dynamic Graph Partitioning:**
-```
-Monitor communication patterns
-Repartition graph to co-locate frequently communicating vertices
-Reduce cross-partition edges
-```
+**Complexity:**
+
+- Time: O(α(n)) per operation (inverse Ackermann, effectively O(1))
+- Space: O(n) for parent and rank arrays
+
+**When to Use Union-Find:**
+
+✅ Dynamic connectivity (edges added over time)
+✅ Detect cycles in undirected graphs
+✅ Group elements by equivalence relation
+✅ Kruskal's MST algorithm
+
+❌ Need to remove edges (Union-Find doesn't support deletion)
+❌ Directed graph cycle detection (use DFS instead)
+❌ Shortest path queries (use BFS/Dijkstra)
+
+**Use Cases:**
+- Network connectivity
+- Image segmentation (connected components)
+- Kruskal's MST
+- Social network friend groups
+- Accounts merging
 
 ---
 
@@ -928,6 +978,18 @@ Reduce cross-partition edges
 - Need explicit cycle detection
 - Want lexicographically smallest ordering
 - Parallel processing possible
+
+### Question 4: When to use Union-Find?
+
+**Use Union-Find when:**
+- Dynamic connectivity: <span class="fill-in">[Edges added over time]</span>
+- Detect cycles in undirected graphs: <span class="fill-in">[Kruskal's MST]</span>
+- Group by equivalence: <span class="fill-in">[Accounts merge, friend groups]</span>
+
+**Don't use Union-Find when:**
+- Need to remove edges: <span class="fill-in">[UF doesn't support deletion]</span>
+- Directed graph cycles: <span class="fill-in">[Use DFS with states instead]</span>
+- Need shortest paths: <span class="fill-in">[Use BFS/Dijkstra]</span>
 
 ---
 
@@ -1177,171 +1239,108 @@ DFS(0): completes successfully → WRONG!
 
 ---
 
-### Challenge 4: Distributed Graph - Partition Imbalance
-
-```java
-/**
- * Graph partitioning with LOAD BALANCING BUG.
- * Creates severely unbalanced partitions!
- */
-public class BuggyGraphPartitioner {
-
-    public Map<Integer, Integer> partitionGraph(List<Edge> edges, int numPartitions) {
-        Map<Integer, Integer> vertexToPartition = new HashMap<>();
-
-        for (Edge edge : edges) {
-            // Assign each vertex to partition based on vertex ID
-            int partition = edge.u % numPartitions;
-            vertexToPartition.put(edge.u, partition);
-            vertexToPartition.put(edge.v, partition);  // BUG: Same partition!
-        }
-
-        return vertexToPartition;
-    }
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What's wrong with vertex assignment?]</span>
-
-**Failure scenario:**
-
-- Graph: Star topology with hub vertex 0, spokes 1-1000
-- Edges: (0,1), (0,2), ..., (0,1000)
-- 10 partitions
-- With bug: Partition 0 has <span class="fill-in">[how many vertices?]</span>
-- Expected: Each partition should have ~<span class="fill-in">[how many vertices?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** Assigns both vertices of an edge to the same partition based on source vertex. This destroys any hash-based distribution and creates severe imbalance.
-
-**Fix:**
-
-```java
-for (Edge edge : edges) {
-    // Each vertex independently assigned to partition
-    if (!vertexToPartition.containsKey(edge.u)) {
-        vertexToPartition.put(edge.u, edge.u % numPartitions);
-    }
-    if (!vertexToPartition.containsKey(edge.v)) {
-        vertexToPartition.put(edge.v, edge.v % numPartitions);
-    }
-}
-```
-
-**Why it matters:** In star topology with hub vertex 0:
-- All edges processed assign both endpoints to partition 0 % 10 = 0
-- Partition 0: 1001 vertices (hub + all spokes)
-- Partitions 1-9: 0 vertices each
-- Complete load imbalance!
-
-**Correct distribution:** Each vertex independently hashed → ~100 vertices per partition.
-</details>
-
----
-
 ### Your Debugging Scorecard
 
 After finding and fixing all bugs:
 
--   [ ] Found all 4+ bugs across graph algorithms
+-   [ ] Found all 3 bugs across different algorithms
 -   [ ] Understood correctness vs performance issues
 -   [ ] Could explain WHY each bug causes failures
--   [ ] Learned common graph algorithm mistakes
+-   [ ] Learned common algorithm implementation mistakes
 
 **Common graph algorithm bugs you discovered:**
 
-1. <span class="fill-in">[List patterns: distance checks, cycle detection, etc.]</span>
-2. <span class="fill-in">[Fill in]</span>
-3. <span class="fill-in">[Fill in]</span>
+1. <span class="fill-in">[Missing distance check in Dijkstra after polling]</span>
+2. <span class="fill-in">[Not using Union-Find to detect cycles in Kruskal's]</span>
+3. <span class="fill-in">[Not propagating cycle detection in TopSort DFS]</span>
 
 ---
 
-## Practice Scenarios
+## Practice
 
-### Scenario 1: Ride-Sharing App (Shortest Path)
+### LeetCode Problems
 
-**Requirements:**
-- Find fastest route between pickup and dropoff
-- Consider traffic (dynamic edge weights)
-- Multiple drivers, multiple riders
-- Real-time updates
+**Focus on interview-critical patterns - practice in priority order:**
 
-**Your design:**
+**Topological Sort (MUST DO - ⭐⭐⭐):**
 
-Algorithm:
-- Base: <span class="fill-in">[Dijkstra? A*?]</span>
-- Optimization: <span class="fill-in">[Bidirectional? Landmarks?]</span>
-- Traffic: <span class="fill-in">[Update weights how often?]</span>
+- [ ] [207. Course Schedule](https://leetcode.com/problems/course-schedule/) ⭐⭐⭐
+    - Pattern: <span class="fill-in">[Topological Sort / Cycle Detection]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
-Scalability:
-- Precomputation: <span class="fill-in">[Contraction hierarchies?]</span>
-- Caching: <span class="fill-in">[Common routes?]</span>
+- [ ] [210. Course Schedule II](https://leetcode.com/problems/course-schedule-ii/) ⭐⭐⭐
+    - Pattern: <span class="fill-in">[Topological Sort - return order]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
-### Scenario 2: Network Infrastructure (MST)
+- [ ] [269. Alien Dictionary](https://leetcode.com/problems/alien-dictionary/) (Premium) ⭐⭐
+    - Pattern: <span class="fill-in">[Topological Sort]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
 
-**Requirements:**
-- Connect 1000 datacenters
-- Minimize fiber optic cable cost
-- Ensure redundancy (k-connected)
-- Latency constraints
+**Union-Find (Important - ⭐⭐):**
 
-**Your design:**
+- [ ] [547. Number of Provinces](https://leetcode.com/problems/number-of-provinces/) ⭐⭐
+    - Pattern: <span class="fill-in">[Union-Find / Connected Components]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
-Algorithm:
-- Primary: <span class="fill-in">[Kruskal? Prim?]</span>
-- Redundancy: <span class="fill-in">[Add k-1 more MSTs?]</span>
-- Constraints: <span class="fill-in">[Filter edges first?]</span>
+- [ ] [684. Redundant Connection](https://leetcode.com/problems/redundant-connection/) ⭐⭐
+    - Pattern: <span class="fill-in">[Union-Find / Cycle Detection]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
 
-Cost optimization:
-- Weight: <span class="fill-in">[Distance? Cost? Both?]</span>
-- Trade-offs: <span class="fill-in">[Cost vs latency?]</span>
+- [ ] [721. Accounts Merge](https://leetcode.com/problems/accounts-merge/) ⭐⭐
+    - Pattern: <span class="fill-in">[Union-Find / Grouping]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
 
-### Scenario 3: Build System (Topological Sort)
+**Dijkstra (Good to know - ⭐⭐):**
 
-**Requirements:**
-- 10,000 source files
-- Complex dependencies
-- Parallel compilation
-- Incremental builds
+- [ ] [743. Network Delay Time](https://leetcode.com/problems/network-delay-time/) ⭐⭐
+    - Pattern: <span class="fill-in">[Dijkstra's Algorithm]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Key insight: <span class="fill-in">[Fill in]</span>
 
-**Your design:**
+- [ ] [787. Cheapest Flights Within K Stops](https://leetcode.com/problems/cheapest-flights-within-k-stops/) ⭐⭐
+    - Pattern: <span class="fill-in">[Modified Dijkstra with constraints]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
 
-Algorithm:
-- Sort: <span class="fill-in">[DFS? Kahn's?]</span>
-- Parallel: <span class="fill-in">[How to identify independent tasks?]</span>
-- Incremental: <span class="fill-in">[Only rebuild affected files?]</span>
+**MST (Optional - ⭐):**
 
-Optimization:
-- Cycle detection: <span class="fill-in">[When to check?]</span>
-- Caching: <span class="fill-in">[Store previous ordering?]</span>
+- [ ] [1584. Min Cost to Connect All Points](https://leetcode.com/problems/min-cost-to-connect-all-points/) ⭐
+    - Pattern: <span class="fill-in">[Prim's MST]</span>
+    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
+    - Note: Low frequency - only if you have extra time
 
 ---
 
 ## Review Checklist
 
-Before moving to the next topic:
+**Before moving to next topic, ensure you've mastered:**
 
 -   [ ] **Understanding**
-    -   [ ] Understand Dijkstra's algorithm
-    -   [ ] Know MST algorithms (Kruskal, Prim)
-    -   [ ] Understand topological sort
+    -   [ ] Understand topological sort (DFS and Kahn's algorithms) ⭐⭐⭐
+    -   [ ] Understand Dijkstra's algorithm ⭐⭐
+    -   [ ] Know Union-Find with optimizations ⭐⭐
+    -   [ ] Understand MST algorithms (Kruskal, Prim) ⭐
     -   [ ] Know when each algorithm applies
 
 -   [ ] **Implementation**
-    -   [ ] Can implement Dijkstra
-    -   [ ] Can implement Kruskal with Union-Find
-    -   [ ] Can implement topological sort
+    -   [ ] Can implement topological sort (both methods)
+    -   [ ] Can implement Dijkstra with priority queue
+    -   [ ] Can implement Union-Find with path compression
+    -   [ ] Can implement Kruskal's MST (if time permits)
     -   [ ] Understand complexity analysis
+
+-   [ ] **Pattern Recognition**
+    -   [ ] Solved Course Schedule I & II (topological sort)
+    -   [ ] Solved 2-3 Union-Find problems
+    -   [ ] Attempted 1-2 Dijkstra problems
+    -   [ ] Understand when to use each algorithm
 
 -   [ ] **Decision Making**
     -   [ ] Know algorithm trade-offs
-    -   [ ] Can choose for requirements
-    -   [ ] Understand limitations
-    -   [ ] Completed practice scenarios
+    -   [ ] Can choose correct algorithm for requirements
+    -   [ ] Understand limitations (e.g., Dijkstra + negative weights)
 
 ---
 
@@ -1349,19 +1348,15 @@ Before moving to the next topic:
 
 **I certify that I can:**
 
--   [ ] Implement Dijkstra from memory
--   [ ] Explain MST algorithms
--   [ ] Detect negative weight cycles
--   [ ] Implement topological sort
--   [ ] Choose appropriate algorithm
+-   [ ] Implement topological sort from memory (both DFS and Kahn's) ⭐⭐⭐
+-   [ ] Solve Course Schedule problems confidently
+-   [ ] Implement Union-Find with path compression and union by rank ⭐⭐
+-   [ ] Detect cycles using Union-Find
+-   [ ] Implement Dijkstra's algorithm ⭐⭐
+-   [ ] Explain when Dijkstra fails (negative weights)
+-   [ ] Understand MST algorithms (Kruskal/Prim) ⭐
+-   [ ] Choose appropriate algorithm for given problem
 -   [ ] Analyze time/space complexity
--   [ ] Optimize for real-world graphs
--   [ ] Debug graph algorithm issues
--   [ ] Apply to distributed systems
--   [ ] Teach concepts to others
+-   [ ] Debug common algorithm issues
+-   [ ] Explain these concepts to others
 
-**Self-assessment score:** ___/10
-
-**If score < 8:** Review weak areas and retry.
-
-**If score ≥ 8:** Congratulations! Proceed to next topic.

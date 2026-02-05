@@ -1303,15 +1303,3 @@ Before moving to the next topic:
 - [ ] Explain the sorted/monotonic requirement clearly
 - [ ] Teach this concept to someone else
 
-**Self-assessment score:** ___/10
-
-**If score < 8:** Review the sections where you struggled, then retry this gate.
-
-**If score ≥ 8:** Congratulations! You've mastered binary search. Proceed to the next topic.
-
-**Final reflection:**
-
-- Most difficult part: <span class="fill-in">[Fill in]</span>
-- Biggest "aha" moment: <span class="fill-in">[Fill in]</span>
-- Pattern you'll remember most: <span class="fill-in">[Fill in]</span>
-- One thing you'd explain differently to a friend: <span class="fill-in">[Fill in]</span>

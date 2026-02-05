@@ -2121,11 +2121,3 @@ flowchart LR
 -   [ ] Scale systems from prototype to production
 -   [ ] Complete a live system design interview
 
-**Self-assessment score:** ___/10
-
-**Time to complete all gates:** ___ hours
-
-**If score < 8:** Review the sections where you struggled, revisit the implementations, then retry the gates.
-
-**If score ≥ 8:** Congratulations! You've mastered full system design. You're ready for system design interviews and
-real-world distributed systems work.

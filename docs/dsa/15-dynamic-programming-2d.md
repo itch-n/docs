@@ -1348,15 +1348,3 @@ Before moving to the next topic:
 - [ ] Debug incorrect implementations quickly
 - [ ] Teach 2D DP concepts to someone else
 
-**Self-assessment score:** ___/10
-
-**Pattern mastery check - Can you implement from memory?**
-
-- [ ] LCS (Longest Common Subsequence)
-- [ ] Edit Distance
-- [ ] Unique Paths
-- [ ] 0/1 Knapsack
-
-**If score < 8:** Review the sections where you struggled, then retry this gate.
-
-**If score ≥ 8:** Congratulations! You've mastered 2D Dynamic Programming. Proceed to the next topic.

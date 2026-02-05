@@ -2241,8 +2241,3 @@ Before moving to the next topic:
 - [ ] Design complete stream processing pipelines
 - [ ] Teach these concepts to someone else
 
-**Self-assessment score:** ___/10
-
-**If score < 8:** Review the sections where you struggled, then retry this gate.
-
-**If score ≥ 8:** Congratulations! You've mastered stream processing. Proceed to the next topic.

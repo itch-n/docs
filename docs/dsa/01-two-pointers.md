@@ -904,8 +904,3 @@ Before moving to the next topic:
 - [ ] Debug common two-pointer mistakes
 - [ ] Teach this concept to someone else
 
-**Self-assessment score:** ___/10
-
-**If score < 8:** Review the sections where you struggled, then retry this gate.
-
-**If score ≥ 8:** Congratulations! You've mastered two pointers. Proceed to the next topic.

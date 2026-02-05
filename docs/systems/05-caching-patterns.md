@@ -1511,15 +1511,3 @@ Before moving to the next topic:
 - [ ] Design caching strategy for a new system
 - [ ] Explain trade-offs to both technical and non-technical audiences
 
-**Self-assessment score:** ___/10
-
-**Real-world application:**
-
-- Have you used caching in a project? <span class="fill-in">[Yes/No]</span>
-- If yes, what was the hit rate? _____
-- What policy did you use? <span class="fill-in">[LRU/LFU/TTL/Other]</span>
-- What would you do differently now? <span class="fill-in">[Fill in]</span>
-
-**If score < 8:** Review the sections where you struggled, then retry this gate.
-
-**If score ≥ 8:** Congratulations! You've mastered caching patterns. Proceed to the next topic.

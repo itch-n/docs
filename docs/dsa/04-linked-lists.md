@@ -1407,21 +1407,6 @@ Before moving to the next topic:
 - [ ] Analyze time and space complexity of all patterns
 - [ ] Teach these concepts to someone else
 
-**Self-assessment score:** ___/10
-
-**Critical skills check:**
-
-- [ ] Can you trace through pointer updates step-by-step?
-- [ ] Do you always check for null before accessing .next?
-- [ ] Do you understand why we use dummy nodes?
-- [ ] Can you identify which pattern to use for new problems?
-
-**If score < 8:** Review the sections where you struggled, then retry this gate.
-
-**If score ≥ 8:** Congratulations! You've mastered linked list operations. Proceed to the next topic.
-
----
-
 ### Real-World Application Test
 
 **Scenario:** You're implementing an undo feature for a text editor.

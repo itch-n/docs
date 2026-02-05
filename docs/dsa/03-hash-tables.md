@@ -1251,14 +1251,3 @@ Before moving to the next topic:
 - [ ] Teach this concept to someone else using analogies
 - [ ] Design real-world systems using hash tables
 
-**Self-assessment score:** ___/10
-
-**What I still need to work on:**
-
-1. <span class="fill-in">[Fill in areas of weakness]</span>
-2. <span class="fill-in">[Fill in]</span>
-3. <span class="fill-in">[Fill in]</span>
-
-**If score < 8:** Review the sections where you struggled, then retry this gate.
-
-**If score ≥ 8:** Congratulations! You've mastered hash tables. Proceed to the next topic.

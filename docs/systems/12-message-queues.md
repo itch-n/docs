@@ -1736,16 +1736,3 @@ flowchart LR
 - [ ] Compare queue vs pub-sub architectures
 - [ ] Teach these concepts to someone else
 
-**Self-assessment score:** ___/10
-
-**Specific competencies:**
-
-- Pattern selection: <span class="fill-in">___</span>/10
-- Concurrency understanding: <span class="fill-in">___</span>/10
-- Delivery guarantees: <span class="fill-in">___</span>/10
-- Error handling: <span class="fill-in">___</span>/10
-- System design: <span class="fill-in">___</span>/10
-
-**If any score < 7:** Review the sections where you struggled, then retry this gate.
-
-**If all scores ≥ 7:** Congratulations! You've mastered message queues. Proceed to the next topic.

@@ -1,6 +1,16 @@
-# Graphs
+# Graphs: Traversal Patterns
 
-> Traverse and search graph structures using DFS, BFS, and specialized algorithms
+> Master DFS, BFS, and cycle detection - the foundation for all graph problems
+
+**Interview Priority: ⭐⭐⭐ CRITICAL** (60% of graph interview problems use these patterns)
+
+**What you'll learn:**
+- How to explore graphs systematically (DFS vs BFS)
+- When to use each traversal technique
+- Cycle detection in directed and undirected graphs
+- Graph representation trade-offs
+
+**Next step:** After mastering this, move to "Advanced Graph Algorithms" for TopSort, Dijkstra, MST
 
 ---
 
@@ -28,6 +38,9 @@
 5. **When should you use DFS vs BFS?**
     - Your answer: <span class="fill-in">[Fill in after practice]</span>
 
+6. **How do you detect cycles in graphs?**
+    - Your answer: <span class="fill-in">[Fill in after learning]</span>
+
 </div>
 
 ---
@@ -50,23 +63,19 @@
     - Space complexity (recursion stack): <span class="fill-in">[Your guess: O(?)]</span>
     - Verified: <span class="fill-in">[Actual]</span>
 
-3. **Dijkstra's Algorithm for weighted graph:**
-    - Time complexity with priority queue: <span class="fill-in">[Your guess: O(?)]</span>
-    - Why is it slower than BFS? <span class="fill-in">[Fill in]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
 
 ### Scenario Predictions
 
 **Scenario 1:** Find shortest path from A to E in graph: A→B→E, A→C→D→E
 
-- **Which algorithm?** <span class="fill-in">[BFS/DFS/Dijkstra - Why?]</span>
+- **Which algorithm?** <span class="fill-in">[BFS/DFS - Why?]</span>
 - **BFS will find path in how many steps?** <span class="fill-in">[Fill in]</span>
 - **DFS might find which path first?** <span class="fill-in">[Fill in]</span>
 - **Why does BFS guarantee shortest?** <span class="fill-in">[Explain]</span>
 
-**Scenario 2:** Detect if course prerequisites have a circular dependency
+**Scenario 2:** Detect if there's a cycle in a graph
 
-- **Which algorithm?** <span class="fill-in">[DFS/BFS/Topological Sort - Why?]</span>
+- **Which algorithm?** <span class="fill-in">[DFS/BFS - Why?]</span>
 - **What data structure represents this?** <span class="fill-in">[Directed/Undirected graph]</span>
 - **How do you detect the cycle?** <span class="fill-in">[Fill in your approach]</span>
 
@@ -82,12 +91,6 @@
 - **Which algorithm?** <span class="fill-in">[DFS/BFS - Why?]</span>
 - **What marks a cell as visited?** <span class="fill-in">[Fill in]</span>
 
-**Scenario 4:** Find shortest path in weighted graph with edges: (A,B,4), (A,C,2), (C,B,1)
-
-- **Path from A to B using BFS:** <span class="fill-in">[What would BFS find?]</span>
-- **Optimal path using Dijkstra:** <span class="fill-in">[What's the shortest?]</span>
-- **Why can't BFS find optimal path here?** <span class="fill-in">[Explain]</span>
-
 ### Trade-off Quiz
 
 **Question 1:** When would DFS be BETTER than BFS?
@@ -95,16 +98,7 @@
 - Your answer: <span class="fill-in">[Fill in before implementation]</span>
 - Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
-**Question 2:** What's the MAIN requirement for Topological Sort to work?
-
-- [ ] Graph must be undirected
-- [ ] Graph must have no cycles (DAG)
-- [ ] Graph must be weighted
-- [ ] Graph must be connected
-
-Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
-
-**Question 3:** Adjacency Matrix vs Adjacency List - which is better for sparse graphs?
+**Question 2:** Adjacency Matrix vs Adjacency List - which is better for sparse graphs?
 
 - Your answer: <span class="fill-in">[Matrix/List - Why?]</span>
 - Space complexity comparison: <span class="fill-in">[Fill in after learning]</span>
@@ -369,113 +363,6 @@ public class GraphList {
 
 ---
 
-### Example 3: Dijkstra vs BFS
-
-**Problem:** Find shortest path in weighted graph from A to D.
-
-Graph: A→B(weight=1), A→C(weight=4), B→D(weight=5), C→D(weight=1)
-
-#### Approach 1: BFS (Wrong for Weighted Graphs)
-
-```java
-// BFS finds shortest in terms of edges, not weights
-public static int shortestPath_BFS(Map<Integer, List<int[]>> graph, int start, int end) {
-    Queue<Integer> queue = new LinkedList<>();
-    Set<Integer> visited = new HashSet<>();
-
-    queue.offer(start);
-    visited.add(start);
-    int edges = 0;
-
-    while (!queue.isEmpty()) {
-        int size = queue.size();
-        for (int i = 0; i < size; i++) {
-            int node = queue.poll();
-            if (node == end) return edges;  // Returns 2 (A→B→D)
-
-            for (int[] neighbor : graph.getOrDefault(node, new ArrayList<>())) {
-                if (!visited.contains(neighbor[0])) {
-                    queue.offer(neighbor[0]);
-                    visited.add(neighbor[0]);
-                }
-            }
-        }
-        edges++;
-    }
-    return -1;
-}
-// Result: 2 edges (A→B→D), but total weight = 1+5 = 6
-```
-
-**Analysis:**
-
-- Finds: A → B → D (2 edges, weight = 6)
-- Misses: A → C → D (2 edges, weight = 5) - **optimal path!**
-
-- Problem: Doesn't consider edge weights at all
-
-#### Approach 2: Dijkstra (Correct for Weighted Graphs)
-
-```java
-// Dijkstra finds shortest in terms of total weight
-public static int shortestPath_Dijkstra(Map<Integer, List<int[]>> graph, int start, int end) {
-    PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[0] - b[0]); // [distance, node]
-    Map<Integer, Integer> dist = new HashMap<>();
-
-    pq.offer(new int[]{0, start});
-    dist.put(start, 0);
-
-    while (!pq.isEmpty()) {
-        int[] curr = pq.poll();
-        int d = curr[0], node = curr[1];
-
-        if (node == end) return d;  // Returns 5 (A→C→D)
-        if (d > dist.getOrDefault(node, Integer.MAX_VALUE)) continue;
-
-        for (int[] neighbor : graph.getOrDefault(node, new ArrayList<>())) {
-            int next = neighbor[0], weight = neighbor[1];
-            int newDist = d + weight;
-
-            if (newDist < dist.getOrDefault(next, Integer.MAX_VALUE)) {
-                dist.put(next, newDist);
-                pq.offer(new int[]{newDist, next});
-            }
-        }
-    }
-    return -1;
-}
-// Result: A→C→D, total weight = 4+1 = 5 (optimal!)
-```
-
-**Analysis:**
-
-- Time: O((V + E) log V) - priority queue operations
-- Finds: A → C → D (weight = 5)
-- Correct: Considers cumulative weights, not edge count
-
-#### Algorithm Comparison
-
-| Scenario                   | BFS Result            | Dijkstra Result | Correct?                   |
-|----------------------------|-----------------------|-----------------|----------------------------|
-| Unweighted graph           | Shortest path         | Shortest path   | Both ✓                     |
-| Weighted (all weights = 1) | Shortest path         | Shortest path   | Both ✓                     |
-| Weighted (varying weights) | **Wrong** (min edges) | Shortest path   | Dijkstra ✓                 |
-| Negative weights           | Wrong                 | **Wrong**       | Neither (use Bellman-Ford) |
-
-**Your analysis:** When all edge weights are equal, BFS is _____ than Dijkstra because _____.
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why does BFS fail on weighted graphs? <span class="fill-in">[Your answer]</span>
-- What does the priority queue do in Dijkstra? <span class="fill-in">[Your answer]</span>
-- When is BFS actually better than Dijkstra? <span class="fill-in">[Your answer]</span>
-
-</div>
-
----
-
 ## Core Implementation
 
 ### Pattern 1: DFS (Depth-First Search)
@@ -707,114 +594,9 @@ public class BFSClient {
 
 ---
 
-### Pattern 3: Topological Sort
+### Pattern 3: Cycle Detection
 
-**Concept:** Linear ordering of vertices in a Directed Acyclic Graph (DAG).
-
-**Use case:** Course schedule, task dependencies, build systems.
-
-```java
-import java.util.*;
-
-public class TopologicalSort {
-
-    /**
-     * Problem: Course schedule (can finish all courses)
-     * Time: O(V + E), Space: O(V + E)
-     *
-     * TODO: Implement using Kahn's algorithm (BFS)
-     */
-    public static boolean canFinish(int numCourses, int[][] prerequisites) {
-        // Build adjacency list and in-degree array
-        List<List<Integer>> graph = new ArrayList<>();
-        int[] inDegree = new int[numCourses];
-
-        // TODO: Initialize graph
-
-        // TODO: Build graph from prerequisites
-
-        // TODO: Add all courses with inDegree 0 to queue
-
-        int completed = 0;
-
-        // TODO: Process courses in topological order
-
-        // TODO: Return true if completed == numCourses
-
-        return false; // Replace
-    }
-
-    /**
-     * Problem: Course schedule II (return order)
-     * Time: O(V + E), Space: O(V + E)
-     *
-     * TODO: Implement with DFS
-     */
-    public static int[] findOrder(int numCourses, int[][] prerequisites) {
-        List<List<Integer>> graph = new ArrayList<>();
-        int[] visited = new int[numCourses]; // 0: unvisited, 1: visiting, 2: visited
-        Stack<Integer> stack = new Stack<>();
-
-        // TODO: Initialize graph
-
-        // TODO: Build graph
-
-        // TODO: DFS from each unvisited node
-
-        // TODO: Build result from stack (reverse order)
-
-        return new int[0]; // Replace
-    }
-
-    private static boolean dfsTopSort(List<List<Integer>> graph, int node,
-                                     int[] visited, Stack<Integer> stack) {
-        // TODO: Implement iteration/conditional logic
-
-        // TODO: Implement iteration/conditional logic
-
-        // TODO: Mark as being visited
-
-        // TODO: Visit all neighbors
-
-        // TODO: Mark as visited and push to stack
-
-        return true; // Replace
-    }
-}
-```
-
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class TopologicalSortClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Topological Sort ===\n");
-
-        // Test 1: Can finish courses
-        System.out.println("--- Test 1: Can Finish Courses ---");
-        int[][] prereq1 = {{1, 0}};
-        int[][] prereq2 = {{1, 0}, {0, 1}};
-
-        System.out.println("2 courses, [[1,0]]: " +
-            TopologicalSort.canFinish(2, prereq1));
-        System.out.println("2 courses, [[1,0],[0,1]]: " +
-            TopologicalSort.canFinish(2, prereq2));
-
-        // Test 2: Find course order
-        System.out.println("\n--- Test 2: Course Order ---");
-        int[][] prereq3 = {{1, 0}, {2, 0}, {3, 1}, {3, 2}};
-        int[] order = TopologicalSort.findOrder(4, prereq3);
-        System.out.println("4 courses: " + Arrays.toString(order));
-    }
-}
-```
-
----
-
-### Pattern 4: Cycle Detection
+**Interview Priority: ⭐⭐⭐ CRITICAL** - Cycle detection is essential for many graph problems
 
 **Concept:** Detect if graph contains a cycle.
 
@@ -913,244 +695,6 @@ public class CycleDetectionClient {
             CycleDetection.hasCycleUndirected(3, edges3));
         System.out.println("Edges [[0,1],[1,2],[2,0]]: " +
             CycleDetection.hasCycleUndirected(3, edges4));
-    }
-}
-```
-
----
-
-### Pattern 5: Dijkstra's Algorithm (Single-Source Shortest Path)
-
-**Concept:** Find shortest paths from a source node to all other nodes in a weighted graph with non-negative edge
-weights.
-
-**Use case:** Network routing, GPS navigation, shortest path in weighted graphs.
-
-```java
-import java.util.*;
-
-public class DijkstraAlgorithm {
-
-    /**
-     * Problem: Network delay time - time for all nodes to receive signal from source
-     * Time: O((V + E) log V), Space: O(V)
-     *
-     * TODO: Implement Dijkstra's algorithm using PriorityQueue
-     */
-    public static int networkDelayTime(int[][] times, int n, int k) {
-        // Build adjacency list: node -> List of [neighbor, weight]
-        Map<Integer, List<int[]>> graph = new HashMap<>();
-
-        // TODO: Build graph from times array
-
-        // TODO: Initialize distances array
-
-        // TODO: Use PriorityQueue (min-heap) to track [distance, node]
-
-        // TODO: Process nodes in order of distance
-        //
-        //     If d > dist[node], skip (already processed)
-        //
-        //     For each neighbor of node:
-        //       int newDist = dist[node] + weight;
-        //       If newDist < dist[neighbor]:
-        //         dist[neighbor] = newDist;
-        //         pq.offer(new int[]{newDist, neighbor});
-
-        // TODO: Implement logic
-
-        return -1; // Replace
-    }
-
-    /**
-     * Problem: Shortest path in weighted graph
-     * Time: O((V + E) log V), Space: O(V)
-     *
-     * TODO: Implement basic Dijkstra's algorithm
-     */
-    public static int[] dijkstra(Map<Integer, List<int[]>> graph, int start, int n) {
-        int[] dist = new int[n];
-        Arrays.fill(dist, Integer.MAX_VALUE);
-        dist[start] = 0;
-
-        // TODO: Use PriorityQueue for efficient minimum extraction
-
-        // TODO: Process each node once
-        //
-        //   While pq not empty:
-        //     int[] curr = pq.poll();
-        //     int d = curr[0], node = curr[1];
-        //
-        //     If visited contains node, skip
-        //     visited.add(node);
-        //
-        //     For each [neighbor, weight] in graph.get(node):
-        //       int newDist = dist[node] + weight;
-        //       If newDist < dist[neighbor]:
-        //         dist[neighbor] = newDist;
-        //         pq.offer(new int[]{newDist, neighbor});
-
-        return dist; // Replace with implementation
-    }
-}
-```
-
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class DijkstraClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Dijkstra's Algorithm ===\n");
-
-        // Test 1: Network delay time
-        System.out.println("--- Test 1: Network Delay Time ---");
-        int[][] times1 = {{2, 1, 1}, {2, 3, 1}, {3, 4, 1}};
-        int n1 = 4, k1 = 2;
-        System.out.println("Network: " + Arrays.deepToString(times1));
-        System.out.println("Start node: " + k1);
-        System.out.println("Time to reach all nodes: " +
-            DijkstraAlgorithm.networkDelayTime(times1, n1, k1));
-
-        // Test 2: Shortest paths
-        System.out.println("\n--- Test 2: Shortest Paths ---");
-        Map<Integer, List<int[]>> graph = new HashMap<>();
-        graph.put(0, Arrays.asList(new int[]{1, 4}, new int[]{2, 1}));
-        graph.put(1, Arrays.asList(new int[]{3, 1}));
-        graph.put(2, Arrays.asList(new int[]{1, 2}, new int[]{3, 5}));
-        graph.put(3, Arrays.asList());
-
-        int[] distances = DijkstraAlgorithm.dijkstra(graph, 0, 4);
-        System.out.println("Graph: " + graph);
-        System.out.println("Shortest distances from node 0: " + Arrays.toString(distances));
-    }
-}
-```
-
----
-
-### Pattern 6: Minimum Spanning Tree (MST)
-
-**Concept:** Find the minimum cost subset of edges that connects all vertices in a weighted undirected graph.
-
-**Use case:** Network design, clustering, approximation algorithms.
-
-```java
-import java.util.*;
-
-public class MinimumSpanningTree {
-
-    /**
-     * Problem: Min cost to connect all points (Prim's algorithm)
-     * Time: O((V + E) log V), Space: O(V + E)
-     *
-     * TODO: Implement Prim's algorithm using PriorityQueue
-     */
-    public static int minCostConnectPoints(int[][] points) {
-        int n = points.length;
-
-        // TODO: Build adjacency list with Manhattan distances
-
-        // TODO: Use PriorityQueue to track [cost, node]
-
-        // TODO: Track visited nodes and total cost
-
-        // TODO: Greedily add minimum cost edges
-        //
-        //     If visited contains node, skip
-        //
-        //     visited.add(node);
-        //     totalCost += cost;
-        //
-        //     For each [neighbor, edgeCost] in graph.get(node):
-        //       If neighbor not visited:
-        //         pq.offer(new int[]{edgeCost, neighbor});
-
-        return 0; // Replace
-    }
-
-    /**
-     * Problem: MST using Prim's algorithm (generic version)
-     * Time: O((V + E) log V), Space: O(V + E)
-     *
-     * TODO: Implement Prim's algorithm
-     */
-    public static int primMST(Map<Integer, List<int[]>> graph, int n) {
-        // TODO: Use PriorityQueue for minimum edge selection
-
-        // TODO: Start from node 0
-        //
-        //   Add all edges from node 0 to pq
-        //   visited.add(0);
-
-        // TODO: Process edges in order of weight
-        //
-        //     If visited contains node, skip
-        //
-        //     visited.add(node);
-        //     totalCost += cost;
-        //
-        //     Add all edges from node to pq (if neighbor not visited)
-
-        return 0; // Replace
-    }
-
-    /**
-     * Edge class for MST algorithms
-     */
-    static class Edge implements Comparable<Edge> {
-        int src, dst, weight;
-
-        Edge(int src, int dst, int weight) {
-            this.src = src;
-            this.dst = dst;
-            this.weight = weight;
-        }
-
-        @Override
-        public int compareTo(Edge other) {
-            return this.weight - other.weight;
-        }
-    }
-}
-```
-
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class MinimumSpanningTreeClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Minimum Spanning Tree ===\n");
-
-        // Test 1: Min cost to connect points
-        System.out.println("--- Test 1: Connect All Points ---");
-        int[][] points1 = {{0, 0}, {2, 2}, {3, 10}, {5, 2}, {7, 0}};
-        System.out.println("Points: " + Arrays.deepToString(points1));
-        System.out.println("Min cost: " +
-            MinimumSpanningTree.minCostConnectPoints(points1));
-
-        // Test 2: Simple MST
-        System.out.println("\n--- Test 2: MST (Prim's Algorithm) ---");
-        int[][] points2 = {{0, 0}, {1, 1}, {1, 0}, {0, 1}};
-        System.out.println("Points: " + Arrays.deepToString(points2));
-        System.out.println("Min cost: " +
-            MinimumSpanningTree.minCostConnectPoints(points2));
-
-        // Test 3: Graph with weighted edges
-        System.out.println("\n--- Test 3: Weighted Graph MST ---");
-        Map<Integer, List<int[]>> graph = new HashMap<>();
-        graph.put(0, Arrays.asList(new int[]{1, 2}, new int[]{2, 3}));
-        graph.put(1, Arrays.asList(new int[]{0, 2}, new int[]{2, 1}, new int[]{3, 5}));
-        graph.put(2, Arrays.asList(new int[]{0, 3}, new int[]{1, 1}, new int[]{3, 4}));
-        graph.put(3, Arrays.asList(new int[]{1, 5}, new int[]{2, 4}));
-
-        System.out.println("Graph: " + graph);
-        System.out.println("MST cost: " + MinimumSpanningTree.primMST(graph, 4));
     }
 }
 ```
@@ -1318,186 +862,7 @@ while (!queue.isEmpty()) {
 
 ---
 
-### Challenge 3: Broken Topological Sort - Cycle Detection Miss
-
-```java
-/**
- * Topological sort using DFS.
- * This has 1 SUBTLE BUG that causes incorrect cycle detection.
- */
-public static List<Integer> topSort_Buggy(int n, int[][] edges) {
-    Map<Integer, List<Integer>> graph = new HashMap<>();
-    for (int i = 0; i < n; i++) graph.put(i, new ArrayList<>());
-    for (int[] edge : edges) graph.get(edge[0]).add(edge[1]);
-
-    int[] visited = new int[n];  // 0: unvisited, 1: visiting, 2: visited
-    Stack<Integer> stack = new Stack<>();
-
-    for (int i = 0; i < n; i++) {
-        if (visited[i] == 0) {
-            if (!dfsTopSort(graph, i, visited, stack)) {
-                return new ArrayList<>();  // Cycle detected
-            }
-        }
-    }
-
-    List<Integer> result = new ArrayList<>();
-    while (!stack.isEmpty()) {
-        result.add(stack.pop());
-    }
-    return result;
-}
-
-private static boolean dfsTopSort(Map<Integer, List<Integer>> graph, int node,
-                                 int[] visited, Stack<Integer> stack) {
-    visited[node] = 1;  // Mark as visiting
-
-    for (int neighbor : graph.get(node)) {
-        if (visited[neighbor] == 1) {
-            return false;  // Cycle detected
-        }
-        if (visited[neighbor] == 0) {
-            dfsTopSort(graph, neighbor, visited, stack);
-        }
-    }
-
-    visited[node] = 2;  // Mark as visited
-    stack.push(node);
-    return true;
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What\'s the bug?]</span>
-
-**Test case with cycle:**
-
-- Input: n = 3, edges = [[0,1], [1,2], [2,0]]
-- Expected: Empty list (cycle exists)
-- Actual with buggy code: <span class="fill-in">[Does it detect the cycle?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug (Line 38):** Missing return value check! Should be:
-
-```java
-if (visited[neighbor] == 0) {
-    if (!dfsTopSort(graph, neighbor, visited, stack)) {
-        return false;  // Propagate cycle detection
-    }
-}
-```
-
-**Why:** Even if a recursive call detects a cycle (returns false), we ignore it and continue. The cycle detection never
-propagates back up the call stack.
-
-**Correct version:**
-
-```java
-for (int neighbor : graph.get(node)) {
-    if (visited[neighbor] == 1) {
-        return false;  // Cycle detected
-    }
-    if (visited[neighbor] == 0) {
-        if (!dfsTopSort(graph, neighbor, visited, stack)) {
-            return false;  // Propagate cycle detection
-        }
-    }
-}
-```
-
-</details>
-
----
-
-### Challenge 4: Broken Dijkstra - Priority Queue Bug
-
-```java
-/**
- * Dijkstra's algorithm for shortest path.
- * This has 1 PERFORMANCE BUG that causes incorrect results.
- */
-public static int dijkstra_Buggy(Map<Integer, List<int[]>> graph, int start, int end, int n) {
-    PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[0] - b[0]);
-    int[] dist = new int[n];
-    Arrays.fill(dist, Integer.MAX_VALUE);
-    dist[start] = 0;
-
-    pq.offer(new int[]{0, start});
-
-    while (!pq.isEmpty()) {
-        int[] curr = pq.poll();
-        int d = curr[0], node = curr[1];
-
-
-        if (node == end) return d;
-
-        for (int[] neighbor : graph.getOrDefault(node, new ArrayList<>())) {
-            int next = neighbor[0], weight = neighbor[1];
-            int newDist = d + weight;
-
-            if (newDist < dist[next]) {
-                dist[next] = newDist;
-                pq.offer(new int[]{newDist, next});
-            }
-        }
-    }
-
-    return dist[end] == Integer.MAX_VALUE ? -1 : dist[end];
-}
-```
-
-**Your debugging:**
-
-- **Bug:** <span class="fill-in">[What check is missing after polling from pq?]</span>
-- **Why it matters:** <span class="fill-in">[What happens without this check?]</span>
-- **Performance impact:** <span class="fill-in">[How does this affect time complexity?]</span>
-
-**Test case:**
-
-- Graph: 0→1(weight=5), 0→1(weight=3), 1→2(weight=1)
-- Without fix: <span class="fill-in">[How many times do we process node 1?]</span>
-- With fix: <span class="fill-in">[How many times should we process node 1?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** Missing distance check after polling. Should be:
-
-```java
-while (!pq.isEmpty()) {
-    int[] curr = pq.poll();
-    int d = curr[0], node = curr[1];
-
-    // Skip if we've already found a better path to this node
-    if (d > dist[node]) continue;
-
-    if (node == end) return d;
-
-    // ... rest of code
-}
-```
-
-**Why:** We may add the same node to the priority queue multiple times with different distances. Without this check, we
-process outdated entries, doing unnecessary work and potentially getting wrong results.
-
-**Example trace without fix:**
-
-```
-Step 1: Process (0, dist=0), add (1, dist=5)
-Step 2: Process (1, dist=5), find shorter path, add (1, dist=3)
-Step 3: Process (1, dist=3) ✓ (correct)
-Step 4: Process (1, dist=5) ✗ (should skip - outdated)
-```
-
-With fix, step 4 would be skipped because d=5 > dist[1]=3.
-</details>
-
----
-
-### Challenge 5: Wrong Adjacency Representation
+### Challenge 3: Wrong Adjacency Representation
 
 ```java
 /**
@@ -1543,89 +908,22 @@ treated as directed.
 
 ---
 
-### Challenge 6: MST Prim's Algorithm Bug
-
-```java
-/**
- * Prim's algorithm for Minimum Spanning Tree.
- * This has 1 SUBTLE BUG that causes incorrect MST cost.
- */
-public static int primMST_Buggy(Map<Integer, List<int[]>> graph, int n) {
-    PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[0] - b[0]);
-    Set<Integer> visited = new HashSet<>();
-    int totalCost = 0;
-
-    pq.offer(new int[]{0, 0});  // Start from node 0 with cost 0
-
-    while (!visited.isEmpty() && visited.size() < n) {        int[] curr = pq.poll();
-        int cost = curr[0], node = curr[1];
-
-
-        visited.add(node);
-        totalCost += cost;
-
-        for (int[] neighbor : graph.getOrDefault(node, new ArrayList<>())) {
-            int next = neighbor[0], edgeCost = neighbor[1];
-            if (!visited.contains(next)) {
-                pq.offer(new int[]{edgeCost, next});
-            }
-        }
-    }
-
-    return totalCost;
-}
-```
-
-**Your debugging:**
-
-- **Bug 1:** <span class="fill-in">[What's wrong with the while loop condition?]</span>
-- **Bug 2:** <span class="fill-in">[What check is missing after polling?]</span>
-- **Result:** <span class="fill-in">[What happens if we process same node twice?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug 1 (Line 7):** Condition `!visited.isEmpty()` is wrong. Should be `!pq.isEmpty()`:
-
-```java
-while (!pq.isEmpty() && visited.size() < n) {
-```
-
-**Bug 2 (Line 10):** Need to check if node was already visited before adding to MST:
-
-```java
-int[] curr = pq.poll();
-int cost = curr[0], node = curr[1];
-
-if (visited.contains(node)) continue;  // Skip if already in MST
-
-visited.add(node);
-totalCost += cost;
-```
-
-**Why:** Multiple edges can lead to the same node with different costs. Without the check, we might add a node to the
-MST multiple times, inflating the total cost.
-</details>
-
----
-
 ### Your Debugging Scorecard
 
 After finding and fixing all bugs:
 
-- [ ] Found all 8+ bugs across 6 challenges
+- [ ] Found all 5 bugs across 3 challenges
 - [ ] Understood WHY each bug causes incorrect behavior
 - [ ] Could explain the fix to someone else
-- [ ] Learned common graph algorithm mistakes to avoid
+- [ ] Learned common graph traversal mistakes to avoid
 
 **Common graph mistakes you discovered:**
 
-1. <span class="fill-in">[Forgetting to mark start node as visited in BFS]</span>
-2. <span class="fill-in">[Not propagating cycle detection in recursive calls]</span>
-3. <span class="fill-in">[Missing distance check in Dijkstra after polling]</span>
+1. <span class="fill-in">[Forgetting to increment counter after DFS]</span>
+2. <span class="fill-in">[Not marking start node as visited in BFS]</span>
+3. <span class="fill-in">[Not processing BFS level-by-level]</span>
 4. <span class="fill-in">[Not adding both directions for undirected graphs]</span>
-5. <span class="fill-in">[Processing queue/priority queue incorrectly]</span>
-6. <span class="fill-in">[Fill in more patterns you noticed]</span>
+5. <span class="fill-in">[Fill in more patterns you noticed]</span>
 
 ---
 
@@ -1649,17 +947,7 @@ Answer after solving problems:
 - Level-order traversal: <span class="fill-in">[Process by distance from source]</span>
 - Multi-source problems: <span class="fill-in">[Fill in examples]</span>
 
-### Question 2: When to use Topological Sort?
-
-Answer for different scenarios:
-
-**Use topological sort when:**
-
-- Have dependencies: <span class="fill-in">[Course prerequisites, build order]</span>
-- Need ordering: <span class="fill-in">[Task scheduling]</span>
-- Graph is DAG: <span class="fill-in">[Must be acyclic]</span>
-
-### Question 3: Graph representation?
+### Question 2: Graph representation?
 
 **Adjacency List:**
 
@@ -1671,69 +959,37 @@ Answer for different scenarios:
 - Use when: <span class="fill-in">[Dense graphs, need to check edge existence]</span>
 - Space: <span class="fill-in">[O(V²)]</span>
 
-### Question 4: When to use Dijkstra's Algorithm?
-
-Answer for different scenarios:
-
-**Use Dijkstra when:**
-
-- Need shortest path in weighted graph: <span class="fill-in">[Non-negative edge weights]</span>
-- Single-source shortest paths: <span class="fill-in">[From one node to all others]</span>
-- Optimal path finding: <span class="fill-in">[GPS navigation, network routing]</span>
-
-**Don't use Dijkstra when:**
-
-- Negative edge weights exist: <span class="fill-in">[Use Bellman-Ford instead]</span>
-- Unweighted graph: <span class="fill-in">[BFS is simpler and faster]</span>
-- All-pairs shortest paths needed: <span class="fill-in">[Consider Floyd-Warshall]</span>
-
-### Question 5: When to use Minimum Spanning Tree?
-
-Answer for different scenarios:
-
-**Use MST when:**
-
-- Need to connect all nodes minimally: <span class="fill-in">[Network design, clustering]</span>
-- Minimize total edge cost: <span class="fill-in">[Infrastructure optimization]</span>
-- Graph is undirected and weighted: <span class="fill-in">[MST only for undirected graphs]</span>
-
-**MST Algorithm Choice:**
-
-- Prim's: <span class="fill-in">[Dense graphs, good with adjacency matrix]</span>
-- Kruskal's: <span class="fill-in">[Sparse graphs, uses Union-Find]</span>
-
 ### Your Decision Tree
 
 Build this after solving practice problems:
 ```mermaid
-flowchart LR
-    Start["Graph Algorithm Selection"]
+flowchart TD
+    Start["Graph Traversal Problem"]
 
-    Q1{"Need shortest path?"}
+    Q1{"Need shortest path<br/>(unweighted)?"}
     Start --> Q1
-    N2(["BFS ✓"])
-    Q1 -->|"Unweighted"| N2
-    N3(["Dijkstra's Algorithm ✓"])
-    Q1 -->|"Weighted (non-negative)"| N3
-    Q4{"Need to explore all paths?"}
-    Start --> Q4
-    Q5{"Need ordering with dependencies?"}
-    Start --> Q5
-    Q6{"Need to connect all nodes minimally?"}
-    Start --> Q6
-    Q7{"Detect cycle?"}
-    Start --> Q7
-    N8(["DFS with states ✓"])
-    Q7 -->|"Directed"| N8
-    N9(["DFS with parent OR Union-Find ✓"])
-    Q7 -->|"Undirected"| N9
-    Q10{"Connected components?"}
-    Start --> Q10
-    N11(["DFS/BFS ✓"])
-    Q10 -->|"Static"| N11
-    N12(["Union-Find ✓"])
-    Q10 -->|"Dynamic"| N12
+    BFS(["BFS ✓"])
+    Q1 -->|"Yes"| BFS
+
+    Q2{"Explore all paths<br/>or backtrack?"}
+    Q1 -->|"No"| Q2
+    DFS1(["DFS ✓"])
+    Q2 -->|"Yes"| DFS1
+
+    Q3{"Detect cycle?"}
+    Q2 -->|"No"| Q3
+    DFS2(["DFS with states ✓"])
+    Q3 -->|"Directed"| DFS2
+    DFS3(["DFS with parent ✓"])
+    Q3 -->|"Undirected"| DFS3
+
+    Q4{"Count components?"}
+    Q3 -->|"No"| Q4
+    DFSBFS(["DFS or BFS ✓"])
+    Q4 -->|"Yes"| DFSBFS
 ```
+
+**Note:** For weighted graphs, topological sort, and MST problems, see "Advanced Graph Algorithms"
 
 
 ---
@@ -1742,108 +998,90 @@ flowchart LR
 
 ### LeetCode Problems
 
+**Interview Priority:** Focus on these patterns - they appear in 60% of graph interviews
+
 **Easy (Complete 2-3):**
 
-- [ ] [997. Find the Town Judge](https://leetcode.com/problems/find-the-town-judge/)
+- [ ] [997. Find the Town Judge](https://leetcode.com/problems/find-the-town-judge/) ⭐
     - Pattern: <span class="fill-in">[Graph properties]</span>
     - Your solution time: <span class="fill-in">___</span>
     - Key insight: <span class="fill-in">[Fill in]</span>
 
-- [ ] [1971. Find if Path Exists in Graph](https://leetcode.com/problems/find-if-path-exists-in-graph/)
+- [ ] [1971. Find if Path Exists in Graph](https://leetcode.com/problems/find-if-path-exists-in-graph/) ⭐⭐
     - Pattern: <span class="fill-in">[DFS/BFS]</span>
     - Your solution time: <span class="fill-in">___</span>
     - Key insight: <span class="fill-in">[Fill in]</span>
 
-**Medium (Complete 4-5):**
+**Medium (Complete ALL - these are critical):**
 
-- [ ] [200. Number of Islands](https://leetcode.com/problems/number-of-islands/)
+- [ ] [200. Number of Islands](https://leetcode.com/problems/number-of-islands/) ⭐⭐⭐
     - Pattern: <span class="fill-in">[DFS]</span>
     - Difficulty: <span class="fill-in">[Rate 1-10]</span>
     - Key insight: <span class="fill-in">[Fill in]</span>
 
-- [ ] [133. Clone Graph](https://leetcode.com/problems/clone-graph/)
+- [ ] [133. Clone Graph](https://leetcode.com/problems/clone-graph/) ⭐⭐⭐
     - Pattern: <span class="fill-in">[DFS/BFS]</span>
     - Difficulty: <span class="fill-in">[Rate 1-10]</span>
     - Key insight: <span class="fill-in">[Fill in]</span>
 
-- [ ] [207. Course Schedule](https://leetcode.com/problems/course-schedule/)
-    - Pattern: <span class="fill-in">[Topological Sort]</span>
-    - Difficulty: <span class="fill-in">[Rate 1-10]</span>
-    - Key insight: <span class="fill-in">[Fill in]</span>
-
-- [ ] [210. Course Schedule II](https://leetcode.com/problems/course-schedule-ii/)
-    - Pattern: <span class="fill-in">[Topological Sort]</span>
-    - Comparison to 207: <span class="fill-in">[How similar?]</span>
-
-- [ ] [994. Rotting Oranges](https://leetcode.com/problems/rotting-oranges/)
+- [ ] [994. Rotting Oranges](https://leetcode.com/problems/rotting-oranges/) ⭐⭐⭐
     - Pattern: <span class="fill-in">[Multi-source BFS]</span>
     - Difficulty: <span class="fill-in">[Rate 1-10]</span>
     - Key insight: <span class="fill-in">[Fill in]</span>
 
-- [ ] [743. Network Delay Time](https://leetcode.com/problems/network-delay-time/)
-    - Pattern: <span class="fill-in">[Dijkstra's Algorithm]</span>
+- [ ] [417. Pacific Atlantic Water Flow](https://leetcode.com/problems/pacific-atlantic-water-flow/) ⭐⭐
+    - Pattern: <span class="fill-in">[DFS/BFS from multiple sources]</span>
     - Difficulty: <span class="fill-in">[Rate 1-10]</span>
     - Key insight: <span class="fill-in">[Fill in]</span>
 
-- [ ] [1584. Min Cost to Connect All Points](https://leetcode.com/problems/min-cost-to-connect-all-points/)
-    - Pattern: <span class="fill-in">[Minimum Spanning Tree (Prim's)]</span>
+- [ ] [261. Graph Valid Tree](https://leetcode.com/problems/graph-valid-tree/) ⭐⭐
+    - Pattern: <span class="fill-in">[Cycle detection]</span>
     - Difficulty: <span class="fill-in">[Rate 1-10]</span>
     - Key insight: <span class="fill-in">[Fill in]</span>
 
 **Hard (Optional):**
 
-- [ ] [127. Word Ladder](https://leetcode.com/problems/word-ladder/)
+- [ ] [127. Word Ladder](https://leetcode.com/problems/word-ladder/) ⭐⭐
     - Pattern: <span class="fill-in">[BFS]</span>
     - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
-- [ ] [329. Longest Increasing Path in Matrix](https://leetcode.com/problems/longest-increasing-path-in-a-matrix/)
-    - Pattern: <span class="fill-in">[DFS + Memoization]</span>
-    - Key insight: <span class="fill-in">[Fill in]</span>
-
-- [ ] [787. Cheapest Flights Within K Stops](https://leetcode.com/problems/cheapest-flights-within-k-stops/)
-    - Pattern: <span class="fill-in">[Dijkstra's Algorithm with constraints]</span>
-    - Key insight: <span class="fill-in">[Fill in after solving]</span>
+**Next step:** After mastering these, move to "Advanced Graph Algorithms" for Course Schedule, Dijkstra, MST
 
 ---
 
 ## Review Checklist
 
-Before moving to the next topic:
+Before moving to Advanced Graph Algorithms:
 
 - [ ] **Implementation**
-    - [ ] DFS: islands, path finding all work
-    - [ ] BFS: shortest path, knight moves, rotting oranges all work
-    - [ ] Topological sort: both algorithms work
+    - [ ] DFS: islands, path finding, cycle detection all work
+    - [ ] BFS: shortest path, multi-source BFS (rotting oranges) work
     - [ ] Cycle detection: directed and undirected work
-    - [ ] Dijkstra's Algorithm: network delay time, shortest paths work
-    - [ ] MST: Prim's algorithm for connecting points works
+    - [ ] Graph representations: can build adjacency list/matrix
     - [ ] All client code runs successfully
 
 - [ ] **Pattern Recognition**
     - [ ] Can identify when to use DFS vs BFS
-    - [ ] Understand topological sort applications
-    - [ ] Know how to detect cycles
-    - [ ] Understand when to use Dijkstra vs BFS
-    - [ ] Recognize when MST is needed
-    - [ ] Understand graph representation trade-offs
+    - [ ] Know how to detect cycles in both directed/undirected graphs
+    - [ ] Understand graph representation trade-offs (list vs matrix)
+    - [ ] Recognize multi-source BFS patterns
 
 - [ ] **Problem Solving**
     - [ ] Solved 2-3 easy problems
-    - [ ] Solved 6-7 medium problems (including Dijkstra and MST)
+    - [ ] Solved 5 core medium problems (Islands, Clone Graph, Rotting Oranges, etc.)
     - [ ] Analyzed time/space complexity
-    - [ ] Handled edge cases (empty graph, disconnected)
+    - [ ] Handled edge cases (empty graph, disconnected components)
 
 - [ ] **Understanding**
     - [ ] Filled in all ELI5 explanations
     - [ ] Built decision tree
     - [ ] Can explain DFS vs BFS trade-offs
-    - [ ] Know when NOT to use each algorithm
-    - [ ] Understand Dijkstra's priority queue optimization
-    - [ ] Understand MST greedy approach
+    - [ ] Know when NOT to use each traversal method
+    - [ ] Understand why BFS finds shortest path in unweighted graphs
 
 - [ ] **Mastery Check**
-    - [ ] Could implement all patterns from memory
-    - [ ] Could recognize pattern in new problem
+    - [ ] Could implement DFS/BFS/cycle detection from memory
+    - [ ] Could recognize traversal pattern in new problem
     - [ ] Could explain to someone else
     - [ ] Understand why each algorithm works
 
@@ -1854,17 +1092,11 @@ Before moving to the next topic:
 **I certify that I can:**
 
 - [ ] Implement DFS and BFS from memory
-- [ ] Explain when to use each graph algorithm
-- [ ] Identify the correct algorithm for new problems
+- [ ] Explain when to use DFS vs BFS
+- [ ] Detect cycles in directed and undirected graphs
+- [ ] Choose appropriate graph representation (list vs matrix)
+- [ ] Identify graph traversal patterns in new problems
 - [ ] Analyze time and space complexity
-- [ ] Choose appropriate graph representation
-- [ ] Implement Dijkstra's algorithm correctly
-- [ ] Understand when to use MST algorithms
-- [ ] Debug common graph algorithm mistakes
+- [ ] Debug common graph traversal mistakes
 - [ ] Teach these concepts to someone else
 
-**Self-assessment score:** ___/10
-
-**If score < 8:** Review the sections where you struggled, then retry this gate.
-
-**If score ≥ 8:** Congratulations! You've mastered graph algorithms. Proceed to the next topic.

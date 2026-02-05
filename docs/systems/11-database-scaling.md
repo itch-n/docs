@@ -1757,17 +1757,3 @@ flowchart LR
 - [ ] Design database layer for large-scale systems
 - [ ] Teach these concepts to others
 
-**Self-assessment score:** ___/10
-
-**Specific areas to review (if score < 8):**
-
-- [ ] Replication lag and consistency models
-- [ ] Hash vs range-based sharding trade-offs
-- [ ] Cross-shard query patterns
-- [ ] Hot shard detection and mitigation
-- [ ] Failover and split-brain prevention
-- [ ] Capacity planning calculations
-
-**If score < 8:** Review the sections where you struggled, then retry this gate.
-
-**If score ≥ 8:** Congratulations! You've mastered database scaling. Proceed to the next topic.

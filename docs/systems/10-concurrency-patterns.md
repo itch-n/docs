@@ -3638,8 +3638,3 @@ Before moving to the next topic:
 - [ ] Compare trade-offs: threads vs virtual threads vs event loops vs reactive
 - [ ] Explain concurrency concepts to others
 
-**Self-assessment score:** ___/10
-
-**If score < 8:** Review the sections where you struggled, then retry this gate.
-
-**If score ≥ 8:** Congratulations! You've mastered concurrency patterns. Proceed to the next topic.

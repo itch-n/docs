@@ -977,8 +977,3 @@ Before moving to the next topic:
 -   [ ] Handle multi-language search
 -   [ ] Teach search concepts to others
 
-**Self-assessment score:** ___/10
-
-**If score < 8:** Review weak areas and retry.
-
-**If score ≥ 8:** Congratulations! Proceed to next topic.

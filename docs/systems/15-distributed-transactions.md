@@ -1979,14 +1979,3 @@ flowchart LR
 - [ ] Debug distributed transaction issues
 - [ ] Teach these concepts to someone else
 
-**Self-assessment score:** ___/10
-
-**Critical understanding questions:**
-
-1. What's the main difference between 2PC and Saga? <span class="fill-in">[Fill in]</span>
-2. Why must compensations be idempotent? <span class="fill-in">[Fill in]</span>
-3. What's the hardest failure scenario in distributed transactions? <span class="fill-in">[Fill in]</span>
-
-**If score < 8:** Review the sections where you struggled, implement the patterns again, then retry this gate.
-
-**If score ≥ 8:** Congratulations! You understand distributed transactions. You're ready for consensus patterns.

@@ -1252,8 +1252,3 @@ Before moving to the next topic:
 - [ ] Teach this concept to someone else
 - [ ] Analyze when NOT to use backtracking
 
-**Self-assessment score:** ___/10
-
-**If score < 8:** Review the sections where you struggled, then retry this gate.
-
-**If score ≥ 8:** Congratulations! You've mastered backtracking. Proceed to the next topic.

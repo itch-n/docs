@@ -1472,14 +1472,3 @@ Before moving to the next topic:
 - [ ] Choose between recursion and iteration
 - [ ] Teach these concepts to someone else
 
-**Self-assessment score:** ___/10
-
-**What I still need to review:**
-
-1. <span class="fill-in">[Fill in if score < 8]</span>
-2. <span class="fill-in">[Fill in]</span>
-3. <span class="fill-in">[Fill in]</span>
-
-**If score < 8:** Review the weak areas, practice more problems, then retry this gate.
-
-**If score ≥ 8:** Congratulations! You've mastered tree recursion. Proceed to the next topic.
