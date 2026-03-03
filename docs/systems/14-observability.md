@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this section you should be able to:
+
+- Explain the three pillars of observability (metrics, logs, traces) and when to use each
+- Implement the RED (Rate, Errors, Duration) and USE (Utilization, Saturation, Errors) metric frameworks
+- Design structured logs with consistent context fields and explain why context propagation is essential
+- Implement distributed tracing with parent-child span relationships and describe how trace IDs enable cross-service correlation
+- Define SLOs, calculate error budgets, and configure alert rules with appropriate severity and duration thresholds
+- Identify and fix high-cardinality metric label issues before they cause performance problems
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,10 +26,10 @@
 **Prompts to guide you:**
 
 1. **What is observability in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">Observability is the ability to ___ what is happening inside your system by ___</span>
 
 2. **What are the three pillars of observability?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">The three pillars are ___, ___, and ___; they differ because ___</span>
 
 3. **Real-world analogy for metrics:**
     - Example: "Metrics are like a car's dashboard showing speed, fuel, temperature..."
@@ -31,13 +44,16 @@
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
 6. **When should you add metrics vs logs vs traces?**
-    - Your answer: <span class="fill-in">[Fill in after practice]</span>
+    - Your answer: <span class="fill-in">Use metrics when ___, logs when ___, traces when ___</span>
 
 </div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+!!! tip "How to use this section"
+    Fill in your best guesses **before** reading any code. After implementing each pattern, return here and check your predictions. Pay special attention to the cardinality scenario — it reveals a cost that surprises many engineers.
 
 <div class="learner-section" markdown>
 
@@ -100,172 +116,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 - Your answer: <span class="fill-in">[Fill in reasoning]</span>
 - Verified: <span class="fill-in">[Fill in after learning about performance impact]</span>
-
-</div>
-
----
-
-## Before/After: Why This Pattern Matters
-
-**Your task:** Compare blind systems vs observable systems to understand the impact.
-
-### Example: Debugging a Slow API
-
-**Problem:** Users report checkout API is slow, but you don't know why.
-
-#### Approach 1: No Observability (Flying Blind)
-
-```java
-// No instrumentation - just the business logic
-public class CheckoutService {
-    public Order checkout(Cart cart) {
-        validateCart(cart);
-        chargePayment(cart);
-        createOrder(cart);
-        sendEmail(cart);
-        return order;
-    }
-}
-```
-
-**What you can see:**
-
-- Nothing! You have to guess what's slow
-- Add println statements and redeploy
-- Wait for complaints to narrow down the issue
-- Time to debug: Hours to days
-
-**Analysis:**
-
-- Debugging time: Multiple deploy cycles
-- Mean time to resolution: 4-8 hours
-- Customer impact: High (prolonged issues)
-
-#### Approach 2: With Full Observability
-
-```java
-// Instrumented with metrics, logs, and traces
-public class CheckoutService {
-    private final MetricsCollector metrics;
-    private final StructuredLogger logger;
-    private final DistributedTracer tracer;
-
-    public Order checkout(Cart cart) {
-        // Start trace
-        Span span = tracer.startSpan("checkout");
-        span.setTag("cart_id", cart.getId());
-        span.setTag("items_count", cart.getItems().size());
-
-        // Add context for logs
-        logger.addContext("trace_id", span.traceId);
-        logger.addContext("cart_id", cart.getId());
-
-        long startTime = System.nanoTime();
-
-        try {
-            // Validate cart
-            Span validateSpan = tracer.startChildSpan("validate_cart");
-            validateCart(cart);
-            tracer.finishSpan();
-
-            // Charge payment
-            Span paymentSpan = tracer.startChildSpan("charge_payment");
-            chargePayment(cart);
-            tracer.finishSpan();
-            logger.info("Payment charged", Map.of("amount", cart.getTotal()));
-
-            // Create order
-            Span orderSpan = tracer.startChildSpan("create_order");
-            Order order = createOrder(cart);
-            tracer.finishSpan();
-
-            // Send email
-            Span emailSpan = tracer.startChildSpan("send_email");
-            sendEmail(cart);
-            tracer.finishSpan();
-
-            // Record success metrics
-            long duration = System.nanoTime() - startTime;
-            metrics.recordRequest(duration / 1_000_000_000.0);
-            logger.info("Checkout completed", Map.of("order_id", order.getId()));
-
-            return order;
-
-        } catch (Exception e) {
-            metrics.recordError((System.nanoTime() - startTime) / 1_000_000_000.0);
-            logger.error("Checkout failed", e);
-            throw e;
-        } finally {
-            tracer.finishSpan();
-            logger.clearContext();
-        }
-    }
-}
-```
-
-**What you can see:**
-
-1. **Metrics:** P99 latency is 3s (P50 is 100ms) - it's a tail latency issue!
-2. **Logs:** Search by trace_id shows payment gateway timeouts
-3. **Traces:** Visualization shows 95% of time spent in charge_payment span
-
-**Analysis:**
-
-- Debugging time: 5 minutes (query dashboards)
-- Root cause: Payment gateway timeout for 1% of requests
-- Solution: Add timeout + retry logic
-- Time to resolution: 30 minutes
-
-#### Performance Comparison
-
-| Scenario                    | No Observability           | With Observability       | Improvement |
-|-----------------------------|----------------------------|--------------------------|-------------|
-| Time to detect issue        | 30+ minutes (user reports) | 30 seconds (alert fired) | 60x faster  |
-| Time to identify root cause | 2-4 hours (trial/error)    | 5 minutes (query traces) | 24x faster  |
-| Deploy cycles needed        | 3-5 deploys                | 1 deploy                 | 3-5x fewer  |
-| Customer impact             | High (hours)               | Low (minutes)            | 10x better  |
-
-**Your calculation:** If you have 10 incidents per month, observability saves approximately _____ engineering hours.
-
-#### Why Does Observability Work?
-
-**Key insight to understand:**
-
-Without observability, debugging is like:
-
-- Finding a needle in a haystack... blindfolded... in the dark
-
-With observability, you can:
-
-1. **Metrics:** Quickly identify that there IS a problem (P99 spike)
-2. **Logs:** Find specific failing requests (search by error, user_id, trace_id)
-3. **Traces:** See exactly where time is spent (payment span = 2.9s of 3s total)
-
-```
-No observability:
-"Users say checkout is slow" → Try things → Deploy → Wait → Repeat
-
-With observability:
-"Users say checkout is slow"
-  → Check metrics (P99 = 3s)
-  → Check traces (payment = 2.9s)
-  → Check logs (gateway timeout)
-  → Fix + deploy → Done
-```
-
-**Why can you skip trial-and-error?**
-
-- Traces show the exact bottleneck (no guessing)
-- Logs provide context (what failed and why)
-- Metrics prove the fix worked (P99 drops to 200ms)
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- How do the three pillars work together? <span class="fill-in">[Your answer]</span>
-- What questions can you answer with each type? <span class="fill-in">[Your answer]</span>
-- Why is context propagation (trace_id) important? <span class="fill-in">[Your answer]</span>
 
 </div>
 
@@ -623,6 +473,47 @@ public class MetricsCollector {
     }
 }
 ```
+
+!!! warning "Debugging Challenge — High-Cardinality Metric Label"
+    The following metrics class has a **scalability bug**. It is supposed to track cache hits per user, but it will crash Prometheus (or any time-series metrics system) if you have more than a few thousand users.
+
+    ```java
+    public class CacheMetrics {
+        private Map<String, Counter> cacheHitsByUser = new ConcurrentHashMap<>();
+
+        public void recordCacheHit(String userId) {
+            cacheHitsByUser
+                .computeIfAbsent(userId,
+                    k -> new Counter("cache_hits", Map.of("user_id", userId)))
+                .inc();
+        }
+    }
+    ```
+
+    - What is the problem with using `user_id` as a metric label?
+    - If you have 1 million users, how many unique time-series does this create?
+    - What should you track instead?
+
+    ??? success "Answer"
+        **Bug:** `user_id` is a high-cardinality label. Each unique label combination creates a new time-series in the metrics system. With 1 million users, this creates 1 million time-series — far beyond what Prometheus or Datadog can handle efficiently without specialized infrastructure.
+
+        **Memory impact:** Each series uses ~10 KB of memory → 10 GB total. Query time degrades from milliseconds to seconds. The metrics system can crash.
+
+        **Fix:** Track aggregated metrics. Use logs or traces for per-user detail:
+
+        ```java
+        private Counter cacheHits = new Counter("cache_hits_total", Map.of());
+        private Counter cacheMisses = new Counter("cache_misses_total", Map.of());
+
+        public void recordCacheHit(boolean hit, String userId) {
+            if (hit) cacheHits.inc();
+            else cacheMisses.inc();
+            // For per-user detail, use a log line instead
+            logger.info("Cache result", Map.of("user_id", userId, "hit", hit));
+        }
+        ```
+
+        **Rule:** Metric labels must have **bounded cardinality** (fewer than ~100 unique values per label).
 
 **Runnable Client Code:**
 
@@ -1741,415 +1632,190 @@ public class SLOManagerClient {
 }
 ```
 
----
-
-## Debugging Challenges
-
-**Your task:** Find and fix bugs in broken observability implementations. This tests your understanding.
-
-### Challenge 1: Missing Metric Labels
-
-```java
-/**
- * This metrics collector is supposed to track requests per endpoint.
- * It has a CRITICAL DESIGN FLAW. Find it!
- */
-public class EndpointMetrics {
-    private Counter totalRequests = new Counter("http_requests_total", Map.of());
-
-    public void recordRequest(String endpoint, String method, int statusCode) {
-        totalRequests.inc();
-    }
-
-    public long getRequestCount() {
-        return totalRequests.get();
-    }
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What\'s the bug?]</span>
-- **Impact:** <span class="fill-in">[Why is this a problem in production?]</span>
-
-**Test scenario:**
-
-- 100 requests to `/api/users` (GET)
-- 50 requests to `/api/orders` (POST)
-- 10 requests to `/api/users` (DELETE)
-- **What can you query?** <span class="fill-in">[Fill in what you can and can't learn]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug:** No labels! All requests go into a single counter, so you can't distinguish:
-
-- Which endpoint is getting traffic
-- Which HTTP method is used
-- Which status codes are returned
-
-**Fix:**
-
-```java
-public void recordRequest(String endpoint, String method, int statusCode) {
-    Map<String, String> labels = Map.of(
-        "endpoint", endpoint,
-        "method", method,
-        "status_code", String.valueOf(statusCode)
-    );
-    Counter counter = new Counter("http_requests_total", labels);
-    counter.inc();
-}
-```
-
-**Impact:** Without labels, you can't:
-
-- Alert on specific endpoint errors
-- Identify which API is slow
-- Track SLOs per endpoint
-- Debug which endpoint is causing load
-
-</details>
+!!! info "Loop back"
+    Now that you have implemented all four patterns, return to the **Quick Quiz** at the top of this page. Fill in the "Verified after learning" fields. Did your estimate of P99 latency's importance match what you saw in the SLO section? Return to the **ELI5** section and complete your one-sentence explanations.
 
 ---
 
-### Challenge 2: High-Cardinality Labels
+## Before/After: Why This Pattern Matters
+
+!!! note "Key insight"
+    Observability doesn't just speed up debugging — it changes the **nature** of debugging. Without it, engineers must form hypotheses and deploy code to test them. With it, engineers query data that already exists. The difference is not linear (faster) but categorical (different kind of work).
+
+**Your task:** Compare blind systems vs observable systems to understand the impact.
+
+### Example: Debugging a Slow API
+
+**Problem:** Users report checkout API is slow, but you don't know why.
+
+#### Approach 1: No Observability (Flying Blind)
 
 ```java
-/**
- * This code tracks cache hits/misses per user.
- * It has a SCALABILITY BUG. Find it!
- */
-public class CacheMetrics {
-    private Map<String, Counter> cacheHitsByUser = new ConcurrentHashMap<>();
-
-    public void recordCacheHit(String userId) {
-        cacheHitsByUser
-            .computeIfAbsent(userId,
-                k -> new Counter("cache_hits", Map.of("user_id", userId)))
-            .inc();
+// No instrumentation - just the business logic
+public class CheckoutService {
+    public Order checkout(Cart cart) {
+        validateCart(cart);
+        chargePayment(cart);
+        createOrder(cart);
+        sendEmail(cart);
+        return order;
     }
-
-    // 1M users = 1M unique metric series!
 }
 ```
 
-**Your debugging:**
+**What you can see:**
 
-- **Bug:** <span class="fill-in">[What's the high-cardinality problem?]</span>
-- **Memory impact:** <span class="fill-in">[How much memory with 1M users?]</span>
-- **Query impact:** <span class="fill-in">[Why do queries become slow?]</span>
-- **Fix:** <span class="fill-in">[What should you track instead?]</span>
+- Nothing! You have to guess what's slow
+- Add println statements and redeploy
+- Wait for complaints to narrow down the issue
+- Time to debug: Hours to days
 
-**Cardinality calculation:**
+**Analysis:**
 
-- If 1M users, you create _____ unique time series
-- If each series uses 10KB of memory = <span class="fill-in">_____</span> GB total
-- Query time grows from 10ms to _____ seconds
+- Debugging time: Multiple deploy cycles
+- Mean time to resolution: 4-8 hours
+- Customer impact: High (prolonged issues)
 
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug:** `user_id` is a high-cardinality label (potentially millions of unique values). This causes:
-
-- **Memory explosion:** Each unique label combination = new time series
-- **Slow queries:** Database must scan millions of series
-- **Storage costs:** Unbounded growth
-- **Metric system overload:** Can crash Prometheus/etc.
-
-**Fix:** Track aggregated metrics instead:
+#### Approach 2: With Full Observability
 
 ```java
-// GOOD: Low cardinality
-private Counter cacheHits = new Counter("cache_hits_total", Map.of());
-private Counter cacheMisses = new Counter("cache_misses_total", Map.of());
+// Instrumented with metrics, logs, and traces
+public class CheckoutService {
+    private final MetricsCollector metrics;
+    private final StructuredLogger logger;
+    private final DistributedTracer tracer;
 
-public void recordCacheHit(boolean hit) {
-    if (hit) {
-        cacheHits.inc();
-    } else {
-        cacheMisses.inc();
-    }
-}
+    public Order checkout(Cart cart) {
+        // Start trace
+        Span span = tracer.startSpan("checkout");
+        span.setTag("cart_id", cart.getId());
+        span.setTag("items_count", cart.getItems().size());
 
-// If you need user-level detail, use logs or traces instead!
-logger.info("Cache hit", Map.of("user_id", userId, "key", key));
-```
+        // Add context for logs
+        logger.addContext("trace_id", span.traceId);
+        logger.addContext("cart_id", cart.getId());
 
-**Rule:** Metric labels should have **bounded cardinality** (< 100 unique values per label).
-</details>
+        long startTime = System.nanoTime();
 
----
+        try {
+            // Validate cart
+            Span validateSpan = tracer.startChildSpan("validate_cart");
+            validateCart(cart);
+            tracer.finishSpan();
 
-### Challenge 3: Slow Histogram Queries
+            // Charge payment
+            Span paymentSpan = tracer.startChildSpan("charge_payment");
+            chargePayment(cart);
+            tracer.finishSpan();
+            logger.info("Payment charged", Map.of("amount", cart.getTotal()));
 
-```java
-/**
- * This histogram implementation is correct but SLOW.
- * Why? How to fix it?
- */
-public class LatencyHistogram {
-    private List<Double> allLatencies = new ArrayList<>();
+            // Create order
+            Span orderSpan = tracer.startChildSpan("create_order");
+            Order order = createOrder(cart);
+            tracer.finishSpan();
 
-    public void observe(double latency) {
-        synchronized(allLatencies) {
-            allLatencies.add(latency);
-        }
-    }
+            // Send email
+            Span emailSpan = tracer.startChildSpan("send_email");
+            sendEmail(cart);
+            tracer.finishSpan();
 
-    public double getP99() {
-        synchronized(allLatencies) {
-            if (allLatencies.isEmpty()) return 0.0;
+            // Record success metrics
+            long duration = System.nanoTime() - startTime;
+            metrics.recordRequest(duration / 1_000_000_000.0);
+            logger.info("Checkout completed", Map.of("order_id", order.getId()));
 
-            Collections.sort(allLatencies);
-            int index = (int)(allLatencies.size() * 0.99);
-            return allLatencies.get(index);
+            return order;
+
+        } catch (Exception e) {
+            metrics.recordError((System.nanoTime() - startTime) / 1_000_000_000.0);
+            logger.error("Checkout failed", e);
+            throw e;
+        } finally {
+            tracer.finishSpan();
+            logger.clearContext();
         }
     }
 }
 ```
 
-**Your debugging:**
+**What you can see:**
 
-- **Performance bug:** <span class="fill-in">[What operation is expensive?]</span>
-- **Complexity:** <span class="fill-in">[What's the time complexity?]</span>
-- **With 1M observations:** <span class="fill-in">[How long does getP99 take?]</span>
-- **Fix:** <span class="fill-in">[What data structure should you use?]</span>
+1. **Metrics:** P99 latency is 3s (P50 is 100ms) - it's a tail latency issue!
+2. **Logs:** Search by trace_id shows payment gateway timeouts
+3. **Traces:** Visualization shows 95% of time spent in charge_payment span
 
-**Performance impact:**
+**Analysis:**
 
-- 1M observations in list
-- Calling getP99 100 times per second
-- Current: <span class="fill-in">_____</span> ms per call
-- Fixed: <span class="fill-in">_____</span> ms per call
+- Debugging time: 5 minutes (query dashboards)
+- Root cause: Payment gateway timeout for 1% of requests
+- Solution: Add timeout + retry logic
+- Time to resolution: 30 minutes
 
-<details markdown>
-<summary>Click to verify your answers</summary>
+#### Performance Comparison
 
-**Bug:** Sorting entire list on every query is O(n log n). With 1M observations:
+| Scenario                    | No Observability           | With Observability       | Improvement |
+|-----------------------------|----------------------------|--------------------------|-------------|
+| Time to detect issue        | 30+ minutes (user reports) | 30 seconds (alert fired) | 60x faster  |
+| Time to identify root cause | 2-4 hours (trial/error)    | 5 minutes (query traces) | 24x faster  |
+| Deploy cycles needed        | 3-5 deploys                | 1 deploy                 | 3-5x fewer  |
+| Customer impact             | High (hours)               | Low (minutes)            | 10x better  |
 
-- 1M * log(1M) ≈ 20M operations
-- At 100 calls/sec = 2 billion operations/sec!
+**Your calculation:** If you have 10 incidents per month, observability saves approximately _____ engineering hours.
 
-**Fix:** Use bucketed histogram (like Prometheus):
+#### Why Does Observability Work?
 
-```java
-public class LatencyHistogram {
-    private final double[] buckets = {0.01, 0.05, 0.1, 0.5, 1.0, 5.0};
-    private final AtomicLongArray counts = new AtomicLongArray(buckets.length + 1);
-    private final AtomicLong totalCount = new AtomicLong(0);
+**Key insight to understand:**
 
-    public void observe(double latency) {
-        int bucket = findBucket(latency);
-        counts.incrementAndGet(bucket);
-        totalCount.incrementAndGet();
-    }
+Without observability, debugging is like:
 
-    public double getP99() {
-        long total = totalCount.get();
-        long target = (long)(total * 0.99);
-        long cumulative = 0;
+- Finding a needle in a haystack... blindfolded... in the dark
 
-        for (int i = 0; i < counts.length(); i++) {
-            cumulative += counts.get(i);
-            if (cumulative >= target) {
-                return i < buckets.length ? buckets[i] : Double.POSITIVE_INFINITY;
-            }
-        }
-        return 0.0;
-    }
-}
+With observability, you can:
+
+1. **Metrics:** Quickly identify that there IS a problem (P99 spike)
+2. **Logs:** Find specific failing requests (search by error, user_id, trace_id)
+3. **Traces:** See exactly where time is spent (payment span = 2.9s of 3s total)
+
+```
+No observability:
+"Users say checkout is slow" → Try things → Deploy → Wait → Repeat
+
+With observability:
+"Users say checkout is slow"
+  → Check metrics (P99 = 3s)
+  → Check traces (payment = 2.9s)
+  → Check logs (gateway timeout)
+  → Fix + deploy → Done
 ```
 
-**Improvement:**
+**Why can you skip trial-and-error?**
 
-- **Before:** O(n log n) = ~20M ops for 1M observations
-- **After:** O(buckets) = ~7 ops regardless of observation count
-- **Speedup:** ~3 million times faster!
+- Traces show the exact bottleneck (no guessing)
+- Logs provide context (what failed and why)
+- Metrics prove the fix worked (P99 drops to 200ms)
 
-**Trade-off:** Approximate percentiles (bucket boundaries) vs exact values.
-</details>
+**After implementing, explain in your own words:**
+
+<div class="learner-section" markdown>
+
+- How do the three pillars work together? <span class="fill-in">[Your answer]</span>
+- What questions can you answer with each type? <span class="fill-in">[Your answer]</span>
+- Why is context propagation (trace_id) important? <span class="fill-in">[Your answer]</span>
+
+</div>
 
 ---
 
-### Challenge 4: Broken Trace Sampling
+## Common Misconceptions
 
-```java
-/**
- * This trace sampler is supposed to sample 10% of traces.
- * It has a CRITICAL BUG. Find it!
- */
-public class TraceSampler {
-    private Random random = new Random();
-    private double sampleRate = 0.10; // 10%
+!!! warning "Misconception 1: Average latency is a good SLO metric"
+    Average (P50) latency hides tail behavior. If your checkout API takes 100ms for 99% of requests and 5 seconds for 1%, the average might look fine at ~150ms. The affected users (the 1% with 5-second waits) are exactly the ones most likely to abandon their cart. Always track **P99 or P99.9** for user-facing latency SLOs, not averages.
 
-    public boolean shouldSample(String traceId) {
-        return random.nextDouble() < sampleRate;
-    }
-}
+!!! warning "Misconception 2: More logs always means better observability"
+    Excessive logging degrades performance (I/O cost), increases storage costs, and — most critically — buries signal in noise. When every line of code emits a DEBUG log, finding the relevant ERROR in an incident becomes harder, not easier. The goal is structured logs at appropriate levels: ERROR and WARN always on, INFO for significant business events, DEBUG only on demand (via dynamic log-level configuration).
 
-// Usage:
-public Span startSpan(String operation) {
-    if (sampler.shouldSample(currentTraceId)) {
-        return tracer.startSpan(operation);
-    }
-    return null;
-}
-```
-
-**Your debugging:**
-
-- **Bug:** <span class="fill-in">[What's inconsistent about this sampling?]</span>
-- **Impact:** <span class="fill-in">[What happens to child spans?]</span>
-- **Trace visualization:** <span class="fill-in">[Why are traces incomplete?]</span>
-- **Fix:** <span class="fill-in">[How to ensure consistent sampling?]</span>
-
-**Test scenario:**
-
-- Parent span: API request (sampled = true)
-- Child span: Database query (sampled = ???)
-- Grandchild span: Cache lookup (sampled = ???)
-- **Problem:** <span class="fill-in">[What's broken about the trace?]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug:** Each span makes independent sampling decision! This causes:
-
-- Parent sampled but children dropped → incomplete traces
-- Children sampled but parent dropped → orphaned spans
-- Can't reconstruct full request flow
-
-**Fix:** Sample based on trace ID (head-based sampling):
-
-```java
-public class TraceSampler {
-    private double sampleRate = 0.10;
-
-    public boolean shouldSample(String traceId) {
-        // Hash trace ID to get consistent decision
-        // All spans in same trace get same result
-        long hash = Math.abs(traceId.hashCode());
-        return (hash % 100) < (sampleRate * 100);
-    }
-}
-
-// Now all spans in trace have same sampling decision!
-```
-
-**Alternative:** Tail-based sampling (sample AFTER seeing full trace):
-
-```java
-// Keep all traces in memory temporarily
-// Sample based on: errors, high latency, specific endpoints
-// Trade-off: More memory, but smarter sampling
-```
-
-**Key insight:** Sampling decision must be consistent across entire trace.
-</details>
-
----
-
-### Challenge 5: Missing Log Context
-
-```java
-/**
- * These logs look fine individually but are USELESS for debugging.
- * What's missing?
- */
-public class OrderService {
-    private StructuredLogger logger = new StructuredLogger("order-service");
-
-    public void processOrder(Order order) {
-        logger.info("Processing order");
-
-        validateOrder(order);
-        logger.info("Order validated");
-
-        chargePayment(order);
-        logger.info("Payment charged");
-
-        createShipment(order);
-        logger.info("Shipment created");
-    }
-}
-
-// Logs in production:
-// {"timestamp":"...", "level":"INFO", "message":"Processing order"}
-// {"timestamp":"...", "level":"INFO", "message":"Payment charged"}
-// {"timestamp":"...", "level":"INFO", "message":"Order validated"}
-// {"timestamp":"...", "level":"INFO", "message":"Shipment created"}
-```
-
-**Your debugging:**
-
-- **Bug:** <span class="fill-in">[What's missing from every log?]</span>
-- **Debugging scenario:** <span class="fill-in">[How do you find logs for order #12345?]</span>
-- **Correlation:** <span class="fill-in">[How do you trace a request across services?]</span>
-- **Fix:** <span class="fill-in">[What fields should every log have?]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug:** No context! Missing:
-
-- `order_id` - can't find logs for specific order
-- `trace_id` - can't correlate across services
-- `user_id` - can't find user's journey
-- Ordering - can't tell which log belongs to which request
-
-**Fix:** Add context to every log:
-
-```java
-public void processOrder(Order order) {
-    // Set context once at start
-    logger.addContext("order_id", order.getId());
-    logger.addContext("user_id", order.getUserId());
-    logger.addContext("trace_id", getCurrentTraceId());
-
-    try {
-        logger.info("Processing order", Map.of("total", order.getTotal()));
-
-        validateOrder(order);
-        logger.info("Order validated");
-
-        chargePayment(order);
-        logger.info("Payment charged", Map.of("amount", order.getTotal()));
-
-        createShipment(order);
-        logger.info("Shipment created", Map.of("tracking", shipment.getTrackingId()));
-
-    } finally {
-        logger.clearContext(); // Clean up
-    }
-}
-
-// Now logs look like:
-// {"timestamp":"...", "level":"INFO", "message":"Processing order",
-//  "context":{"order_id":"12345", "user_id":"user_1", "trace_id":"abc-123"},
-//  "fields":{"total":99.99}}
-```
-
-**Key insight:** Logs without context are useless for debugging distributed systems.
-</details>
-
----
-
-### Your Debugging Scorecard
-
-After finding and fixing all bugs:
-
-- [ ] Found high-cardinality label issue
-- [ ] Understood histogram performance trade-offs
-- [ ] Fixed trace sampling consistency
-- [ ] Added proper log context
-- [ ] Avoided common observability pitfalls
-
-**Common mistakes you discovered:**
-
-1. <span class="fill-in">[List the patterns you noticed]</span>
-2. <span class="fill-in">[Fill in]</span>
-3. <span class="fill-in">[Fill in]</span>
+!!! warning "Misconception 3: Trace sampling breaks observability"
+    Sampling 1–10% of traces does not mean you miss 90–99% of problems. Most errors and latency issues affect a category of requests, not a single one. Sampling captures representative examples of every type of behavior. The cases sampling genuinely misses are extremely rare one-off events — for those, **error logs** (which are never sampled) provide the context you need.
 
 ---
 
@@ -2368,53 +2034,16 @@ Planning:
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-Before moving to the next topic:
+Answer these questions without looking at your implementation. They are designed to probe understanding, not recall.
 
-- [ ] **Implementation**
-    - [ ] Counter, Gauge, Histogram work correctly
-    - [ ] RED and USE metrics implemented
-    - [ ] Structured logging with JSON output works
-    - [ ] Distributed tracing with spans works
-    - [ ] SLO tracking and error budget calculation works
-    - [ ] Alert rule evaluation works
-    - [ ] All client code runs successfully
+1. **Your P50 latency is 80ms and your P99 latency is 4 seconds. Users are not complaining. Should you be concerned? Why or why not?**
 
-- [ ] **Understanding**
-    - [ ] Filled in all ELI5 explanations
-    - [ ] Understand difference between metrics/logs/traces
-    - [ ] Know when to use RED vs USE method
-    - [ ] Understand trace context propagation
-    - [ ] Know how to calculate error budget
-    - [ ] Can design alert rules
+2. **An engineer proposes adding a `user_id` label to your HTTP request counter metric so the team can track per-user request rates. What is the likely consequence in a system with 500K monthly active users, and what alternative approach achieves the same monitoring goal?**
 
-- [ ] **Decision Making**
-    - [ ] Know when to use each observability pattern
-    - [ ] Understand sampling strategies
-    - [ ] Can design SLOs for a service
-    - [ ] Completed practice scenarios
-    - [ ] Can explain observability trade-offs
+3. **A distributed trace shows the total request took 2 seconds, but the sum of all child span durations adds up to only 800ms. What does this gap represent, and what is the most likely cause?**
 
-- [ ] **Mastery Check**
-    - [ ] Could implement metrics collector from memory
-    - [ ] Could add observability to new service
-    - [ ] Understand observability costs and trade-offs
-    - [ ] Know how to debug with observability data
-    - [ ] Can write runbooks for alerts
+4. **Your SLO is 99.9% availability over 30 days. You have consumed 80% of your error budget in the first 10 days. Should you stop all feature work immediately? Describe how you would use the error budget to make a rational engineering decision.**
 
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
-- [ ] Implement metrics (Counter, Gauge, Histogram) from memory
-- [ ] Design structured logging with proper context
-- [ ] Implement distributed tracing with span propagation
-- [ ] Calculate SLOs and error budgets
-- [ ] Choose the right observability tool for each problem
-- [ ] Identify and fix high-cardinality issues
-- [ ] Debug systems using metrics, logs, and traces
-- [ ] Design observability for a new service
-
+5. **Design decision: You are adding observability to a new microservice that processes financial transactions. For each of the three pillars (metrics, logs, traces), name one specific piece of data you would capture and explain why that specific data item is more valuable than alternatives you considered.**

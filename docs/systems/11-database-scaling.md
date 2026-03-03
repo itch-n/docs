@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this topic you will be able to:
+
+- Implement hash-based and range-based sharding and explain the trade-off between even distribution and range-query performance
+- Implement master-slave replication and explain why read-after-write consistency requires routing some reads back to the master
+- Identify the hot-shard problem and explain when shard-by-user-id causes it
+- Compare vertical partitioning and horizontal sharding and choose the appropriate strategy for a given access pattern
+- Explain why cross-shard queries are expensive and describe the pagination and parallelisation techniques that mitigate this
+- Choose a shard key given requirements for query locality, distribution uniformity, and future resharding cost
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,36 +26,39 @@
 **Prompts to guide you:**
 
 1. **What is database scaling in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">Database scaling is a ___ that works by ___</span>
 
 2. **Why do databases need to scale?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">A single database becomes a bottleneck when ___ exceeds ___, causing ___</span>
 
 3. **Real-world analogy for sharding:**
     - Example: "Sharding is like having multiple filing cabinets where..."
-    - Your analogy: <span class="fill-in">[Fill in]</span>
+    - Your analogy: <span class="fill-in">Think about how a library divides its books — books A-K in one room, L-Z in another — so each librarian handles a smaller collection and can find things faster...</span>
 
 4. **What is sharding in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">Sharding is a ___ that splits ___ across multiple ___ so that each ___</span>
 
 5. **How is replication different from sharding?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">Replication creates ___ of the same data, while sharding splits ___ so each node holds ___; replication improves ___ while sharding improves ___</span>
 
 6. **Real-world analogy for replication:**
     - Example: "Replication is like photocopying important documents where..."
-    - Your analogy: <span class="fill-in">[Fill in]</span>
+    - Your analogy: <span class="fill-in">Think about a newspaper: one printing press creates the master copy, and other presses make identical copies for different regions — all copies have the same content but each serves a different audience...</span>
 
 7. **What is partitioning in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">Partitioning is a ___ that divides ___ within ___ so that ___</span>
 
 8. **When would you use horizontal vs vertical scaling?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">Vertical scaling (bigger machine) is better when ___ because ___; horizontal scaling (more machines) is better when ___ because ___</span>
 
 </div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+!!! tip "How to use this section"
+    Complete your predictions now, before reading further. You will revisit and verify each answer after running the benchmark (or completing the implementation).
 
 <div class="learner-section" markdown>
 
@@ -112,198 +128,6 @@ Verify after implementation: <span class="fill-in">[Which one(s) and why?]</span
 Your answer: <span class="fill-in">[Fill in]</span>
 Verified: <span class="fill-in">[Fill in after understanding replication]</span>
 
-
-</div>
-
----
-
-## Before/After: Why Database Scaling Matters
-
-**Your task:** Compare unscaled vs scaled approaches to understand the impact.
-
-### Example: E-Commerce User Lookup
-
-**Problem:** Product catalog with 10M items, receiving 10,000 read requests/sec and 100 write requests/sec.
-
-#### Approach 1: Single Database (No Scaling)
-
-```
-Architecture:
-┌─────────────┐
-│   Clients   │ ─────> 10,000 reads/sec + 100 writes/sec
-└─────────────┘
-       │
-       ▼
-┌─────────────┐
-│  Single DB  │ ← All traffic hits one server
-└─────────────┘
-```
-
-**Analysis:**
-
-- All reads and writes hit one server
-- Database becomes CPU and I/O bottleneck
-- At ~1,000 req/sec: Response time = 50ms
-- At ~5,000 req/sec: Response time = 200ms (degraded)
-- At ~10,000 req/sec: Database crashes or times out
-- Maximum throughput: ~3,000-5,000 req/sec (hardware limit)
-
-**Breaking point:** 10,000 req/sec target vs 5,000 req/sec capacity = **2x overloaded**
-
-#### Approach 2: Master-Slave Replication (Read Scaling)
-
-```
-Architecture:
-┌─────────────┐
-│   Clients   │
-└─────────────┘
-       │
-       ├─────> 100 writes/sec ────> ┌──────────┐
-       │                             │  Master  │
-       │                             └──────────┘
-       │                                   │
-       │                             (replicates to)
-       │                                   │
-       │                        ┌──────────┴──────────┐
-       └─> 10,000 reads/sec ──> │                     │
-                                 ▼                     ▼
-                           ┌──────────┐         ┌──────────┐
-                           │ Slave 1  │         │ Slave 2  │
-                           └──────────┘         └──────────┘
-                           5,000 reads/sec      5,000 reads/sec
-```
-
-**Analysis:**
-
-- Writes: 100 writes/sec to master (well under capacity)
-- Reads: 10,000 reads/sec distributed across 2 slaves = 5,000 each
-- Master handles: 100 writes + replication = ~200 ops/sec
-- Each slave handles: 5,000 reads/sec (within capacity)
-- Read capacity: 2x-3x improvement per replica added
-- Write capacity: No improvement (still single master)
-
-**Result:** Can now handle 10,000 reads/sec + 100 writes/sec comfortably
-
-#### Approach 3: Sharding (Write + Data Scaling)
-
-```
-Architecture:
-┌─────────────┐
-│   Clients   │
-└─────────────┘
-       │
-(Shard by user_id % 4)
-       │
-   ┌───┴───┬───────┬───────┐
-   ▼       ▼       ▼       ▼
-┌──────┐┌──────┐┌──────┐┌──────┐
-│Shard0││Shard1││Shard2││Shard3│
-│ 2.5M ││ 2.5M ││ 2.5M ││ 2.5M │ items each
-│items ││items ││items ││items │
-└──────┘└──────┘└──────┘└──────┘
-2,500    2,500    2,500    2,500  reads/sec each
-25       25       25       25     writes/sec each
-```
-
-**Analysis:**
-
-- Data per shard: 10M items / 4 = 2.5M items each
-- Reads per shard: 10,000 / 4 = 2,500 reads/sec (well under capacity)
-- Writes per shard: 100 / 4 = 25 writes/sec (well under capacity)
-- Each shard operates at ~25% capacity (lots of headroom)
-- Can scale writes (unlike replication)
-- Can add more shards as data grows
-
-**Trade-off:** Cross-shard queries become complex (e.g., "find all items > $100")
-
-#### Performance Comparison
-
-| Metric                 | Single DB     | Replication (2 slaves) | Sharding (4 shards)    |
-|------------------------|---------------|------------------------|------------------------|
-| **Read Capacity**      | 5,000 req/sec | 15,000 req/sec         | 20,000 req/sec         |
-| **Write Capacity**     | 500 req/sec   | 500 req/sec            | 2,000 req/sec          |
-| **Data Capacity**      | 1TB max       | 1TB max                | 4TB+ (linear)          |
-| **Latency (reads)**    | 50ms @ load   | 50ms @ load            | 50ms @ load            |
-| **Latency (writes)**   | 50ms          | 50ms + replication     | 50ms                   |
-| **Single-key lookup**  | 1 query       | 1 query                | 1 query (1 shard)      |
-| **Cross-entity query** | 1 query       | 1 query                | 4 queries (all shards) |
-| **Cost**               | 1x            | 3x (1M + 2S)           | 4x (4 shards)          |
-| **Complexity**         | Low           | Medium                 | High                   |
-
-**Your calculation:** For 50,000 read req/sec, you'd need _____ read replicas OR _____ shards.
-
-#### Real-World Impact Example
-
-**Instagram's scaling journey (simplified):**
-
-```
-2010: Single PostgreSQL database
-
-- 10K users
-- Single server
-- Cost: $500/month
-
-2011: Master-slave replication
-
-- 1M users
-- 1 master + 3 read replicas
-- Can't scale writes fast enough
-- Cost: $5K/month
-
-2012: Sharded by user_id
-
-- 10M users
-- 100+ shards
-- Custom sharding logic
-- Cost: $50K/month
-
-2015: Cassandra (distributed database)
-
-- 500M users
-- Automatic sharding + replication
-- No single point of failure
-- Cost: $500K/month
-```
-
-#### Why Does Replication Help Reads?
-
-**Key insight to understand:**
-
-```
-Single Database (1000 reads/sec capacity):
-Request 1 ──┐
-Request 2 ──┤
-Request 3 ──┤──> ┌────────┐
-...         │    │   DB   │ ← Bottleneck
-Request 999 ──┤  └────────┘
-Request 1000──┘
-Request 1001 ✗ (rejected/timeout)
-```
-
-```
-Replication with 3 slaves (3000 reads/sec total):
-Request 1-333   ──> ┌────────┐
-                    │ Slave 1│
-                    └────────┘
-
-Request 334-666 ──> ┌────────┐
-                    │ Slave 2│
-                    └────────┘
-
-Request 667-1000──> ┌────────┐
-                    │ Slave 3│
-                    └────────┘
-
-All 1000 requests handled, with 2000 req/sec headroom
-```
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why does replication not help writes? <span class="fill-in">[Your answer]</span>
-- Why does sharding help both reads and writes? <span class="fill-in">[Your answer]</span>
-- When would you combine replication + sharding? <span class="fill-in">[Your answer]</span>
 
 </div>
 
@@ -493,6 +317,47 @@ public class HashBasedSharding {
 }
 ```
 
+!!! warning "Debugging Challenge — Key-Length Hotspot in Hash Sharding"
+
+    The sharding implementation below distributes data unevenly in practice, causing one shard to receive nearly all traffic. Find and fix the bug.
+
+    ```java
+    public class BrokenHashSharding {
+        private final List<DatabaseShard> shards;
+
+        public DatabaseShard getShard(String key) {
+            int hash = key.length() % shards.size();
+            return shards.get(hash);
+        }
+    }
+    ```
+
+    Trace: keys `"user1"`, `"user2"`, `"user99"`, `"user100"`. With 3 shards, which shard does each key map to?
+
+    ??? success "Answer"
+
+        **Bug:** `key.length()` is used as the hash, not `key.hashCode()`. Every key with the same number of characters maps to the same shard.
+
+        With 3 shards and keys `"user1"` (len 5), `"user2"` (len 5), `"user99"` (len 6), `"user100"` (len 7):
+        - `"user1"` → shard `5 % 3 = 2`
+        - `"user2"` → shard `5 % 3 = 2`
+        - `"user99"` → shard `6 % 3 = 0`
+        - `"user100"` → shard `7 % 3 = 1`
+
+        Any real dataset where keys have similar lengths (like `"user1"` through `"user9999"`) piles them all on the same shard.
+
+        **Fix:**
+        ```java
+        public DatabaseShard getShard(String key) {
+            int hash = Math.abs(key.hashCode()) % shards.size();
+            return shards.get(hash);
+        }
+        ```
+
+        `hashCode()` produces different values for different string contents, even when lengths are equal. `Math.abs()` is needed because `hashCode()` can return negative values.
+
+---
+
 ### Part 2: Range-Based Sharding
 
 **Your task:** Implement range-based sharding for ordered data.
@@ -604,6 +469,9 @@ public class RangeBasedSharding {
 ### Part 3: Master-Slave Replication
 
 **Your task:** Implement master-slave replication for read scaling.
+
+!!! note "Read-after-write consistency"
+    After writing to the master, a client that immediately reads from a slave may see stale data because replication is asynchronous. The classic fix is *sticky reads*: for a short window after a write, route that client's reads to the master. This adds master load but prevents the "I just updated my profile and it shows the old name" experience.
 
 ```java
 /**
@@ -1157,6 +1025,203 @@ public class DatabaseScalingClient {
 
 ---
 
+!!! info "Loop back"
+    Return to the Quick Quiz now and fill in your verified answers.
+
+---
+
+## Before/After: Why Database Scaling Matters
+
+**Your task:** Compare unscaled vs scaled approaches to understand the impact.
+
+### Example: E-Commerce User Lookup
+
+**Problem:** Product catalog with 10M items, receiving 10,000 read requests/sec and 100 write requests/sec.
+
+#### Approach 1: Single Database (No Scaling)
+
+```
+Architecture:
+┌─────────────┐
+│   Clients   │ ─────> 10,000 reads/sec + 100 writes/sec
+└─────────────┘
+       │
+       ▼
+┌─────────────┐
+│  Single DB  │ ← All traffic hits one server
+└─────────────┘
+```
+
+**Analysis:**
+
+- All reads and writes hit one server
+- Database becomes CPU and I/O bottleneck
+- At ~1,000 req/sec: Response time = 50ms
+- At ~5,000 req/sec: Response time = 200ms (degraded)
+- At ~10,000 req/sec: Database crashes or times out
+- Maximum throughput: ~3,000-5,000 req/sec (hardware limit)
+
+**Breaking point:** 10,000 req/sec target vs 5,000 req/sec capacity = **2x overloaded**
+
+#### Approach 2: Master-Slave Replication (Read Scaling)
+
+```
+Architecture:
+┌─────────────┐
+│   Clients   │
+└─────────────┘
+       │
+       ├─────> 100 writes/sec ────> ┌──────────┐
+       │                             │  Master  │
+       │                             └──────────┘
+       │                                   │
+       │                             (replicates to)
+       │                                   │
+       │                        ┌──────────┴──────────┐
+       └─> 10,000 reads/sec ──> │                     │
+                                 ▼                     ▼
+                           ┌──────────┐         ┌──────────┐
+                           │ Slave 1  │         │ Slave 2  │
+                           └──────────┘         └──────────┘
+                           5,000 reads/sec      5,000 reads/sec
+```
+
+**Analysis:**
+
+- Writes: 100 writes/sec to master (well under capacity)
+- Reads: 10,000 reads/sec distributed across 2 slaves = 5,000 each
+- Master handles: 100 writes + replication = ~200 ops/sec
+- Each slave handles: 5,000 reads/sec (within capacity)
+- Read capacity: 2x-3x improvement per replica added
+- Write capacity: No improvement (still single master)
+
+**Result:** Can now handle 10,000 reads/sec + 100 writes/sec comfortably
+
+#### Approach 3: Sharding (Write + Data Scaling)
+
+```
+Architecture:
+┌─────────────┐
+│   Clients   │
+└─────────────┘
+       │
+(Shard by user_id % 4)
+       │
+   ┌───┴───┬───────┬───────┐
+   ▼       ▼       ▼       ▼
+┌──────┐┌──────┐┌──────┐┌──────┐
+│Shard0││Shard1││Shard2││Shard3│
+│ 2.5M ││ 2.5M ││ 2.5M ││ 2.5M │ items each
+│items ││items ││items ││items │
+└──────┘└──────┘└──────┘└──────┘
+2,500    2,500    2,500    2,500  reads/sec each
+25       25       25       25     writes/sec each
+```
+
+**Analysis:**
+
+- Data per shard: 10M items / 4 = 2.5M items each
+- Reads per shard: 10,000 / 4 = 2,500 reads/sec (well under capacity)
+- Writes per shard: 100 / 4 = 25 writes/sec (well under capacity)
+- Each shard operates at ~25% capacity (lots of headroom)
+- Can scale writes (unlike replication)
+- Can add more shards as data grows
+
+**Trade-off:** Cross-shard queries become complex (e.g., "find all items > $100")
+
+#### Performance Comparison
+
+| Metric                 | Single DB     | Replication (2 slaves) | Sharding (4 shards)    |
+|------------------------|---------------|------------------------|------------------------|
+| **Read Capacity**      | 5,000 req/sec | 15,000 req/sec         | 20,000 req/sec         |
+| **Write Capacity**     | 500 req/sec   | 500 req/sec            | 2,000 req/sec          |
+| **Data Capacity**      | 1TB max       | 1TB max                | 4TB+ (linear)          |
+| **Latency (reads)**    | 50ms @ load   | 50ms @ load            | 50ms @ load            |
+| **Latency (writes)**   | 50ms          | 50ms + replication     | 50ms                   |
+| **Single-key lookup**  | 1 query       | 1 query                | 1 query (1 shard)      |
+| **Cross-entity query** | 1 query       | 1 query                | 4 queries (all shards) |
+| **Cost**               | 1x            | 3x (1M + 2S)           | 4x (4 shards)          |
+| **Complexity**         | Low           | Medium                 | High                   |
+
+**Your calculation:** For 50,000 read req/sec, you'd need _____ read replicas OR _____ shards.
+
+#### Real-World Impact Example
+
+**Instagram's scaling journey (simplified):**
+
+```
+2010: Single PostgreSQL database
+
+- 10K users
+- Single server
+- Cost: $500/month
+
+2011: Master-slave replication
+
+- 1M users
+- 1 master + 3 read replicas
+- Can't scale writes fast enough
+- Cost: $5K/month
+
+2012: Sharded by user_id
+
+- 10M users
+- 100+ shards
+- Custom sharding logic
+- Cost: $50K/month
+
+2015: Cassandra (distributed database)
+
+- 500M users
+- Automatic sharding + replication
+- No single point of failure
+- Cost: $500K/month
+```
+
+#### Why Does Replication Help Reads?
+
+**Key insight to understand:**
+
+```
+Single Database (1000 reads/sec capacity):
+Request 1 ──┐
+Request 2 ──┤
+Request 3 ──┤──> ┌────────┐
+...         │    │   DB   │ ← Bottleneck
+Request 999 ──┤  └────────┘
+Request 1000──┘
+Request 1001 ✗ (rejected/timeout)
+```
+
+```
+Replication with 3 slaves (3000 reads/sec total):
+Request 1-333   ──> ┌────────┐
+                    │ Slave 1│
+                    └────────┘
+
+Request 334-666 ──> ┌────────┐
+                    │ Slave 2│
+                    └────────┘
+
+Request 667-1000──> ┌────────┐
+                    │ Slave 3│
+                    └────────┘
+
+All 1000 requests handled, with 2000 req/sec headroom
+```
+
+**After implementing, explain in your own words:**
+
+<div class="learner-section" markdown>
+
+- Why does replication not help writes? <span class="fill-in">[Your answer]</span>
+- Why does sharding help both reads and writes? <span class="fill-in">[Your answer]</span>
+- When would you combine replication + sharding? <span class="fill-in">[Your answer]</span>
+
+</div>
+
+---
+
 ## Debugging Challenges
 
 **Your task:** Find and fix bugs in broken database scaling implementations. This tests your understanding of scaling
@@ -1196,24 +1261,22 @@ public class BrokenHashSharding {
 - With 3 shards, where do they go? <span class="fill-in">[All to shard ___]</span>
 - Expected: <span class="fill-in">[Should be distributed across all shards]</span>
 
-<details markdown>
-<summary>Click to verify your answer</summary>
+??? success "Answer"
 
-**Bug:** Using `key.length()` as hash creates terrible distribution. All keys with same length go to same shard.
+    **Bug:** Using `key.length()` as hash creates terrible distribution. All keys with same length go to same shard.
 
-**Fix:**
+    **Fix:**
 
-```java
-public DatabaseShard getShard(String key) {
-    // Use proper hash function
-    int hash = Math.abs(key.hashCode()) % shards.size();
-    return shards.get(hash);
-}
-```
+    ```java
+    public DatabaseShard getShard(String key) {
+        // Use proper hash function
+        int hash = Math.abs(key.hashCode()) % shards.size();
+        return shards.get(hash);
+    }
+    ```
 
-**Why:** `hashCode()` produces different values for different strings, even with same length. The `Math.abs()` handles
-negative hash codes.
-</details>
+    **Why:** `hashCode()` produces different values for different strings, even with same length. The `Math.abs()` handles
+    negative hash codes.
 
 ---
 
@@ -1259,48 +1322,46 @@ public class BrokenReplication {
 - **Fix option 1:** <span class="fill-in">[How to guarantee read-after-write consistency?]</span>
 - **Fix option 2:** <span class="fill-in">[Alternative approach?]</span>
 
-<details markdown>
-<summary>Click to verify your answers</summary>
+??? success "Answer"
 
-**Bug:** Reading from slaves immediately after writing to master causes stale reads due to replication lag.
+    **Bug:** Reading from slaves immediately after writing to master causes stale reads due to replication lag.
 
-**Fix Option 1 - Read-Your-Writes (sticky sessions):**
+    **Fix Option 1 - Read-Your-Writes (sticky sessions):**
 
-```java
-public void updateProfile(String userId, String newName) {
-    master.write(userId, newName);
-    // Mark this session to read from master for next N seconds
-    markSessionForMasterReads(userId, Duration.ofSeconds(5));
-}
-
-public String getProfile(String userId) {
-    // Check if user recently wrote
-    if (shouldReadFromMaster(userId)) {
-        return master.read(userId);  // Read from master
+    ```java
+    public void updateProfile(String userId, String newName) {
+        master.write(userId, newName);
+        // Mark this session to read from master for next N seconds
+        markSessionForMasterReads(userId, Duration.ofSeconds(5));
     }
-    // Otherwise read from slave
-    Database slave = slaves.get(readIndex);
-    readIndex = (readIndex + 1) % slaves.size();
-    return slave.read(userId);
-}
-```
 
-**Fix Option 2 - Always read from master after writes:**
-
-```java
-public String getProfile(String userId, boolean afterWrite) {
-    if (afterWrite) {
-        return master.read(userId);  // Guarantee consistency
+    public String getProfile(String userId) {
+        // Check if user recently wrote
+        if (shouldReadFromMaster(userId)) {
+            return master.read(userId);  // Read from master
+        }
+        // Otherwise read from slave
+        Database slave = slaves.get(readIndex);
+        readIndex = (readIndex + 1) % slaves.size();
+        return slave.read(userId);
     }
-    // Normal read from slave
-    Database slave = slaves.get(readIndex);
-    readIndex = (readIndex + 1) % slaves.size();
-    return slave.read(userId);
-}
-```
+    ```
 
-**Trade-off:** Both fixes reduce read scalability by routing some reads to master.
-</details>
+    **Fix Option 2 - Always read from master after writes:**
+
+    ```java
+    public String getProfile(String userId, boolean afterWrite) {
+        if (afterWrite) {
+            return master.read(userId);  // Guarantee consistency
+        }
+        // Normal read from slave
+        Database slave = slaves.get(readIndex);
+        readIndex = (readIndex + 1) % slaves.size();
+        return slave.read(userId);
+    }
+    ```
+
+    **Trade-off:** Both fixes reduce read scalability by routing some reads to master.
 
 ---
 
@@ -1345,56 +1406,54 @@ public class BrokenCrossShardQuery {
 - **Bug 3 (Reliability):** <span class="fill-in">[What if one shard hangs?]</span>
 - **Bug 3 fix:** <span class="fill-in">[How to add timeout?]</span>
 
-<details markdown>
-<summary>Click to verify your answers</summary>
+??? success "Answer"
 
-**Fixed version with all bugs addressed:**
+    **Fixed version with all bugs addressed:**
 
-```java
-public List<User> findAllUsersOver21(int limit, int offset) {
-    List<CompletableFuture<List<User>>> futures = new ArrayList<>();
+    ```java
+    public List<User> findAllUsersOver21(int limit, int offset) {
+        List<CompletableFuture<List<User>>> futures = new ArrayList<>();
 
-    // FIX 1: Parallel queries across shards
-    for (DatabaseShard shard : shards) {
-        CompletableFuture<List<User>> future = CompletableFuture.supplyAsync(() -> {
-            // FIX 2: Per-shard pagination
-            return shard.query("age > 21", limit / shards.size(), offset / shards.size());
-        });
+        // FIX 1: Parallel queries across shards
+        for (DatabaseShard shard : shards) {
+            CompletableFuture<List<User>> future = CompletableFuture.supplyAsync(() -> {
+                // FIX 2: Per-shard pagination
+                return shard.query("age > 21", limit / shards.size(), offset / shards.size());
+            });
 
-        // FIX 3: Add timeout per shard
-        future = future.orTimeout(5, TimeUnit.SECONDS)
-                      .exceptionally(ex -> {
-                          // Log error, return empty for failed shard
-                          System.err.println("Shard query failed: " + ex);
-                          return Collections.emptyList();
-                      });
+            // FIX 3: Add timeout per shard
+            future = future.orTimeout(5, TimeUnit.SECONDS)
+                          .exceptionally(ex -> {
+                              // Log error, return empty for failed shard
+                              System.err.println("Shard query failed: " + ex);
+                              return Collections.emptyList();
+                          });
 
-        futures.add(future);
-    }
-
-    // Wait for all shards (with timeout)
-    List<User> results = new ArrayList<>();
-    for (CompletableFuture<List<User>> future : futures) {
-        try {
-            results.addAll(future.get(10, TimeUnit.SECONDS));
-        } catch (Exception e) {
-            // Handle timeout or failure
-            System.err.println("Shard timeout: " + e);
+            futures.add(future);
         }
+
+        // Wait for all shards (with timeout)
+        List<User> results = new ArrayList<>();
+        for (CompletableFuture<List<User>> future : futures) {
+            try {
+                results.addAll(future.get(10, TimeUnit.SECONDS));
+            } catch (Exception e) {
+                // Handle timeout or failure
+                System.err.println("Shard timeout: " + e);
+            }
+        }
+
+        // FIX 2 continued: Apply global limit
+        return results.stream().limit(limit).collect(Collectors.toList());
     }
+    ```
 
-    // FIX 2 continued: Apply global limit
-    return results.stream().limit(limit).collect(Collectors.toList());
-}
-```
+    **Performance improvement:**
 
-**Performance improvement:**
+    - Before: 10 shards × 2 seconds = 20 seconds
+    - After: max(2 seconds) = 2 seconds (parallel)
+    - **10x faster!**
 
-- Before: 10 shards × 2 seconds = 20 seconds
-- After: max(2 seconds) = 2 seconds (parallel)
-- **10x faster!**
-
-</details>
 
 ---
 
@@ -1440,54 +1499,52 @@ public class BrokenSharding {
 - **Fix option 2:** <span class="fill-in">[How to cache celebrity data?]</span>
 - **Fix option 3:** <span class="fill-in">[Different sharding strategy?]</span>
 
-<details markdown>
-<summary>Click to verify your answers</summary>
+??? success "Answer"
 
-**Design bug:** Sharding by user_id groups all of a user's data on one shard. For celebrities with massive data/traffic,
-that shard becomes a hotspot.
+    **Design bug:** Sharding by user_id groups all of a user's data on one shard. For celebrities with massive data/traffic,
+    that shard becomes a hotspot.
 
-**Fix Option 1 - Split entity sharding:**
+    **Fix Option 1 - Split entity sharding:**
 
-```java
-// Shard users and their posts by user_id (small data)
-public DatabaseShard getUserShard(String userId) {
-    return shards.get(hash(userId) % shards.size());
-}
-
-// Shard followers by follower_id, not celebrity_id (distributes load)
-public DatabaseShard getFollowerShard(String followerId) {
-    return followerShards.get(hash(followerId) % followerShards.size());
-}
-
-// Now celebrity's 100M followers distributed across ALL shards
-```
-
-**Fix Option 2 - Caching layer:**
-
-```java
-// Cache celebrity data in Redis/Memcached
-public List<Post> getUserPosts(String userId) {
-    // Check if celebrity (cached list)
-    if (isCelebrity(userId)) {
-        return cache.get("posts:" + userId);
+    ```java
+    // Shard users and their posts by user_id (small data)
+    public DatabaseShard getUserShard(String userId) {
+        return shards.get(hash(userId) % shards.size());
     }
-    // Normal user -> query shard
-    return getShard(userId).queryPosts(userId);
-}
-```
 
-**Fix Option 3 - Consistent hashing with detection:**
+    // Shard followers by follower_id, not celebrity_id (distributes load)
+    public DatabaseShard getFollowerShard(String followerId) {
+        return followerShards.get(hash(followerId) % followerShards.size());
+    }
 
-```java
-// Detect hot shards and split them
-if (shard.requestRate() > threshold) {
-    splitShard(shard);  // Create two shards from one
-    rehashKeys(shard);  // Redistribute keys
-}
-```
+    // Now celebrity's 100M followers distributed across ALL shards
+    ```
 
-**Prevention:** Monitor shard metrics (CPU, request rate, data size) and set alerts for imbalance.
-</details>
+    **Fix Option 2 - Caching layer:**
+
+    ```java
+    // Cache celebrity data in Redis/Memcached
+    public List<Post> getUserPosts(String userId) {
+        // Check if celebrity (cached list)
+        if (isCelebrity(userId)) {
+            return cache.get("posts:" + userId);
+        }
+        // Normal user -> query shard
+        return getShard(userId).queryPosts(userId);
+    }
+    ```
+
+    **Fix Option 3 - Consistent hashing with detection:**
+
+    ```java
+    // Detect hot shards and split them
+    if (shard.requestRate() > threshold) {
+        splitShard(shard);  // Create two shards from one
+        rehashKeys(shard);  // Redistribute keys
+    }
+    ```
+
+    **Prevention:** Monitor shard metrics (CPU, request rate, data size) and set alerts for imbalance.
 
 ---
 
@@ -1539,79 +1596,77 @@ public class BrokenMasterFailover {
 - **Fix option 2:** <span class="fill-in">[How to detect split brain?]</span>
 - **Real-world solution:** <span class="fill-in">[What do production systems do?]</span>
 
-<details markdown>
-<summary>Click to verify your answers</summary>
+??? success "Answer"
 
-**Bug:** Split-brain occurs when two nodes both think they're master, accepting conflicting writes. This causes data
-divergence and conflicts.
+    **Bug:** Split-brain occurs when two nodes both think they're master, accepting conflicting writes. This causes data
+    divergence and conflicts.
 
-**Fix Option 1 - Fencing (prevent old master from accepting writes):**
+    **Fix Option 1 - Fencing (prevent old master from accepting writes):**
 
-```java
-public void handleMasterFailure() {
-    // Step 1: FENCE old master (disable it)
-    oldMaster.fence();  // Prevent further writes
+    ```java
+    public void handleMasterFailure() {
+        // Step 1: FENCE old master (disable it)
+        oldMaster.fence();  // Prevent further writes
 
-    // Step 2: Wait for in-flight writes to complete
-    Thread.sleep(5000);
+        // Step 2: Wait for in-flight writes to complete
+        Thread.sleep(5000);
 
-    // Step 3: Promote slave
-    master = slaves.get(0);
-    slaves.remove(0);
+        // Step 3: Promote slave
+        master = slaves.get(0);
+        slaves.remove(0);
 
-    // Step 4: Configure slaves to replicate from new master
-    for (Database slave : slaves) {
-        slave.replicateFrom(master);
-    }
-}
-```
-
-**Fix Option 2 - Consensus protocol (Raft/Paxos):**
-
-```java
-// Use leader election with quorum
-// - Only ONE master elected at a time
-// - Master must have quorum (majority votes)
-// - Old master can't get quorum if network partitioned
-public void electMaster() {
-    int votes = 0;
-    int requiredVotes = (nodes.size() / 2) + 1;  // Majority
-
-    for (Node node : nodes) {
-        if (node.voteFor(thisNode)) {
-            votes++;
+        // Step 4: Configure slaves to replicate from new master
+        for (Database slave : slaves) {
+            slave.replicateFrom(master);
         }
     }
+    ```
 
-    if (votes >= requiredVotes) {
-        thisNode.becomeMaster();  // Safe - have quorum
-    }
-}
-```
+    **Fix Option 2 - Consensus protocol (Raft/Paxos):**
 
-**Fix Option 3 - Epoch/term numbers:**
+    ```java
+    // Use leader election with quorum
+    // - Only ONE master elected at a time
+    // - Master must have quorum (majority votes)
+    // - Old master can't get quorum if network partitioned
+    public void electMaster() {
+        int votes = 0;
+        int requiredVotes = (nodes.size() / 2) + 1;  // Majority
 
-```java
-class Database {
-    int epoch = 0;  // Incremented on each master change
-
-    public void write(String key, String value, int writeEpoch) {
-        if (writeEpoch < this.epoch) {
-            throw new StaleEpochException("Old master, reject write");
+        for (Node node : nodes) {
+            if (node.voteFor(thisNode)) {
+                votes++;
+            }
         }
-        // Accept write
+
+        if (votes >= requiredVotes) {
+            thisNode.becomeMaster();  // Safe - have quorum
+        }
     }
-}
-```
+    ```
 
-**Real-world solutions:**
+    **Fix Option 3 - Epoch/term numbers:**
 
-- **PostgreSQL:** Uses fencing + watchdog
-- **MySQL:** Group Replication with consensus
-- **MongoDB:** Replica sets with election
-- **Distributed databases:** Raft/Paxos consensus algorithms
+    ```java
+    class Database {
+        int epoch = 0;  // Incremented on each master change
 
-</details>
+        public void write(String key, String value, int writeEpoch) {
+            if (writeEpoch < this.epoch) {
+                throw new StaleEpochException("Old master, reject write");
+            }
+            // Accept write
+        }
+    }
+    ```
+
+    **Real-world solutions:**
+
+    - **PostgreSQL:** Uses fencing + watchdog
+    - **MySQL:** Group Replication with consensus
+    - **MongoDB:** Replica sets with election
+    - **Distributed databases:** Raft/Paxos consensus algorithms
+
 
 ---
 
@@ -1639,6 +1694,19 @@ After finding and fixing all bugs:
 - Which bug surprised you most? <span class="fill-in">[Fill in]</span>
 - Which bug is hardest to detect in production? <span class="fill-in">[Fill in]</span>
 - Which bug has the worst consequences? <span class="fill-in">[Fill in]</span>
+
+---
+
+## Common Misconceptions
+
+!!! warning "Sharding solves all scalability problems"
+    Sharding increases write and read throughput by distributing data, but it makes cross-shard queries — joins, aggregations, sorted scans across all users — significantly more expensive. Applications that frequently need to query across shard boundaries often perform worse after sharding than before. Always verify your most important query patterns against the shard key before committing.
+
+!!! warning "Replication doubles your write capacity"
+    Replication improves read capacity by distributing reads across replicas, but all writes still go to a single master. If writes are the bottleneck, adding read replicas does nothing to help. Replication is the right tool when reads dominate (typical for read-heavy workloads at 80:20 or higher); horizontal sharding is needed when writes are the constraint.
+
+!!! warning "Choosing a shard key is easy to change later"
+    Resharding — migrating an existing dataset to a new shard key — is one of the most disruptive database operations in production. It typically requires a dual-write migration period, careful coordination to avoid data loss, and significant downtime risk. Choose the shard key thoughtfully upfront, considering both current access patterns and likely future growth.
 
 ---
 
@@ -1768,31 +1836,12 @@ flowchart LR
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-- [ ] Hash-based sharding implemented
-- [ ] Range-based sharding implemented
-- [ ] Master-slave replication implemented
-- [ ] Vertical partitioning implemented
-- [ ] Consistent hash sharding implemented
-- [ ] Understand when to use each strategy
-- [ ] Can explain trade-offs between strategies
-- [ ] Built decision tree for strategy selection
-- [ ] Completed practice scenarios
+Answer these without referring to your notes or implementation.
 
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
-- [ ] Explain all scaling strategies to non-technical stakeholders
-- [ ] Draw architecture diagrams for each strategy from memory
-- [ ] Choose the correct strategy for different scenarios
-- [ ] Calculate capacity requirements and costs
-- [ ] Debug common scaling issues (lag, hotspots, split-brain)
-- [ ] Analyze trade-offs between different approaches
-- [ ] Handle production incidents involving sharding/replication
-- [ ] Design database layer for large-scale systems
-- [ ] Teach these concepts to others
-
+1. Your e-commerce platform shards users by `user_id`. The marketing team wants to run a query: "find all users who made a purchase in the last 7 days." Why is this expensive in a sharded setup, and what would you change in the architecture to make it cheaper?
+2. You implement master-slave replication with 4 read replicas. A user updates their profile picture and immediately refreshes the page — they see the old picture. Explain exactly why this happens and describe two ways to fix it without removing replicas.
+3. A social media app shards by `user_id`. A celebrity account with 50 million followers causes one shard to receive 95% of all queries. What is the name of this problem, and give two structural approaches to fix it?
+4. You are choosing between hash-based sharding and range-based sharding for a time-series sensor dataset where the most common query is "all readings from device X between 2:00 PM and 3:00 PM." Which would you choose and why? What hot-spot risk do you need to address with your choice?
+5. A colleague proposes solving all database scaling problems by "just adding more RAM to the primary database server." In what scenario is this the right answer? In what scenario does it completely fail to help, and what should be done instead?

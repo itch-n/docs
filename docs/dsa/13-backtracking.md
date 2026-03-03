@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this topic you will be able to:
+
+- Implement the three-step backtracking template (choose, explore, unchoose) for any problem
+- Distinguish backtracking from brute force and explain when pruning provides a real speedup
+- Generate permutations, combinations, and subsets using the correct variant of the template
+- Solve constraint satisfaction problems (N-Queens, Sudoku) by tracking attacked positions
+- Identify the duplicate-skipping condition needed when the input contains repeated elements
+- Recognize when a problem is NOT improved by backtracking and a simpler DP or greedy solution exists
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,9 +26,13 @@
 **Prompts to guide you:**
 
 1. **What is backtracking in one sentence?**
+    - Backtracking is a technique that ___ all candidates by ___ choices one at a time, and ___ the last choice
+      when it leads to a dead end.
     - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **How is backtracking different from brute force?**
+    - Brute force generates ___ then checks validity, while backtracking checks ___ during generation, allowing it
+      to ___ entire branches.
     - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy:**
@@ -23,9 +40,13 @@
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **When does this pattern work?**
+    - Backtracking works when you must ___ and the solution space has ___ structure that allows ___ invalid paths
+      early.
     - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
 
 5. **What makes a problem suitable for backtracking?**
+    - A problem is suitable when you can ___ partial solutions incrementally, and when an ___ partial solution can
+      never lead to a valid complete solution.
     - Your answer: <span class="fill-in">[Fill in after learning the pattern]</span>
 
 </div>
@@ -33,6 +54,10 @@
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+!!! tip "How to use this section"
+    Complete your predictions now, before reading further. You will revisit and verify each answer after running the
+    benchmark (or completing the implementation).
 
 <div class="learner-section" markdown>
 
@@ -58,14 +83,14 @@
 
 **Scenario 1:** Generate all permutations of `[1, 2, 3]`
 
-- **How many permutations exist?** <span class="fill-in">[Your guess: <span class="fill-in">___</span>]</span>
+- **How many permutations exist?** <span class="fill-in">[Your guess: ___]</span>
 - **First permutation:** <span class="fill-in">[Fill in]</span>
 - **When do you backtrack?** <span class="fill-in">[Fill in]</span>
 - **What state do you restore?** <span class="fill-in">[Fill in]</span>
 
 **Scenario 2:** Generate all subsets of `[1, 2, 3]`
 
-- **How many subsets exist?** <span class="fill-in">[Your guess: <span class="fill-in">___</span>]</span>
+- **How many subsets exist?** <span class="fill-in">[Your guess: ___]</span>
 - **Formula for n elements:** <span class="fill-in">[Fill in]</span>
 - **How is this different from permutations?** <span class="fill-in">[Fill in]</span>
 
@@ -90,126 +115,6 @@
 - [ ] Permutations allow duplicates, combinations don't
 
 Verify after implementation: <span class="fill-in">[Which one?]</span>
-
-
-</div>
-
----
-
-## Before/After: Why This Pattern Matters
-
-**Your task:** Compare naive vs optimized approaches to understand the impact.
-
-### Example: Find All Subsets
-
-**Problem:** Generate all subsets of an array `[1, 2, 3]`.
-
-#### Approach 1: Brute Force Enumeration
-
-```java
-// Naive approach - Generate all possible combinations with checking
-public static List<List<Integer>> subsets_BruteForce(int[] nums) {
-    List<List<Integer>> result = new ArrayList<>();
-    int n = nums.length;
-
-    // Generate all possible bit patterns (2^n combinations)
-    for (int mask = 0; mask < (1 << n); mask++) {
-        List<Integer> subset = new ArrayList<>();
-
-        // Check each bit to decide if element is included
-        for (int i = 0; i < n; i++) {
-            if ((mask & (1 << i)) != 0) {
-                subset.add(nums[i]);
-            }
-        }
-
-        result.add(subset);
-    }
-
-    return result;
-}
-```
-
-**Analysis:**
-
-- Time: O(2^n * n) - Generate 2^n combinations, each takes O(n) to build
-- Space: O(2^n * n) - Store all subsets
-- For n = 10: 1,024 subsets * 10 operations = ~10,240 operations
-- **Limitation:** Cannot easily add pruning or constraints
-
-#### Approach 2: Backtracking with Pruning
-
-```java
-// Optimized approach - Use backtracking to build subsets
-public static List<List<Integer>> subsets_Backtracking(int[] nums) {
-    List<List<Integer>> result = new ArrayList<>();
-    backtrack(nums, 0, new ArrayList<>(), result);
-    return result;
-}
-
-private static void backtrack(int[] nums, int start,
-                              List<Integer> current,
-                              List<List<Integer>> result) {
-    // Add current subset (valid at every step)
-    result.add(new ArrayList<>(current));
-
-    // Explore further choices
-    for (int i = start; i < nums.length; i++) {
-        current.add(nums[i]);              // Make choice
-        backtrack(nums, i + 1, current, result);  // Explore
-        current.remove(current.size() - 1); // Undo choice (backtrack)
-    }
-}
-```
-
-**Analysis:**
-
-- Time: O(2^n * n) - Same asymptotic complexity
-- Space: O(n) - Recursion depth (excluding output)
-- For n = 10: Similar operations BUT can easily add pruning
-- **Advantage:** Can prune branches early with constraints
-
-#### Performance Comparison
-
-| Problem Type         | Brute Force    | Backtracking | Advantage              |
-|----------------------|----------------|--------------|------------------------|
-| All subsets (n=10)   | 10,240 ops     | 10,240 ops   | Same without pruning   |
-| Subsets with sum ≤ K | 10,240 ops     | ~5,000 ops   | 2x faster with pruning |
-| N-Queens (n=8)       | 16,777,216 ops | ~2,000 ops   | 8,000x faster!         |
-
-**Your calculation:** For N-Queens with n=4, brute force tries _____ placements, backtracking tries approximately _____.
-
-#### Why Does Backtracking with Pruning Work?
-
-**Key insight to understand:**
-
-In N-Queens (4x4 board):
-
-```
-Brute Force: Try all 4^16 possible placements (>4 billion)
-Then check if valid
-
-Backtracking:
-Row 1: Try 4 positions
-  Row 2: Only try valid positions (maybe 2 safe)
-    Row 3: Only try valid positions (maybe 1 safe)
-      Row 4: Only try valid positions
-      ❌ Invalid? Backtrack immediately!
-```
-
-**Pruning eliminates entire branches:**
-
-- Brute force: Check constraints AFTER generating complete solution
-- Backtracking: Check constraints DURING generation
-- Each invalid partial solution eliminates millions of possibilities!
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why is backtracking better than brute force enumeration? <span class="fill-in">[Your answer]</span>
-- When does backtracking give the biggest advantage? <span class="fill-in">[Your answer]</span>
-- What problems are NOT improved by backtracking? <span class="fill-in">[Your answer]</span>
 
 </div>
 
@@ -318,6 +223,46 @@ public class PermutationsPatternClient {
     }
 }
 ```
+
+!!! warning "Debugging Challenge — Broken Permutations"
+    The following permutations implementation has two bugs:
+
+    ```java
+    private static void backtrack(int[] nums, List<Integer> current,
+                                  boolean[] used, List<List<Integer>> result) {
+        if (current.size() == nums.length) {
+            result.add(current);        // BUG 1
+            return;
+        }
+
+        for (int i = 0; i < nums.length; i++) {
+            if (used[i]) continue;
+
+            used[i] = true;
+            current.add(nums[i]);
+            backtrack(nums, current, used, result);
+            // BUG 2: missing lines here
+        }
+    }
+    ```
+
+    - Bug 1: What is wrong with `result.add(current)`?
+    - Bug 2: What two lines are missing after the recursive call?
+
+    ??? success "Answer"
+        **Bug 1:** Should be `result.add(new ArrayList<>(current))`. Without copying, all results reference the
+        same list object. As backtracking modifies `current`, every entry in `result` gets overwritten, producing
+        wrong output.
+
+        **Bug 2:** Missing the undo (backtrack) step. After the recursive call, add:
+
+        ```java
+        current.remove(current.size() - 1);  // Undo choice
+        used[i] = false;                      // Undo state
+        ```
+
+        Without these lines, the algorithm never properly undoes its choices. It can only explore one branch down the
+        leftmost path.
 
 ---
 
@@ -451,6 +396,50 @@ public class CombinationsPatternClient {
     }
 }
 ```
+
+!!! warning "Debugging Challenge — Subsets with Duplicates Missing Both Fixes"
+    The following code generates duplicate subsets for input `[1, 2, 2]`:
+
+    ```java
+    public static List<List<Integer>> subsetsWithDup_Buggy(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        backtrack(nums, 0, new ArrayList<>(), result);
+        return result;
+    }
+
+    private static void backtrack(int[] nums, int start,
+                                  List<Integer> current,
+                                  List<List<Integer>> result) {
+        result.add(new ArrayList<>(current));
+
+        for (int i = start; i < nums.length; i++) {
+            current.add(nums[i]);
+            backtrack(nums, i + 1, current, result);
+            current.remove(current.size() - 1);
+        }
+    }
+    ```
+
+    For input `[1, 2, 2]`, what is expected and what does the buggy code produce? Name both missing fixes.
+
+    ??? success "Answer"
+        **Expected:** `[[], [1], [1,2], [1,2,2], [2], [2,2]]` — 6 unique subsets
+
+        **Buggy output:** 8 subsets (includes `[2]` and `[1,2]` twice each)
+
+        **Fix 1:** Add `Arrays.sort(nums);` before calling backtrack. Sorting groups duplicates together so we can
+        detect them.
+
+        **Fix 2:** Add a duplicate-skip check at the start of the loop:
+
+        ```java
+        if (i > start && nums[i] == nums[i - 1]) {
+            continue;  // Skip duplicates at same recursion level
+        }
+        ```
+
+        This skips using `nums[i]` as the current element when it equals the previous element at the same level
+        (meaning we already explored that branch).
 
 ---
 
@@ -732,73 +721,52 @@ public class GridSearchClient {
 
 ---
 
-## Debugging Challenges
+## Before/After: Why This Pattern Matters
 
-**Your task:** Find and fix bugs in broken implementations. This tests your understanding of backtracking.
+**Your task:** Compare naive vs optimized approaches to understand the impact.
 
-### Challenge 1: Broken Permutations
+### Example: Find All Subsets
+
+**Problem:** Generate all subsets of an array `[1, 2, 3]`.
+
+#### Approach 1: Brute Force Enumeration
 
 ```java
-/**
- * This code is supposed to generate all permutations.
- * It has 2 BUGS. Find them!
- */
-public static List<List<Integer>> permute_Buggy(int[] nums) {
+// Naive approach - Generate all possible combinations with checking
+public static List<List<Integer>> subsets_BruteForce(int[] nums) {
     List<List<Integer>> result = new ArrayList<>();
-    boolean[] used = new boolean[nums.length];
-    backtrack(nums, new ArrayList<>(), used, result);
+    int n = nums.length;
+
+    // Generate all possible bit patterns (2^n combinations)
+    for (int mask = 0; mask < (1 << n); mask++) {
+        List<Integer> subset = new ArrayList<>();
+
+        // Check each bit to decide if element is included
+        for (int i = 0; i < n; i++) {
+            if ((mask & (1 << i)) != 0) {
+                subset.add(nums[i]);
+            }
+        }
+
+        result.add(subset);
+    }
+
     return result;
 }
-
-private static void backtrack(int[] nums, List<Integer> current,
-                              boolean[] used, List<List<Integer>> result) {
-    // Base case
-    if (current.size() == nums.length) {
-        result.add(current);        return;
-    }
-
-    for (int i = 0; i < nums.length; i++) {
-        if (used[i]) continue;
-
-        used[i] = true;
-        current.add(nums[i]);
-        backtrack(nums, current, used, result);
-    }
-}
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
+- Time: O(2^n * n) — Generate 2^n combinations, each takes O(n) to build
+- Space: O(2^n * n) — Store all subsets
+- For n = 10: 1,024 subsets * 10 operations = ~10,240 operations
+- **Limitation:** Cannot easily add pruning or constraints
 
-- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1 (Line 11):** Should be `result.add(new ArrayList<>(current))`, not `result.add(current)`. Without copying, all
-results will reference the same list object, which gets modified during backtracking!
-
-**Bug 2 (After line 20):** Missing the backtrack step! Should have:
+#### Approach 2: Backtracking with Pruning
 
 ```java
-current.remove(current.size() - 1);  // Undo choice
-used[i] = false;                      // Undo state
-```
-
-Without these lines, the algorithm never properly backtracks and explores other branches.
-</details>
-
----
-
-### Challenge 2: Broken Subsets with Duplicates
-
-```java
-/**
- * Generate subsets from array with duplicates [1, 2, 2]
- * This has 2 BUGS causing duplicate subsets in output.
- */
-public static List<List<Integer>> subsetsWithDup_Buggy(int[] nums) {
+// Optimized approach - Use backtracking to build subsets
+public static List<List<Integer>> subsets_Backtracking(int[] nums) {
     List<List<Integer>> result = new ArrayList<>();
     backtrack(nums, 0, new ArrayList<>(), result);
     return result;
@@ -807,280 +775,119 @@ public static List<List<Integer>> subsetsWithDup_Buggy(int[] nums) {
 private static void backtrack(int[] nums, int start,
                               List<Integer> current,
                               List<List<Integer>> result) {
+    // Add current subset (valid at every step)
     result.add(new ArrayList<>(current));
 
+    // Explore further choices
     for (int i = start; i < nums.length; i++) {
-        current.add(nums[i]);
-        backtrack(nums, i + 1, current, result);
-        current.remove(current.size() - 1);
+        current.add(nums[i]);              // Make choice
+        backtrack(nums, i + 1, current, result);  // Explore
+        current.remove(current.size() - 1); // Undo choice (backtrack)
     }
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- **Bug 1:** <span class="fill-in">[What must be done to the array first?]</span>
-- **Bug 1 fix:** <span class="fill-in">[Fill in]</span>
+- Time: O(2^n * n) — Same asymptotic complexity
+- Space: O(n) — Recursion depth (excluding output)
+- For n = 10: Similar operations BUT can easily add pruning
+- **Advantage:** Can prune branches early with constraints
 
-- **Bug 2:** <span class="fill-in">[What check is missing in the loop?]</span>
-- **Bug 2 fix:** <span class="fill-in">[Fill in the condition]</span>
+#### Performance Comparison
 
-**Test case to expose the bug:**
+| Problem Type           | Brute Force    | Backtracking   | Advantage              |
+|------------------------|----------------|----------------|------------------------|
+| All subsets (n=10)     | 10,240 ops     | 10,240 ops     | Same without pruning   |
+| Subsets with sum ≤ K   | 10,240 ops     | ~5,000 ops     | 2x faster with pruning |
+| N-Queens (n=8)         | 16,777,216 ops | ~2,000 ops     | 8,000x faster!         |
 
-- Input: `[1, 2, 2]`
-- Expected: `[[], [1], [1,2], [1,2,2], [2], [2,2]]` (6 unique subsets)
-- Actual with buggy code: <span class="fill-in">[How many duplicates?]</span>
+**Your calculation:** For N-Queens with n=4, brute force tries _____ placements, backtracking tries approximately _____.
 
-<details markdown>
-<summary>Click to verify your answers</summary>
+#### Why Does Backtracking with Pruning Work?
 
-**Bug 1:** Must sort the array first! Add `Arrays.sort(nums);` before calling backtrack. Sorting groups duplicates
-together so we can skip them.
+!!! note "Key insight"
+    The power of backtracking comes from **pruning entire subtrees**. When you detect that a partial candidate
+    cannot possibly lead to a valid solution, you abandon it immediately — eliminating potentially millions of
+    branches without ever exploring them. The earlier in the search tree you prune, the more work you save.
 
-**Bug 2:** Missing duplicate check. After line 15, add:
+In N-Queens (4x4 board):
 
-```java
-if (i > start && nums[i] == nums[i - 1]) {
-    continue;  // Skip duplicates at same level
-}
+```
+Brute Force: Try all 4^16 possible placements (>4 billion)
+Then check if valid
+
+Backtracking:
+Row 1: Try 4 positions
+  Row 2: Only try valid positions (maybe 2 safe)
+    Row 3: Only try valid positions (maybe 1 safe)
+      Row 4: Only try valid positions
+      ❌ Invalid? Backtrack immediately!
 ```
 
-This skips duplicate elements at the same recursion level, preventing duplicate subsets.
-</details>
+**Pruning eliminates entire branches:**
+
+- Brute force: Check constraints AFTER generating complete solution
+- Backtracking: Check constraints DURING generation
+- Each invalid partial solution eliminates millions of possibilities!
+
+**After implementing, explain in your own words:**
+
+<div class="learner-section" markdown>
+
+- Why is backtracking better than brute force enumeration? <span class="fill-in">[Your answer]</span>
+- When does backtracking give the biggest advantage? <span class="fill-in">[Your answer]</span>
+- What problems are NOT improved by backtracking? <span class="fill-in">[Your answer]</span>
+
+</div>
+
+!!! info "Loop back"
+    Return to the Quick Quiz now and fill in your verified answers.
 
 ---
 
-### Challenge 3: Broken N-Queens
+## Case Studies
 
-```java
-/**
- * N-Queens solver with bugs
- * This has 1 CRITICAL BUG in the diagonal checking logic.
- */
-public static List<List<String>> solveNQueens_Buggy(int n) {
-    List<List<String>> result = new ArrayList<>();
-    char[][] board = new char[n][n];
-    for (char[] row : board) Arrays.fill(row, '.');
+### Chess Engines: N-Queens as the Constraint Satisfaction Foundation
 
-    Set<Integer> cols = new HashSet<>();
-    Set<Integer> diag1 = new HashSet<>();
-    Set<Integer> diag2 = new HashSet<>();
+The N-Queens problem is the canonical introduction to constraint satisfaction, which underlies Sudoku solvers, timetable
+scheduling, and register allocation in compilers. The key insight — tracking attacked positions in sets of columns and
+diagonals (row-col, row+col) rather than scanning the board — applies directly to any problem where you must track
+which "slots" are occupied by previously placed elements.
 
-    backtrack(0, n, board, cols, diag1, diag2, result);
-    return result;
-}
+### Game Solvers: Sudoku and Crossword Puzzles
 
-private static void backtrack(int row, int n, char[][] board,
-                              Set<Integer> cols, Set<Integer> diag1,
-                              Set<Integer> diag2, List<List<String>> result) {
-    if (row == n) {
-        result.add(constructBoard(board));
-        return;
-    }
+Published Sudoku solvers (used by newspapers and puzzle apps) use backtracking with constraint propagation: at each
+empty cell, they first narrow the set of valid digits by checking rows, columns, and boxes (constraint propagation),
+then branch on the cell with fewest candidates. The `isValidSudoku` check is exactly this pattern — the combination of
+backtracking + early pruning makes 9×9 Sudoku tractable in milliseconds.
 
-    for (int col = 0; col < n; col++) {
-        int d1 = row - col;
-        int d2 = row + col;
-        if (cols.contains(col) || diag1.contains(d1) || diag2.contains(d2)) {
-            continue;
-        }
+### Spell Checking: Combination Sum as Autocorrect Core
 
-        // Place queen
-        board[row][col] = 'Q';
-        cols.add(col);
-        diag1.add(d1);
-        diag2.add(d2);
-
-        backtrack(row + 1, n, board, cols, diag1, diag2, result);
-
-    }
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What\'s the bug?]</span>
-
-**Hint:** What happens after the recursive call?
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** Missing backtrack cleanup after the recursive call! After line 37, should add:
-
-```java
-// Remove queen (backtrack)
-board[row][col] = '.';
-cols.remove(col);
-diag1.remove(d1);
-diag2.remove(d2);
-```
-
-Without this cleanup, the queen placement and constraint tracking aren't properly undone, causing incorrect solutions or
-missing valid solutions.
-</details>
+Autocorrect systems find all valid word completions within edit distance k. This is essentially a combination problem
+where at each character you either keep, replace, or delete — a backtracking search over edit operations. The pruning
+condition (stop exploring when the edit budget is exhausted) is exactly the same as pruning in combination sum when the
+running total exceeds the target.
 
 ---
 
-### Challenge 4: Broken Combination Sum with Pruning
+## Common Misconceptions
 
-```java
-/**
- * Find all combinations that sum to target
- * This has a PRUNING BUG that misses valid solutions.
- */
-public static List<List<Integer>> combinationSum_Buggy(int[] candidates, int target) {
-    List<List<Integer>> result = new ArrayList<>();
-    Arrays.sort(candidates);  // Sorted for pruning
-    backtrack(candidates, target, 0, new ArrayList<>(), result);
-    return result;
-}
+!!! warning "Backtracking always explores the full search tree"
+    Backtracking only explores the full tree when there is no pruning. Effective pruning — checking constraints as
+    early as possible rather than at the leaves — can reduce the search from exponential to polynomial for many
+    practical inputs. The key skill is identifying the earliest point where a partial candidate can be declared
+    invalid.
 
-private static void backtrack(int[] candidates, int target, int start,
-                              List<Integer> current, List<List<Integer>> result) {
-    if (target == 0) {
-        result.add(new ArrayList<>(current));
-        return;
-    }
+!!! warning "You must use a boolean visited array for all backtracking problems"
+    For permutations (where order matters and each element is used once), a `boolean[] used` array is needed. For
+    subsets and combinations (where you advance a `start` index), no visited array is needed because you never go
+    backwards in the array. Mixing these two approaches causes bugs.
 
-    if (target < 0) {        return;
-    }
-
-    for (int i = start; i < candidates.length; i++) {
-        current.add(candidates[i]);
-        backtrack(candidates, target - candidates[i], i, current, result);
-        current.remove(current.size() - 1);
-    }
-}
-```
-
-**Your debugging:**
-
-- **Bug:** <span class="fill-in">[Where should pruning happen?]</span>
-- **Why is it a problem?** <span class="fill-in">[What inefficiency does this cause?]</span>
-- **Fix:** <span class="fill-in">[Add the proper pruning condition]</span>
-
-**Performance impact:**
-
-- Without fix: Explores many invalid branches
-- With fix: Stops early when candidate exceeds remaining target
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** Pruning should happen BEFORE recursion, not after! In the for loop, add:
-
-```java
-if (candidates[i] > target) {
-    break;  // All remaining candidates are too large (sorted array)
-}
-```
-
-This should be added right after the for loop starts (before line 23). Since the array is sorted, once a candidate
-exceeds the target, all subsequent candidates will too, so we can break early.
-
-**Better version of the loop:**
-
-```java
-for (int i = start; i < candidates.length; i++) {
-    if (candidates[i] > target) break;  // Prune early!
-
-    current.add(candidates[i]);
-    backtrack(candidates, target - candidates[i], i, current, result);
-    current.remove(current.size() - 1);
-}
-```
-
-</details>
-
----
-
-### Challenge 5: Duplicate Results Bug
-
-```java
-/**
- * Permutations with duplicates [1, 1, 2]
- * This has a BUG causing duplicate permutations.
- */
-public static List<List<Integer>> permuteUnique_Buggy(int[] nums) {
-    List<List<Integer>> result = new ArrayList<>();
-    Arrays.sort(nums);  // Sorted to handle duplicates
-    boolean[] used = new boolean[nums.length];
-    backtrack(nums, new ArrayList<>(), used, result);
-    return result;
-}
-
-private static void backtrack(int[] nums, List<Integer> current,
-                              boolean[] used, List<List<Integer>> result) {
-    if (current.size() == nums.length) {
-        result.add(new ArrayList<>(current));
-        return;
-    }
-
-    for (int i = 0; i < nums.length; i++) {
-        if (used[i]) continue;
-
-        // Should skip if: same as previous && previous not used
-
-        used[i] = true;
-        current.add(nums[i]);
-        backtrack(nums, current, used, result);
-        current.remove(current.size() - 1);
-        used[i] = false;
-    }
-}
-```
-
-**Your debugging:**
-
-- **Bug:** <span class="fill-in">[What check is missing?]</span>
-- **Why does this cause duplicates?** <span class="fill-in">[Explain the logic]</span>
-- **Fix:** <span class="fill-in">[Fill in the condition]</span>
-
-**Test case:**
-
-- Input: `[1, 1, 2]`
-- Expected: `[[1,1,2], [1,2,1], [2,1,1]]` (3 unique)
-- Actual without fix: <span class="fill-in">[How many duplicates?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** Missing duplicate check! After line 20, add:
-
-```java
-// Skip duplicates: if same as previous element and previous not used
-if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]) {
-    continue;
-}
-```
-
-**Why this works:**
-
-- If `nums[i] == nums[i-1]` (duplicates) AND previous not used, we'd generate same permutation
-- By requiring previous to be used first, we ensure unique orderings
-- Example: For [1, 1, 2], we must use first 1 before second 1 at same position
-
-Without this check, both 1's get treated as distinct, generating duplicate permutations.
-</details>
-
----
-
-### Your Debugging Scorecard
-
-After finding and fixing all bugs:
-
-- [ ] Found all 8+ bugs across 5 challenges
-- [ ] Understood WHY each bug causes incorrect behavior
-- [ ] Could explain the fix to someone else
-- [ ] Learned common backtracking mistakes to avoid
-
-**Common backtracking mistakes you discovered:**
-
-1. <span class="fill-in">[Fill in - e.g., forgetting to copy list when adding to result]</span>
-2. <span class="fill-in">[Fill in - e.g., missing backtrack cleanup]</span>
-3. <span class="fill-in">[Fill in - e.g., wrong pruning condition]</span>
-4. <span class="fill-in">[Fill in]</span>
+!!! warning "Forgetting to copy the list when adding to results"
+    `result.add(current)` adds a **reference** to the same list object. As backtracking modifies `current`, every
+    entry in `result` gets overwritten. Always use `result.add(new ArrayList<>(current))` to capture a snapshot
+    of the current state.
 
 ---
 
@@ -1120,6 +927,7 @@ Answer after solving problems:
 - Approach: <span class="fill-in">[Mark visited, unmark on backtrack]</span>
 
 ### Your Decision Tree
+
 ```mermaid
 flowchart LR
     Start["Backtracking Pattern Selection"]
@@ -1140,10 +948,7 @@ flowchart LR
     Q5 -->|"Sudoku-like"| N7
     N8(["DFS with visited tracking ✓"])
     Q5 -->|"Grid search"| N8
-    Q9{"Optimization?"}
-    Start --> Q9
 ```
-
 
 ---
 
@@ -1202,53 +1007,17 @@ flowchart LR
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-Before moving to the next topic:
+Answer these without referring to your notes or implementation.
 
-- [ ] **Implementation**
-    - [ ] Permutations: basic and with duplicates work
-    - [ ] Combinations: subsets, combinations, combination sum work
-    - [ ] N-Queens: placement and counting work
-    - [ ] Word search: grid DFS with backtracking works
-    - [ ] All client code runs successfully
-
-- [ ] **Pattern Recognition**
-    - [ ] Can identify permutation vs combination problems
-    - [ ] Understand when to use visited array vs set
-    - [ ] Know when to sort input for duplicates
-    - [ ] Recognize constraint satisfaction problems
-
-- [ ] **Problem Solving**
-    - [ ] Solved 2 easy problems
-    - [ ] Solved 4-5 medium problems
-    - [ ] Analyzed time/space complexity
-    - [ ] Understood pruning strategies
-
-- [ ] **Understanding**
-    - [ ] Filled in all ELI5 explanations
-    - [ ] Built decision tree
-    - [ ] Identified when NOT to use backtracking
-    - [ ] Can explain backtrack step clearly
-
-- [ ] **Mastery Check**
-    - [ ] Could implement all patterns from memory
-    - [ ] Could recognize pattern in new problem
-    - [ ] Could explain to someone else
-    - [ ] Understand when to prune branches
-
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
-- [ ] Implement all four backtracking patterns from memory
-- [ ] Explain when and why to use backtracking
-- [ ] Identify the correct pattern for new problems
-- [ ] Write proper base cases and backtrack steps
-- [ ] Add effective pruning to reduce search space
-- [ ] Debug common backtracking mistakes
-- [ ] Teach this concept to someone else
-- [ ] Analyze when NOT to use backtracking
-
+1. Write the three-step backtracking template (choose, explore, unchoose) in pseudocode. What happens if you omit the
+   "unchoose" step?
+2. For generating subsets with duplicates from `[1, 2, 2]`, explain why you must sort the array first and what
+   condition skips duplicates. What would go wrong if you used a Set to deduplicate the output instead?
+3. In the N-Queens problem, how do you represent "diagonal under attack" without scanning the board? What mathematical
+   property of row-col and row+col makes this work?
+4. Compare subsets (starts advancing `start` index) vs permutations (uses `boolean[] used`). Why does each problem
+   require a different mechanism to avoid reuse?
+5. A colleague says "backtracking is always better than dynamic programming because it avoids storing all subproblems."
+   Under what conditions is this claim wrong, and what kind of problem is DP faster for?

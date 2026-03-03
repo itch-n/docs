@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this topic you will be able to:
+
+- Explain why row-oriented and column-oriented layouts produce opposite performance profiles for the same data
+- Implement a row store and a column store with insert, point lookup, and aggregation operations
+- Benchmark and interpret performance differences across insert, lookup, and column-scan workloads
+- Identify whether a given query benefits from row or column storage by analysing its access pattern
+- Choose the appropriate storage layout for OLTP vs OLAP workloads based on measured trade-offs
+- Explain how column stores achieve compression ratios that row stores cannot, and why that matters at scale
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,30 +26,35 @@
 **Prompts to guide you:**
 
 1. **What is row-oriented storage in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Row storage is a layout where <span class="fill-in">[each record's fields are stored ___ on disk, so reading one record requires ___ disk operation(s)]</span>
 
 2. **What is column-oriented storage in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Column storage is a layout where <span class="fill-in">[all values for a single field are stored ___, so analytics queries only need to read ___]</span>
 
 3. **Real-world analogy for row storage:**
     - Example: "Row storage is like filing cabinets where each drawer contains one person's complete file..."
+    - Think about how a HR department keeps employee folders — everything about one person in one place.
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **Real-world analogy for column storage:**
     - Example: "Column storage is like having separate filing cabinets for each attribute..."
+    - Think about how a payroll department might keep one binder of just salaries, another of just departments.
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
 5. **When would you use row storage?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Row storage is preferred when ___ because it avoids the cost of <span class="fill-in">[___ separate reads just to reconstruct one ___]</span>
 
 6. **When would you use column storage?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Column storage is preferred when ___ because it avoids the cost of <span class="fill-in">[reading ___ bytes of unneeded columns just to aggregate one ___]</span>
 
 </div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+!!! tip "How to use this section"
+    Complete your predictions now, before reading further. You will revisit and verify each answer after running the benchmark.
 
 <div class="learner-section" markdown>
 
@@ -78,210 +96,6 @@
 - **Why?** <span class="fill-in">[Explain]</span>
 
 </div>
-
----
-
-## Before/After: Why This Pattern Matters
-
-**Your task:** Understand the fundamental trade-off between row and column layouts.
-
-### The Core Problem
-
-You have a table with 1 million users:
-
-```sql
-CREATE TABLE users (
-    id INT,
-    name VARCHAR(100),
-    email VARCHAR(100),
-    age INT,
-    city VARCHAR(50),
-    salary INT
-);
-```
-
-**Two different queries with radically different performance:**
-
-```sql
-
--- Query 1: OLTP - Fetch one user by ID
-SELECT * FROM users WHERE id = 12345;
-
--- Query 2: OLAP - Analytics across millions
-SELECT AVG(salary), city FROM users GROUP BY city;
-```
-
-**The question:** How should you physically store this data on disk?
-
----
-
-### Approach 1: Row-Oriented Storage
-
-**Physical layout:** Store entire rows together
-
-```
-Disk layout (row-oriented):
-┌──────────────────────────────────────────────┐
-│ [1, "Alice", "a@x.com", 30, "NYC", 100000]   │  ← Row 1
-│ [2, "Bob", "b@x.com", 25, "SF", 120000]      │  ← Row 2
-│ [3, "Carol", "c@x.com", 35, "LA", 90000]     │  ← Row 3
-│ ...                                           │
-└──────────────────────────────────────────────┘
-```
-
-**Query 1 performance (fetch one user):**
-
-```java
-// Single disk read gets entire row
-public User getUser(int id) {
-    // 1 disk seek to row location
-    // Read entire row (~200 bytes)
-    return parseRow(diskRead(rowOffset(id)));  // O(1) - FAST! ✓
-}
-```
-
-**Query 2 performance (aggregate salary by city):**
-
-```java
-// Must read ALL rows to get salary + city columns
-public Map<String, Double> avgSalaryByCity() {
-    for (int i = 0; i < 1_000_000; i++) {
-        byte[] row = diskRead(rowOffset(i));  // Read entire row (~200 bytes)
-        // But only need salary (4 bytes) + city (50 bytes)
-        // Wasting 146 bytes per row!
-    }
-    // Total read: 1M * 200 bytes = 200MB
-    // Actual needed: 1M * 54 bytes = 54MB
-    // Waste: 73% of I/O! ✗
-}
-```
-
-**Row storage characteristics:**
-
-- ✅ Point lookups: Excellent (single disk read)
-- ✅ Insert/Update full row: Excellent (single write)
-- ❌ Column scans: Poor (read unnecessary data)
-- ❌ Compression: Limited (mixed data types per row)
-
----
-
-### Approach 2: Column-Oriented Storage
-
-**Physical layout:** Store each column separately
-
-```
-Disk layout (column-oriented):
-┌─────────────────┐
-│ id:      [1,2,3,...]           │  ← All IDs together
-│ name:    ["Alice","Bob",...]   │  ← All names together
-│ email:   ["a@x","b@x",...]     │  ← All emails together
-│ age:     [30,25,35,...]        │  ← All ages together
-│ city:    ["NYC","SF","LA",...] │  ← All cities together
-│ salary:  [100000,120000,...]   │  ← All salaries together
-└─────────────────┘
-```
-
-**Query 1 performance (fetch one user):**
-
-```java
-// Must read from EACH column file
-public User getUser(int id) {
-    // 6 disk seeks (one per column)
-    int userId = idColumn.read(id);
-    String name = nameColumn.read(id);
-    String email = emailColumn.read(id);
-    int age = ageColumn.read(id);
-    String city = cityColumn.read(id);
-    int salary = salaryColumn.read(id);
-    return new User(userId, name, email, age, city, salary);
-    // 6 disk seeks - SLOW! ✗
-}
-```
-
-**Query 2 performance (aggregate salary by city):**
-
-```java
-// Only read the columns we need!
-public Map<String, Double> avgSalaryByCity() {
-    int[] salaries = salaryColumn.readAll();  // 1M * 4 bytes = 4MB
-    String[] cities = cityColumn.readAll();   // 1M * 50 bytes = 50MB
-
-    // Total read: 54MB (only what we need!)
-    // vs 200MB with row storage
-    // 73% less I/O! ✓
-
-    // Bonus: Columns compress MUCH better
-    // salary: All integers, similar range
-    // city: Many duplicates ("NYC", "SF", "LA"...)
-    // With compression: 54MB → ~10MB! ✓✓
-}
-```
-
-**Column storage characteristics:**
-
-- ❌ Point lookups: Poor (must read from N columns)
-- ❌ Insert/Update: Complex (update N separate files)
-- ✅ Column scans: Excellent (only read needed columns)
-- ✅ Compression: Excellent (similar data types)
-- ✅ SIMD/Vectorization: Possible (homogeneous data)
-
----
-
-## The Fundamental Trade-off
-
-| Feature            | Row Storage             | Column Storage       |
-|--------------------|-------------------------|----------------------|
-| **Point Lookups**  | ⚡⚡⚡ (1 read)            | 🐌 (N reads)         |
-| **Full Row Scans** | 🐌 (wasted I/O)         | 🐌 (N files)         |
-| **Column Scans**   | 🐌 (wasted I/O)         | ⚡⚡⚡ (targeted)       |
-| **Compression**    | ⚡ (limited)             | ⚡⚡⚡ (excellent)      |
-| **Inserts**        | ⚡⚡⚡ (single write)      | 🐌 (N writes)        |
-| **Updates**        | ⚡⚡ (single write)       | 🐌 (N writes)        |
-| **Best For**       | **OLTP** (Transactions) | **OLAP** (Analytics) |
-
-**Key insight:**
-
-- **OLTP:** "Give me order #12345" → Need entire row → Use row storage
-- **OLAP:** "Show revenue by category" → Need specific columns → Use column storage
-
----
-
-## Case Studies: Row vs. Column Storage in the Wild
-
-### PostgreSQL & MySQL: The Row-Oriented Champions
-
-- **Pattern:** Row-Oriented Storage.
-- **How it works:** In databases like PostgreSQL and MySQL (with InnoDB), all the values for a single row (`id`, `name`,
-  `email`, `city`, `salary`) are stored contiguously on disk.
-- **Use Case:** This is ideal for **OLTP (Online Transaction Processing)** workloads. When you query
-  `SELECT * FROM users WHERE id = 123`, the database performs a single read to fetch the entire user record, which is
-  highly efficient. Creating or updating a user is also a single write operation.
-- **Key Takeaway:** For applications where you primarily work with entire records at a time (e.g., e-commerce backends,
-  content management systems, user account services), row-oriented storage provides the best performance for read,
-  write, and update operations.
-
-### Amazon Redshift & Google BigQuery: Columnar for Analytics
-
-- **Pattern:** Column-Oriented Storage.
-- **How it works:** Data warehouses like Redshift, BigQuery, and Snowflake store data in columns. All `user_id` values
-  are stored together, all `city` values are stored together, and so on.
-- **Use Case:** This is built for **OLAP (Online Analytical Processing)**. When an analyst runs a query like
-  `SELECT city, AVG(salary) FROM users GROUP BY city`, the database only needs to read the `city` and `salary` columns.
-  It completely ignores the `id`, `name`, and `email` columns, drastically reducing the amount of data read from disk.
-- **Key Takeaway:** Columnar storage provides orders-of-magnitude performance improvements for analytical queries that
-  aggregate over a small subset of columns in a large dataset. The high compression ratios achieved also lead to
-  significant cost savings.
-
-### ClickHouse: High-Performance Real-Time Analytics
-
-- **Pattern:** Column-Oriented Storage.
-- **How it works:** ClickHouse is an open-source columnar database designed for extreme speed on analytical queries. It
-  not only uses columnar storage but also processes data in vectors using a vectorized query execution engine to
-  maximize CPU efficiency.
-- **Key Takeaway:** For use cases like real-time dashboards, log analysis, and telemetry monitoring, where you need to
-  slice and dice massive datasets interactively, a performance-focused columnar database like ClickHouse is the optimal
-  choice. It demonstrates that the benefits of columnar storage go beyond just I/O reduction to include computational
-  efficiency.
 
 ---
 
@@ -374,6 +188,36 @@ public class RowStore {
     }
 }
 ```
+
+!!! warning "Debugging Challenge — Column Scan Wastes Reads"
+
+    The `avgSalary()` implementation below compiles and runs, but contains a subtle correctness bug when the row set is empty.
+
+    ```java
+    public double avgSalary() {
+        int total = 0;
+        for (Row row : rows.values()) {
+            total += row.salary;
+        }
+        return total / rows.size();
+    }
+    ```
+
+    Consider what happens when `rows` is empty.
+
+    ??? success "Answer"
+
+        **Bug:** Integer division by zero when the map is empty. `rows.size()` returns 0, causing `ArithmeticException`.
+
+        **Fix:** Guard against the empty case and use floating-point division:
+        ```java
+        if (rows.isEmpty()) return 0.0;
+        double total = 0;
+        for (Row row : rows.values()) {
+            total += row.salary;
+        }
+        return total / rows.size();
+        ```
 
 ---
 
@@ -670,6 +514,173 @@ public class StorageLayoutBenchmark {
 
 </div>
 
+!!! info "Loop back"
+    Return to the Quick Quiz now and fill in your verified answers.
+
+---
+
+## Before/After: Why This Pattern Matters
+
+**Your task:** Understand the fundamental trade-off between row and column layouts.
+
+### The Core Problem
+
+You have a table with 1 million users:
+
+```sql
+CREATE TABLE users (
+    id INT,
+    name VARCHAR(100),
+    email VARCHAR(100),
+    age INT,
+    city VARCHAR(50),
+    salary INT
+);
+```
+
+**Two different queries with radically different performance:**
+
+```sql
+
+-- Query 1: OLTP - Fetch one user by ID
+SELECT * FROM users WHERE id = 12345;
+
+-- Query 2: OLAP - Analytics across millions
+SELECT AVG(salary), city FROM users GROUP BY city;
+```
+
+**The question:** How should you physically store this data on disk?
+
+---
+
+### Approach 1: Row-Oriented Storage
+
+**Physical layout:** Store entire rows together
+
+```
+Disk layout (row-oriented):
+┌──────────────────────────────────────────────┐
+│ [1, "Alice", "a@x.com", 30, "NYC", 100000]   │  ← Row 1
+│ [2, "Bob", "b@x.com", 25, "SF", 120000]      │  ← Row 2
+│ [3, "Carol", "c@x.com", 35, "LA", 90000]     │  ← Row 3
+│ ...                                           │
+└──────────────────────────────────────────────┘
+```
+
+**Query 1 performance (fetch one user):**
+
+```java
+// Single disk read gets entire row
+public User getUser(int id) {
+    // 1 disk seek to row location
+    // Read entire row (~200 bytes)
+    return parseRow(diskRead(rowOffset(id)));  // O(1) - FAST! ✓
+}
+```
+
+**Query 2 performance (aggregate salary by city):**
+
+```java
+// Must read ALL rows to get salary + city columns
+public Map<String, Double> avgSalaryByCity() {
+    for (int i = 0; i < 1_000_000; i++) {
+        byte[] row = diskRead(rowOffset(i));  // Read entire row (~200 bytes)
+        // But only need salary (4 bytes) + city (50 bytes)
+        // Wasting 146 bytes per row!
+    }
+    // Total read: 1M * 200 bytes = 200MB
+    // Actual needed: 1M * 54 bytes = 54MB
+    // Waste: 73% of I/O! ✗
+}
+```
+
+**Row storage characteristics:**
+
+- ✅ Point lookups: Excellent (single disk read)
+- ✅ Insert/Update full row: Excellent (single write)
+- ❌ Column scans: Poor (read unnecessary data)
+- ❌ Compression: Limited (mixed data types per row)
+
+---
+
+### Approach 2: Column-Oriented Storage
+
+**Physical layout:** Store each column separately
+
+```
+Disk layout (column-oriented):
+┌─────────────────┐
+│ id:      [1,2,3,...]           │  ← All IDs together
+│ name:    ["Alice","Bob",...]   │  ← All names together
+│ email:   ["a@x","b@x",...]     │  ← All emails together
+│ age:     [30,25,35,...]        │  ← All ages together
+│ city:    ["NYC","SF","LA",...] │  ← All cities together
+│ salary:  [100000,120000,...]   │  ← All salaries together
+└─────────────────┘
+```
+
+**Query 1 performance (fetch one user):**
+
+```java
+// Must read from EACH column file
+public User getUser(int id) {
+    // 6 disk seeks (one per column)
+    int userId = idColumn.read(id);
+    String name = nameColumn.read(id);
+    String email = emailColumn.read(id);
+    int age = ageColumn.read(id);
+    String city = cityColumn.read(id);
+    int salary = salaryColumn.read(id);
+    return new User(userId, name, email, age, city, salary);
+    // 6 disk seeks - SLOW! ✗
+}
+```
+
+**Query 2 performance (aggregate salary by city):**
+
+```java
+// Only read the columns we need!
+public Map<String, Double> avgSalaryByCity() {
+    int[] salaries = salaryColumn.readAll();  // 1M * 4 bytes = 4MB
+    String[] cities = cityColumn.readAll();   // 1M * 50 bytes = 50MB
+
+    // Total read: 54MB (only what we need!)
+    // vs 200MB with row storage
+    // 73% less I/O! ✓
+
+    // Bonus: Columns compress MUCH better
+    // salary: All integers, similar range
+    // city: Many duplicates ("NYC", "SF", "LA"...)
+    // With compression: 54MB → ~10MB! ✓✓
+}
+```
+
+**Column storage characteristics:**
+
+- ❌ Point lookups: Poor (must read from N columns)
+- ❌ Insert/Update: Complex (update N separate files)
+- ✅ Column scans: Excellent (only read needed columns)
+- ✅ Compression: Excellent (similar data types)
+- ✅ SIMD/Vectorization: Possible (homogeneous data)
+
+---
+
+## The Fundamental Trade-off
+
+| Feature            | Row Storage             | Column Storage       |
+|--------------------|-------------------------|----------------------|
+| **Point Lookups**  | ⚡⚡⚡ (1 read)            | 🐌 (N reads)         |
+| **Full Row Scans** | 🐌 (wasted I/O)         | 🐌 (N files)         |
+| **Column Scans**   | 🐌 (wasted I/O)         | ⚡⚡⚡ (targeted)       |
+| **Compression**    | ⚡ (limited)             | ⚡⚡⚡ (excellent)      |
+| **Inserts**        | ⚡⚡⚡ (single write)      | 🐌 (N writes)        |
+| **Updates**        | ⚡⚡ (single write)       | 🐌 (N writes)        |
+| **Best For**       | **OLTP** (Transactions) | **OLAP** (Analytics) |
+
+!!! note "Key insight"
+    - **OLTP:** "Give me order #12345" → Need entire row → Use row storage
+    - **OLAP:** "Show revenue by category" → Need specific columns → Use column storage
+
 ---
 
 ## Compression: The Hidden Superpower of Column Stores
@@ -725,23 +736,60 @@ After: [0, 1, 1, 1, 1, 1]  (store differences)
 Space saved: 6 ints (24 bytes) → 1 int + 5 bytes (9 bytes) = 62% reduction
 ```
 
-**Real-world impact:**
+!!! tip "Real-world compression impact"
+    1 billion rows, 10 columns with row storage (uncompressed) ≈ 200 GB. The same dataset in a column store with dictionary and delta encoding typically compresses to ~50 GB — a 75% reduction that directly translates to cheaper storage and faster network transfers.
 
-```
-1 billion rows, 10 columns:
+---
 
-Row store (uncompressed):
-  Row size: 200 bytes
-  Total: 200 GB
+## Case Studies: Row vs. Column Storage in the Wild
 
-Column store (compressed):
-  IDs: 4 GB → 500 MB (delta encoding)
-  Names: 100 GB → 10 GB (dictionary encoding)
-  Cities: 50 GB → 500 MB (RLE + dictionary)
-  Salaries: 4 GB → 1 GB (delta encoding)
-  ...
-  Total: ~50 GB (75% reduction!)
-```
+### PostgreSQL & MySQL: The Row-Oriented Champions
+
+- **Pattern:** Row-Oriented Storage.
+- **How it works:** In databases like PostgreSQL and MySQL (with InnoDB), all the values for a single row (`id`, `name`,
+  `email`, `city`, `salary`) are stored contiguously on disk.
+- **Use Case:** This is ideal for **OLTP (Online Transaction Processing)** workloads. When you query
+  `SELECT * FROM users WHERE id = 123`, the database performs a single read to fetch the entire user record, which is
+  highly efficient. Creating or updating a user is also a single write operation.
+- **Key Takeaway:** For applications where you primarily work with entire records at a time (e.g., e-commerce backends,
+  content management systems, user account services), row-oriented storage provides the best performance for read,
+  write, and update operations.
+
+### Amazon Redshift & Google BigQuery: Columnar for Analytics
+
+- **Pattern:** Column-Oriented Storage.
+- **How it works:** Data warehouses like Redshift, BigQuery, and Snowflake store data in columns. All `user_id` values
+  are stored together, all `city` values are stored together, and so on.
+- **Use Case:** This is built for **OLAP (Online Analytical Processing)**. When an analyst runs a query like
+  `SELECT city, AVG(salary) FROM users GROUP BY city`, the database only needs to read the `city` and `salary` columns.
+  It completely ignores the `id`, `name`, and `email` columns, drastically reducing the amount of data read from disk.
+- **Key Takeaway:** Columnar storage provides orders-of-magnitude performance improvements for analytical queries that
+  aggregate over a small subset of columns in a large dataset. The high compression ratios achieved also lead to
+  significant cost savings.
+
+### ClickHouse: High-Performance Real-Time Analytics
+
+- **Pattern:** Column-Oriented Storage.
+- **How it works:** ClickHouse is an open-source columnar database designed for extreme speed on analytical queries. It
+  not only uses columnar storage but also processes data in vectors using a vectorized query execution engine to
+  maximize CPU efficiency.
+- **Key Takeaway:** For use cases like real-time dashboards, log analysis, and telemetry monitoring, where you need to
+  slice and dice massive datasets interactively, a performance-focused columnar database like ClickHouse is the optimal
+  choice. It demonstrates that the benefits of columnar storage go beyond just I/O reduction to include computational
+  efficiency.
+
+---
+
+## Common Misconceptions
+
+!!! warning "Column stores are always better for analytics"
+    Column stores win for queries that touch a small fraction of columns. If your analytics query selects nearly every column (e.g., `SELECT *` with a WHERE filter), row storage may outperform column storage because the column store must still make one disk seek per column. The gain comes from column *pruning*, not from columnar layout alone.
+
+!!! warning "Row stores cannot compress data"
+    Row stores can use general-purpose compression (gzip, LZ4) on pages or blocks. What they cannot do efficiently is apply column-specific compression algorithms like dictionary encoding or RLE, because each disk page contains mixed data types from many columns. Column stores win on compression *ratio*, not on whether compression is possible.
+
+!!! warning "You must choose one layout for the entire database"
+    Modern systems like PostgreSQL (with `citus` columnar extension), TimescaleDB, and Apache Kudu support hybrid layouts. OLTP tables can be row-oriented while analytical tables in the same cluster use columnar storage. The choice is per-table (or even per-partition), not per-database.
 
 ---
 
@@ -800,47 +848,84 @@ flowchart LR
 
 ---
 
-## Review Checklist
+## Practice
 
-Before moving to the next topic:
+### Scenario 1: E-Commerce Order Table
 
-- [ ] **Implementation**
-    - [ ] RowStore works correctly (insert, point lookup, scans)
-    - [ ] ColumnStore works correctly (insert, point lookup, scans)
-    - [ ] Benchmarks completed and results recorded
+Design storage for this table:
 
-- [ ] **Understanding**
-    - [ ] Can explain why row storage is faster for point lookups
-    - [ ] Can explain why column storage is faster for aggregations
-    - [ ] Understand compression advantages of column storage
+```sql
+CREATE TABLE orders (
+    id BIGINT PRIMARY KEY,
+    user_id BIGINT,
+    product_id BIGINT,
+    quantity INT,
+    total_price DECIMAL,
+    created_at TIMESTAMP
+);
+```
 
-- [ ] **Decision Making**
-    - [ ] Can identify OLTP vs OLAP workloads
-    - [ ] Know when to use each storage layout
-    - [ ] Understand the trade-offs
+**Queries:**
+
+- Q1: Get order details by order ID
+- Q2: Total revenue per product for last 30 days
+- Q3: Insert new orders (5,000 orders/sec)
+
+**Your design:**
+
+Storage layout choice: <span class="fill-in">[Row or Column?]</span>
+
+Reasoning:
+
+- Write volume: <span class="fill-in">[Fill in]</span>
+- Read patterns: <span class="fill-in">[Fill in]</span>
+- Your choice: <span class="fill-in">[Fill in]</span>
+
+### Scenario 2: Analytics Event Table
+
+```sql
+CREATE TABLE events (
+    event_id BIGINT,
+    user_id BIGINT,
+    event_type VARCHAR(50),
+    timestamp TIMESTAMP,
+    page VARCHAR(100),
+    session_id VARCHAR(50)
+);
+```
+
+**Access patterns:**
+
+- Writes: 10M events/day
+- Reads: Daily aggregation queries over weeks of data
+- Common query: `SELECT event_type, COUNT(*) FROM events WHERE timestamp > ? GROUP BY event_type`
+
+**Your design:**
+
+Storage layout: <span class="fill-in">[Fill in]</span>
+
+Why?
+
+1. <span class="fill-in">[Write characteristics]</span>
+2. <span class="fill-in">[Read characteristics]</span>
+3. <span class="fill-in">[Compression opportunities]</span>
 
 ---
 
-### Mastery Certification
+## Test Your Understanding
 
-**I certify that I can:**
+Answer these without referring to your notes or implementation.
 
-- [ ] Implement row-oriented storage (insert, point lookup, column scan)
-- [ ] Implement column-oriented storage (insert, point lookup, column scan)
-- [ ] Explain why row storage is faster for point lookups
-- [ ] Explain why column storage is faster for aggregations
-- [ ] Understand compression advantages of column storage
-- [ ] Identify OLTP vs OLAP workloads from requirements
-- [ ] Choose appropriate storage layout for a given workload
-- [ ] Explain the fundamental read/write trade-offs
-- [ ] Understand when to use each storage representation
-- [ ] Benchmark and analyze performance differences
-- [ ] Debug storage layout issues
-- [ ] Explain these concepts in a system design interview
+1. A query reads only 2 out of 50 columns across 10 million rows. Explain quantitatively why column storage outperforms row storage for this query.
+2. Why does inserting a single row require writing to more locations in a column store than in a row store? What is the consequence at high insert throughput?
+3. A team is building a system that must both process individual customer orders in real time AND generate nightly revenue reports. How would you approach the storage layout decision, and what is the key trade-off?
+4. Dictionary encoding reduces a `city` column of 1 million strings to integers. Why is this compression technique only practical for column stores and not for row stores?
+5. A colleague says "We migrated to a columnar database and our dashboard queries are 50x faster, so we should use it for our transactional order-processing system too." What is wrong with this reasoning?
 
-# APPENDIX
+---
 
-## Real world technologies
+<details markdown>
+<summary>Appendix: Real-World Technology Reference</summary>
 
 ### When to Use Row Storage
 
@@ -899,3 +984,5 @@ Before moving to the next topic:
 - **Apache Kudu** - Supports both row and column scans
 - **InfluxDB** - Time-series with column-like storage
 - **TimescaleDB** - PostgreSQL extension with columnar compression
+
+</details>

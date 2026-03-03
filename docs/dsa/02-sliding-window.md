@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this topic you will be able to:
+
+- Explain why sliding window eliminates redundant recalculation compared to nested loops
+- Implement both fixed-size and dynamic-size window patterns
+- Track window state using variables, HashSet, HashMap, or frequency arrays as appropriate
+- Distinguish between sliding window and two-pointer techniques and select the right one
+- Identify the shrink condition that determines when a dynamic window must contract
+- Analyse time and space complexity for all four window variants
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,10 +26,10 @@
 **Prompts to guide you:**
 
 1. **What is the sliding window pattern in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">[Instead of recalculating a subarray from scratch each time, sliding window ___ by removing the element that left the window and ___ the element that just entered, so each step costs ___ instead of O(k)]</span>
 
 2. **How is it different from two pointers?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">[Two pointers typically searches for a pair satisfying a condition, while sliding window maintains ___ and tracks ___ within it; the key distinction is ___]</span>
 
 3. **Real-world analogy:**
     - Example: "Sliding window is like a camera viewfinder moving across a scene..."
@@ -33,6 +46,9 @@
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+!!! tip "How to use this section"
+    Write your best guess in each fill-in span **before** reading any implementation code. After you finish coding and running the tests, come back and fill in the "Verified" answers. The gap between your prediction and the actual answer is where the real learning happens.
 
 <div class="learner-section" markdown>
 
@@ -95,126 +111,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 - **Fixed window when:** <span class="fill-in">[Fill in]</span>
 - **Dynamic window when:** <span class="fill-in">[Fill in]</span>
-
-</div>
-
----
-
-## Before/After: Why This Pattern Matters
-
-**Your task:** Compare naive vs optimized approaches to understand the impact.
-
-### Example: Maximum Sum of K Consecutive Elements
-
-**Problem:** Find the maximum sum of any k consecutive elements in an array.
-
-#### Approach 1: Brute Force (Nested Loops)
-
-```java
-// Naive approach - Recalculate sum for each window
-public static int maxSum_BruteForce(int[] nums, int k) {
-    if (nums.length < k) return 0;
-
-    int maxSum = Integer.MIN_VALUE;
-
-    // For each possible starting position
-    for (int i = 0; i <= nums.length - k; i++) {
-        int windowSum = 0;
-
-        // Calculate sum of k elements starting at i
-        for (int j = i; j < i + k; j++) {
-            windowSum += nums[j];
-        }
-
-        maxSum = Math.max(maxSum, windowSum);
-    }
-
-    return maxSum;
-}
-```
-
-**Analysis:**
-
-- Time: O(n × k) - For each of n-k positions, sum k elements
-- Space: O(1) - No extra space
-- For n = 10,000, k = 100: ~1,000,000 operations
-
-#### Approach 2: Sliding Window (Optimized)
-
-```java
-// Optimized approach - Reuse previous sum by sliding
-public static int maxSum_SlidingWindow(int[] nums, int k) {
-    if (nums.length < k) return 0;
-
-    // Calculate sum of first window
-    int windowSum = 0;
-    for (int i = 0; i < k; i++) {
-        windowSum += nums[i];
-    }
-    int maxSum = windowSum;
-
-    // Slide window: remove left, add right
-    for (int i = k; i < nums.length; i++) {
-        windowSum = windowSum - nums[i - k] + nums[i];  // KEY: Reuse previous sum!
-        maxSum = Math.max(maxSum, windowSum);
-    }
-
-    return maxSum;
-}
-```
-
-**Analysis:**
-
-- Time: O(n) - One pass to build first window, one pass to slide
-- Space: O(1) - Only track window sum
-- For n = 10,000, k = 100: ~10,000 operations
-
-#### Performance Comparison
-
-| Array Size (n) | Window Size (k) | Brute Force (O(n×k)) | Sliding Window (O(n)) | Speedup |
-|----------------|-----------------|----------------------|-----------------------|---------|
-| n = 100        | k = 10          | 1,000 ops            | 100 ops               | 10x     |
-| n = 1,000      | k = 100         | 100,000 ops          | 1,000 ops             | 100x    |
-| n = 10,000     | k = 100         | 1,000,000 ops        | 10,000 ops            | 100x    |
-
-**Your calculation:** For n = 5,000 and k = 50, the speedup is approximately _____ times faster.
-
-#### Why Does Sliding Window Work?
-
-**Key insight to understand:**
-
-In array `[1, 4, 2, 10, 2, 3]` with k = 3:
-
-```
-Window 1: [1, 4, 2]     sum = 7
-Window 2:    [4, 2, 10]  sum = 16
-
-Brute force: Calculate 4 + 2 + 10 = 16 (3 operations)
-Sliding window: Previous sum (7) - 1 + 10 = 16 (2 operations)
-```
-
-**Why can we reuse the sum?**
-
-- Window 2 shares elements [4, 2] with Window 1
-- Only difference: remove leftmost (1), add rightmost (10)
-- No need to recalculate the shared elements!
-
-**Visualization:**
-
-```
-[1, 4, 2, 10, 2, 3]
- ^-----^              Window 1: sum = 7
-    ^-----^           Window 2: Remove 1, Add 10 → sum = 7 - 1 + 10 = 16
-       ^-----^        Window 3: Remove 4, Add 2 → sum = 16 - 4 + 2 = 14
-```
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why does the window "slide" instead of "jump"? <span class="fill-in">[Your answer]</span>
-- What would happen if the window wasn't contiguous? <span class="fill-in">[Your answer]</span>
-- How is this different from two pointers? <span class="fill-in">[Your answer]</span>
 
 </div>
 
@@ -320,6 +216,38 @@ public class FixedWindowClient {
     }
 }
 ```
+
+!!! warning "Debugging Challenge — Broken Fixed Window (Max Average)"
+    The code below has **2 bugs**. Trace through `nums = [1, 12, -5, -6, 50, 3]`, `k = 4` before checking the answer.
+
+    ```java
+    public static double maxAverage_Buggy(int[] nums, int k) {
+        int windowSum = 0;
+        for (int i = 0; i <= k; i++) {        windowSum += nums[i];
+        }
+        double maxAvg = windowSum / k;
+        for (int i = k; i < nums.length; i++) {
+            windowSum = windowSum - nums[i - k] + nums[i];
+            maxAvg = Math.max(maxAvg, windowSum / k);    }
+        return maxAvg;
+    }
+    ```
+
+    - Bug 1: <span class="fill-in">[What's the bug?]</span>
+    - Bug 2: <span class="fill-in">[What's the bug?]</span>
+
+    ??? success "Answer"
+        **Bug 1 (loop bound):** The first loop uses `i <= k`, which reads `k + 1` elements instead of `k`. It should be `i < k`.
+
+        **Bug 2 (integer division):** `windowSum / k` performs integer division. Both occurrences must cast to double: `windowSum / (double) k`.
+
+        **Correct first window:**
+        ```java
+        for (int i = 0; i < k; i++) {     // Fixed: i < k
+            windowSum += nums[i];
+        }
+        double maxAvg = windowSum / (double) k;   // Fixed: cast
+        ```
 
 ---
 
@@ -430,6 +358,39 @@ public class DynamicWindowClient {
     }
 }
 ```
+
+!!! warning "Debugging Challenge — `if` vs `while` in Window Shrinking"
+    The code below uses an `if` to shrink the window. It compiles but produces wrong results. Trace through `nums = [2, 3, 1, 2, 4, 3]`, `target = 7` before checking the answer.
+
+    ```java
+    public static int minSubArrayLen_Buggy(int target, int[] nums) {
+        int left = 0, sum = 0, minLen = Integer.MAX_VALUE;
+        for (int right = 0; right < nums.length; right++) {
+            sum += nums[right];
+            if (sum >= target) {            minLen = Math.min(minLen, right - left + 1);
+                sum -= nums[left];
+                left++;
+            }
+        }
+        return minLen == Integer.MAX_VALUE ? 0 : minLen;
+    }
+    ```
+
+    - Bug: <span class="fill-in">[Why does `if` fail here where `while` would succeed?]</span>
+
+    ??? success "Answer"
+        **Bug:** The shrink condition must be `while (sum >= target)`, not `if`. After shrinking once, the window may still satisfy `sum >= target` and could shrink further to reveal a shorter valid subarray. Using `if` only shrinks once per `right` step, so the algorithm misses the minimum.
+
+        **Correct:**
+        ```java
+        while (sum >= target) {
+            minLen = Math.min(minLen, right - left + 1);
+            sum -= nums[left];
+            left++;
+        }
+        ```
+
+        **Key principle:** Dynamic windows need `while` for shrinking whenever the validity condition can remain true after one shrink step.
 
 ---
 
@@ -664,284 +625,136 @@ public class HybridWindowClient {
 
 ---
 
-## Debugging Challenges
+!!! info "Loop back"
+    Before moving on, return to the ELI5 section and Quick Quiz at the top. Fill in any answers you left blank. Pay particular attention to the fixed-vs-dynamic distinction and the `if`-vs-`while` shrink question — those two points catch most sliding window bugs.
 
-**Your task:** Find and fix bugs in broken implementations. This tests your understanding of sliding window mechanics.
+---
 
-### Challenge 1: Broken Fixed Window (Max Average)
+## Before/After: Why This Pattern Matters
+
+**Your task:** Compare naive vs optimized approaches to understand the impact.
+
+### Example: Maximum Sum of K Consecutive Elements
+
+**Problem:** Find the maximum sum of any k consecutive elements in an array.
+
+#### Approach 1: Brute Force (Nested Loops)
 
 ```java
-/**
- * Find maximum average of k consecutive elements.
- * This has 2 BUGS. Find them!
- */
-public static double maxAverage_Buggy(int[] nums, int k) {
+// Naive approach - Recalculate sum for each window
+public static int maxSum_BruteForce(int[] nums, int k) {
+    if (nums.length < k) return 0;
+
+    int maxSum = Integer.MIN_VALUE;
+
+    // For each possible starting position
+    for (int i = 0; i <= nums.length - k; i++) {
+        int windowSum = 0;
+
+        // Calculate sum of k elements starting at i
+        for (int j = i; j < i + k; j++) {
+            windowSum += nums[j];
+        }
+
+        maxSum = Math.max(maxSum, windowSum);
+    }
+
+    return maxSum;
+}
+```
+
+**Analysis:**
+
+- Time: O(n × k) - For each of n-k positions, sum k elements
+- Space: O(1) - No extra space
+- For n = 10,000, k = 100: ~1,000,000 operations
+
+#### Approach 2: Sliding Window (Optimized)
+
+```java
+// Optimized approach - Reuse previous sum by sliding
+public static int maxSum_SlidingWindow(int[] nums, int k) {
+    if (nums.length < k) return 0;
+
+    // Calculate sum of first window
     int windowSum = 0;
-
-    // Build first window
-    for (int i = 0; i <= k; i++) {        windowSum += nums[i];
+    for (int i = 0; i < k; i++) {
+        windowSum += nums[i];
     }
+    int maxSum = windowSum;
 
-    double maxAvg = windowSum / k;
-
-    // Slide window
+    // Slide window: remove left, add right
     for (int i = k; i < nums.length; i++) {
-        windowSum = windowSum - nums[i - k] + nums[i];
-        maxAvg = Math.max(maxAvg, windowSum / k);    }
-
-    return maxAvg;
-}
-```
-
-**Your debugging:**
-
-- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
-
-- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
-
-**Test case to expose bugs:**
-
-- Input: `nums = [1, 12, -5, -6, 50, 3]`, `k = 4`
-- Expected: Maximum average should be `12.75` (for subarray `[12, -5, -6, 50]`)
-- Actual with bugs: <span class="fill-in">[Trace through manually]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1 (Line 5):** Loop should be `i < k`, not `i <= k`. We want k elements (indices 0 to k-1), not k+1 elements.
-
-**Bug 2 (Line 15):** `windowSum / k` performs integer division. Should be `windowSum / (double) k` to get accurate
-average.
-
-**Correct code:**
-
-```java
-for (int i = 0; i < k; i++) {  // Fixed: i < k
-    windowSum += nums[i];
-}
-double maxAvg = windowSum / (double) k;  // Fixed: cast to double
-
-for (int i = k; i < nums.length; i++) {
-    windowSum = windowSum - nums[i - k] + nums[i];
-    maxAvg = Math.max(maxAvg, windowSum / (double) k);  // Fixed: cast to double
-}
-```
-
-</details>
-
----
-
-### Challenge 2: Broken Dynamic Window (Longest Substring)
-
-```java
-/**
- * Find longest substring without repeating characters.
- * This has 1 CRITICAL BUG. Find it!
- */
-public static int longestSubstring_Buggy(String s) {
-    Set<Character> window = new HashSet<>();
-    int left = 0, maxLen = 0;
-
-    for (int right = 0; right < s.length(); right++) {
-        char c = s.charAt(right);
-
-        while (window.contains(c)) {
-            window.remove(s.charAt(left));
-            left++;
-        }
-
-        window.add(c);
-        maxLen = Math.max(maxLen, window.size());    }
-
-    return maxLen;
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What\'s the bug?]</span>
-
-**Trace through example:**
-
-- Input: `"abcabcbb"`
-- Expected: `3` (substring "abc")
-- Trace the window and maxLen calculation at each step: <span class="fill-in">[Fill in]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug (Line 16):** Using `window.size()` seems correct but could fail in edge cases. The proper calculation is
-`right - left + 1` to get the current window length.
-
-**Why the bug is subtle:** In this specific implementation, `window.size()` and `right - left + 1` are usually the same
-because we maintain a set. However, using indices is the standard approach and more explicit.
-
-**Correct:**
-
-```java
-maxLen = Math.max(maxLen, right - left + 1);  // Proper window length calculation
-```
-
-**Note:** This is a subtle bug because the code might work in many cases, but using index-based calculation is clearer
-and more maintainable.
-</details>
-
----
-
-### Challenge 3: Broken Window Shrinking Logic
-
-```java
-/**
- * Find minimum subarray length with sum >= target.
- * This has 1 CRITICAL BUG in shrinking logic.
- */
-public static int minSubArrayLen_Buggy(int target, int[] nums) {
-    int left = 0, sum = 0, minLen = Integer.MAX_VALUE;
-
-    for (int right = 0; right < nums.length; right++) {
-        sum += nums[right];
-
-        if (sum >= target) {            minLen = Math.min(minLen, right - left + 1);
-            sum -= nums[left];
-            left++;
-        }
+        windowSum = windowSum - nums[i - k] + nums[i];  // KEY: Reuse previous sum!
+        maxSum = Math.max(maxSum, windowSum);
     }
 
-    return minLen == Integer.MAX_VALUE ? 0 : minLen;
+    return maxSum;
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- **Bug location:** <span class="fill-in">[What's wrong with the condition?]</span>
-- **Bug explanation:** <span class="fill-in">[Why does IF fail but WHILE works?]</span>
+- Time: O(n) - One pass to build first window, one pass to slide
+- Space: O(1) - Only track window sum
+- For n = 10,000, k = 100: ~10,000 operations
 
-**Test case to expose bug:**
+#### Performance Comparison
 
-- Input: `nums = [2, 3, 1, 2, 4, 3]`, `target = 7`
-- Expected: `2` (subarray `[4, 3]`)
-- Actual with buggy code: <span class="fill-in">[Trace through and predict]</span>
+| Array Size (n) | Window Size (k) | Brute Force (O(n×k)) | Sliding Window (O(n)) | Speedup |
+|----------------|-----------------|----------------------|-----------------------|---------|
+| n = 100        | k = 10          | 1,000 ops            | 100 ops               | 10x     |
+| n = 1,000      | k = 100         | 100,000 ops          | 1,000 ops             | 100x    |
+| n = 10,000     | k = 100         | 1,000,000 ops        | 10,000 ops            | 100x    |
 
-**Trace manually:**
+**Your calculation:** For n = 5,000 and k = 50, the speedup is approximately _____ times faster.
+
+#### Why Does Sliding Window Work?
+
+!!! note "The reuse insight"
+    Window 2 shares all but one element with Window 1. Sliding window **reuses** the previous sum rather than recalculating the shared portion. The only work per step is one subtraction (remove left element) and one addition (add right element) — constant time regardless of k.
+
+In array `[1, 4, 2, 10, 2, 3]` with k = 3:
 
 ```
-right=0: sum=2, sum < 7, skip
-right=1: sum=5, sum < 7, skip
-right=2: sum=6, sum < 7, skip
-right=3: sum=8, sum >= 7, minLen=4, left=1, sum=6
-right=4: sum=10, sum >= 7, minLen=4 (not updated!), left=2, sum=8
-...
+Window 1: [1, 4, 2]     sum = 7
+Window 2:    [4, 2, 10]  sum = 16
+
+Brute force: Calculate 4 + 2 + 10 = 16 (3 operations)
+Sliding window: Previous sum (7) - 1 + 10 = 16 (2 operations)
 ```
 
-<details markdown>
-<summary>Click to verify your answer</summary>
+**Visualization:**
 
-**Bug (Line 7):** Should be `while (sum >= target)` instead of `if (sum >= target)`.
-
-**Why:** When we find a valid window, we should shrink it as much as possible to find the minimum length. Using `if`
-only shrinks once, but we might be able to shrink multiple times and still maintain `sum >= target`.
-
-**Correct:**
-
-```java
-while (sum >= target) {  // Keep shrinking while valid
-    minLen = Math.min(minLen, right - left + 1);
-    sum -= nums[left];
-    left++;
-}
+```
+[1, 4, 2, 10, 2, 3]
+ ^-----^              Window 1: sum = 7
+    ^-----^           Window 2: Remove 1, Add 10 → sum = 7 - 1 + 10 = 16
+       ^-----^        Window 3: Remove 4, Add 2 → sum = 16 - 4 + 2 = 14
 ```
 
-**Key insight:** Dynamic windows often need `while` loops for shrinking, not `if` statements, because you want to shrink
-as much as possible while maintaining the constraint.
-</details>
+**After implementing, explain in your own words:**
+
+<div class="learner-section" markdown>
+
+- Why does the window "slide" instead of "jump"? <span class="fill-in">[Your answer]</span>
+- What would happen if the window wasn't contiguous? <span class="fill-in">[Your answer]</span>
+- How is this different from two pointers? <span class="fill-in">[Your answer]</span>
+
+</div>
 
 ---
 
-### Challenge 4: Not Shrinking Window at All
+## Common Misconceptions
 
-```java
-/**
- * Longest substring with at most K distinct characters.
- * This code expands the window but NEVER SHRINKS it properly!
- */
-public static int longestKDistinct_Buggy(String s, int k) {
-    Map<Character, Integer> window = new HashMap<>();
-    int left = 0, maxLen = 0;
+!!! warning "Misconception 1: Sliding window requires a sorted array"
+    Unlike two-pointer pair-sum, sliding window has no sorting requirement. It works on any sequence because it relies only on **contiguity**, not on element order. `maxSlidingWindow`, `lengthOfLongestSubstring`, and `minSubArrayLen` all operate on unsorted input.
 
-    for (int right = 0; right < s.length(); right++) {
-        char c = s.charAt(right);
-        window.put(c, window.getOrDefault(c, 0) + 1);
+!!! warning "Misconception 2: You always need `while` to shrink a dynamic window"
+    Use `while` when the constraint can remain satisfied after one shrink step (e.g., `sum >= target`). Use `if` when shrinking once is always sufficient to restore validity (e.g., removing the leftmost element of a fixed-size window). Choosing the wrong one is the single most common sliding window bug.
 
-        if (window.size() > k) {            char leftChar = s.charAt(left);
-            window.put(leftChar, window.get(leftChar) - 1);
-            left++;
-        }
-
-        maxLen = Math.max(maxLen, right - left + 1);
-    }
-
-    return maxLen;
-}
-```
-
-**Your debugging:**
-
-- **Bug 1:** <span class="fill-in">[Why is checking size > k once not enough?]</span>
-- **Bug 2:** <span class="fill-in">[What happens if frequency becomes 0?]</span>
-- **Fixes:** <span class="fill-in">[Fill in both fixes]</span>
-
-**Example to trace:**
-
-- Input: `s = "eceba"`, `k = 2`
-- Expected: `3` (substring "ece" or "eba")
-- Trace window map state at each step: <span class="fill-in">[Fill in]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1:** Should be `while (window.size() > k)` instead of `if`. We need to keep shrinking until we have at most k
-distinct characters.
-
-**Bug 2:** After decrementing frequency, we must remove the character from the map if frequency becomes 0. Otherwise,
-`window.size()` will never decrease!
-
-**Correct:**
-
-```java
-while (window.size() > k) {  // Keep shrinking while invalid
-    char leftChar = s.charAt(left);
-    window.put(leftChar, window.get(leftChar) - 1);
-
-    if (window.get(leftChar) == 0) {  // Remove if frequency is 0
-        window.remove(leftChar);
-    }
-
-    left++;
-}
-```
-
-**Key mistake:** Not removing keys from HashMap when their frequency reaches 0 is a common bug in sliding window
-problems with frequency tracking.
-</details>
-
----
-
-### Your Debugging Scorecard
-
-After finding and fixing all bugs:
-
-- [ ] Found all 6+ bugs across 4 challenges
-- [ ] Understood WHY each bug causes incorrect behavior
-- [ ] Could explain the fix to someone else
-- [ ] Learned common sliding window mistakes to avoid
-
-**Common mistakes you discovered:**
-
-1. **Off-by-one errors:** <span class="fill-in">[In loop bounds, especially building first window]</span>
-2. **Using IF instead of WHILE for shrinking:** <span class="fill-in">[Window doesn't shrink enough]</span>
-3. **Not removing from HashMap when frequency = 0:** <span class="fill-in">[Window size never decreases]</span>
-4. **Integer division errors:** <span class="fill-in">[Forgetting to cast to double for averages]</span>
-5. <span class="fill-in">[Add any other patterns you noticed]</span>
+!!! warning "Misconception 3: Not removing zero-frequency keys from a HashMap breaks nothing"
+    If you decrement a character's count to 0 but leave it in the map, `window.size()` never decreases. The shrink condition `window.size() > k` becomes permanently true, causing the window to collapse to size 1. Always remove a key when its frequency hits 0.
 
 ---
 
@@ -1088,53 +901,17 @@ flowchart LR
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-Before moving to the next topic:
+Answer these questions without looking at your notes. Write a sentence or two for each.
 
-- [ ] **Implementation**
-    - [ ] Fixed window: max average, nearby duplicate, max sliding window all work
-    - [ ] Dynamic window: longest substring, k distinct, min subarray sum all work
-    - [ ] String window: find anagrams, check inclusion, min window all work
-    - [ ] Hybrid: character replacement, max ones, fruit baskets all work
-    - [ ] All client code runs successfully
+1. **A fixed window of size k is sliding across an array. The brute-force approach recomputes the sum from scratch each step. Explain exactly why the sliding window only needs two operations (one add, one subtract) per step, and what property of the problem makes this possible.**
 
-- [ ] **Pattern Recognition**
-    - [ ] Can identify fixed vs dynamic window
-    - [ ] Understand when to expand vs shrink
-    - [ ] Know what state to track in window
-    - [ ] Understand the contiguous requirement
+2. **You write a dynamic window solution for "longest substring with at most k distinct characters." It works on most inputs but fails on `"aab"` with `k = 1`. You suspect the shrink logic. Describe the most likely bug and trace through the failing case to confirm it.**
 
-- [ ] **Problem Solving**
-    - [ ] Solved 4 easy problems
-    - [ ] Solved 3-4 medium problems
-    - [ ] Analyzed time/space complexity
-    - [ ] Handled edge cases (empty, k > length)
+3. **Minimum Window Substring (LeetCode 76) requires tracking "how many required characters are currently satisfied." Explain why simply comparing two frequency maps at each step would be too slow, and what optimisation the standard O(n) solution uses instead.**
 
-- [ ] **Understanding**
-    - [ ] Filled in all ELI5 explanations
-    - [ ] Built decision tree
-    - [ ] Identified when NOT to use sliding window
-    - [ ] Can explain trade-offs vs other approaches
+4. **When should you use a monotonic deque instead of a plain variable to track the window maximum? What does the deque store, and what is the invariant it maintains?**
 
-- [ ] **Mastery Check**
-    - [ ] Could implement all patterns from memory
-    - [ ] Could recognize pattern in new problem
-    - [ ] Could explain to someone else
-    - [ ] Understand difference from two pointers
-
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
-- [ ] Implement both fixed and dynamic window patterns from memory
-- [ ] Explain when and why to use each pattern
-- [ ] Identify the correct window type for new problems
-- [ ] Track appropriate state (sum, frequency, set) in the window
-- [ ] Analyze time and space complexity
-- [ ] Debug common sliding window mistakes (if/while, HashMap cleanup, off-by-one)
-- [ ] Compare trade-offs with brute force approaches
-- [ ] Teach this concept to someone else
+5. **Sliding window and two-pointer techniques both use two indices. Give a concrete example of a problem that is naturally a sliding window problem, and explain why framing it as a two-pointer pair-search would not work.**
 

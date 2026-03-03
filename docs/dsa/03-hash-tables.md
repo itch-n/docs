@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this topic you will be able to:
+
+- Explain how a hash function maps keys to bucket indices and why this enables O(1) average lookups
+- Implement four core patterns: basic lookup, set membership, grouping, and sliding window state tracking
+- Design appropriate keys for grouping problems (e.g., sorted-character keys for anagram grouping)
+- Diagnose and fix common bugs: `NullPointerException` from missing `getOrDefault`, same-index reuse in Two Sum, and stale zero-frequency keys
+- Articulate the O(n) worst-case scenario caused by hash collisions and explain what a good hash function prevents
+- Choose between HashMap, HashSet, and array-based frequency tables based on key type and space constraints
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,10 +26,10 @@
 **Prompts to guide you:**
 
 1. **What is a hash table in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">[A hash table is a data structure that converts a key into an index using a hash function so that ___, giving O(1) average lookup instead of ___]</span>
 
 2. **Why is O(1) lookup possible?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">[Instead of scanning the entire collection, the hash function tells you ___ directly, so the lookup cost does not grow with ___]</span>
 
 3. **Real-world analogy:**
     - Example: "Hash tables are like a library card catalog..."
@@ -33,6 +46,9 @@
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+!!! tip "How to use this section"
+    Write your best guess in each fill-in span **before** reading any implementation code. After you finish coding and running the tests, come back and fill in the "Verified" answers. The gap between your prediction and the actual answer is where the real learning happens.
 
 <div class="learner-section" markdown>
 
@@ -103,172 +119,6 @@
 
 Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
-
-</div>
-
----
-
-## Before/After: Why This Pattern Matters
-
-**Your task:** Compare naive vs optimized approaches to understand the impact.
-
-### Example: Two Sum Problem
-
-**Problem:** Find two numbers in an array that sum to a target value.
-
-#### Approach 1: Brute Force (Nested Loops)
-
-```java
-// Naive approach - Check all possible pairs
-public static int[] twoSum_BruteForce(int[] nums, int target) {
-    for (int i = 0; i < nums.length; i++) {
-        for (int j = i + 1; j < nums.length; j++) {
-            if (nums[i] + nums[j] == target) {
-                return new int[] {i, j};
-            }
-        }
-    }
-    return new int[] {-1, -1};
-}
-```
-
-**Analysis:**
-
-- Time: O(n²) - For each element, check all remaining elements
-- Space: O(1) - No extra space
-- For n = 10,000: ~100,000,000 comparisons
-
-#### Approach 2: HashMap (Optimized)
-
-```java
-// Optimized approach - Use HashMap for O(1) lookup
-public static int[] twoSum_HashMap(int[] nums, int target) {
-    Map<Integer, Integer> map = new HashMap<>();
-
-    for (int i = 0; i < nums.length; i++) {
-        int complement = target - nums[i];
-        if (map.containsKey(complement)) {
-            return new int[] {map.get(complement), i};
-        }
-        map.put(nums[i], i);
-    }
-
-    return new int[] {-1, -1};
-}
-```
-
-**Analysis:**
-
-- Time: O(n) - Single pass through array, O(1) lookups
-- Space: O(n) - Store up to n elements in map
-- For n = 10,000: ~10,000 operations
-
-#### Performance Comparison
-
-| Array Size | Brute Force (O(n²)) | HashMap (O(n)) | Speedup |
-|------------|---------------------|----------------|---------|
-| n = 100    | 10,000 ops          | 100 ops        | 100x    |
-| n = 1,000  | 1,000,000 ops       | 1,000 ops      | 1,000x  |
-| n = 10,000 | 100,000,000 ops     | 10,000 ops     | 10,000x |
-
-**Your calculation:** For n = 5,000, the speedup is approximately _____ times faster.
-
-#### Why Does HashMap Work?
-
-**Key insight to understand:**
-
-In array `[2, 7, 11, 15]` looking for sum = 9:
-
-```
-Step 1: num=2, complement=7, map={} → not found, add 2→0
-Step 2: num=7, complement=2, map={2→0} → FOUND! Return [0, 1]
-```
-
-**Why is this faster?**
-
-- Instead of checking every pair (2,7), (2,11), (2,15), (7,11), (7,15), (11,15)
-- We check each number once and use O(1) lookup to find its complement
-- HashMap eliminates the need for the inner loop!
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why does O(1) lookup matter? <span class="fill-in">[Your answer]</span>
-- What's the space/time trade-off? <span class="fill-in">[Your answer]</span>
-
-</div>
-
----
-
-### Example: Finding Duplicates
-
-**Problem:** Check if an array contains any duplicate values.
-
-#### Approach 1: Linear Search for Each Element
-
-```java
-// Naive approach - For each element, search rest of array
-public static boolean containsDuplicate_LinearSearch(int[] nums) {
-    for (int i = 0; i < nums.length; i++) {
-        for (int j = i + 1; j < nums.length; j++) {
-            if (nums[i] == nums[j]) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-```
-
-**Analysis:**
-
-- Time: O(n²) - Nested loops
-- Space: O(1) - No extra space
-
-#### Approach 2: HashSet (Optimized)
-
-```java
-// Optimized approach - Use HashSet for O(1) membership test
-public static boolean containsDuplicate_HashSet(int[] nums) {
-    Set<Integer> seen = new HashSet<>();
-
-    for (int num : nums) {
-        if (seen.contains(num)) {
-            return true;  // Found duplicate!
-        }
-        seen.add(num);
-    }
-
-    return false;
-}
-```
-
-**Analysis:**
-
-- Time: O(n) - Single pass, O(1) contains/add operations
-- Space: O(n) - Store up to n elements
-
-#### Performance Comparison
-
-| Array Size | Linear Search (O(n²)) | HashSet (O(n)) | Speedup |
-|------------|-----------------------|----------------|---------|
-| n = 100    | 10,000 ops            | 100 ops        | 100x    |
-| n = 1,000  | 1,000,000 ops         | 1,000 ops      | 1,000x  |
-| n = 10,000 | 100,000,000 ops       | 10,000 ops     | 10,000x |
-
-**Key insight:**
-
-- HashSet remembers what we've seen in O(1) time
-- No need to repeatedly search through previous elements
-- Trade memory for speed!
-
-**After implementing, answer:**
-
-<div class="learner-section" markdown>
-
-- When is the space trade-off worth it? <span class="fill-in">[Your answer]</span>
-- When might you prefer the O(1) space solution? <span class="fill-in">[Your answer]</span>
 
 </div>
 
@@ -377,6 +227,43 @@ public class BasicHashMapClient {
     }
 }
 ```
+
+!!! warning "Debugging Challenge — Broken Two Sum"
+    The code below has **2 bugs**. Test with `nums = [3, 2, 4], target = 6` before checking the answer.
+
+    ```java
+    public static int[] twoSum_Buggy(int[] nums, int target) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            map.put(nums[i], i);    }
+        for (int i = 0; i < nums.length; i++) {
+            int complement = target - nums[i];
+            if (map.containsKey(complement)) {
+                return new int[] {map.get(complement), i};        }
+        }
+        return new int[] {-1, -1};
+    }
+    ```
+
+    - Bug 1: <span class="fill-in">[What's the structural inefficiency in the two-pass approach?]</span>
+    - Bug 2: <span class="fill-in">[What if nums[i] + nums[i] == target? Which index is returned twice?]</span>
+
+    ??? success "Answer"
+        **Bug 1:** Building the entire map first and then searching in a second pass allows `map.get(complement)` to return the same index `i` when `complement == nums[i]` (e.g., `nums = [3, 2, 4], target = 6` — index 0 maps to `3`, and `6 - 3 = 3` finds itself).
+
+        **Bug 2:** The same-index problem: add a guard `map.get(complement) != i`.
+
+        **Best fix — check before adding:**
+        ```java
+        for (int i = 0; i < nums.length; i++) {
+            int complement = target - nums[i];
+            if (map.containsKey(complement)) {
+                return new int[] {map.get(complement), i};
+            }
+            map.put(nums[i], i);  // Add AFTER checking
+        }
+        ```
+        Adding after checking eliminates the same-index problem entirely without extra guards.
 
 ---
 
@@ -603,6 +490,36 @@ public class HashMapGroupingClient {
 }
 ```
 
+!!! warning "Debugging Challenge — Broken Group Anagrams Key"
+    The code below groups words but gives wrong results. Test with `["eat", "tea", "tan", "ate", "nat", "bat"]` before checking the answer.
+
+    ```java
+    public static List<List<String>> groupAnagrams_Buggy(String[] strs) {
+        Map<String, List<String>> groups = new HashMap<>();
+        for (String s : strs) {
+            String key = s.toLowerCase();
+            if (!groups.containsKey(key)) {
+                groups.put(key, new ArrayList<>());
+            }
+            groups.get(key).add(s);
+        }
+        return new ArrayList<>(groups.values());
+    }
+    ```
+
+    - Bug: <span class="fill-in">[What property must the key encode that `toLowerCase()` misses?]</span>
+
+    ??? success "Answer"
+        **Bug:** `toLowerCase()` does not change character order. `"eat"` and `"tea"` lowercase to `"eat"` and `"tea"` — still different keys. Anagrams share the **same characters in the same frequencies**, which is captured by sorting the characters.
+
+        **Fix:**
+        ```java
+        char[] chars = s.toCharArray();
+        Arrays.sort(chars);
+        String key = new String(chars);
+        ```
+        Now `"eat"`, `"tea"`, and `"ate"` all produce the key `"aet"`.
+
 ---
 
 ### Pattern 4: Hash Map for Sliding Window with Constraints
@@ -689,395 +606,182 @@ public class HashMapWindowClient {
 
 ---
 
-## Debugging Challenges
+!!! info "Loop back"
+    Before moving on, return to the ELI5 section and Quick Quiz at the top. Fill in any answers you left blank. If your understanding of hash collisions is still fuzzy, re-read the HashCollisionAwareness challenge answer — O(n) worst case is one of the most commonly misunderstood aspects of HashMap.
 
-**Your task:** Find and fix bugs in broken implementations. This tests your understanding of hash tables.
+---
 
-### Challenge 1: Broken Two Sum with HashMap
+## Before/After: Why This Pattern Matters
+
+**Your task:** Compare naive vs optimized approaches to understand the impact.
+
+### Example: Two Sum Problem
+
+**Problem:** Find two numbers in an array that sum to a target value.
+
+#### Approach 1: Brute Force (Nested Loops)
 
 ```java
-/**
- * This code is supposed to find two numbers that sum to target.
- * It has 2 BUGS. Find them!
- */
-public static int[] twoSum_Buggy(int[] nums, int target) {
-    Map<Integer, Integer> map = new HashMap<>();
-
+// Naive approach - Check all possible pairs
+public static int[] twoSum_BruteForce(int[] nums, int target) {
     for (int i = 0; i < nums.length; i++) {
-        map.put(nums[i], i);    }
+        for (int j = i + 1; j < nums.length; j++) {
+            if (nums[i] + nums[j] == target) {
+                return new int[] {i, j};
+            }
+        }
+    }
+    return new int[] {-1, -1};
+}
+```
+
+**Analysis:**
+
+- Time: O(n²) - For each element, check all remaining elements
+- Space: O(1) - No extra space
+- For n = 10,000: ~100,000,000 comparisons
+
+#### Approach 2: HashMap (Optimized)
+
+```java
+// Optimized approach - Use HashMap for O(1) lookup
+public static int[] twoSum_HashMap(int[] nums, int target) {
+    Map<Integer, Integer> map = new HashMap<>();
 
     for (int i = 0; i < nums.length; i++) {
         int complement = target - nums[i];
         if (map.containsKey(complement)) {
-            return new int[] {map.get(complement), i};        }
+            return new int[] {map.get(complement), i};
+        }
+        map.put(nums[i], i);
     }
 
     return new int[] {-1, -1};
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
+- Time: O(n) - Single pass through array, O(1) lookups
+- Space: O(n) - Store up to n elements in map
+- For n = 10,000: ~10,000 operations
 
-- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 2 explanation:** _[What if nums[i] + nums[i] = target? Same index used twice!]_
-- **Bug 2 fix:** <span class="fill-in">[How to check indices are different?]</span>
+#### Performance Comparison
 
-**Test case to expose Bug 2:**
+| Array Size | Brute Force (O(n²)) | HashMap (O(n)) | Speedup |
+|------------|---------------------|----------------|---------|
+| n = 100    | 10,000 ops          | 100 ops        | 100x    |
+| n = 1,000  | 1,000,000 ops       | 1,000 ops      | 1,000x  |
+| n = 10,000 | 100,000,000 ops     | 10,000 ops     | 10,000x |
 
-- Input: `nums = [3, 2, 4], target = 6`
-- Expected: `[1, 2]` (indices of 2 and 4)
-- Buggy output: <span class="fill-in">[What happens if we check 3+3?]</span>
+**Your calculation:** For n = 5,000, the speedup is approximately _____ times faster.
 
-<details markdown>
-<summary>Click to verify your answers</summary>
+#### Why Does HashMap Work?
 
-**Bug 1:** Two separate loops are inefficient (though not technically wrong). Better to check and add in single loop.
+!!! note "The complement lookup insight"
+    Instead of checking every pair `(nums[i], nums[j])`, for each element we ask "does its complement already exist in the map?" Because `map.containsKey()` is O(1) on average, the inner loop is eliminated entirely. The map acts as a memory of everything seen so far, so finding the complement is instant.
 
-**Bug 2:** Could return `[i, i]` if the same element appears twice. Fix:
+In array `[2, 7, 11, 15]` looking for sum = 9:
 
-```java
-if (map.containsKey(complement) && map.get(complement) != i) {
-    return new int[] {map.get(complement), i};
-}
-map.put(nums[i], i);
+```
+Step 1: num=2, complement=7, map={} → not found, add 2→0
+Step 2: num=7, complement=2, map={2→0} → FOUND! Return [0, 1]
 ```
 
-**Better solution - check BEFORE adding:**
+**After implementing, explain in your own words:**
 
-```java
-for (int i = 0; i < nums.length; i++) {
-    int complement = target - nums[i];
-    if (map.containsKey(complement)) {
-        return new int[] {map.get(complement), i};
-    }
-    map.put(nums[i], i);  // Add after checking
-}
-```
+<div class="learner-section" markdown>
 
-</details>
+- Why does O(1) lookup matter? <span class="fill-in">[Your answer]</span>
+- What's the space/time trade-off? <span class="fill-in">[Your answer]</span>
+
+</div>
 
 ---
 
-### Challenge 2: Broken Frequency Counter
+### Example: Finding Duplicates
+
+**Problem:** Check if an array contains any duplicate values.
+
+#### Approach 1: Linear Search for Each Element
 
 ```java
-/**
- * Count character frequencies.
- * This has 1 NULL POINTER BUG.
- */
-public static Map<Character, Integer> countChars_Buggy(String s) {
-    Map<Character, Integer> freq = new HashMap<>();
-
-    for (char c : s.toCharArray()) {
-        int count = freq.get(c);        freq.put(c, count + 1);
-    }
-
-    return freq;
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What\'s the bug?]</span>
-
-**Test case:**
-
-- Input: `"hello"`
-- Expected: `{h=1, e=1, l=2, o=1}`
-- Buggy output: <span class="fill-in">[What exception?]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug:** `freq.get(c)` returns `null` for first occurrence, causing `NullPointerException` when adding 1.
-
-**Fix Option 1 - Use getOrDefault:**
-
-```java
-int count = freq.getOrDefault(c, 0);
-freq.put(c, count + 1);
-```
-
-**Fix Option 2 - Check containsKey:**
-
-```java
-if (freq.containsKey(c)) {
-    freq.put(c, freq.get(c) + 1);
-} else {
-    freq.put(c, 1);
-}
-```
-
-**Fix Option 3 - Use compute:**
-
-```java
-freq.compute(c, (key, val) -> val == null ? 1 : val + 1);
-```
-
-</details>
-
----
-
-### Challenge 3: Broken Group Anagrams
-
-```java
-/**
- * Group anagrams together.
- * This has a LOGIC BUG with the key generation.
- */
-public static List<List<String>> groupAnagrams_Buggy(String[] strs) {
-    Map<String, List<String>> groups = new HashMap<>();
-
-    for (String s : strs) {
-        String key = s.toLowerCase();
-        if (!groups.containsKey(key)) {
-            groups.put(key, new ArrayList<>());
-        }
-        groups.get(key).add(s);
-    }
-
-    return new ArrayList<>(groups.values());
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What\'s the bug?]</span>
-
-**Test case:**
-
-- Input: `["eat", "tea", "tan", "ate", "nat", "bat"]`
-- Expected: `[["eat", "tea", "ate"], ["tan", "nat"], ["bat"]]`
-- Buggy output: <span class="fill-in">[Each word in its own group!]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** Lowercase doesn't make anagrams have the same key. "eat" and "tea" are different when lowercased.
-
-**Fix - Sort characters:**
-
-```java
-char[] chars = s.toCharArray();
-Arrays.sort(chars);
-String key = new String(chars);
-```
-
-Now "eat", "tea", and "ate" all become "aet" when sorted!
-</details>
-
----
-
-### Challenge 4: Hash Collision Awareness
-
-```java
-/**
- * This code works but has PERFORMANCE issues due to collisions.
- * Identify the problem.
- */
-public static class BadHashCode {
-    private String name;
-    private int age;
-
-    @Override
-    public int hashCode() {
-        return 42;    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof BadHashCode)) return false;
-        BadHashCode other = (BadHashCode) o;
-        return this.name.equals(other.name) && this.age == other.age;
-    }
-}
-```
-
-**Your debugging:**
-
-- **Bug:** <span class="fill-in">[What's wrong with always returning 42?]</span>
-- **Performance impact:** <span class="fill-in">[What's the time complexity now?]</span>
-- **Explanation:** <span class="fill-in">[How does HashMap work with this hashCode?]</span>
-
-**Real-world scenario:**
-
-- HashMap with 10,000 BadHashCode objects
-- Expected lookup: O(1)
-- Actual lookup: <span class="fill-in">[What happens?]</span>
-
-<details markdown>
-<summary>Click to verify your understanding</summary>
-
-**Problem:** All objects hash to the same bucket (42), creating a massive collision.
-
-**Performance:** HashMap degrades to O(n) for all operations because all entries are in one linked list/tree.
-
-**Why it's bad:**
-
-- HashMap has many buckets (default 16, grows to thousands)
-- All 10,000 objects go into ONE bucket
-- Lookup requires scanning through all 10,000 objects
-- Defeats the entire purpose of hashing!
-
-**Correct implementation:**
-
-```java
-@Override
-public int hashCode() {
-    return Objects.hash(name, age);
-}
-```
-
-**Key lesson:** Good hash functions distribute objects evenly across buckets.
-</details>
-
----
-
-### Challenge 5: Missing Null Checks
-
-```java
-/**
- * Find intersection of two arrays.
- * This has MULTIPLE null-safety bugs.
- */
-public static int[] intersection_Buggy(int[] nums1, int[] nums2) {
-    Set<Integer> set1 = new HashSet<>();
-
-    for (int num : nums1) {        set1.add(num);
-    }
-
-    Set<Integer> result = new HashSet<>();
-    for (int num : nums2) {        if (set1.contains(num)) {
-            result.add(num);
-        }
-    }
-
-    return result.stream().mapToInt(i -> i).toArray();}
-```
-
-**Your debugging:**
-
-- **Bug 1:** <span class="fill-in">[What happens if nums1 is null?]</span>
-- **Bug 2:** <span class="fill-in">[What happens if nums2 is null?]</span>
-- **Bug 3:** <span class="fill-in">[Is this actually a bug? Empty result valid?]</span>
-
-**Fixes:**
-
-- Should you check for null? Return empty array? Throw exception? <span class="fill-in">[Your answer]</span>
-- <span class="fill-in">[Your defensive programming strategy]</span>
-
-<details markdown>
-<summary>Click to verify your approach</summary>
-
-**Bugs 1 & 2:** NullPointerException if either array is null.
-
-**Fix - Add null checks:**
-
-```java
-public static int[] intersection_Fixed(int[] nums1, int[] nums2) {
-    if (nums1 == null || nums2 == null) {
-        return new int[0];  // or throw IllegalArgumentException
-    }
-
-    // ... rest of implementation
-}
-```
-
-**Bug 3:** Not actually a bug - empty result is valid when there's no intersection.
-
-**Design decision:**
-
-- Return empty array: Easier for caller, no exception handling
-- Throw exception: Fail fast, makes null input a programmer error
-- Which is better? Depends on your API design philosophy!
-
-</details>
-
----
-
-### Challenge 6: Longest Consecutive Sequence - Off By One
-
-```java
-/**
- * Find longest consecutive sequence.
- * This has a SUBTLE off-by-one bug.
- */
-public static int longestConsecutive_Buggy(int[] nums) {
-    Set<Integer> numSet = new HashSet<>();
-    for (int num : nums) {
-        numSet.add(num);
-    }
-
-    int maxLength = 0;
-
-    for (int num : numSet) {
-        if (!numSet.contains(num - 1)) {  // Start of sequence
-            int currentNum = num;
-            int currentLength = 1;
-
-            while (numSet.contains(currentNum + 1)) {
-                currentNum++;
-                currentLength++;
+// Naive approach - For each element, search rest of array
+public static boolean containsDuplicate_LinearSearch(int[] nums) {
+    for (int i = 0; i < nums.length; i++) {
+        for (int j = i + 1; j < nums.length; j++) {
+            if (nums[i] == nums[j]) {
+                return true;
             }
-
-            maxLength = Math.max(maxLength, currentLength);
         }
     }
-
-    return maxLength;}
+    return false;
+}
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- **Bug:** <span class="fill-in">[What's returned for empty array?]</span>
-- **Expected:** <span class="fill-in">[What should be returned?]</span>
-- **Fix:** <span class="fill-in">[Is 0 correct for empty array? Or should it be different?]</span>
+- Time: O(n²) - Nested loops
+- Space: O(1) - No extra space
 
-**Test cases:**
+#### Approach 2: HashSet (Optimized)
 
-- Input: `[]` → Expected: 0 or -1? <span class="fill-in">[Your decision]</span>
-- Input: `[100, 4, 200, 1, 3, 2]` → Expected: 4 (sequence: 1,2,3,4)
+```java
+// Optimized approach - Use HashSet for O(1) membership test
+public static boolean containsDuplicate_HashSet(int[] nums) {
+    Set<Integer> seen = new HashSet<>();
 
-<details markdown>
-<summary>Click to verify</summary>
+    for (int num : nums) {
+        if (seen.contains(num)) {
+            return true;  // Found duplicate!
+        }
+        seen.add(num);
+    }
 
-**Bug:** For empty array, returns 0. Is this a bug?
+    return false;
+}
+```
 
-**Answer:** Depends on problem specification!
+**Analysis:**
 
-- Returning 0 is often correct (no elements = sequence length 0)
-- Some problems might expect -1 or throw exception
+- Time: O(n) - Single pass, O(1) contains/add operations
+- Space: O(n) - Store up to n elements
 
-**The code is actually CORRECT!** This was a trick question to make you think about edge cases.
+#### Performance Comparison
 
-**Real lesson:** Always verify edge case behavior matches problem requirements.
-</details>
+| Array Size | Linear Search (O(n²)) | HashSet (O(n)) | Speedup |
+|------------|-----------------------|----------------|---------|
+| n = 100    | 10,000 ops            | 100 ops        | 100x    |
+| n = 1,000  | 1,000,000 ops         | 1,000 ops      | 1,000x  |
+| n = 10,000 | 100,000,000 ops       | 10,000 ops     | 10,000x |
+
+**Key insight:**
+
+- HashSet remembers what we've seen in O(1) time
+- No need to repeatedly search through previous elements
+- Trade memory for speed!
+
+**After implementing, answer:**
+
+<div class="learner-section" markdown>
+
+- When is the space trade-off worth it? <span class="fill-in">[Your answer]</span>
+- When might you prefer the O(1) space solution? <span class="fill-in">[Your answer]</span>
+
+</div>
 
 ---
 
-### Your Debugging Scorecard
+## Common Misconceptions
 
-After finding and fixing all bugs:
+!!! warning "Misconception 1: HashMap lookup is always O(1)"
+    HashMap lookup is O(1) **on average**, assuming a good hash function. If all keys collide into one bucket (see the `BadHashCode` challenge), every operation degrades to O(n) because the bucket becomes a linear list. In practice, Java's HashMap uses tree-based buckets after a threshold, improving worst case to O(log n), but this is still far from O(1).
 
-- [ ] Found the two-sum same-index bug
-- [ ] Fixed null pointer in frequency counter (knew 2+ solutions)
-- [ ] Corrected anagram key generation (sorted characters)
-- [ ] Understood hash collision performance impact
-- [ ] Added null checks for defensive programming
-- [ ] Analyzed edge cases (empty array behavior)
+!!! warning "Misconception 2: `freq.get(c)` is safe for the first occurrence"
+    `HashMap.get()` returns `null` when a key is absent — it does not return 0. Calling `freq.get(c) + 1` on a missing key throws a `NullPointerException`. Always use `freq.getOrDefault(c, 0)` or check `containsKey` first. This is the single most common hash map bug.
 
-**Common hash table mistakes you discovered:**
-
-1. <span class="fill-in">[List the patterns you noticed]</span>
-2. <span class="fill-in">[Fill in]</span>
-3. <span class="fill-in">[Fill in]</span>
-
-**Best practices learned:**
-
-1. <span class="fill-in">[When to use getOrDefault vs containsKey?]</span>
-2. <span class="fill-in">[Why check before adding to map in some cases?]</span>
-3. <span class="fill-in">[How to handle null inputs?]</span>
+!!! warning "Misconception 3: HashMap and HashSet maintain insertion order"
+    Standard `HashMap` and `HashSet` do **not** guarantee ordering. If you need insertion order, use `LinkedHashMap` or `LinkedHashSet`. If you need sorted order, use `TreeMap` or `TreeSet`. Confusing these leads to non-deterministic iteration bugs that are hard to reproduce.
 
 ---
 
@@ -1201,53 +905,17 @@ flowchart LR
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-Before moving to the next topic:
+Answer these questions without looking at your notes. Write a sentence or two for each.
 
-- [ ] **Implementation**
-    - [ ] Basic HashMap: two sum, frequency counting, contains duplicate all work
-    - [ ] HashSet: intersection, missing number, longest consecutive all work
-    - [ ] Grouping: group anagrams, custom grouping all work
-    - [ ] Window: minimum window substring, check inclusion work
-    - [ ] All client code runs successfully
+1. **Two Sum can be solved with O(n²) time and O(1) space (nested loops) or O(n) time and O(n) space (HashMap). Describe a real scenario where you would deliberately choose the slower O(n²) approach, and justify your choice.**
 
-- [ ] **Pattern Recognition**
-    - [ ] Can identify when to use HashMap vs HashSet
-    - [ ] Understand frequency counting pattern
-    - [ ] Understand grouping pattern
-    - [ ] Know when hash table beats other approaches
+2. **Your `groupAnagrams` implementation passes most tests but fails on `["", ""]`. Trace through what happens with empty strings and identify the bug. What does the sorted empty string key look like?**
 
-- [ ] **Problem Solving**
-    - [ ] Solved 4 easy problems
-    - [ ] Solved 3-4 medium problems
-    - [ ] Analyzed time/space complexity
-    - [ ] Understood collision handling (conceptually)
+3. **Explain what happens to HashMap performance when a custom object is used as a key but only `equals()` is overridden without `hashCode()`. What is the Java contract between `equals` and `hashCode`, and what breaks when you violate it?**
 
-- [ ] **Understanding**
-    - [ ] Filled in all ELI5 explanations
-    - [ ] Built decision tree
-    - [ ] Identified when NOT to use hash tables
-    - [ ] Can explain trade-offs vs other approaches
+4. **Longest Consecutive Sequence (LeetCode 128) requires O(n) time. Why does storing all numbers in a HashSet and then only starting counts from sequence-start elements achieve O(n) even though each sequence is traversed fully? Why doesn't this give O(n²) in the worst case?**
 
-- [ ] **Mastery Check**
-    - [ ] Could implement all patterns from memory
-    - [ ] Could recognize pattern in new problem
-    - [ ] Could explain to someone else
-    - [ ] Understand hash table internals (basic level)
-
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
-- [ ] Implement HashMap and HashSet patterns from memory
-- [ ] Explain when and why to use each data structure
-- [ ] Identify the correct pattern for new problems
-- [ ] Analyze time and space complexity (including collision impact)
-- [ ] Compare trade-offs with alternative approaches
-- [ ] Debug common hash table mistakes (null checks, collisions, key design)
-- [ ] Teach this concept to someone else using analogies
-- [ ] Design real-world systems using hash tables
+5. **You are implementing a frequency counter using a `HashMap<Character, Integer>`. A colleague suggests using an `int[26]` array instead. Under what conditions is the array strictly better, and what does it assume about the input?**
 

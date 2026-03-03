@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this topic you will be able to:
+
+- Explain the structural difference between B+Trees and LSM Trees and why each was designed
+- Implement insert, search, and range query for a B+Tree
+- Implement put, get, flush, and compaction for an LSM Tree
+- Benchmark and interpret performance differences between the two engines
+- Choose the appropriate engine given a workload's read/write characteristics
+- Identify and fix common implementation bugs in tree-based storage structures
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,20 +26,21 @@
 **Prompts to guide you:**
 
 1. **What is a B+Tree in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - A B+Tree is a self-balancing tree where <span class="fill-in">[all values are stored in ___ nodes, which are linked together so you can ___]</span>
 
 2. **Why do databases use B+Trees?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Databases use B+Trees because each node is sized to match a <span class="fill-in">[disk ___, minimising the number of ___ needed per query]</span>
 
 3. **Real-world analogy for B+Tree:**
     - Example: "A B+Tree is like a filing cabinet where..."
+    - Think about how you'd navigate a large physical index before computers.
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **What is an LSM Tree in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - An LSM Tree speeds up writes by <span class="fill-in">[first buffering inserts in ___, then periodically flushing them as sorted, immutable ___ on disk]</span>
 
 5. **Why do write-heavy databases use LSM Trees?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - LSM Trees suit write-heavy workloads because each write only touches <span class="fill-in">[___ (RAM / disk?), deferring expensive ___ to background batch operations]</span>
 
 6. **Real-world analogy for LSM Tree:**
     - Example: "An LSM Tree is like a notebook where..."
@@ -37,6 +51,9 @@
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+!!! tip "How to use this section"
+    Complete your predictions now, before reading further. You will revisit and verify each answer after running the benchmark in Part 3.
 
 <div class="learner-section" markdown>
 
@@ -98,217 +115,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 - Verified: <span class="fill-in">[Fill in after testing]</span>
 
 </div>
-
----
-
-## Before/After: Why This Pattern Matters
-
-**Your task:** Compare naive vs optimized storage approaches to understand the trade-offs.
-
-### Example: Write-Heavy Workload
-
-**Problem:** Insert 10,000 key-value pairs as quickly as possible.
-
-#### Approach 1: B+Tree (Immediate Persistence)
-
-```java
-// Every write requires tree traversal and potential rebalancing
-BPlusTree<Integer, String> btree = new BPlusTree<>(128);
-
-long start = System.nanoTime();
-for (int i = 0; i < 10000; i++) {
-    btree.insert(i, "Value" + i);  // Each insert: O(log N)
-    // Must traverse tree from root to leaf
-    // May trigger node splits (expensive)
-    // Must maintain tree balance property
-}
-long duration = System.nanoTime() - start;
-```
-
-**Analysis:**
-
-- Time: O(N log N) - Each insert is O(log N)
-- Space: O(N) - Tree structure overhead
-- For 10,000 inserts: ~10,000 * log(10,000) = ~130,000 operations
-- Write amplification: High (each insert may split nodes, update parent pointers)
-
-#### Approach 2: LSM Tree (Buffered Writes)
-
-```java
-// Writes go to in-memory MemTable (just a TreeMap insert)
-LSMTree<Integer, String> lsm = new LSMTree<>(100);
-
-long start = System.nanoTime();
-for (int i = 0; i < 10000; i++) {
-    lsm.put(i, "Value" + i);  // Each put: O(log M), M = memTable size
-    // Only updates in-memory TreeMap
-    // Occasional flush to disk (batched)
-}
-long duration = System.nanoTime() - start;
-```
-
-**Analysis:**
-
-- Time: O(N log M) where M << N (M = MemTable size)
-- Space: O(N) - Eventually flushes to SSTables
-- For 10,000 inserts: ~10,000 * log(100) = ~20,000 operations
-- Write amplification: Lower (batch writes to disk)
-
-#### Performance Comparison
-
-| Operation Count | B+Tree (O(N log N)) | LSM Tree (O(N log M)) | LSM Advantage |
-|-----------------|---------------------|-----------------------|---------------|
-| N = 1,000       | ~10,000 ops         | ~2,000 ops            | 5x faster     |
-| N = 10,000      | ~130,000 ops        | ~20,000 ops           | 6.5x faster   |
-| N = 100,000     | ~1,700,000 ops      | ~200,000 ops          | 8.5x faster   |
-
-**Your calculation:** For N = 50,000 writes, LSM Tree is approximately _____ times faster.
-
-#### Why Does LSM Win for Writes?
-
-**Key insight to understand:**
-
-B+Tree: Every insert = tree traversal + potential split
-
-```
-Insert key=50:
-
-1. Traverse root → internal → leaf (3 disk seeks)
-2. Insert in leaf (sorted position)
-3. If leaf full, split node (expensive)
-4. Update parent pointers (more writes)
-Result: 1 logical write = 4-5 physical writes (write amplification!)
-```
-
-LSM Tree: Batched sequential writes
-
-```
-Insert key=50:
-
-1. Insert into MemTable (in-memory TreeMap)
-2. When MemTable full, flush entire batch to SSTable
-3. Sequential write to disk (very fast)
-Result: 1 logical write = 1 in-memory write (occasionally batched to disk)
-```
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why does B+Tree require more writes per operation? <span class="fill-in">[Your answer]</span>
-- How does LSM Tree achieve better write throughput? <span class="fill-in">[Your answer]</span>
-- What's the trade-off for read performance? <span class="fill-in">[Your answer]</span>
-
-</div>
-
----
-
-### Example: Read-Heavy Workload
-
-**Problem:** Perform 1,000 random lookups after loading 10,000 records.
-
-#### Approach 1: B+Tree (Single Location Read)
-
-```java
-BPlusTree<Integer, String> btree = new BPlusTree<>(128);
-// Load data...
-
-long start = System.nanoTime();
-for (int i = 0; i < 1000; i++) {
-    int key = random.nextInt(10000);
-    String value = btree.search(key);  // Single tree traversal: O(log N)
-    // Root → Internal → Leaf (3-4 hops)
-}
-long duration = System.nanoTime() - start;
-```
-
-**Analysis:**
-
-- Time: O(log N) per read
-- For 1,000 reads: ~1,000 * log(10,000) = ~13,000 operations
-- Read amplification: Low (single path through tree)
-
-#### Approach 2: LSM Tree (Multiple Location Read)
-
-```java
-LSMTree<Integer, String> lsm = new LSMTree<>(100);
-// Load data... (creates multiple SSTables)
-
-long start = System.nanoTime();
-for (int i = 0; i < 1000; i++) {
-    int key = random.nextInt(10000);
-    String value = lsm.get(key);  // Check MemTable + all SSTables
-    // Must check MemTable (O(log M))
-    // Then check SSTable-5 (O(log S))
-    // Then check SSTable-4 (O(log S))
-    // ... continue until found
-}
-long duration = System.nanoTime() - start;
-```
-
-**Analysis:**
-
-- Time: O(log M + K * log S) where K = number of SSTables
-- For 1,000 reads with 10 SSTables: ~1,000 * (10 * log(1000)) = ~100,000 operations
-- Read amplification: High (must check multiple locations)
-
-#### Performance Comparison
-
-| SSTable Count | B+Tree (O(log N)) | LSM Tree (O(K * log S)) | B+Tree Advantage |
-|---------------|-------------------|-------------------------|------------------|
-| K = 1         | ~13 ops/read      | ~13 ops/read            | ~1x (equal)      |
-| K = 5         | ~13 ops/read      | ~65 ops/read            | 5x faster        |
-| K = 10        | ~13 ops/read      | ~130 ops/read           | 10x faster       |
-
-**Your calculation:** With 20 SSTables, B+Tree is approximately _____ times faster for reads.
-
-**Key insight:** This is why LSM Trees need **compaction** - to reduce SSTable count!
-
-**After benchmarking, fill in:**
-
-<div class="learner-section" markdown>
-
-- What happens to LSM read performance as SSTables accumulate? <span class="fill-in">[Your answer]</span>
-- Why doesn't B+Tree have this problem? <span class="fill-in">[Your answer]</span>
-- How does compaction help LSM Trees? <span class="fill-in">[Your answer]</span>
-
-</div>
-
----
-
-## Case Studies: Storage Engines in the Wild
-
-### MySQL (InnoDB): The B+Tree Workhorse
-
-- **Engine:** InnoDB, the default storage engine for MySQL.
-- **Pattern:** B+Tree.
-- **How it works:** InnoDB uses a B+Tree for its primary key index, which is a **clustered index**. This means the table
-  data itself is stored in the leaf nodes of the B+Tree, physically ordered by the primary key. This makes primary key
-  lookups and range scans extremely fast.
-- **Key Takeaway:** B+Trees are the default choice for general-purpose OLTP databases like MySQL that require strong
-  consistency, fast point lookups, and efficient range queries (e.g., fetching users in a specific ID range). The
-  trade-off is higher write amplification, as in-place updates can cause page splits.
-
-### Apache Cassandra: LSM Trees for Write-Heavy Scale
-
-- **Engine:** Apache Cassandra.
-- **Pattern:** Log-Structured Merge-Tree (LSM Tree).
-- **How it works:** Writes are first appended to a commit log and then written to an in-memory `memtable`. When the
-  `memtable` is full, it's flushed to disk as an immutable `SSTable`. Reads must check the `memtable` and potentially
-  multiple `SSTables`. Compaction processes merge `SSTables` in the background to improve read performance.
-- **Key Takeaway:** Cassandra is built for massive write throughput and high availability. By turning random writes into
-  sequential appends, LSM Trees are perfect for write-heavy workloads like time-series data, IoT metrics, and logging
-  systems, at the cost of higher read latency and eventual consistency.
-
-### RocksDB: The Embedded LSM Engine
-
-- **Engine:** RocksDB, an embeddable key-value store developed by Facebook.
-- **Pattern:** LSM Tree.
-- **How it works:** RocksDB provides an LSM-based storage engine library that other databases can build on top of. It
-  manages `memtables`, `SSTables`, and compaction, offering tunable performance for different workloads.
-- **Key Takeaway:** The LSM Tree pattern is so powerful that it's used as a foundational component in many modern
-  distributed databases like CockroachDB, TiDB, and YugabyteDB. It provides a robust, high-performance engine for
-  handling state in a distributed environment.
 
 ---
 
@@ -532,6 +338,56 @@ public class BPlusTreeClient {
 
 ---
 
+!!! warning "Debugging Challenge — Broken Leaf Search"
+
+    The `findLeaf` below has one subtle bug in its comparison logic. Find it before reading the answer.
+
+    ```java
+    private LeafNode findLeaf(K key) {
+        Node current = root;
+
+        while (!current.isLeaf()) {
+            InternalNode internal = (InternalNode) current;
+
+            int i = 0;
+            while (i < internal.keys.size() && key.compareTo(internal.keys.get(i)) > 0) {
+                i++;
+            }
+
+            current = internal.children.get(i);
+        }
+
+        return (LeafNode) current;
+    }
+    ```
+
+    Trace through manually with this tree:
+
+    ```
+    Internal node: keys=[20], children=[ChildA, ChildB]
+    ChildA contains: [10, 15]
+    ChildB contains: [20, 25, 30]
+
+    Search key=20:
+    - key(20) > keys[0](20)? → NO → i stays 0 → visit ChildA
+    - But key 20 is in ChildB!
+    ```
+
+    ??? success "Answer"
+
+        **Bug:** Using `>` instead of `>=` sends keys equal to a split point left when they belong right.
+
+        **B+Tree invariant:** An internal key K means left child contains keys `< K`, right child contains keys `>= K`.
+
+        **Fix:**
+        ```java
+        while (i < internal.keys.size() && key.compareTo(internal.keys.get(i)) >= 0) {
+            i++;
+        }
+        ```
+
+---
+
 ### Part 2: LSM Tree
 
 **Your task:** Implement a simplified LSM Tree with MemTable and SSTables.
@@ -712,6 +568,49 @@ public class LSMTreeClient {
 
 ---
 
+!!! warning "Debugging Challenge — Broken Compaction"
+
+    The `compact()` below has two logic bugs that cause data loss and incorrect values. Find both before reading the answers.
+
+    ```java
+    public void compact() {
+        if (sstables.size() <= 1) return;
+
+        TreeMap<K, V> merged = new TreeMap<>();
+
+        for (int i = sstables.size() - 1; i >= 0; i--) {  // newest → oldest
+            SSTable<K, V> table = sstables.get(i);
+            for (Map.Entry<K, V> entry : table.entrySet()) {
+                merged.put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        SSTable<K, V> compacted = new SSTable<>(merged);
+        sstables.add(compacted);
+
+        System.out.println("Compacted into 1 SSTable");
+    }
+    ```
+
+    ??? success "Answers"
+
+        **Bug 1 — wrong iteration order:** Iterating newest-to-oldest means that when a key appears in an older SSTable, its older value overwrites the newer one. LSM Trees must keep the newest value.
+
+        **Fix:** Iterate oldest-to-newest so later `put()` calls overwrite earlier ones:
+        ```java
+        for (int i = 0; i < sstables.size(); i++) { ... }
+        ```
+
+        **Bug 2 — old SSTables never removed:** `sstables.add(compacted)` appends the compacted table but leaves all originals in place. Memory leak, and reads become slower after every compaction.
+
+        **Fix:**
+        ```java
+        sstables.clear();
+        sstables.add(compacted);
+        ```
+
+---
+
 ### Part 3: Benchmark Comparison
 
 **Your task:** Compare B+Tree vs LSM Tree performance.
@@ -812,14 +711,6 @@ public class StorageBenchmark {
 }
 ```
 
-**Must complete:**
-
-- [ ] Implement B+Tree insert, search, rangeQuery
-- [ ] Implement LSM Tree put, get, flush, compact
-- [ ] Run both client programs successfully
-- [ ] Run benchmark and record results
-- [ ] Understand WHY each performs better in different scenarios
-
 **Your benchmark results:**
 
 <table class="benchmark-table">
@@ -861,402 +752,228 @@ public class StorageBenchmark {
 
 <div class="learner-section" markdown>
 
-**Key insight:** <span class="fill-in">[Fill in why this difference exists]</span>
+**Key insight from your results:** <span class="fill-in">[Fill in why this difference exists]</span>
+
+</div>
+
+!!! info "Loop back"
+    Return to the Quick Quiz now and fill in your verified answers.
+
+---
+
+## Before/After: Why This Pattern Matters
+
+**Your task:** Compare naive vs optimised approaches to understand the trade-offs.
+
+### Example: Write-Heavy Workload
+
+**Problem:** Insert 10,000 key-value pairs as quickly as possible.
+
+#### Approach 1: B+Tree (Immediate Persistence)
+
+```java
+// Every write requires tree traversal and potential rebalancing
+BPlusTree<Integer, String> btree = new BPlusTree<>(128);
+
+long start = System.nanoTime();
+for (int i = 0; i < 10000; i++) {
+    btree.insert(i, "Value" + i);  // Each insert: O(log N)
+    // Must traverse tree from root to leaf
+    // May trigger node splits (expensive)
+    // Must maintain tree balance property
+}
+long duration = System.nanoTime() - start;
+```
+
+**Analysis:**
+
+- Time: O(N log N) — Each insert is O(log N)
+- For 10,000 inserts: ~10,000 * log(10,000) = ~130,000 operations
+- Write amplification: High (each insert may split nodes, update parent pointers)
+
+#### Approach 2: LSM Tree (Buffered Writes)
+
+```java
+// Writes go to in-memory MemTable (just a TreeMap insert)
+LSMTree<Integer, String> lsm = new LSMTree<>(100);
+
+long start = System.nanoTime();
+for (int i = 0; i < 10000; i++) {
+    lsm.put(i, "Value" + i);  // Each put: O(log M), M = memTable size
+    // Only updates in-memory TreeMap
+    // Occasional flush to disk (batched)
+}
+long duration = System.nanoTime() - start;
+```
+
+**Analysis:**
+
+- Time: O(N log M) where M << N (M = MemTable size)
+- For 10,000 inserts: ~10,000 * log(100) = ~20,000 operations
+- Write amplification: Lower (batch writes to disk)
+
+#### Performance Comparison
+
+| Operation Count | B+Tree (O(N log N)) | LSM Tree (O(N log M)) | LSM Advantage |
+|-----------------|---------------------|-----------------------|---------------|
+| N = 1,000       | ~10,000 ops         | ~2,000 ops            | 5x faster     |
+| N = 10,000      | ~130,000 ops        | ~20,000 ops           | 6.5x faster   |
+| N = 100,000     | ~1,700,000 ops      | ~200,000 ops          | 8.5x faster   |
+
+**Your calculation:** For N = 50,000 writes, LSM Tree is approximately _____ times faster.
+
+#### Why Does LSM Win for Writes?
+
+!!! note "Key insight"
+    B+Tree: every insert = tree traversal + potential split.
+    LSM Tree: every insert = one in-memory write, occasionally flushed in a batch.
+
+```
+B+Tree insert key=50:
+1. Traverse root → internal → leaf  (3 disk seeks)
+2. Insert in leaf                   (sorted position)
+3. If leaf full, split node         (expensive)
+4. Update parent pointers           (more writes)
+Result: 1 logical write = 4-5 physical writes (write amplification)
+
+LSM Tree insert key=50:
+1. Insert into MemTable             (in-memory TreeMap)
+2. When MemTable full, flush batch  (sequential write to disk)
+Result: 1 logical write = 1 in-memory write
+```
+
+**After implementing, explain in your own words:**
+
+<div class="learner-section" markdown>
+
+- Why does B+Tree require more writes per operation? <span class="fill-in">[Your answer]</span>
+- How does LSM Tree achieve better write throughput? <span class="fill-in">[Your answer]</span>
+- What's the trade-off for read performance? <span class="fill-in">[Your answer]</span>
 
 </div>
 
 ---
 
-## Debugging Challenges
+### Example: Read-Heavy Workload
 
-**Your task:** Find and fix bugs in broken storage engine implementations. This tests your deep understanding.
+**Problem:** Perform 1,000 random lookups after loading 10,000 records.
 
-### Challenge 1: Broken B+Tree Leaf Split
+#### Approach 1: B+Tree (Single Location Read)
 
 ```java
-/**
- * This splitLeaf method is supposed to split a full leaf node.
- * It has 3 CRITICAL BUGS. Find them!
- */
-private void splitLeaf(LeafNode leaf) {
-    LeafNode newLeaf = new LeafNode();
-    int midpoint = leaf.keys.size() / 2;
+BPlusTree<Integer, String> btree = new BPlusTree<>(128);
+// Load data...
 
-    // Move half the keys/values to new leaf
-    for (int i = midpoint; i < leaf.keys.size(); i++) {
-        newLeaf.keys.add(leaf.keys.get(i));
-        newLeaf.values.add(leaf.values.get(i));
-    }
-
-    for (int i = midpoint; i < leaf.keys.size(); i++) {
-        leaf.keys.remove(i);
-        leaf.values.remove(i);
-    }
-
-    // newLeaf.next = ???
-
-    InternalNode parent = (InternalNode) leaf.parent;
-    parent.keys.add(newLeaf.keys.get(0));
-    parent.children.add(newLeaf);
+long start = System.nanoTime();
+for (int i = 0; i < 1000; i++) {
+    int key = random.nextInt(10000);
+    String value = btree.search(key);  // Single tree traversal: O(log N)
+    // Root → Internal → Leaf (3-4 hops)
 }
+long duration = System.nanoTime() - start;
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- Bug 1: <span class="fill-in">[What's the bug?]</span>
-- Bug 2: <span class="fill-in">[What's the bug?]</span>
-- Bug 3: <span class="fill-in">[What's the bug?]</span>
+- Time: O(log N) per read
+- For 1,000 reads: ~1,000 * log(10,000) = ~13,000 operations
+- Read amplification: Low (single path through tree)
 
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1 (Lines 13-16):** Removing elements while iterating forward breaks indices. Each removal shifts remaining
-elements left.
-
-**Fix:**
+#### Approach 2: LSM Tree (Multiple Location Read)
 
 ```java
-// Remove from end to avoid index shifting
-for (int i = leaf.keys.size() - 1; i >= midpoint; i--) {
-    leaf.keys.remove(i);
-    leaf.values.remove(i);
+LSMTree<Integer, String> lsm = new LSMTree<>(100);
+// Load data... (creates multiple SSTables)
+
+long start = System.nanoTime();
+for (int i = 0; i < 1000; i++) {
+    int key = random.nextInt(10000);
+    String value = lsm.get(key);  // Check MemTable + all SSTables
+    // Must check MemTable (O(log M))
+    // Then check SSTable-5 (O(log S))
+    // Then check SSTable-4 (O(log S))
+    // ... continue until found
 }
-// OR use subList:
-leaf.keys.subList(midpoint, leaf.keys.size()).clear();
-leaf.values.subList(midpoint, leaf.values.size()).clear();
+long duration = System.nanoTime() - start;
 ```
 
-**Bug 2 (After line 11):** Must link new leaf into the leaf chain for range queries!
+**Analysis:**
 
-**Fix:**
+- Time: O(log M + K * log S) where K = number of SSTables
+- For 1,000 reads with 10 SSTables: ~1,000 * (10 * log(1000)) = ~100,000 operations
+- Read amplification: High (must check multiple locations)
 
-```java
-newLeaf.next = leaf.next;  // New leaf points to old leaf's next
-leaf.next = newLeaf;       // Old leaf points to new leaf
-```
+#### Performance Comparison
 
-**Bug 3 (Lines 22-23):** If leaf is root, parent is null - NullPointerException!
+| SSTable Count | B+Tree (O(log N)) | LSM Tree (O(K * log S)) | B+Tree Advantage |
+|---------------|-------------------|-------------------------|------------------|
+| K = 1         | ~13 ops/read      | ~13 ops/read            | ~1x (equal)      |
+| K = 5         | ~13 ops/read      | ~65 ops/read            | 5x faster        |
+| K = 10        | ~13 ops/read      | ~130 ops/read           | 10x faster       |
 
-**Fix:**
+**Your calculation:** With 20 SSTables, B+Tree is approximately _____ times faster for reads.
 
-```java
-if (leaf.parent == null) {
-    // Create new root
-    InternalNode newRoot = new InternalNode();
-    newRoot.keys.add(newLeaf.keys.get(0));
-    newRoot.children.add(leaf);
-    newRoot.children.add(newLeaf);
-    leaf.parent = newRoot;
-    newLeaf.parent = newRoot;
-    root = newRoot;
-} else {
-    InternalNode parent = (InternalNode) leaf.parent;
-    // Insert key in sorted position (not just add!)
-    // Insert newLeaf in corresponding position
-}
-```
+!!! tip "This is why compaction matters"
+    LSM read performance degrades linearly with SSTable count. Compaction controls that count.
 
-</details>
+**After benchmarking, fill in:**
+
+<div class="learner-section" markdown>
+
+- What happens to LSM read performance as SSTables accumulate? <span class="fill-in">[Your answer]</span>
+- Why doesn't B+Tree have this problem? <span class="fill-in">[Your answer]</span>
+- How does compaction help LSM Trees? <span class="fill-in">[Your answer]</span>
+
+</div>
 
 ---
 
-### Challenge 2: Broken LSM Tree Compaction
+## Case Studies: Storage Engines in the Wild
 
-```java
-/**
- * Compact all SSTables into one.
- * This has 2 LOGIC BUGS that cause data loss and incorrect ordering.
- */
-public void compact() {
-    if (sstables.size() <= 1) return;
+### MySQL (InnoDB): The B+Tree Workhorse
 
-    TreeMap<K, V> merged = new TreeMap<>();
+- **Engine:** InnoDB, the default storage engine for MySQL.
+- **Pattern:** B+Tree.
+- **How it works:** InnoDB uses a B+Tree for its primary key index, which is a **clustered index**. This means the table
+  data itself is stored in the leaf nodes of the B+Tree, physically ordered by the primary key. This makes primary key
+  lookups and range scans extremely fast.
+- **Key Takeaway:** B+Trees are the default choice for general-purpose OLTP databases like MySQL that require strong
+  consistency, fast point lookups, and efficient range queries (e.g., fetching users in a specific ID range). The
+  trade-off is higher write amplification, as in-place updates can cause page splits.
 
-    for (int i = sstables.size() - 1; i >= 0; i--) {
-        SSTable<K, V> table = sstables.get(i);
-        for (Map.Entry<K, V> entry : table.entrySet()) {
-            merged.put(entry.getKey(), entry.getValue());
-        }
-    }
+### Apache Cassandra: LSM Trees for Write-Heavy Scale
 
-    // Create compacted SSTable
-    SSTable<K, V> compacted = new SSTable<>(merged);
+- **Engine:** Apache Cassandra.
+- **Pattern:** Log-Structured Merge-Tree (LSM Tree).
+- **How it works:** Writes are first appended to a commit log and then written to an in-memory `memtable`. When the
+  `memtable` is full, it's flushed to disk as an immutable `SSTable`. Reads must check the `memtable` and potentially
+  multiple `SSTables`. Compaction processes merge `SSTables` in the background to improve read performance.
+- **Key Takeaway:** Cassandra is built for massive write throughput and high availability. By turning random writes into
+  sequential appends, LSM Trees are perfect for write-heavy workloads like time-series data, IoT metrics, and logging
+  systems, at the cost of higher read latency and eventual consistency.
 
-    sstables.add(compacted);
+### RocksDB: The Embedded LSM Engine
 
-    System.out.println("Compacted into 1 SSTable");
-}
-```
-
-**Your debugging:**
-
-- Bug 1: <span class="fill-in">[What's the bug?]</span>
-- Bug 2: <span class="fill-in">[What's the bug?]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1 (Line 9):** Iterating from newest to oldest means older values overwrite newer ones!
-
-LSM Trees must keep the NEWEST value for each key. By iterating newest-to-oldest and using `put()`, when we encounter
-the key again in an older SSTable, it overwrites the newer value.
-
-**Fix:**
-
-```java
-// Iterate from OLDEST to NEWEST
-for (int i = 0; i < sstables.size(); i++) {
-    SSTable<K, V> table = sstables.get(i);
-    for (Map.Entry<K, V> entry : table.entrySet()) {
-        merged.put(entry.getKey(), entry.getValue());  // Later puts overwrite earlier
-    }
-}
-```
-
-**Bug 2 (Line 18):** We add the compacted SSTable but never remove the old ones! Memory leak!
-
-**Fix:**
-
-```java
-sstables.clear();          // Remove all old SSTables
-sstables.add(compacted);   // Add compacted one
-```
-
-</details>
+- **Engine:** RocksDB, an embeddable key-value store developed by Facebook.
+- **Pattern:** LSM Tree.
+- **How it works:** RocksDB provides an LSM-based storage engine library that other databases can build on top of. It
+  manages `memtables`, `SSTables`, and compaction, offering tunable performance for different workloads.
+- **Key Takeaway:** The LSM Tree pattern is so powerful that it's used as a foundational component in many modern
+  distributed databases like CockroachDB, TiDB, and YugabyteDB. It provides a robust, high-performance engine for
+  handling state in a distributed environment.
 
 ---
 
-### Challenge 3: B+Tree Search with Wrong Child Selection
+## Common Misconceptions
 
-```java
-/**
- * Find the leaf node where key should be located.
- * This has 1 SUBTLE BUG in binary search logic.
- */
-private LeafNode findLeaf(K key) {
-    Node current = root;
+!!! warning "LSM Trees are always faster than B+Trees"
+    LSM Trees are faster for *writes*. B+Trees are faster for *reads*, especially point lookups. The correct framing is: which trade-off matches your workload's read/write ratio?
 
-    while (!current.isLeaf()) {
-        InternalNode internal = (InternalNode) current;
+!!! warning "Compaction is optional"
+    Without compaction, SSTables accumulate indefinitely. Read performance degrades as O(K × log S) where K grows without bound — eventually every read scans dozens of files. Compaction is not an optimisation; it is required for sustained read performance.
 
-        int i = 0;
-        while (i < internal.keys.size() && key.compareTo(internal.keys.get(i)) > 0) {
-            i++;
-        }
-
-        current = internal.children.get(i);
-    }
-
-    return (LeafNode) current;
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What's the bug?]</span>
-
-**Trace through manually:**
-
-```
-Internal node: keys=[20], children=[ChildA, ChildB]
-ChildA contains: [10, 15]
-ChildB contains: [20, 25, 30]
-
-Search key=20:
-
-- Line 12: i=0, key(20) > keys[0](20)? NO
-- i stays 0
-- Visit children[0] = ChildA
-- BUG: Key 20 is actually in ChildB!
-```
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug (Line 12):** Using `>` instead of `>=` causes keys equal to split points to go left when they should go right.
-
-**B+Tree invariant:** Internal node key K means "left child < K, right child >= K"
-
-**Fix:**
-
-```java
-while (i < internal.keys.size() && key.compareTo(internal.keys.get(i)) >= 0) {
-    i++;
-}
-```
-
-OR be more explicit:
-
-```java
-int i;
-for (i = 0; i < internal.keys.size(); i++) {
-    if (key.compareTo(internal.keys.get(i)) < 0) {
-        break;
-    }
-}
-current = internal.children.get(i);
-```
-
-</details>
-
----
-
-### Challenge 4: LSM Tree Missing Flush
-
-```java
-/**
- * This LSM Tree mysteriously loses data after many inserts.
- * Find the CRITICAL MISSING OPERATION.
- */
-public class LSMTree<K extends Comparable<K>, V> {
-    private TreeMap<K, V> memTable;
-    private List<SSTable<K, V>> sstables;
-    private final int memTableSize = 100;
-
-    public void put(K key, V value) {
-        memTable.put(key, value);
-
-        if (memTable.size() >= memTableSize) {
-            flush();
-        }
-    }
-
-    private void flush() {
-        SSTable<K, V> newTable = new SSTable<>(memTable);
-        sstables.add(newTable);
-        System.out.println("Flushed to SSTable");
-    }
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What's the bug?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug (After line 20):** We never clear the MemTable after flushing!
-
-**Result:** MemTable keeps growing forever. After first flush, memTable has 100 items. After second flush, it has 200.
-Eventually OutOfMemoryError.
-
-**Also:** Data gets duplicated across SSTables because we keep the same data in memory and keep flushing it again.
-
-**Fix:**
-
-```java
-private void flush() {
-    SSTable<K, V> newTable = new SSTable<>(memTable);
-    sstables.add(newTable);
-    memTable.clear();  // CRITICAL: Clear for new writes!
-    System.out.println("Flushed to SSTable");
-}
-```
-
-OR initialize a new MemTable:
-
-```java
-memTable = new TreeMap<>();
-```
-
-</details>
-
----
-
-### Challenge 5: Range Query Doesn't Stop
-
-```java
-/**
- * B+Tree range query implementation.
- * This has 1 CRITICAL BUG causing incorrect results.
- */
-public List<V> rangeQuery(K startKey, K endKey) {
-    List<V> results = new ArrayList<>();
-
-    LeafNode leaf = findLeaf(startKey);
-
-    // Traverse leaves until we exceed endKey
-    while (leaf != null) {
-        for (int i = 0; i < leaf.keys.size(); i++) {
-            K key = leaf.keys.get(i);
-
-            if (key.compareTo(startKey) >= 0) {
-                results.add(leaf.values.get(i));
-            }
-        }
-
-        leaf = leaf.next;
-    }
-
-    return results;
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What's the bug?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug (Lines 11-17):** We check if key >= startKey but never check if key > endKey!
-
-**Result:** Range query returns ALL keys from startKey to the end of the tree, ignoring endKey.
-
-**Fix:**
-
-```java
-while (leaf != null) {
-    for (int i = 0; i < leaf.keys.size(); i++) {
-        K key = leaf.keys.get(i);
-
-        if (key.compareTo(endKey) > 0) {
-            return results;  // Stop when we exceed endKey
-        }
-
-        if (key.compareTo(startKey) >= 0) {
-            results.add(leaf.values.get(i));
-        }
-    }
-
-    leaf = leaf.next;
-}
-```
-
-**Optimization:** Can also break out of outer loop:
-
-```java
-if (key.compareTo(endKey) > 0) {
-    break;  // Exit inner loop
-}
-// After inner loop:
-if (leaf.keys.size() > 0 &&
-    leaf.keys.get(leaf.keys.size()-1).compareTo(endKey) > 0) {
-    break;  // Exit outer loop
-}
-```
-
-</details>
-
----
-
-### Your Debugging Scorecard
-
-After finding and fixing all bugs:
-
-- [ ] Found all 9+ bugs across 5 challenges
-- [ ] Understood WHY each bug causes data corruption or incorrect results
-- [ ] Could explain the fix to someone else
-- [ ] Learned common storage engine mistakes to avoid
-
-**Common mistakes you discovered:**
-
-1. <span class="fill-in">[Index manipulation while iterating]</span>
-2. <span class="fill-in">[Missing pointer updates in tree structures]</span>
-3. <span class="fill-in">[Wrong iteration order in merge operations]</span>
-4. <span class="fill-in">[Forgetting to clear/reset data structures]</span>
-5. <span class="fill-in">[Incomplete boundary checks in range queries]</span>
+!!! warning "WAL is part of the storage engine"
+    WAL (Write-Ahead Log) is a separate durability layer, not a feature of either engine. Both B+Trees and LSM Trees use WAL for crash recovery — it is orthogonal to how data is structured on disk. Losing your MemTable on a crash and replaying a WAL is an LSM concern; B+Trees have their own WAL-based recovery path.
 
 ---
 
@@ -1307,6 +1024,8 @@ flowchart LR
     Q3 -->|"YES, many<br/>range scans"| A4(["Use B+Tree ✓"])
     Q3 -->|"Mixed<br/>workload"| A5["Your decision here<br/>based on testing"]
 ```
+
+---
 
 ## Practice
 
@@ -1405,52 +1124,20 @@ Trade-offs you considered:
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-Before moving to the next topic:
+Answer these without referring to your notes or implementation.
 
-- [ ] **Implementation**
-    - [ ] B+Tree insert, search, range query work correctly
-    - [ ] LSM Tree put, get, flush, compact work correctly
-    - [ ] All client code runs without errors
-    - [ ] Benchmarks completed and results recorded
-
-- [ ] **Understanding**
-    - [ ] Can explain B+Tree in simple terms (filled ELI5)
-    - [ ] Can explain LSM Tree in simple terms (filled ELI5)
-    - [ ] Understand why writes are different speeds
-    - [ ] Understand why reads are different speeds
-
-- [ ] **Decision Making**
-    - [ ] Built complete decision tree
-    - [ ] Solved all 3 practice scenarios
-    - [ ] Can justify each design choice
-
-- [ ] **Mastery Check**
-    - [ ] Could implement both from memory
-    - [ ] Could explain trade-offs in an interview
-    - [ ] Know when to use each without looking at notes
+1. What causes write amplification in a B+Tree? Describe the physical I/O operations that occur for a single logical insert.
+2. Why does an LSM Tree need compaction? What specifically breaks if you skip it indefinitely?
+3. A metrics pipeline ingests 500k events/second and queries the last hour of data every 30 seconds. Which engine, and why?
+4. What structural difference between B-Tree and B+Tree makes range queries significantly more efficient?
+5. A colleague says "We should use LSM Trees — they're faster." What is incomplete about this statement?
 
 ---
 
-### Mastery Certification
-
-**I certify that I can:**
-
-- [ ] Implement B+Tree insert, search, and range query from memory
-- [ ] Explain B+Tree node splitting and balancing
-- [ ] Implement LSM Tree put, get, flush, and compact operations
-- [ ] Explain write amplification in B+Trees vs LSM Trees
-- [ ] Explain read amplification in LSM Trees
-- [ ] Understand the role of compaction in LSM Trees
-- [ ] Choose between B+Tree and LSM Tree for a given workload
-- [ ] Explain when to use each storage engine
-- [ ] Benchmark and analyze performance differences
-- [ ] Debug common storage engine implementation issues
-- [ ] Explain these concepts in a system design interview
-- [ ] Teach these concepts to someone else
-
-# APPENDIX: The Historical Evolution - From First Principles
+<details markdown>
+<summary>Appendix: The Historical Evolution — From First Principles</summary>
 
 > **Why this appendix exists**: The main chapter teaches B+Trees and LSM Trees side-by-side. But historically, B+Trees
 > came first and dominated for 30 years. Understanding this evolution provides deeper intuition about why these designs
@@ -1476,7 +1163,7 @@ Before moving to the next topic:
 - Cassandra, HBase, RocksDB, LevelDB
 - Narrative: "B+Trees are old SQL. LSM Trees are modern NoSQL."
 
-**Reality**: Both solve the same problem (organizing data on disk) with different trade-offs.
+**Reality**: Both solve the same problem (organising data on disk) with different trade-offs.
 
 ---
 
@@ -1574,7 +1261,7 @@ We fixed reads by keeping the file sorted (enabling binary search). But what's t
 - Each record = 100 bytes → **50MB rewritten per insert** 🐌
 - This is worse than the unsorted file!
 
-**Trade-off discovered**: Optimizing reads (sorting) made writes slower.
+**Trade-off discovered**: Optimising reads (sorting) made writes slower.
 
 </details>
 
@@ -1611,7 +1298,7 @@ public class SortedFileDB {
 - ❌ Writes: O(N) - must shift data to maintain sort order
 - ❌ Every insert rewrites half the file on average
 
-**Problem**: Writes went from O(1) to O(N). Optimization for reads broke writes.
+**Problem**: Writes went from O(1) to O(N). Optimisation for reads broke writes.
 
 ---
 
@@ -1649,7 +1336,7 @@ disk?
 - Disk page size: 4KB
 - **Wasting 99% of each disk read!**
 
-**Problem discovered**: We need to pack more data per disk read to minimize seeks.
+**Problem discovered**: We need to pack more data per disk read to minimise seeks.
 
 </details>
 
@@ -1702,7 +1389,7 @@ public class BSTDB {
 
 ### Level 3: B-Tree (1972) - The Breakthrough
 
-**Key insight**: Disk I/O is expensive. **Minimize disk seeks** by making nodes match disk page size.
+**Key insight**: Disk I/O is expensive. **Minimise disk seeks** by making nodes match disk page size.
 
 ```java
 class BTreeNode {
@@ -1747,7 +1434,7 @@ Result: 6-7x faster!
 
 ---
 
-### Level 4: B+Tree - Optimized for Range Queries
+### Level 4: B+Tree - Optimised for Range Queries
 
 **Problem with B-Tree**: Range queries are awkward.
 
@@ -1840,81 +1527,62 @@ public void insert(K key, V value) {
 - Actual new data: **~100GB**
 - **Write amplification: 400x**
 
-**Additional problem**:
-
-- B+Trees do **random I/O** (tree traversal jumps around disk)
-- On spinning disks: random I/O = **100x slower** than sequential I/O
-- Random seeks kill throughput
-
 ---
 
 ## First Principles → LSM Tree
 
-**Question**: How can we optimize for massive write volume?
+**Question**: How can we optimise for massive write volume?
 
 ### Core Insight: Delay Sorting
 
 ```
 When do you pay the cost of sorting?
 ┌─────────────────────────────────┐
-│                                 │
 │      On Every Write             │
 │         (B+Tree)                │
 │           vs                    │
 │      In Batches                 │
 │       (LSM Tree)                │
-│                                 │
 └─────────────────────────────────┘
 ```
 
 **B+Tree philosophy**: Keep data sorted all the time
 
-- Insert cost: O(log N) - must maintain sort order immediately
-- Read cost: O(log N) - data is always sorted
+- Insert cost: O(log N) — must maintain sort order immediately
+- Read cost: O(log N) — data is always sorted
 
 **LSM Tree philosophy**: Sort in batches, not per-write
 
-- Insert cost: O(log M) - just update in-memory buffer (M << N)
-- Read cost: O(K × log S) - check multiple sorted files
-- Amortize sorting cost over many writes
+- Insert cost: O(log M) — just update in-memory buffer (M << N)
+- Read cost: O(K × log S) — check multiple sorted files
+- Amortise sorting cost over many writes
 
 ---
 
 ### The LSM Tree Evolution
 
-**Step 1: Recognize append-only is fastest**
+**Step 1: Recognise append-only is fastest**
 
 ```java
-// Fastest possible write: append to log
 public void write(K key, V value) {
     log.append(key + "," + value);  // O(1), sequential I/O ✓
 }
-
 // But reads are O(N) - scan entire log ✗
 ```
-
----
 
 **Step 2: Buffer writes in memory (sorted)**
 
 ```java
-TreeMap<K, V> memTable = new TreeMap<>();  // Sorted in memory
+TreeMap<K, V> memTable = new TreeMap<>();
 
 public void write(K key, V value) {
     memTable.put(key, value);  // O(log M) where M is small (e.g., 10K)
-    // Fast! In-memory operation, no disk I/O
 }
 
 public V read(K key) {
     return memTable.get(key);  // O(log M)
 }
 ```
-
-**Benefit**: Writes are fast (in-memory), data is sorted.
-
-**Problem**: Limited by RAM size. Need to flush to disk eventually.
-
----
 
 **Step 3: Flush to sorted files periodically**
 
@@ -1923,7 +1591,6 @@ public void write(K key, V value) {
     memTable.put(key, value);
 
     if (memTable.size() >= threshold) {
-        // Flush to disk as sorted file (SSTable)
         SSTable newTable = writeSSTable(memTable);  // Sequential write - FAST!
         sstables.add(newTable);
         memTable.clear();
@@ -1931,67 +1598,40 @@ public void write(K key, V value) {
 }
 ```
 
-**Benefit**:
-
-- Batched writes: 1000 inserts → 1 sequential flush
-- **100-1000x less I/O** than B+Tree
-- Sequential writes (fast on HDDs)
-
----
-
 **Step 4: Read from multiple locations**
 
 ```java
 public V read(K key) {
-    // Check memory first (most recent)
     if (memTable.containsKey(key)) {
         return memTable.get(key);
     }
 
-    // Check on-disk files (newest to oldest)
     for (int i = sstables.size() - 1; i >= 0; i--) {
         SSTable table = sstables.get(i);
-        V value = table.get(key);  // Binary search in sorted file
+        V value = table.get(key);
         if (value != null) return value;
     }
 
-    return null;  // Not found
+    return null;
 }
 ```
-
-**Trade-off**:
-
-- ❌ Reads are slower (check multiple places)
-- ✅ But acceptable for **write-heavy** workloads
-
-**This is called "read amplification"**: must check K files instead of 1 tree.
-
----
 
 **Step 5: Compact periodically**
 
 ```java
-// Problem: Too many SSTables → slow reads
-// Solution: Merge files periodically
-
 public void compact() {
     TreeMap<K, V> merged = new TreeMap<>();
 
-    // Merge all SSTables (oldest to newest)
-    for (SSTable table : sstables) {
+    for (SSTable table : sstables) {  // oldest to newest
         for (Entry<K, V> entry : table.entrySet()) {
             merged.put(entry.getKey(), entry.getValue());
-            // Newer values overwrite older ones
         }
     }
 
-    // Replace old SSTables with one compacted file
     sstables.clear();
     sstables.add(new SSTable(merged));
 }
 ```
-
-**Result**: Fewer files = faster reads. Amortize compaction cost over time.
 
 ---
 
@@ -1999,49 +1639,22 @@ public void compact() {
 
 **WAL is orthogonal** to your storage engine choice. It's about **durability**, not structure.
 
-**Problem**: MemTable is in RAM - what if crash before flush?
-
-```java
-// Without WAL: Data lost on crash ❌
-public void put(K key, V value) {
-    memTable.put(key, value);  // If crash here, data is LOST!
-
-    if (memTable.size() >= threshold) {
-        flushToSSTable(memTable);
-    }
-}
-```
-
-**Solution: WAL (Write-Ahead Log)**
-
 ```java
 // With WAL: Durable ✓
 public void put(K key, V value) {
-    // 1. Write to WAL FIRST (append-only log on disk)
     wal.append(key, value);      // Persist to disk immediately
-
-    // 2. Update in-memory MemTable
     memTable.put(key, value);    // Fast in-memory update
 
     if (memTable.size() >= threshold) {
         flushToSSTable(memTable);
-        wal.clear();  // Can delete WAL after successful flush
+        wal.clear();
     }
 }
 
-// On crash recovery:
 public void recover() {
-    memTable = replayWAL();  // Rebuild MemTable from WAL
-    // Then continue normal operations
+    memTable = replayWAL();
 }
 ```
-
-**WAL characteristics**:
-
-- Append-only (sequential writes - fast)
-- Only stores recent uncommitted data
-- Deleted after flush
-- Used for crash recovery
 
 **Both B+Trees and LSM Trees use WAL** for durability. It's a separate layer from the core storage structure.
 
@@ -2051,10 +1664,7 @@ public void recover() {
 
 **Completely different trade-off**: RAM vs Disk
 
-### Redis (Pure In-Memory)
-
 ```java
-// Everything in RAM - no disk I/O for reads!
 Map<K, V> data = new HashMap<>();
 
 public void put(K key, V value) {
@@ -2064,34 +1674,14 @@ public void put(K key, V value) {
 public V get(K key) {
     return data.get(key);  // O(1) - instant! ⚡
 }
-
-// Optional: Persist to disk asynchronously (doesn't block)
-public void backgroundSave() {
-    fork();  // Copy-on-write
-    childProcess.writeToDisk(data);  // Snapshot
-}
 ```
-
-**Advantages**:
-
-- ⚡ Extremely fast: O(1) for hash operations
-- No disk I/O latency (microseconds vs milliseconds)
-- Simple architecture
-
-**Disadvantages**:
-
-- 💰 RAM is 30-50x more expensive than SSD
-- 📏 Limited capacity: can't store more than RAM
-- ❌ Data loss risk: if crash before persistence
-- ❌ No range queries (hash table, not sorted)
 
 **When to use**:
 
-- **Cache** (can rebuild from database if lost)
-- **Session storage** (acceptable to lose some sessions)
-- **Real-time counters** (like/view counts)
-- **Leaderboards** (can reconstruct)
-- **Pub/sub** (transient messages)
+- Cache (can rebuild from database if lost)
+- Session storage (acceptable to lose some sessions)
+- Real-time counters (like/view counts)
+- Leaderboards (can reconstruct)
 
 **When NOT to use**:
 
@@ -2111,119 +1701,41 @@ public void backgroundSave() {
 | **LSM Tree**    | ⚡⚡⚡ O(log M) | ⚡⚡ O(K×log S) | ✓✓ Good       | Unlimited | ✓ (with WAL) | Write-heavy OLTP |
 | **Redis (RAM)** | ⚡⚡⚡ O(1)     | ⚡⚡⚡ O(1)      | ❌ Limited     | RAM-bound | ⚠️ Optional  | Cache, sessions  |
 
-Where:
-
-- N = total number of records
-- M = MemTable size (typically 1K-100K)
-- K = number of SSTables
-- S = SSTable size
-
 ---
 
 ## The Complete Historical Sequence
 
 ```
 1970s: B-Trees invented (Rudolf Bayer, Boeing)
-└── Goal: Minimize disk seeks on spinning disks
+└── Goal: Minimise disk seeks on spinning disks
 
 1972: B+Trees emerge
-├── Optimize B-Trees for range queries
+├── Optimise B-Trees for range queries
 └── Become standard in databases
 
 1980s-2000s: B+Trees dominate
 ├── Oracle, MySQL, PostgreSQL, SQL Server
-├── Perfect for balanced read/write workloads
-└── Optimized over decades
+└── Perfect for balanced read/write workloads
 
 1996: LSM Trees invented (Patrick O'Neil et al.)
 ├── Published in academic paper
-├── Designed for write-heavy workloads
 └── Mostly ignored by industry
 
 2006: Google BigTable paper (THE TURNING POINT)
 ├── Describes LSM-style architecture
-├── Proves it works at massive scale (indexing the web)
-└── Makes LSM Trees "real" for industry
+└── Proves it works at massive scale
 
 2008-2012: NoSQL movement
-├── Cassandra (2008): Facebook's LSM database
-├── HBase (2008): Hadoop's BigTable clone
-├── LevelDB (2011): Google's open-source LSM
-├── RocksDB (2012): Facebook's LevelDB fork
-└── Narrative: "LSM Trees are modern, B+Trees are legacy"
+├── Cassandra, HBase, LevelDB, RocksDB
+└── "LSM Trees are modern, B+Trees are legacy"
 
 2010s: SSDs change the game
 ├── Random I/O becomes cheaper
-├── Gap between B+Trees and LSM Trees narrows
-└── Both remain viable depending on workload
+└── Gap between engines narrows
 
 Modern day: Hybrid approaches
 ├── MongoDB/WiredTiger supports both engines
-├── Choice depends on workload characteristics
-└── No universal "best" - only trade-offs
+└── Choice depends on workload characteristics
 ```
 
----
-
-## Key Takeaways
-
-1. **B+Trees came first** (1972) and dominated for 30+ years
-    - Optimize for disk seeks (main bottleneck on HDDs)
-    - Perfect for balanced read/write workloads
-
-2. **LSM Trees emerged** (popularized 2006) to solve specific problem
-    - Google needed massive write throughput for web indexing
-    - B+Tree write amplification became bottleneck
-    - LSM Trees trade read performance for write performance
-
-3. **WAL is separate** from storage engine choice
-    - Both B+Trees and LSM Trees use WAL for durability
-    - It's about crash recovery, not core structure
-
-4. **In-memory engines** (Redis) are different trade-off entirely
-    - RAM vs disk capacity
-    - Speed vs durability
-    - Use for caching, not primary storage
-
-5. **No universal "best"**
-    - B+Tree: read-heavy, range queries, OLTP
-    - LSM Tree: write-heavy, insert-heavy, analytics ingestion
-    - Redis: extremely low latency, acceptable data loss
-
-The lesson: **Understand the workload, then choose the tool.**
-
----
-
-## Real-World Examples
-
-**B+Tree Storage Engines**:
-
-- MySQL InnoDB
-- PostgreSQL
-- SQLite
-- SQL Server
-- Oracle Database
-
-**LSM Tree Storage Engines**:
-
-- Cassandra
-- HBase
-- RocksDB (used by MyRocks, CockroachDB, TiDB)
-- LevelDB
-- ScyllaDB
-
-**Hybrid (supports both)**:
-
-- MongoDB (WiredTiger can use either)
-
-**In-Memory**:
-
-- Redis
-- Memcached
-- VoltDB
-
----
-
-**End of Appendix**
-
-[Return to main content](#01-storage-engines)
+</details>

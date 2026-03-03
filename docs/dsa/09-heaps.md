@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this section you should be able to:
+
+- Explain the heap property, state the O(log n) insert/delete and O(1) peek complexities, and give the correct 0-indexed parent/child index formulas
+- Implement the four core patterns: basic heap operations (Kth largest), merge K sorted sequences, top-K frequent elements, and two-heap running median
+- Explain the counterintuitive rule: use a **min-heap** to find the K **largest** values and a **max-heap** to find the K **smallest** values — and give the reasoning from first principles
+- Describe the two-heap median invariant (maxHeap holds the smaller half, minHeap holds the larger half, size difference at most 1) and trace the rebalancing logic for a concrete stream
+- Diagnose the three most common heap bugs: using max-heap instead of min-heap for Kth largest, missing rebalancing in the two-heap median finder, and using 1-indexed parent/child formulas in a 0-indexed array
+- Compare heap vs sort vs QuickSelect for Kth largest and state when each is preferred
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,26 +26,29 @@
 **Prompts to guide you:**
 
 1. **What is a heap in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">[A heap is a tree-based data structure stored as an array where every parent is ___ than its children (min-heap) or ___ than its children (max-heap), guaranteeing that the root is always the global ___ and can be accessed in O(1)]</span>
 
 2. **Why is it called a priority queue?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">[It is called a priority queue because items are retrieved not in insertion order but in priority order — the item with the ___ priority (min or max depending on configuration) is always at the front, so the most urgent item is always served ___ regardless of when it arrived]</span>
 
 3. **Real-world analogy:**
     - Example: "A heap is like a hospital emergency room where patients are seen by urgency..."
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **When does this pattern work?**
-    - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
+    - Your answer: <span class="fill-in">[Heaps work whenever you need repeated access to the minimum or maximum of a changing set — for example finding the Kth largest in a stream (where you cannot sort first), merging K sorted sequences (where you need to pick the ___ element from K candidates at each step), or finding the running median (where you need the ___ of an unsorted stream)]</span>
 
 5. **What's the difference between min-heap and max-heap?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">[In a min-heap every parent is smaller than its children so the ___ element is at the root; in a max-heap every parent is larger so the ___ element is at the root. Java's PriorityQueue is a min-heap by default; to get a max-heap you pass ___ as the comparator]</span>
 
 </div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+!!! tip "How to use this section"
+    Write your best guess in each fill-in span **before** reading any implementation code. Your predictions do not need to be correct — the act of committing to an answer first makes the correct answer stick much better when you verify it later.
 
 <div class="learner-section" markdown>
 
@@ -106,210 +122,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 ---
 
-## Before/After: Why This Pattern Matters
-
-**Your task:** Compare naive vs optimized approaches to understand the impact.
-
-### Example 1: Find Kth Largest Element
-
-**Problem:** Find the Kth largest element in an unsorted array.
-
-#### Approach 1: Sorting (Simple but Inefficient)
-
-```java
-// Naive approach - Sort entire array
-public static int findKthLargest_Sorting(int[] nums, int k) {
-    Arrays.sort(nums);  // Sort ascending
-    return nums[nums.length - k];  // Kth largest
-}
-```
-
-**Analysis:**
-
-- Time: O(n log n) - Must sort all n elements
-- Space: O(1) or O(log n) depending on sort algorithm
-- For n = 100,000: ~1,600,000 operations
-
-#### Approach 2: Min-Heap of Size K (Optimized)
-
-```java
-// Optimized approach - Maintain heap of K largest elements
-public static int findKthLargest_Heap(int[] nums, int k) {
-    PriorityQueue<Integer> minHeap = new PriorityQueue<>();
-
-    for (int num : nums) {
-        minHeap.offer(num);
-        if (minHeap.size() > k) {
-            minHeap.poll();  // Remove smallest
-        }
-    }
-
-    return minHeap.peek();  // Kth largest at top
-}
-```
-
-**Analysis:**
-
-- Time: O(n log k) - n insertions, each log k operations
-- Space: O(k) - Only store K elements
-- For n = 100,000, k = 10: ~166,000 operations
-
-#### Performance Comparison
-
-| Array Size (n) | k   | Sorting (O(n log n)) | Heap (O(n log k)) | Speedup |
-|----------------|-----|----------------------|-------------------|---------|
-| n = 1,000      | 10  | ~10,000 ops          | ~3,000 ops        | 3x      |
-| n = 10,000     | 10  | ~130,000 ops         | ~33,000 ops       | 4x      |
-| n = 100,000    | 100 | ~1,600,000 ops       | ~660,000 ops      | 2.4x    |
-
-**Your calculation:** For n = 50,000 and k = 50, the speedup is approximately _____ times faster.
-
-#### Why Does Min-Heap Work for Kth LARGEST?
-
-**Key insight to understand:**
-
-In array `[3, 2, 1, 5, 6, 4]` looking for k=2 (2nd largest):
-
-```
-Step 1: Add 3 → Heap: [3]
-Step 2: Add 2 → Heap: [2, 3] (size=2)
-Step 3: Add 1 → Heap: [2, 3], size > k → remove min → Heap: [3]
-Step 4: Add 5 → Heap: [3, 5]
-Step 5: Add 6 → Heap: [3, 5], size > k → remove min → Heap: [5, 6]
-Step 6: Add 4 → Heap: [4, 5, 6], remove min → Heap: [5, 6]
-
-Answer: heap.peek() = 5 (2nd largest)
-```
-
-**Why min-heap, not max-heap?**
-
-- Min-heap keeps K largest elements, smallest of them at top
-- When heap size exceeds K, we remove the SMALLEST of the K largest
-- The top element is the Kth largest!
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why does removing the minimum preserve the K largest elements? <span class="fill-in">[Your answer]</span>
-- What would happen with a max-heap instead? <span class="fill-in">[Your answer]</span>
-
-</div>
-
----
-
-### Example 2: Finding Running Median
-
-**Problem:** Maintain the median as numbers are added one by one.
-
-#### Approach 1: Sort Every Time (Inefficient)
-
-```java
-// Naive approach - Re-sort after each insertion
-public static class MedianFinder_Sorting {
-    private List<Integer> list = new ArrayList<>();
-
-    public void addNum(int num) {
-        list.add(num);
-        Collections.sort(list);  // Re-sort entire list!
-    }
-
-    public double findMedian() {
-        int n = list.size();
-        if (n % 2 == 1) {
-            return list.get(n / 2);
-        } else {
-            return (list.get(n / 2 - 1) + list.get(n / 2)) / 2.0;
-        }
-    }
-}
-```
-
-**Analysis:**
-
-- Time: O(n log n) per insertion due to sorting
-- Space: O(n)
-- For 10,000 insertions: ~100,000,000 total operations
-
-#### Approach 2: Two Heaps (Optimized)
-
-```java
-// Optimized approach - Two heaps maintain balance
-public static class MedianFinder_TwoHeaps {
-    private PriorityQueue<Integer> maxHeap;  // Smaller half
-    private PriorityQueue<Integer> minHeap;  // Larger half
-
-    public MedianFinder_TwoHeaps() {
-        maxHeap = new PriorityQueue<>(Collections.reverseOrder());
-        minHeap = new PriorityQueue<>();
-    }
-
-    public void addNum(int num) {
-        maxHeap.offer(num);
-        minHeap.offer(maxHeap.poll());
-
-        if (maxHeap.size() < minHeap.size()) {
-            maxHeap.offer(minHeap.poll());
-        }
-    }
-
-    public double findMedian() {
-        if (maxHeap.size() > minHeap.size()) {
-            return maxHeap.peek();
-        }
-        return (maxHeap.peek() + minHeap.peek()) / 2.0;
-    }
-}
-```
-
-**Analysis:**
-
-- Time: O(log n) per insertion
-- Space: O(n)
-- For 10,000 insertions: ~130,000 total operations
-
-#### Performance Comparison
-
-| Number of Elements | Sorting (O(n²log n) total) | Two Heaps (O(n log n) total) | Speedup |
-|--------------------|----------------------------|------------------------------|---------|
-| n = 100            | ~66,000 ops                | ~700 ops                     | 94x     |
-| n = 1,000          | ~10,000,000 ops            | ~10,000 ops                  | 1,000x  |
-| n = 10,000         | ~1,300,000,000 ops         | ~130,000 ops                 | 10,000x |
-
-**Your calculation:** For n = 5,000 elements, the speedup is approximately _____ times faster.
-
-#### Why Do Two Heaps Work?
-
-**Key insight:**
-
-```
-Stream: [5, 15, 1, 3]
-
-Add 5:  maxHeap=[5], minHeap=[] → Median = 5
-Add 15: maxHeap=[5], minHeap=[15] → Median = (5+15)/2 = 10
-Add 1:  maxHeap=[5,1], minHeap=[15] → Median = 5
-Add 3:  maxHeap=[5,3,1], minHeap=[15] → rebalance → maxHeap=[5,3], minHeap=[15]
-        → Median = (5+15)/2 = 10
-```
-
-**Invariant maintained:**
-
-- maxHeap contains smaller half (max element on top)
-- minHeap contains larger half (min element on top)
-- Size difference ≤ 1
-- Median is at the top(s)!
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why do we need both heaps instead of just sorting? <span class="fill-in">[Your answer]</span>
-- How does keeping them balanced help find median quickly? <span class="fill-in">[Your answer]</span>
-
-</div>
-
----
-
 ## Core Implementation
 
 ### Pattern 1: Basic Heap Operations
@@ -365,6 +177,53 @@ public class BasicHeapOperations {
     }
 }
 ```
+
+!!! warning "Debugging Challenge — Max-Heap Used Where Min-Heap Is Required"
+    ```java
+    /**
+     * This code is supposed to find the Kth largest element.
+     * It has 2 BUGS. Find them!
+     */
+    public static int findKthLargest_Buggy(int[] nums, int k) {
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(
+            Collections.reverseOrder()    );
+
+        for (int num : nums) {
+            maxHeap.offer(num);
+            if (maxHeap.size() > k) {
+                maxHeap.poll();        }
+        }
+
+        return maxHeap.peek();
+    }
+    ```
+
+    - Bug 1: <span class="fill-in">[What's the bug?]</span>
+    - **Bug 2 location:** <span class="fill-in">[Which line?]</span>
+    - **Bug 2 explanation:** <span class="fill-in">[What gets removed? Is this what we want?]</span>
+
+??? success "Answer"
+    **Bug 1:** The code uses a **max-heap** (`Collections.reverseOrder()`), but a **min-heap** is required. For Kth largest
+    we want to keep the K largest elements and evict the smallest intruder when the heap exceeds size K. A max-heap evicts
+    the largest element, which is exactly what we want to keep — so we end up throwing away the K largest values and
+    keeping small ones.
+
+    **Bug 2:** `maxHeap.poll()` removes the **largest** element (the root of a max-heap). We want to remove the **smallest**
+    among the K candidates so that the K **largest** remain. The correct data structure is a min-heap (no comparator needed
+    in Java's `PriorityQueue`), and then `poll()` removes the smallest element, which is what we want to evict.
+
+    **Fixed code:**
+    ```java
+    PriorityQueue<Integer> minHeap = new PriorityQueue<>();  // min-heap
+
+    for (int num : nums) {
+        minHeap.offer(num);
+        if (minHeap.size() > k) {
+            minHeap.poll();  // Remove smallest — keeps K largest
+        }
+    }
+    return minHeap.peek();  // Smallest of the K largest = Kth largest
+    ```
 
 **Runnable Client Code:**
 
@@ -767,379 +626,235 @@ public class TwoHeapsClient {
 
 ---
 
-## Debugging Challenges
-
-**Your task:** Find and fix bugs in broken heap implementations. This tests your understanding.
-
-### Challenge 1: Broken Kth Largest Finder
-
-```java
-/**
- * This code is supposed to find the Kth largest element.
- * It has 2 BUGS. Find them!
- */
-public static int findKthLargest_Buggy(int[] nums, int k) {
-    PriorityQueue<Integer> maxHeap = new PriorityQueue<>(
-        Collections.reverseOrder()    );
-
-    for (int num : nums) {
-        maxHeap.offer(num);
-        if (maxHeap.size() > k) {
-            maxHeap.poll();        }
-    }
-
-    return maxHeap.peek();
-}
-```
-
-**Your debugging:**
-
-- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
-
-- **Bug 2 location:** <span class="fill-in">[Which line?]</span>
-- **Bug 2 explanation:** <span class="fill-in">[What gets removed? Is this what we want?]</span>
-- **Bug 2 impact:** <span class="fill-in">[What will the final answer be?]</span>
-
-**Test case to expose the bug:**
-
-- Input: `nums = [3, 2, 1, 5, 6, 4]`, `k = 2`
-- Expected: `5` (2nd largest)
-- Actual with buggy code: <span class="fill-in">[Trace through manually]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1:** Should use **min-heap**, not max-heap! For Kth largest, we want to keep the K largest elements and remove the
-smallest among them.
-
-**Correct:**
-
-```java
-PriorityQueue<Integer> minHeap = new PriorityQueue<>();
-```
-
-**Bug 2:** With max-heap, `poll()` removes the LARGEST element, which is exactly what we want to KEEP! This defeats the
-purpose.
-
-**Why min-heap works:**
-
-- Min-heap of size K keeps K largest elements
-- The smallest of these K largest is at the top
-- That smallest element IS the Kth largest!
-
-**Trace with correct code:**
-
-```
-[3, 2, 1, 5, 6, 4], k=2
-Add 3: [3]
-Add 2: [2,3]
-Add 1: [1,2,3], size>2, poll() removes 1 → [2,3]
-Add 5: [2,3,5], poll() removes 2 → [3,5]
-Add 6: [3,5,6], poll() removes 3 → [5,6]
-Add 4: [4,5,6], poll() removes 4 → [5,6]
-peek() = 5 ✓
-```
-
-</details>
+!!! info "Loop back"
+    Now that you have implemented all four patterns, return to the **ELI5** section and fill in prompts 1, 2, and 5. Focus especially on prompt 5: confirm you can articulate the min-heap vs max-heap rule in both directions (K largest → min-heap; K smallest → max-heap) and explain from first principles why each is correct. Then return to the **Quick Quiz** and verify your complexity predictions for the O(n log k) heap approach vs the O(n log n) sort approach.
 
 ---
 
-### Challenge 2: Broken Two-Heap Median Finder
+## Before/After: Why This Pattern Matters
+
+**Your task:** Compare naive vs optimized approaches to understand the impact.
+
+### Example 1: Find Kth Largest Element
+
+**Problem:** Find the Kth largest element in an unsorted array.
+
+#### Approach 1: Sorting (Simple but Inefficient)
 
 ```java
-/**
- * Find median from data stream using two heaps.
- * This has 2 CRITICAL BUGS.
- */
-static class MedianFinder_Buggy {
-    PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+// Naive approach - Sort entire array
+public static int findKthLargest_Sorting(int[] nums, int k) {
+    Arrays.sort(nums);  // Sort ascending
+    return nums[nums.length - k];  // Kth largest
+}
+```
+
+**Analysis:**
+
+- Time: O(n log n) - Must sort all n elements
+- Space: O(1) or O(log n) depending on sort algorithm
+- For n = 100,000: ~1,600,000 operations
+
+#### Approach 2: Min-Heap of Size K (Optimized)
+
+```java
+// Optimized approach - Maintain heap of K largest elements
+public static int findKthLargest_Heap(int[] nums, int k) {
     PriorityQueue<Integer> minHeap = new PriorityQueue<>();
 
+    for (int num : nums) {
+        minHeap.offer(num);
+        if (minHeap.size() > k) {
+            minHeap.poll();  // Remove smallest
+        }
+    }
+
+    return minHeap.peek();  // Kth largest at top
+}
+```
+
+**Analysis:**
+
+- Time: O(n log k) - n insertions, each log k operations
+- Space: O(k) - Only store K elements
+- For n = 100,000, k = 10: ~166,000 operations
+
+#### Performance Comparison
+
+| Array Size (n) | k   | Sorting (O(n log n)) | Heap (O(n log k)) | Speedup |
+|----------------|-----|----------------------|-------------------|---------|
+| n = 1,000      | 10  | ~10,000 ops          | ~3,000 ops        | 3x      |
+| n = 10,000     | 10  | ~130,000 ops         | ~33,000 ops       | 4x      |
+| n = 100,000    | 100 | ~1,600,000 ops       | ~660,000 ops      | 2.4x    |
+
+**Your calculation:** For n = 50,000 and k = 50, the speedup is approximately _____ times faster.
+
+#### Why Does Min-Heap Work for Kth LARGEST?
+
+!!! note "The counterintuitive min-heap rule for K largest"
+    For K **largest** values, use a **min**-heap of size K. The logic: we want to keep the K largest elements seen so
+    far. When a new element arrives and the heap exceeds size K, we evict the smallest element (the root of the min-heap)
+    — that element is not in the top K. At the end, the heap contains exactly the K largest elements, and the root is the
+    smallest of them, which is the Kth largest overall. A max-heap would evict the largest element — exactly the one we
+    want to keep — which is wrong.
+
+In array `[3, 2, 1, 5, 6, 4]` looking for k=2 (2nd largest):
+
+```
+Step 1: Add 3 → Heap: [3]
+Step 2: Add 2 → Heap: [2, 3] (size=2)
+Step 3: Add 1 → Heap: [2, 3], size > k → remove min → Heap: [3]
+Step 4: Add 5 → Heap: [3, 5]
+Step 5: Add 6 → Heap: [3, 5], size > k → remove min → Heap: [5, 6]
+Step 6: Add 4 → Heap: [4, 5, 6], remove min → Heap: [5, 6]
+
+Answer: heap.peek() = 5 (2nd largest)
+```
+
+**After implementing, explain in your own words:**
+
+<div class="learner-section" markdown>
+
+- Why does removing the minimum preserve the K largest elements? <span class="fill-in">[Your answer]</span>
+- What would happen with a max-heap instead? <span class="fill-in">[Your answer]</span>
+
+</div>
+
+---
+
+### Example 2: Finding Running Median
+
+**Problem:** Maintain the median as numbers are added one by one.
+
+#### Approach 1: Sort Every Time (Inefficient)
+
+```java
+// Naive approach - Re-sort after each insertion
+public static class MedianFinder_Sorting {
+    private List<Integer> list = new ArrayList<>();
+
     public void addNum(int num) {
-        if (maxHeap.isEmpty() || num < maxHeap.peek()) {
-            maxHeap.offer(num);
+        list.add(num);
+        Collections.sort(list);  // Re-sort entire list!
+    }
+
+    public double findMedian() {
+        int n = list.size();
+        if (n % 2 == 1) {
+            return list.get(n / 2);
         } else {
-            minHeap.offer(num);
+            return (list.get(n / 2 - 1) + list.get(n / 2)) / 2.0;
+        }
+    }
+}
+```
+
+**Analysis:**
+
+- Time: O(n log n) per insertion due to sorting
+- Space: O(n)
+- For 10,000 insertions: ~100,000,000 total operations
+
+#### Approach 2: Two Heaps (Optimized)
+
+```java
+// Optimized approach - Two heaps maintain balance
+public static class MedianFinder_TwoHeaps {
+    private PriorityQueue<Integer> maxHeap;  // Smaller half
+    private PriorityQueue<Integer> minHeap;  // Larger half
+
+    public MedianFinder_TwoHeaps() {
+        maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+        minHeap = new PriorityQueue<>();
+    }
+
+    public void addNum(int num) {
+        maxHeap.offer(num);
+        minHeap.offer(maxHeap.poll());
+
+        if (maxHeap.size() < minHeap.size()) {
+            maxHeap.offer(minHeap.poll());
         }
     }
 
     public double findMedian() {
         if (maxHeap.size() > minHeap.size()) {
             return maxHeap.peek();
-        } else if (minHeap.size() > maxHeap.size()) {
-            return minHeap.peek();        } else {
-            return (maxHeap.peek() + minHeap.peek()) / 2;
         }
+        return (maxHeap.peek() + minHeap.peek()) / 2.0;
     }
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- **Bug 1:** <span class="fill-in">[What's missing after adding elements?]</span>
-- **Bug 1 explanation:** <span class="fill-in">[What happens if sizes become unbalanced?]</span>
-- **Bug 1 fix:** <span class="fill-in">[What code should be added?]</span>
+- Time: O(log n) per insertion
+- Space: O(n)
+- For 10,000 insertions: ~130,000 total operations
 
-- **Bug 2:** <span class="fill-in">[Which heap should contain the median for even split?]</span>
-- **Bug 2 explanation:** <span class="fill-in">[Trace through example: add 1, 2, 3]</span>
-- **Bug 2 fix:** <span class="fill-in">[Fill in]</span>
+#### Performance Comparison
 
-**Test case:**
+| Number of Elements | Sorting (O(n²log n) total) | Two Heaps (O(n log n) total) | Speedup |
+|--------------------|----------------------------|------------------------------|---------|
+| n = 100            | ~66,000 ops                | ~700 ops                     | 94x     |
+| n = 1,000          | ~10,000,000 ops            | ~10,000 ops                  | 1,000x  |
+| n = 10,000         | ~1,300,000,000 ops         | ~130,000 ops                 | 10,000x |
 
-- Stream: `[1, 2, 3, 4, 5]`
-- Expected medians: `[1.0, 1.5, 2.0, 2.5, 3.0]`
-- Actual with buggy code: <span class="fill-in">[Trace through]</span>
+**Your calculation:** For n = 5,000 elements, the speedup is approximately _____ times faster.
 
-<details markdown>
-<summary>Click to verify your answers</summary>
+#### Why Do Two Heaps Work?
 
-**Bug 1:** Missing **rebalancing logic**! Heaps can become severely unbalanced.
+**Key insight:**
 
-**Correct addNum:**
+```
+Stream: [5, 15, 1, 3]
 
-```java
-public void addNum(int num) {
-    if (maxHeap.isEmpty() || num < maxHeap.peek()) {
-        maxHeap.offer(num);
-    } else {
-        minHeap.offer(num);
-    }
-
-    // REBALANCE - maintain size difference ≤ 1
-    if (maxHeap.size() > minHeap.size() + 1) {
-        minHeap.offer(maxHeap.poll());
-    } else if (minHeap.size() > maxHeap.size()) {
-        maxHeap.offer(minHeap.poll());
-    }
-}
+Add 5:  maxHeap=[5], minHeap=[] → Median = 5
+Add 15: maxHeap=[5], minHeap=[15] → Median = (5+15)/2 = 10
+Add 1:  maxHeap=[5,1], minHeap=[15] → Median = 5
+Add 3:  maxHeap=[5,3,1], minHeap=[15] → rebalance → maxHeap=[5,3], minHeap=[15]
+        → Median = (5+15)/2 = 10
 ```
 
-**Bug 2:** The else-if case should probably never happen if we maintain maxHeap.size() >= minHeap.size() as invariant.
-But if it does, the logic is actually correct - we'd return minHeap.peek().
+**Invariant maintained:**
 
-**Better approach - Always add to maxHeap first:**
+- maxHeap contains smaller half (max element on top)
+- minHeap contains larger half (min element on top)
+- Size difference ≤ 1
+- Median is at the top(s)!
 
-```java
-public void addNum(int num) {
-    maxHeap.offer(num);
-    minHeap.offer(maxHeap.poll());
+**After implementing, explain in your own words:**
 
-    if (maxHeap.size() < minHeap.size()) {
-        maxHeap.offer(minHeap.poll());
-    }
-}
-```
+<div class="learner-section" markdown>
 
-This ensures maxHeap.size() is always >= minHeap.size().
-</details>
+- Why do we need both heaps instead of just sorting? <span class="fill-in">[Your answer]</span>
+- How does keeping them balanced help find median quickly? <span class="fill-in">[Your answer]</span>
+
+</div>
 
 ---
 
-### Challenge 3: Heap Index Calculation Bugs
+## Common Misconceptions
 
-```java
-/**
- * Manual heap implementation with parent/child index calculations.
- * This has INDEX CALCULATION BUGS.
- */
-static class MinHeap_Buggy {
-    private List<Integer> heap = new ArrayList<>();
+!!! warning "Misconception 1: Use max-heap to find the K largest elements"
+    This is backwards. For K **largest**, use a **min**-heap of size K. The min-heap evicts the smallest candidate when it
+    overflows, preserving the K largest. A max-heap evicts the largest candidate, which destroys the very elements you are
+    trying to keep. The rule generalises: for K smallest, use a max-heap of size K (evict the largest intruder, preserve
+    the K smallest). The pattern is always "evict the one that doesn't belong, keep the K that do."
 
-    private int parent(int i) {
-        return i / 2;    }
+!!! warning "Misconception 2: The two-heap median finder does not need rebalancing"
+    If you add numbers without rebalancing, one heap can grow arbitrarily larger than the other. When the sizes diverge by
+    more than 1, the median calculation is wrong. The rebalancing logic (`if (maxHeap.size() > minHeap.size() + 1)
+    minHeap.offer(maxHeap.poll())`) must run after every insertion. A common shortcut — always add to maxHeap first and
+    then move the root to minHeap — handles most cases, but still requires checking that maxHeap stays at least as large
+    as minHeap.
 
-    private int leftChild(int i) {
-        return 2 * i;    }
-
-    private int rightChild(int i) {
-        return 2 * i + 1;    }
-
-    public void insert(int val) {
-        heap.add(val);
-        heapifyUp(heap.size() - 1);
-    }
-
-    private void heapifyUp(int i) {
-        while (i > 0 && heap.get(i) < heap.get(parent(i))) {
-            swap(i, parent(i));
-            i = parent(i);
-        }
-    }
-
-    private void swap(int i, int j) {
-        int temp = heap.get(i);
-        heap.set(i, heap.get(j));
-        heap.set(j, temp);
-    }
-}
-```
-
-**Your debugging:**
-
-- **Bug 1:** <span class="fill-in">[What's the correct parent formula for 0-indexed array?]</span>
-- **Bug 2:** <span class="fill-in">[What's the correct leftChild formula?]</span>
-- **Bug 3:** <span class="fill-in">[What's the correct rightChild formula?]</span>
-
-**Heap index formulas:**
-
-- For 0-indexed array:
-    - Parent of i: <span class="fill-in">[Your formula]</span>
-    - Left child of i: <span class="fill-in">[Your formula]</span>
-    - Right child of i: <span class="fill-in">[Your formula]</span>
-
-**Test case:**
-
-```
-Insert: 5, 3, 7, 1
-Expected heap array: [1, 3, 7, 5] (min-heap property)
-Actual with buggy code: <span class="fill-in">[What happens?]</span>
-```
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**All three formulas are wrong for 0-indexed arrays!**
-
-**Correct formulas for 0-indexed:**
-
-```java
-private int parent(int i) {
-    return (i - 1) / 2;  // Not i / 2
-}
-
-private int leftChild(int i) {
-    return 2 * i + 1;  // Not 2 * i
-}
-
-private int rightChild(int i) {
-    return 2 * i + 2;  // Not 2 * i + 1
-}
-```
-
-**Why these formulas?**
-
-In 0-indexed array `[0, 1, 2, 3, 4, 5, 6]`:
-
-```
-       0
-      / \
-     1   2
-    / \ / \
-   3  4 5  6
-```
-
-- Parent of 1: (1-1)/2 = 0 ✓
-- Parent of 2: (2-1)/2 = 0 ✓
-- Left of 0: 2*0+1 = 1 ✓
-- Right of 0: 2*0+2 = 2 ✓
-- Left of 1: 2*1+1 = 3 ✓
-- Right of 1: 2*1+2 = 4 ✓
-
-**For 1-indexed arrays (if you stored heap starting at index 1):**
-
-```java
-parent(i) = i / 2
-leftChild(i) = 2 * i
-rightChild(i) = 2 * i + 1
-```
-
-This is why some people prefer 1-indexed - simpler formulas!
-</details>
-
----
-
-### Challenge 4: Min-Heap vs Max-Heap Confusion
-
-```java
-/**
- * Find K closest points to origin.
- * This code has HEAP TYPE BUG.
- */
-public static int[][] kClosest_Buggy(int[][] points, int k) {
-    PriorityQueue<int[]> minHeap = new PriorityQueue<>(
-        (a, b) -> (a[0]*a[0] + a[1]*a[1]) - (b[0]*b[0] + b[1]*b[1])
-    );
-    for (int[] point : points) {
-        minHeap.offer(point);
-        if (minHeap.size() > k) {
-            minHeap.poll();
-        }
-    }
-
-    int[][] result = new int[k][2];
-    for (int i = 0; i < k; i++) {
-        result[i] = minHeap.poll();
-    }
-    return result;
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What\'s the bug?]</span>
-
-**Think about it:**
-
-- For K largest → Use <span class="fill-in">[min/max]</span>-heap
-- For K smallest → Use <span class="fill-in">[min/max]</span>-heap
-- For K closest → Same as K <span class="fill-in">[largest/smallest]</span> distances
-- Therefore, use <span class="fill-in">[min/max]</span>-heap
-
-**Test case:**
-
-```
-Points: [[1,3], [-2,2], [5,8], [0,1]], k=2
-Distances: [10, 8, 89, 1]
-Expected: [[0,1], [-2,2]] (distances 1 and 8)
-Actual with buggy code: <span class="fill-in">[What do you get?]</span>
-```
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug:** Using min-heap is WRONG! We need **max-heap**.
-
-**Why?**
-
-- K closest = K smallest distances
-- For K smallest distances, use max-heap (same logic as Kth largest)
-- Keep K smallest, remove the largest of them when heap exceeds size K
-
-**Correct:**
-
-```java
-PriorityQueue<int[]> maxHeap = new PriorityQueue<>(
-    (a, b) -> (b[0]*b[0] + b[1]*b[1]) - (a[0]*a[0] + a[1]*a[1])
-    // Note: b - a for max-heap (reverse comparison)
-);
-```
-
-**Pattern to remember:**
-
-- **K largest values** → min-heap of size K (remove smallest)
-- **K smallest values** → max-heap of size K (remove largest)
-
-This seems backwards but makes sense: you want to remove the "outlier" from your K elements!
-</details>
-
----
-
-### Your Debugging Scorecard
-
-After finding and fixing all bugs:
-
-- [ ] Found all bugs in Kth largest (min vs max heap)
-- [ ] Found rebalancing bug in median finder
-- [ ] Fixed all three index calculation formulas
-- [ ] Understood when to use min-heap vs max-heap
-- [ ] Could explain WHY each bug causes incorrect behavior
-
-**Common heap mistakes you discovered:**
-
-1. <span class="fill-in">[Min vs max confusion - when to use which?]</span>
-2. <span class="fill-in">[Index calculation errors in manual implementation]</span>
-3. <span class="fill-in">[Forgetting to rebalance in two-heap pattern]</span>
-4. <span class="fill-in">[Fill in - what other patterns did you notice?]</span>
+!!! warning "Misconception 3: 0-indexed and 1-indexed heap formulas are interchangeable"
+    The two sets of formulas differ by exactly 1, and mixing them causes subtle off-by-one bugs that may not surface until
+    edge cases. For a **0-indexed** array: `parent(i) = (i - 1) / 2`, `leftChild(i) = 2*i + 1`, `rightChild(i) = 2*i + 2`.
+    For a **1-indexed** array: `parent(i) = i / 2`, `leftChild(i) = 2*i`, `rightChild(i) = 2*i + 1`. Java's
+    `PriorityQueue` handles indexing internally so you rarely write these formulas directly — but if you implement a heap
+    manually, decide on the indexing scheme first and use it consistently throughout.
 
 ---
 
@@ -1261,54 +976,14 @@ flowchart LR
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-Before moving to the next topic:
+1. The min-heap-for-K-largest rule feels counterintuitive. Prove it is correct from first principles: state what invariant the heap maintains after each element is processed, show that the invariant holds after processing element i+1 given that it held after element i, and explain why `heap.peek()` at the end of the loop is exactly the Kth largest element.
 
-- [ ] **Implementation**
-    - [ ] Basic operations: Kth largest, K largest, heap sort all work
-    - [ ] Merge K: lists and arrays both work
-    - [ ] Top K: frequent elements and closest points work
-    - [ ] Two heaps: median finder works correctly
-    - [ ] All client code runs successfully
+2. The two-heap median algorithm uses this insertion strategy: always add to maxHeap first, then move the root to minHeap; then if maxHeap is smaller than minHeap, move the root of minHeap back. Trace this algorithm on the stream `[5, 15, 1, 3]` step by step, showing the state of both heaps and the median after each insertion. Then explain what invariant guarantees that `findMedian()` is always correct.
 
-- [ ] **Pattern Recognition**
-    - [ ] Can identify when to use min-heap vs max-heap
-    - [ ] Understand when heap size should be K vs N
-    - [ ] Know when to use two heaps
-    - [ ] Recognize merge K sorted pattern
+3. `mergeKLists` achieves O(n log k) time by using a min-heap of size K. Explain why merging K sorted lists by repeatedly merging two lists at a time (K-1 merge operations) gives O(nK) time in the worst case, and confirm that the heap approach is strictly better when K is large relative to n.
 
-- [ ] **Problem Solving**
-    - [ ] Solved 3 easy problems
-    - [ ] Solved 3-4 medium problems
-    - [ ] Analyzed time/space complexity
-    - [ ] Understood heap vs sort trade-offs
+4. The 0-indexed heap formulas are `parent(i) = (i-1)/2`, `leftChild(i) = 2*i+1`, `rightChild(i) = 2*i+2`. Verify these formulas for the first 7 positions (indices 0–6) by drawing the heap tree and confirming that each formula gives the correct index. Then show what happens if you accidentally use the 1-indexed formula `parent(i) = i/2` on a 0-indexed array (what incorrect parent does node 2 compute?).
 
-- [ ] **Understanding**
-    - [ ] Filled in all ELI5 explanations
-    - [ ] Built decision tree
-    - [ ] Identified when NOT to use heaps
-    - [ ] Can explain heap property and operations
-
-- [ ] **Mastery Check**
-    - [ ] Could implement all patterns from memory
-    - [ ] Could recognize pattern in new problem
-    - [ ] Could explain to someone else
-    - [ ] Understand PriorityQueue in Java
-
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
-- [ ] Implement all four heap patterns from memory
-- [ ] Explain when to use min-heap vs max-heap
-- [ ] Identify the correct pattern for new problems
-- [ ] Analyze time and space complexity
-- [ ] Compare trade-offs with alternative approaches
-- [ ] Debug common heap mistakes (min/max confusion, indexing errors)
-- [ ] Implement two-heap median finder
-- [ ] Calculate parent/child indices correctly
-- [ ] Teach this concept to someone else
-
+5. For "K closest points to origin" we use a max-heap (evict the farthest point when size exceeds K). Apply the same logic to a different problem: "find the K strings with the shortest length from a stream." State which heap type to use, what the comparator compares, and what the invariant maintained by the heap is. Then explain how this generalises to any "K smallest by some metric" problem.

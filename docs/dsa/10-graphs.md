@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this topic you will be able to:
+
+- Implement DFS and BFS from memory, including multi-source BFS variants
+- Explain why BFS guarantees shortest path in unweighted graphs while DFS does not
+- Detect cycles in both directed and undirected graphs using appropriate state-tracking techniques
+- Choose between adjacency list and adjacency matrix representations given a graph's density
+- Identify the correct traversal pattern (DFS, BFS, or cycle detection) from a problem description
+- Compare the time and space complexity trade-offs between DFS and BFS for a given problem
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,22 +26,28 @@
 **Prompts to guide you:**
 
 1. **What is a graph in one sentence?**
+    - A graph is a ___ where ___ are connected by ___
     - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **Why/when do we use graphs?**
+    - We use graphs when the problem involves ___ between ___, such as ___
     - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy:**
     - Example: "A graph is like a social network where people are nodes and friendships are edges..."
+    - Think about how you'd navigate a city map or a subway system.
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **What's the difference between DFS and BFS?**
+    - DFS explores ___ before ___, while BFS explores all ___ before moving ___
     - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
 
 5. **When should you use DFS vs BFS?**
+    - Use BFS when you need ___ because it guarantees ___; use DFS when you need ___ because it uses less ___
     - Your answer: <span class="fill-in">[Fill in after practice]</span>
 
 6. **How do you detect cycles in graphs?**
+    - Cycles are detected by tracking ___ states. In directed graphs you need ___, in undirected graphs you track ___
     - Your answer: <span class="fill-in">[Fill in after learning]</span>
 
 </div>
@@ -36,6 +55,9 @@
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+!!! tip "How to use this section"
+    Complete your predictions now, before reading further. You will revisit and verify each answer after running the benchmark (or completing the implementation).
 
 <div class="learner-section" markdown>
 
@@ -113,241 +135,6 @@ Your answer:
 
 **Which uses less space?** <span class="fill-in">[Fill in and explain why]</span>
 
-
-</div>
-
----
-
-## Before/After: Why This Pattern Matters
-
-**Your task:** Compare naive vs optimized approaches to understand the impact.
-
-### Example 1: Find Shortest Path
-
-**Problem:** Find shortest path between two nodes in an unweighted graph.
-
-#### Approach 1: DFS (Suboptimal)
-
-```java
-// Naive approach - DFS finds A path, not shortest path
-public static int findPath_DFS(Map<Integer, List<Integer>> graph, int start, int end) {
-    Set<Integer> visited = new HashSet<>();
-    return dfsPathLength(graph, start, end, visited, 0);
-}
-
-private static int dfsPathLength(Map<Integer, List<Integer>> graph,
-                                 int current, int end, Set<Integer> visited, int length) {
-    if (current == end) return length;
-    if (visited.contains(current)) return Integer.MAX_VALUE;
-
-    visited.add(current);
-    int minPath = Integer.MAX_VALUE;
-
-    for (int neighbor : graph.getOrDefault(current, new ArrayList<>())) {
-        int pathLen = dfsPathLength(graph, neighbor, end, visited, length + 1);
-        minPath = Math.min(minPath, pathLen);
-    }
-
-    visited.remove(current); // Backtrack
-    return minPath;
-}
-```
-
-**Analysis:**
-
-- Time: O(V!) in worst case - explores all possible paths
-- Space: O(V) - recursion stack
-- Problem: Explores unnecessary paths, no guarantee of finding shortest first
-
-#### Approach 2: BFS (Optimized)
-
-```java
-// Optimized approach - BFS guarantees shortest path
-public static int findPath_BFS(Map<Integer, List<Integer>> graph, int start, int end) {
-    Queue<Integer> queue = new LinkedList<>();
-    Set<Integer> visited = new HashSet<>();
-
-    queue.offer(start);
-    visited.add(start);
-    int length = 0;
-
-    while (!queue.isEmpty()) {
-        int size = queue.size();
-
-        for (int i = 0; i < size; i++) {
-            int node = queue.poll();
-
-            if (node == end) return length;
-
-            for (int neighbor : graph.getOrDefault(node, new ArrayList<>())) {
-                if (!visited.contains(neighbor)) {
-                    queue.offer(neighbor);
-                    visited.add(neighbor);
-                }
-            }
-        }
-        length++;
-    }
-
-    return -1; // Not found
-}
-```
-
-**Analysis:**
-
-- Time: O(V + E) - visits each node and edge once
-- Space: O(V) - queue storage
-- Benefit: Explores level-by-level, first path found is shortest
-
-#### Performance Comparison
-
-| Graph Size       | DFS (worst case)     | BFS     | Speedup   |
-|------------------|----------------------|---------|-----------|
-| V = 10, E = 20   | ~3,628,800 ops (10!) | 30 ops  | ~120,000x |
-| V = 6, E = 10    | ~720 ops (6!)        | 16 ops  | 45x       |
-| V = 100, E = 200 | Intractable          | 300 ops | Infinite  |
-
-**Your calculation:** For a graph with V = 8 nodes, BFS would be approximately _____ times faster in worst case.
-
-#### Why Does BFS Find Shortest Path?
-
-**Key insight to understand:**
-
-In graph A→B→D, A→C→D looking for path from A to D:
-
-```
-BFS Level 0: [A]
-BFS Level 1: [B, C]        (distance = 1 from A)
-BFS Level 2: [D, D]        (distance = 2 from A, found first time)
-```
-
-DFS might go: A → B → D (found) but doesn't know if A → C → D is shorter without exploring everything.
-
-**Why BFS guarantees shortest:**
-
-- Explores all nodes at distance k before distance k+1
-- First time we reach target = minimum distance
-- No need to explore further paths
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why does level-order exploration matter? <span class="fill-in">[Your answer]</span>
-- When would DFS accidentally find shortest path? <span class="fill-in">[Your answer]</span>
-
-</div>
-
----
-
-### Example 2: Graph Representation
-
-**Problem:** Store graph with 1000 nodes and 5000 edges.
-
-#### Approach 1: Adjacency Matrix
-
-```java
-// Matrix representation - simple but space-inefficient for sparse graphs
-public class GraphMatrix {
-    private int[][] matrix;
-    private int V;
-
-    public GraphMatrix(int vertices) {
-        this.V = vertices;
-        this.matrix = new int[V][V];
-    }
-
-    public void addEdge(int src, int dst) {
-        matrix[src][dst] = 1;  // O(1) to add
-    }
-
-    public boolean hasEdge(int src, int dst) {
-        return matrix[src][dst] == 1;  // O(1) to check
-    }
-
-    public List<Integer> getNeighbors(int node) {
-        List<Integer> neighbors = new ArrayList<>();
-        for (int i = 0; i < V; i++) {
-            if (matrix[node][i] == 1) {
-                neighbors.add(i);
-            }
-        }
-        return neighbors;  // O(V) to get all neighbors
-    }
-}
-```
-
-**Analysis:**
-
-- Space: O(V²) = O(1,000,000) for 1000 nodes
-- Add edge: O(1)
-- Check edge: O(1)
-- Get neighbors: O(V)
-- Memory usage: 1000 × 1000 = 1,000,000 integers ≈ 4 MB
-
-#### Approach 2: Adjacency List
-
-```java
-// List representation - space-efficient for sparse graphs
-public class GraphList {
-    private Map<Integer, List<Integer>> adjList;
-
-    public GraphList() {
-        this.adjList = new HashMap<>();
-    }
-
-    public void addEdge(int src, int dst) {
-        adjList.computeIfAbsent(src, k -> new ArrayList<>()).add(dst);  // O(1) average
-    }
-
-    public boolean hasEdge(int src, int dst) {
-        return adjList.getOrDefault(src, new ArrayList<>()).contains(dst);  // O(degree)
-    }
-
-    public List<Integer> getNeighbors(int node) {
-        return adjList.getOrDefault(node, new ArrayList<>());  // O(1) to get list
-    }
-}
-```
-
-**Analysis:**
-
-- Space: O(V + E) = O(1000 + 5000) = O(6000)
-- Add edge: O(1) average
-- Check edge: O(degree of node)
-- Get neighbors: O(1)
-- Memory usage: ~6000 integers ≈ 24 KB
-
-#### Space Comparison
-
-| Graph Type                  | Adjacency Matrix | Adjacency List   | Better Choice         |
-|-----------------------------|------------------|------------------|-----------------------|
-| Dense (V=1000, E=500,000)   | 1M ints (4 MB)   | 501K ints (2 MB) | Matrix (similar)      |
-| Sparse (V=1000, E=5000)     | 1M ints (4 MB)   | 6K ints (24 KB)  | **List (167x less)**  |
-| Very Sparse (V=1000, E=100) | 1M ints (4 MB)   | 1.1K ints (4 KB) | **List (1000x less)** |
-
-**Your calculation:** For V = 5000 nodes and E = 10,000 edges, adjacency list uses _____ less space than matrix.
-
-#### When to Use Each?
-
-**Use Adjacency Matrix when:**
-
-- Graph is dense (E ≈ V²)
-- Need O(1) edge existence checks frequently
-- All operations need to be simple array lookups
-
-**Use Adjacency List when:**
-
-- Graph is sparse (E << V²)
-- Need to iterate through neighbors frequently
-- Memory is limited
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why does sparse vs dense matter? <span class="fill-in">[Your answer]</span>
-- What operations are faster with each representation? <span class="fill-in">[Your answer]</span>
 
 </div>
 
@@ -459,6 +246,61 @@ public class DFSClient {
     }
 }
 ```
+
+---
+
+!!! warning "Debugging Challenge — Missing Component Counter"
+
+    The `countComponents_Buggy` below has 2 bugs. Find them before reading the answer.
+
+    ```java
+    public static int countComponents_Buggy(int n, int[][] edges) {
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+
+        for (int i = 0; i < n; i++) {
+            graph.put(i, new ArrayList<>());
+        }
+        for (int[] edge : edges) {
+            graph.get(edge[0]).add(edge[1]);
+            graph.get(edge[1]).add(edge[0]);
+        }
+
+        boolean[] visited = new boolean[n];
+        int count = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                dfs(graph, i, visited);        }
+        }
+
+        return count;}
+
+    private static void dfs(Map<Integer, List<Integer>> graph, int node, boolean[] visited) {
+        visited[node] = true;
+
+        for (int neighbor : graph.get(node)) {
+            if (!visited[neighbor]) {
+                dfs(graph, neighbor, visited);
+            }
+        }
+    }
+    ```
+
+    Trace through with: n = 5, edges = [[0,1], [1,2], [3,4]]
+    Expected: 2 components. What do you actually get?
+
+    ??? success "Answer"
+
+        **Bug 1 (inside the loop):** After calling `dfs()`, we never increment `count`. Should be:
+
+        ```java
+        if (!visited[i]) {
+            dfs(graph, i, visited);
+            count++;  // Increment after exploring component
+        }
+        ```
+
+        **Bug 2:** The same as Bug 1 — `count` is initialised but never incremented, so it always returns 0. Both fixes are the same: add `count++` after the DFS call.
 
 ---
 
@@ -584,6 +426,66 @@ public class BFSClient {
 
 ---
 
+!!! warning "Debugging Challenge — Broken BFS Level Tracking"
+
+    The `shortestPath_Buggy` below has 2 bugs that cause wrong distances. Find them.
+
+    ```java
+    public static int shortestPath_Buggy(Map<Integer, List<Integer>> graph, int start, int end) {
+        Queue<Integer> queue = new LinkedList<>();
+        Set<Integer> visited = new HashSet<>();
+        int distance = 0;
+
+        queue.offer(start);
+
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            if (node == end) return distance;
+
+            for (int neighbor : graph.getOrDefault(node, new ArrayList<>())) {
+                if (!visited.contains(neighbor)) {
+                    queue.offer(neighbor);
+                    visited.add(neighbor);
+                }
+            }
+
+            distance++;
+        }
+
+        return -1;
+    }
+    ```
+
+    Trace with start=0, end=2, graph: 0→1, 1→2. Expected distance: 2.
+
+    ??? success "Answer"
+
+        **Bug 1:** Missing `visited.add(start)` after adding start to the queue. Without this, the start node may be revisited.
+
+        **Bug 2:** Not processing nodes level-by-level. `distance++` increments for every node polled, not for each complete level. Fix:
+
+        ```java
+        while (!queue.isEmpty()) {
+            int size = queue.size();  // Process all nodes at current level
+
+            for (int i = 0; i < size; i++) {
+                int node = queue.poll();
+                if (node == end) return distance;
+
+                for (int neighbor : graph.getOrDefault(node, new ArrayList<>())) {
+                    if (!visited.contains(neighbor)) {
+                        queue.offer(neighbor);
+                        visited.add(neighbor);
+                    }
+                }
+            }
+
+            distance++;  // Increment after processing entire level
+        }
+        ```
+
+---
+
 ### Pattern 3: Cycle Detection
 
 **Interview Priority: ⭐⭐⭐ CRITICAL** - Cycle detection is essential for many graph problems
@@ -691,229 +593,267 @@ public class CycleDetectionClient {
 
 ---
 
-## Debugging Challenges
+## Before/After: Why This Pattern Matters
 
-**Your task:** Find and fix bugs in broken graph implementations. This tests your understanding.
+**Your task:** Compare naive vs optimized approaches to understand the impact.
 
-### Challenge 1: Broken DFS - Visited Array Bug
+### Example 1: Find Shortest Path
+
+**Problem:** Find shortest path between two nodes in an unweighted graph.
+
+#### Approach 1: DFS (Suboptimal)
 
 ```java
-/**
- * This code is supposed to count connected components using DFS.
- * It has 2 BUGS. Find them!
- */
-public static int countComponents_Buggy(int n, int[][] edges) {
-    Map<Integer, List<Integer>> graph = new HashMap<>();
+// Naive approach - DFS finds A path, not shortest path
+public static int findPath_DFS(Map<Integer, List<Integer>> graph, int start, int end) {
+    Set<Integer> visited = new HashSet<>();
+    return dfsPathLength(graph, start, end, visited, 0);
+}
 
-    // Build graph
-    for (int i = 0; i < n; i++) {
-        graph.put(i, new ArrayList<>());
-    }
-    for (int[] edge : edges) {
-        graph.get(edge[0]).add(edge[1]);
-        graph.get(edge[1]).add(edge[0]);
-    }
+private static int dfsPathLength(Map<Integer, List<Integer>> graph,
+                                 int current, int end, Set<Integer> visited, int length) {
+    if (current == end) return length;
+    if (visited.contains(current)) return Integer.MAX_VALUE;
 
-    boolean[] visited = new boolean[n];
-    int count = 0;
+    visited.add(current);
+    int minPath = Integer.MAX_VALUE;
 
-    for (int i = 0; i < n; i++) {
-        if (!visited[i]) {
-            dfs(graph, i, visited);        }
+    for (int neighbor : graph.getOrDefault(current, new ArrayList<>())) {
+        int pathLen = dfsPathLength(graph, neighbor, end, visited, length + 1);
+        minPath = Math.min(minPath, pathLen);
     }
 
-    return count;}
-
-private static void dfs(Map<Integer, List<Integer>> graph, int node, boolean[] visited) {
-    visited[node] = true;
-
-    for (int neighbor : graph.get(node)) {
-        if (!visited[neighbor]) {
-            dfs(graph, neighbor, visited);
-        }
-    }
+    visited.remove(current); // Backtrack
+    return minPath;
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
+- Time: O(V!) in worst case - explores all possible paths
+- Space: O(V) - recursion stack
+- Problem: Explores unnecessary paths, no guarantee of finding shortest first
 
-- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
-
-**Test case:**
-
-- Input: n = 5, edges = [[0,1], [1,2], [3,4]]
-- Expected: 2 components
-- Actual with buggy code: <span class="fill-in">[What do you get?]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1 (Line 18):** After calling `dfs()`, we never increment `count`! Should be:
+#### Approach 2: BFS (Optimized)
 
 ```java
-if (!visited[i]) {
-    dfs(graph, i, visited);
-    count++;  // Increment after exploring component
-}
-```
-
-**Bug 2:** Actually the same as Bug 1. The `count` variable is initialized but never incremented, so it always returns
-0.
-
-**Correct fix:**
-
-```java
-for (int i = 0; i < n; i++) {
-    if (!visited[i]) {
-        dfs(graph, i, visited);
-        count++;
-    }
-}
-return count;
-```
-
-</details>
-
----
-
-### Challenge 2: Broken BFS - Level Tracking Bug
-
-```java
-/**
- * Find shortest path length using BFS.
- * This has 1 CRITICAL BUG that causes wrong results.
- */
-public static int shortestPath_Buggy(Map<Integer, List<Integer>> graph, int start, int end) {
+// Optimized approach - BFS guarantees shortest path
+public static int findPath_BFS(Map<Integer, List<Integer>> graph, int start, int end) {
     Queue<Integer> queue = new LinkedList<>();
     Set<Integer> visited = new HashSet<>();
-    int distance = 0;
 
     queue.offer(start);
+    visited.add(start);
+    int length = 0;
 
     while (!queue.isEmpty()) {
-        int node = queue.poll();
-        if (node == end) return distance;
+        int size = queue.size();
 
-        for (int neighbor : graph.getOrDefault(node, new ArrayList<>())) {
-            if (!visited.contains(neighbor)) {
-                queue.offer(neighbor);
-                visited.add(neighbor);
+        for (int i = 0; i < size; i++) {
+            int node = queue.poll();
+
+            if (node == end) return length;
+
+            for (int neighbor : graph.getOrDefault(node, new ArrayList<>())) {
+                if (!visited.contains(neighbor)) {
+                    queue.offer(neighbor);
+                    visited.add(neighbor);
+                }
             }
         }
-
-        distance++;
+        length++;
     }
 
-    return -1;
+    return -1; // Not found
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- **Bug 1:** <span class="fill-in">[What's missing after queue.offer(start)?]</span>
-- **Bug 2:** <span class="fill-in">[How should we process the queue by level?]</span>
-- **Why it fails:** <span class="fill-in">[Trace through with start=0, end=2, graph: 0→1, 1→2]</span>
+- Time: O(V + E) - visits each node and edge once
+- Space: O(V) - queue storage
+- Benefit: Explores level-by-level, first path found is shortest
 
-**Expected distance:** 2
-**Actual with buggy code:** <span class="fill-in">[What do you get?]</span>
+#### Performance Comparison
 
-<details markdown>
-<summary>Click to verify your answer</summary>
+| Graph Size       | DFS (worst case)     | BFS     | Speedup   |
+|------------------|----------------------|---------|-----------|
+| V = 10, E = 20   | ~3,628,800 ops (10!) | 30 ops  | ~120,000x |
+| V = 6, E = 10    | ~720 ops (6!)        | 16 ops  | 45x       |
+| V = 100, E = 200 | Intractable          | 300 ops | Infinite  |
 
-**Bug 1:** Missing `visited.add(start)` after adding start to queue. Without this, we might revisit the start node.
+**Your calculation:** For a graph with V = 8 nodes, BFS would be approximately _____ times faster in worst case.
 
-**Bug 2:** Not processing nodes level-by-level. Should use:
+#### Why Does BFS Find Shortest Path?
 
-```java
-while (!queue.isEmpty()) {
-    int size = queue.size();  // Process all nodes at current level
+!!! note "Key insight"
+    BFS explores all nodes at distance k before exploring any node at distance k+1. The first time it reaches the target node is therefore guaranteed to be via the shortest path.
 
-    for (int i = 0; i < size; i++) {
-        int node = queue.poll();
+In graph A→B→D, A→C→D looking for path from A to D:
 
-        if (node == end) return distance;
-
-        for (int neighbor : graph.getOrDefault(node, new ArrayList<>())) {
-            if (!visited.contains(neighbor)) {
-                queue.offer(neighbor);
-                visited.add(neighbor);
-            }
-        }
-    }
-
-    distance++;  // Increment after processing entire level
-}
+```
+BFS Level 0: [A]
+BFS Level 1: [B, C]        (distance = 1 from A)
+BFS Level 2: [D, D]        (distance = 2 from A, found first time)
 ```
 
-**Why:** Without level-by-level processing, `distance` increments for every node polled, not for each level.
-</details>
+DFS might go: A → B → D (found) but doesn't know if A → C → D is shorter without exploring everything.
+
+**After implementing, explain in your own words:**
+
+<div class="learner-section" markdown>
+
+- Why does level-order exploration matter? <span class="fill-in">[Your answer]</span>
+- When would DFS accidentally find shortest path? <span class="fill-in">[Your answer]</span>
+
+</div>
 
 ---
 
-### Challenge 3: Wrong Adjacency Representation
+### Example 2: Graph Representation
+
+**Problem:** Store graph with 1000 nodes and 5000 edges.
+
+#### Approach 1: Adjacency Matrix
 
 ```java
-/**
- * Build graph from edge list for undirected graph.
- * This has 1 LOGIC BUG.
- */
-public static Map<Integer, List<Integer>> buildGraph_Buggy(int n, int[][] edges) {
-    Map<Integer, List<Integer>> graph = new HashMap<>();
+// Matrix representation - simple but space-inefficient for sparse graphs
+public class GraphMatrix {
+    private int[][] matrix;
+    private int V;
 
-    for (int i = 0; i < n; i++) {
-        graph.put(i, new ArrayList<>());
+    public GraphMatrix(int vertices) {
+        this.V = vertices;
+        this.matrix = new int[V][V];
     }
 
-    for (int[] edge : edges) {
-        int u = edge[0], v = edge[1];
-        graph.get(u).add(v);    }
+    public void addEdge(int src, int dst) {
+        matrix[src][dst] = 1;  // O(1) to add
+    }
 
-    return graph;
+    public boolean hasEdge(int src, int dst) {
+        return matrix[src][dst] == 1;  // O(1) to check
+    }
+
+    public List<Integer> getNeighbors(int node) {
+        List<Integer> neighbors = new ArrayList<>();
+        for (int i = 0; i < V; i++) {
+            if (matrix[node][i] == 1) {
+                neighbors.add(i);
+            }
+        }
+        return neighbors;  // O(V) to get all neighbors
+    }
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- **Bug:** <span class="fill-in">[What's missing for undirected graphs?]</span>
-- **What happens:** <span class="fill-in">[Can you find the path with buggy graph?]</span>
+- Space: O(V²) = O(1,000,000) for 1000 nodes
+- Add edge: O(1)
+- Check edge: O(1)
+- Get neighbors: O(V)
+- Memory usage: 1000 × 1000 = 1,000,000 integers ≈ 4 MB
 
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** For undirected graphs, need to add edge in BOTH directions:
+#### Approach 2: Adjacency List
 
 ```java
-for (int[] edge : edges) {
-    int u = edge[0], v = edge[1];
-    graph.get(u).add(v);
-    graph.get(v).add(u);  // Add reverse edge!
+// List representation - space-efficient for sparse graphs
+public class GraphList {
+    private Map<Integer, List<Integer>> adjList;
+
+    public GraphList() {
+        this.adjList = new HashMap<>();
+    }
+
+    public void addEdge(int src, int dst) {
+        adjList.computeIfAbsent(src, k -> new ArrayList<>()).add(dst);  // O(1) average
+    }
+
+    public boolean hasEdge(int src, int dst) {
+        return adjList.getOrDefault(src, new ArrayList<>()).contains(dst);  // O(degree)
+    }
+
+    public List<Integer> getNeighbors(int node) {
+        return adjList.getOrDefault(node, new ArrayList<>());  // O(1) to get list
+    }
 }
 ```
 
-**Why:** In an undirected graph, edge (u,v) means both u→v and v→u. Without the reverse edge, the graph is incorrectly
-treated as directed.
-</details>
+**Analysis:**
+
+- Space: O(V + E) = O(1000 + 5000) = O(6000)
+- Add edge: O(1) average
+- Check edge: O(degree of node)
+- Get neighbors: O(1)
+- Memory usage: ~6000 integers ≈ 24 KB
+
+#### Space Comparison
+
+| Graph Type                  | Adjacency Matrix | Adjacency List   | Better Choice         |
+|-----------------------------|------------------|------------------|-----------------------|
+| Dense (V=1000, E=500,000)   | 1M ints (4 MB)   | 501K ints (2 MB) | Matrix (similar)      |
+| Sparse (V=1000, E=5000)     | 1M ints (4 MB)   | 6K ints (24 KB)  | **List (167x less)**  |
+| Very Sparse (V=1000, E=100) | 1M ints (4 MB)   | 1.1K ints (4 KB) | **List (1000x less)** |
+
+**Your calculation:** For V = 5000 nodes and E = 10,000 edges, adjacency list uses _____ less space than matrix.
+
+#### When to Use Each?
+
+**Use Adjacency Matrix when:**
+
+- Graph is dense (E ≈ V²)
+- Need O(1) edge existence checks frequently
+- All operations need to be simple array lookups
+
+**Use Adjacency List when:**
+
+- Graph is sparse (E << V²)
+- Need to iterate through neighbors frequently
+- Memory is limited
+
+**After implementing, explain in your own words:**
+
+<div class="learner-section" markdown>
+
+- Why does sparse vs dense matter? <span class="fill-in">[Your answer]</span>
+- What operations are faster with each representation? <span class="fill-in">[Your answer]</span>
+
+</div>
 
 ---
 
-### Your Debugging Scorecard
+!!! info "Loop back"
+    Return to the Quick Quiz now and fill in your verified answers.
 
-After finding and fixing all bugs:
+---
 
-- [ ] Found all 5 bugs across 3 challenges
-- [ ] Understood WHY each bug causes incorrect behavior
-- [ ] Could explain the fix to someone else
-- [ ] Learned common graph traversal mistakes to avoid
+## Case Studies: Graph Traversal in the Wild
 
-**Common graph mistakes you discovered:**
+### Social Networks: BFS for Degrees of Separation
 
-1. <span class="fill-in">[Forgetting to increment counter after DFS]</span>
-2. <span class="fill-in">[Not marking start node as visited in BFS]</span>
-3. <span class="fill-in">[Not processing BFS level-by-level]</span>
-4. <span class="fill-in">[Not adding both directions for undirected graphs]</span>
-5. <span class="fill-in">[Fill in more patterns you noticed]</span>
+LinkedIn's "2nd connections" feature is a direct BFS implementation. Starting from your profile node, the algorithm runs BFS up to depth 2 and returns all reachable people. The level-by-level guarantee of BFS ensures that a "1st connection" is never mislabelled as a "2nd connection".
+
+### Package Managers: DFS for Dependency Resolution
+
+When `npm install` or `pip install` resolves a dependency tree, it performs a DFS on the dependency graph. If a cycle is detected during that DFS (package A depends on B, B depends on A), the install fails with a "circular dependency" error. The directed cycle detection pattern is the exact algorithm applied here.
+
+### Maps and Navigation: BFS for Fewest Transfers
+
+When a transit app calculates the route with the fewest transfers (not the fastest in time), it uses an unweighted BFS on a station graph. Each station is a node, edges connect adjacent stations, and BFS guarantees the minimum number of edges (transfers) in the result path.
+
+---
+
+## Common Misconceptions
+
+!!! warning "DFS finds the shortest path"
+    DFS finds *a* path, not necessarily the shortest one. It explores as deep as possible along one branch before backtracking, so it may discover a long path before a shorter one exists in an unexplored branch. BFS, by exploring level by level, guarantees that the first path found is the shortest in an unweighted graph.
+
+!!! warning "You must mark a node visited before calling DFS on it"
+    In undirected graphs, if you mark visited *after* exploring (not before), you risk re-entering the same node from different neighbours before the first DFS call returns. Always add a node to `visited` the moment you decide to explore it — not after.
+
+!!! warning "Adjacency list is always better than adjacency matrix"
+    Adjacency list is better *for sparse graphs*. For dense graphs (E ≈ V²), the overhead of linked structures can make adjacency matrix competitive or better, especially when O(1) edge-existence checks are the dominant operation. The right choice depends on graph density and which operations are most frequent.
 
 ---
 
@@ -1039,54 +979,12 @@ flowchart TD
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-Before moving to Advanced Graph Algorithms:
+Answer these without referring to your notes or implementation.
 
-- [ ] **Implementation**
-    - [ ] DFS: islands, path finding, cycle detection all work
-    - [ ] BFS: shortest path, multi-source BFS (rotting oranges) work
-    - [ ] Cycle detection: directed and undirected work
-    - [ ] Graph representations: can build adjacency list/matrix
-    - [ ] All client code runs successfully
-
-- [ ] **Pattern Recognition**
-    - [ ] Can identify when to use DFS vs BFS
-    - [ ] Know how to detect cycles in both directed/undirected graphs
-    - [ ] Understand graph representation trade-offs (list vs matrix)
-    - [ ] Recognize multi-source BFS patterns
-
-- [ ] **Problem Solving**
-    - [ ] Solved 2-3 easy problems
-    - [ ] Solved 5 core medium problems (Islands, Clone Graph, Rotting Oranges, etc.)
-    - [ ] Analyzed time/space complexity
-    - [ ] Handled edge cases (empty graph, disconnected components)
-
-- [ ] **Understanding**
-    - [ ] Filled in all ELI5 explanations
-    - [ ] Built decision tree
-    - [ ] Can explain DFS vs BFS trade-offs
-    - [ ] Know when NOT to use each traversal method
-    - [ ] Understand why BFS finds shortest path in unweighted graphs
-
-- [ ] **Mastery Check**
-    - [ ] Could implement DFS/BFS/cycle detection from memory
-    - [ ] Could recognize traversal pattern in new problem
-    - [ ] Could explain to someone else
-    - [ ] Understand why each algorithm works
-
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
-- [ ] Implement DFS and BFS from memory
-- [ ] Explain when to use DFS vs BFS
-- [ ] Detect cycles in directed and undirected graphs
-- [ ] Choose appropriate graph representation (list vs matrix)
-- [ ] Identify graph traversal patterns in new problems
-- [ ] Analyze time and space complexity
-- [ ] Debug common graph traversal mistakes
-- [ ] Teach these concepts to someone else
-
+1. Why does BFS guarantee the shortest path in an unweighted graph, but DFS does not? Describe the structural reason, not just the rule.
+2. What is the difference between the visited-state arrays needed for directed vs undirected cycle detection? Why does a directed graph require a three-state system?
+3. A social network has 500 million users and each user averages 200 connections. You need to check if two arbitrary users are connected within 3 hops. Which representation and algorithm do you choose, and what is the approximate cost?
+4. An adjacency matrix and an adjacency list both store the same graph. Which supports faster "does edge (u,v) exist?" checks, and which supports faster "iterate all neighbours of u" operations?
+5. A colleague says "I always use DFS because it uses less memory than BFS." When is this statement wrong, and what is the actual space complexity comparison?

@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this topic you will be able to:
+
+- Implement LRU and LFU caches with O(1) get and put operations using the correct combination of data structures
+- Explain why the combination of a HashMap and a doubly linked list achieves O(1) LRU operations
+- Compare Write-Through and Write-Back policies and choose the right one given consistency and latency requirements
+- Calculate the performance impact of a given cache hit rate on average latency and database load
+- Identify and fix the five common caching bugs: stampede, stale data, thundering herd on expiration, LFU minFreq error, and invalidation race condition
+- Design a complete caching strategy (eviction policy, write policy, TTL, invalidation) for a given production scenario
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,26 +26,32 @@
 **Prompts to guide you:**
 
 1. **What is caching in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Caching is a technique where you store <span class="fill-in">[the result of an expensive ___ in a faster location so that repeated requests for the same ___ can be answered in ___ instead of ___]</span>
 
 2. **Why/when do we use caching?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Caching is used when <span class="fill-in">[the cost of computing or fetching a value is ___ and the same value is requested ___, making it cheaper to ___ the result than to ___ it again]</span>
 
 3. **Real-world analogy:**
     - Example: "A cache is like keeping your favorite books on your desk instead of walking to the library..."
+    - Think about how a chef keeps frequently used spices on the counter rather than the stock room.
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **What's the difference between LRU and LFU?**
-    - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
+    - LRU evicts the item that was <span class="fill-in">[accessed ___ recently, assuming that items not used lately will not be needed ___]</span>
+    - LFU evicts the item that was <span class="fill-in">[accessed ___ frequently overall, assuming that items rarely requested are ___ likely to be needed]</span>
 
 5. **When should you use Write-Through vs Write-Back?**
-    - Your answer: <span class="fill-in">[Fill in after practice]</span>
+    - Use Write-Through when <span class="fill-in">[___ is critical and you cannot afford to lose a write, because ___ updates both ___ and ___ synchronously]</span>
+    - Use Write-Back when <span class="fill-in">[___ latency matters more than strict consistency, because the write is acknowledged after updating ___ only, with the ___ flush happening ___]</span>
 
 </div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+!!! tip "How to use this section"
+    Complete your predictions now, before reading further. You will revisit and verify each answer after running the implementations.
 
 <div class="learner-section" markdown>
 
@@ -119,247 +138,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 - Verified impact: <span class="fill-in">[Fill in after implementation]</span>
 
 </div>
-
----
-
-## Before/After: Why This Pattern Matters
-
-**Your task:** Compare direct database access vs caching to understand the impact.
-
-### Example: Product Lookup API
-
-**Problem:** Fetch product details for 1000 concurrent users.
-
-#### Approach 1: Direct Database Query (No Cache)
-
-```java
-// Naive approach - Query database for every request
-public class DirectDatabaseLookup {
-
-    private final Database database;
-
-    public Product getProduct(String productId) {
-        // Direct database query every time
-        return database.query("SELECT * FROM products WHERE id = ?", productId);
-    }
-}
-
-// Performance test
-public static void benchmarkDirectDB() {
-    DirectDatabaseLookup service = new DirectDatabaseLookup(database);
-
-    long start = System.currentTimeMillis();
-    for (int i = 0; i < 1000; i++) {
-        service.getProduct("prod-123"); // Same product queried 1000 times
-    }
-    long end = System.currentTimeMillis();
-
-    System.out.println("Total time: " + (end - start) + "ms");
-}
-```
-
-**Analysis:**
-
-- Time per DB query: ~50ms
-- For 1000 requests: 1000 × 50ms = **50,000ms (50 seconds)**
-
-- Database load: 1000 queries/sec
-- Cost: High (database compute, network latency)
-- Throughput: ~20 requests/sec per thread
-
-#### Approach 2: LRU Cache (Optimized)
-
-```java
-// Optimized approach - Cache frequent lookups
-public class CachedProductLookup {
-
-    private final LRUCache<String, Product> cache;
-    private final Database database;
-
-    public CachedProductLookup(int cacheSize, Database database) {
-        this.cache = new LRUCache<>(cacheSize);
-        this.database = database;
-    }
-
-    public Product getProduct(String productId) {
-        // Try cache first (O(1), ~1ms)
-        Product product = cache.get(productId);
-
-        if (product != null) {
-            return product; // Cache hit - fast!
-        }
-
-        // Cache miss - query database (~50ms)
-        product = database.query("SELECT * FROM products WHERE id = ?", productId);
-
-        if (product != null) {
-            cache.put(productId, product); // Populate cache
-        }
-
-        return product;
-    }
-}
-
-// Performance test
-public static void benchmarkCached() {
-    CachedProductLookup service = new CachedProductLookup(100, database);
-
-    long start = System.currentTimeMillis();
-    for (int i = 0; i < 1000; i++) {
-        service.getProduct("prod-123"); // Same product queried 1000 times
-    }
-    long end = System.currentTimeMillis();
-
-    System.out.println("Total time: " + (end - start) + "ms");
-}
-```
-
-**Analysis:**
-
-- First request (cache miss): ~50ms
-- Subsequent requests (cache hits): ~1ms each
-- For 1000 requests: 50ms + (999 × 1ms) = **1,049ms (~1 second)**
-
-- Database load: 1 query for 1000 requests
-- Cache hit rate: 99.9%
-- Throughput: ~950 requests/sec per thread
-
-#### Performance Comparison
-
-| Metric                         | Direct DB  | With Cache  | Improvement         |
-|--------------------------------|------------|-------------|---------------------|
-| **Total time (1000 requests)** | 50,000ms   | 1,049ms     | **47.6x faster**    |
-| **Average latency**            | 50ms       | 1.05ms      | **47.6x faster**    |
-| **Database queries**           | 1000       | 1           | **99.9% reduction** |
-| **Throughput**                 | 20 req/sec | 950 req/sec | **47.5x higher**    |
-| **DB cost (estimate)**         | $100/day   | $2/day      | **$98/day savings** |
-
-**Your calculation:** For 10,000 requests with 90% cache hit rate:
-
-- Cache hits: 10,000 × 0.9 = <span class="fill-in">_____</span> requests × 1ms = <span class="fill-in">_____</span>ms
-- Cache misses: 10,000 × 0.1 = <span class="fill-in">_____</span> requests × 50ms = <span class="fill-in">_____</span>ms
-- Total time: <span class="fill-in">_____</span> + _____ = <span class="fill-in">_____</span>ms
-- Speedup vs direct DB: <span class="fill-in">_____</span> times faster
-
-#### Hit Rate Analysis
-
-**How hit rate affects performance:**
-
-```
-Cache Hit Rate Analysis (1000 requests)
-
-Hit Rate | Cache Hits | DB Queries | Total Time | Speedup
-
----------|------------|------------|------------|--------
-   0%    |     0      |    1000    |  50,000ms  |   1x
-  50%    |   500      |     500    |  25,500ms  |   2x
-  75%    |   750      |     250    |  13,250ms  |   3.8x
-  90%    |   900      |     100    |   5,900ms  |   8.5x
-  95%    |   950      |      50    |   3,450ms  |  14.5x
-  99%    |   990      |      10    |   1,490ms  |  33.6x
- 99.9%   |   999      |      1     |   1,049ms  |  47.7x
-```
-
-**Key insight:** Even a modest 75% hit rate gives 3.8x speedup!
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why does caching provide such dramatic speedup? <span class="fill-in">[Your answer]</span>
-- What happens when hit rate drops below 50%? <span class="fill-in">[Your answer]</span>
-- When might caching not be worth it? <span class="fill-in">[Your answer]</span>
-
-</div>
-
-#### Write Policy Comparison
-
-**Scenario:** Update user profile (name change)
-
-```java
-// Write-Through Example
-public void updateUserProfile_WriteThrough(String userId, String newName) {
-    long start = System.currentTimeMillis();
-
-    // Write to cache (1ms)
-    cache.put(userId, newName);
-
-    // Write to database (50ms) - BLOCKS until complete
-    database.update(userId, newName);
-
-    long end = System.currentTimeMillis();
-    System.out.println("Write-Through latency: " + (end - start) + "ms");
-    // Output: ~51ms
-}
-
-// Write-Back Example
-public void updateUserProfile_WriteBack(String userId, String newName) {
-    long start = System.currentTimeMillis();
-
-    // Write to cache (1ms) - IMMEDIATE RETURN
-    cache.put(userId, newName);
-
-    // Mark as dirty for async flush
-    dirtyEntries.put(userId, newName);
-
-    long end = System.currentTimeMillis();
-    System.out.println("Write-Back latency: " + (end - start) + "ms");
-    // Output: ~1ms
-
-    // Database write happens later asynchronously
-}
-```
-
-**Write Policy Performance:**
-
-| Policy        | User Latency   | DB Write     | Consistency | Data Loss Risk        |
-|---------------|----------------|--------------|-------------|-----------------------|
-| Write-Through | 51ms           | Synchronous  | Immediate   | None                  |
-| Write-Back    | 1ms            | Asynchronous | Eventual    | If crash before flush |
-| **Speedup**   | **51x faster** | -            | Trade-off   | Trade-off             |
-
-**Your analysis:** When would you choose each?
-
-- Write-Through: <span class="fill-in">[Fill in scenarios]</span>
-- Write-Back: <span class="fill-in">[Fill in scenarios]</span>
-
----
-
-## Case Studies: Caching in the Wild
-
-### Facebook's Social Graph: TAO and Memcached
-
-- **Pattern:** Cache-Aside with a custom distributed caching layer (TAO).
-- **How it works:** Facebook's social graph (friends, posts, comments) is too large and interconnected to query from a
-  database for every request. They built TAO, a geographically distributed caching system on top of Memcached. When a
-  user requests their feed, the application first queries TAO. If the data is present (cache hit), it's returned
-  instantly. If not (cache miss), TAO fetches the data from the master database (MySQL), populates the cache, and then
-  returns it.
-- **Key Takeaway:** At massive scale, a simple cache isn't enough. Facebook needed to build a custom caching *service*
-  that handles eventual consistency, replication across data centers, and the "thundering herd" problem. It showcases
-  the cache-aside pattern on a global scale.
-
-### Twitter's Timeline Cache: Redis for Real-Time Feeds
-
-- **Pattern:** Pre-computed timelines with a Cache-Aside strategy.
-- **How it works:** A user's home timeline is one of the most frequently read pieces of data. Generating it on-the-fly
-  for every request is too slow. Instead, Twitter pre-computes user timelines and stores them in a massive Redis
-  cluster. When you open Twitter, your app fetches this pre-computed list directly from the cache. When a user you
-  follow tweets, a background "fan-out" service pushes that tweet into the timeline caches of all their followers.
-- **Key Takeaway:** For read-heavy workloads with complex data generation, it's often better to do the work ahead of
-  time and cache the *results*. Redis is a perfect fit for this due to its high performance and versatile data
-  structures (like sorted lists for timelines).
-
-### Content Delivery Networks (CDNs): Caching at the Edge
-
-- **Pattern:** Multi-layered caching with LRU/LFU eviction.
-- **How it works:** A Content Delivery Network (CDN) like Cloudflare or Akamai acts as a massive, distributed cache for
-  a website's static assets (images, CSS, JS). When a user in London requests an image, it's served from the CDN's
-  London edge server, not from the origin server in California. The first request might be slow, but subsequent requests
-  from that region are served from the local cache.
-- **Key Takeaway:** Caching isn't just for databases; it's for any data that can be served closer to the user. CDNs
-  demonstrate how layered caching and intelligent eviction policies (like LRU to keep popular assets hot) can
-  dramatically improve website performance and reduce bandwidth costs for the origin server.
 
 ---
 
@@ -478,6 +256,40 @@ public class LRUCache<K, V> {
     }
 }
 ```
+
+!!! warning "Debugging Challenge — Broken LRU Eviction Order"
+
+    The `put()` below has a subtle bug that evicts the wrong entry when the cache is full.
+
+    ```java
+    public void put(K key, V value) {
+        if (cache.containsKey(key)) {
+            Node<K, V> node = cache.get(key);
+            node.value = value;
+            list.moveToFront(node);
+            return;
+        }
+
+        Node<K, V> node = new Node<>(key, value);
+        cache.put(key, node);
+        list.addToFront(node);
+
+        if (cache.size() > capacity) {
+            Node<K, V> lru = list.removeLast();
+            // Bug is here
+            cache.remove(lru.key);
+        }
+    }
+    ```
+
+    Trace with capacity=2, then: `put(A)`, `put(B)`, `get(A)`, `put(C)`.
+    After `put(C)`, what is in the cache and what should be?
+
+    ??? success "Answer"
+
+        The logic above is actually correct for this trace — `B` is the LRU and gets evicted. The subtle bug that learners typically introduce is **not removing the node from `cache` before or after `removeLast()`**, causing `cache.size()` to remain inflated. If `cache.remove(lru.key)` is omitted or the node's key is not stored, the size check `cache.size() > capacity` never triggers correctly on future insertions.
+
+        Always verify that both the HashMap **and** the linked list are updated atomically on every eviction.
 
 ---
 
@@ -848,51 +660,49 @@ for (int i = 0; i < 1000; i++) {
 // Actual with bug: <span class="fill-in">_____</span> DB queries
 ```
 
-<details markdown>
-<summary>Click to verify your answer</summary>
+??? success "Answer"
 
-**Bug:** No synchronization during cache miss. Multiple threads can simultaneously detect cache miss and all query the
-database.
+    **Bug:** No synchronization during cache miss. Multiple threads can simultaneously detect cache miss and all query the
+    database.
 
-**Fix 1 - Simple locking (but blocks all reads):**
+    **Fix 1 - Simple locking (but blocks all reads):**
 
-```java
-public synchronized V get(K key) {
-    // ... same logic
-}
-```
-
-**Fix 2 - Better: Per-key locking to avoid thundering herd:**
-
-```java
-private final ConcurrentHashMap<K, CompletableFuture<V>> inFlightRequests = new ConcurrentHashMap<>();
-
-public V get(K key) {
-    V value = cache.get(key);
-    if (value != null) return value;
-
-    // Only one thread per key will query DB
-    CompletableFuture<V> future = inFlightRequests.computeIfAbsent(key, k -> {
-        return CompletableFuture.supplyAsync(() -> {
-            V dbValue = database.read(k);
-            if (dbValue != null) cache.put(k, dbValue);
-            return dbValue;
-        });
-    });
-
-    try {
-        value = future.get();
-        inFlightRequests.remove(key);
-        return value;
-    } catch (Exception e) {
-        inFlightRequests.remove(key);
-        throw new RuntimeException(e);
+    ```java
+    public synchronized V get(K key) {
+        // ... same logic
     }
-}
-```
+    ```
 
-**Key insight:** Cache stampede can overwhelm your database. Always protect cache misses with per-key synchronization.
-</details>
+    **Fix 2 - Better: Per-key locking to avoid thundering herd:**
+
+    ```java
+    private final ConcurrentHashMap<K, CompletableFuture<V>> inFlightRequests = new ConcurrentHashMap<>();
+
+    public V get(K key) {
+        V value = cache.get(key);
+        if (value != null) return value;
+
+        // Only one thread per key will query DB
+        CompletableFuture<V> future = inFlightRequests.computeIfAbsent(key, k -> {
+            return CompletableFuture.supplyAsync(() -> {
+                V dbValue = database.read(k);
+                if (dbValue != null) cache.put(k, dbValue);
+                return dbValue;
+            });
+        });
+
+        try {
+            value = future.get();
+            inFlightRequests.remove(key);
+            return value;
+        } catch (Exception e) {
+            inFlightRequests.remove(key);
+            throw new RuntimeException(e);
+        }
+    }
+    ```
+
+    **Key insight:** Cache stampede can overwhelm your database. Always protect cache misses with per-key synchronization.
 
 ---
 
@@ -952,32 +762,30 @@ public class StaleWriteBackCache<K, V> {
 - **Actual:** <span class="fill-in">[What happens?]</span>
 - **Fix:** <span class="fill-in">[Correct the order of checks]</span>
 
-<details markdown>
-<summary>Click to verify your answer</summary>
+??? success "Answer"
 
-**Bug:** Cache lookup happens before dirty entries check. If cache evicts an item that's in dirtyEntries, we'll miss the
-latest value.
+    **Bug:** Cache lookup happens before dirty entries check. If cache evicts an item that's in dirtyEntries, we'll miss the
+    latest value.
 
-**Correct order:**
+    **Correct order:**
 
-```java
-public V get(K key) {
-    // Check dirty entries FIRST (most recent writes)
-    V value = dirtyEntries.get(key);
-    if (value != null) return value;
+    ```java
+    public V get(K key) {
+        // Check dirty entries FIRST (most recent writes)
+        V value = dirtyEntries.get(key);
+        if (value != null) return value;
 
-    // Then check cache
-    value = cache.get(key);
-    if (value != null) return value;
+        // Then check cache
+        value = cache.get(key);
+        if (value != null) return value;
 
-    // Finally, check database
-    return database.read(key);
-}
-```
+        // Finally, check database
+        return database.read(key);
+    }
+    ```
 
-**Key insight:** With write-back caching, dirty entries hold the "source of truth" until flushed. Always check them
-first!
-</details>
+    **Key insight:** With write-back caching, dirty entries hold the "source of truth" until flushed. Always check them
+    first!
 
 ---
 
@@ -1046,64 +854,62 @@ What happens?
 - **Expected:** Smooth database load
 - **Actual:** <span class="fill-in">[What happens to database?]</span>
 
-<details markdown>
-<summary>Click to verify your answer</summary>
+??? success "Answer"
 
-**Bug:** All items created at the same time will expire at the same time, causing synchronized cache misses and database
-overload.
+    **Bug:** All items created at the same time will expire at the same time, causing synchronized cache misses and database
+    overload.
 
-**Fix 1 - Add jitter to TTL:**
+    **Fix 1 - Add jitter to TTL:**
 
-```java
-private final Random random = new Random();
+    ```java
+    private final Random random = new Random();
 
-public V get(K key) {
-    // ... existing logic ...
-    if (value != null) {
-        // Add ±20% jitter to TTL
-        long jitter = (long) (ttlMs * (0.8 + random.nextDouble() * 0.4));
-        cache.put(key, new CacheEntry<>(value, jitter));
+    public V get(K key) {
+        // ... existing logic ...
+        if (value != null) {
+            // Add ±20% jitter to TTL
+            long jitter = (long) (ttlMs * (0.8 + random.nextDouble() * 0.4));
+            cache.put(key, new CacheEntry<>(value, jitter));
+        }
+        return value;
     }
-    return value;
-}
-```
+    ```
 
-**Fix 2 - Probabilistic early expiration (XFetch algorithm):**
+    **Fix 2 - Probabilistic early expiration (XFetch algorithm):**
 
-```java
-public V get(K key) {
-    CacheEntry<V> entry = cache.get(key);
+    ```java
+    public V get(K key) {
+        CacheEntry<V> entry = cache.get(key);
 
-    if (entry == null) {
-        return refreshFromDB(key);
+        if (entry == null) {
+            return refreshFromDB(key);
+        }
+
+        // Probabilistic early expiration
+        // As item gets older, higher chance of refresh
+        long timeLeft = entry.expiryTime - System.currentTimeMillis();
+        double refreshProbability = 1.0 - ((double) timeLeft / ttlMs);
+
+        if (entry.isExpired() || random.nextDouble() < refreshProbability * 0.1) {
+            // Refresh asynchronously
+            CompletableFuture.runAsync(() -> refreshFromDB(key));
+        }
+
+        return entry.value;
     }
 
-    // Probabilistic early expiration
-    // As item gets older, higher chance of refresh
-    long timeLeft = entry.expiryTime - System.currentTimeMillis();
-    double refreshProbability = 1.0 - ((double) timeLeft / ttlMs);
-
-    if (entry.isExpired() || random.nextDouble() < refreshProbability * 0.1) {
-        // Refresh asynchronously
-        CompletableFuture.runAsync(() -> refreshFromDB(key));
+    private V refreshFromDB(K key) {
+        V value = database.read(key);
+        if (value != null) {
+            long jitter = (long) (ttlMs * (0.8 + random.nextDouble() * 0.4));
+            cache.put(key, new CacheEntry<>(value, jitter));
+        }
+        return value;
     }
+    ```
 
-    return entry.value;
-}
-
-private V refreshFromDB(K key) {
-    V value = database.read(key);
-    if (value != null) {
-        long jitter = (long) (ttlMs * (0.8 + random.nextDouble() * 0.4));
-        cache.put(key, new CacheEntry<>(value, jitter));
-    }
-    return value;
-}
-```
-
-**Key insight:** Synchronized expiration creates thundering herd. Add jitter and probabilistic early expiration to
-spread load.
-</details>
+    **Key insight:** Synchronized expiration creates thundering herd. Add jitter and probabilistic early expiration to
+    spread load.
 
 ---
 
@@ -1178,45 +984,43 @@ put("B", 2) - freq=1, minFreq should be?
 
 - **Fix:** <span class="fill-in">[Complete the updateFrequency method]</span>
 
-<details markdown>
-<summary>Click to verify your answer</summary>
+??? success "Answer"
 
-**Bug 1:** When the last node at minFreq is moved to a higher frequency, we must update minFreq.
+    **Bug 1:** When the last node at minFreq is moved to a higher frequency, we must update minFreq.
 
-**Bug 2:** Empty frequency lists should be removed from freqMap to save memory.
+    **Bug 2:** Empty frequency lists should be removed from freqMap to save memory.
 
-**Correct implementation:**
+    **Correct implementation:**
 
-```java
-private void updateFrequency(Node<K, V> node) {
-    int freq = node.freq;
+    ```java
+    private void updateFrequency(Node<K, V> node) {
+        int freq = node.freq;
 
-    // Remove from current frequency list
-    LinkedHashSet<K> freqList = freqMap.get(freq);
-    freqList.remove(node.key);
+        // Remove from current frequency list
+        LinkedHashSet<K> freqList = freqMap.get(freq);
+        freqList.remove(node.key);
 
-    // If this was the last node at minFreq, increment minFreq
-    if (freq == minFreq && freqList.isEmpty()) {
-        minFreq++;
+        // If this was the last node at minFreq, increment minFreq
+        if (freq == minFreq && freqList.isEmpty()) {
+            minFreq++;
+        }
+
+        // Remove empty frequency list
+        if (freqList.isEmpty()) {
+            freqMap.remove(freq);
+        }
+
+        // Increment frequency
+        node.freq++;
+
+        // Add to new frequency list
+        freqMap.computeIfAbsent(node.freq, k -> new LinkedHashSet<>())
+               .add(node.key);
     }
+    ```
 
-    // Remove empty frequency list
-    if (freqList.isEmpty()) {
-        freqMap.remove(freq);
-    }
-
-    // Increment frequency
-    node.freq++;
-
-    // Add to new frequency list
-    freqMap.computeIfAbsent(node.freq, k -> new LinkedHashSet<>())
-           .add(node.key);
-}
-```
-
-**Key insight:** LFU requires careful maintenance of minFreq and frequency lists. Missing updates cause incorrect
-evictions.
-</details>
+    **Key insight:** LFU requires careful maintenance of minFreq and frequency lists. Missing updates cause incorrect
+    evictions.
 
 ---
 
@@ -1276,70 +1080,68 @@ T3: Thread 1 invalidates cache
 ```
 
 
-<details markdown>
-<summary>Click to verify your answer</summary>
+??? success "Answer"
 
-**Bug:** Cache invalidation happens AFTER database write, creating a window where stale data is served.
+    **Bug:** Cache invalidation happens AFTER database write, creating a window where stale data is served.
 
-**Fix 1 - Invalidate before write:**
+    **Fix 1 - Invalidate before write:**
 
-```java
-public void update(K key, V newValue) {
-    // Invalidate FIRST
-    cache.remove(key);
+    ```java
+    public void update(K key, V newValue) {
+        // Invalidate FIRST
+        cache.remove(key);
 
-    // Then write to database
-    database.write(key, newValue);
+        // Then write to database
+        database.write(key, newValue);
 
-    // Small window where cache misses hit DB, but at least no stale data
-}
-```
-
-**Fix 2 - Use versioning:**
-
-```java
-static class VersionedValue<V> {
-    V value;
-    long version;
-}
-
-public void update(K key, V newValue) {
-    // Increment version
-    long newVersion = getNextVersion(key);
-
-    // Write to DB with version
-    database.write(key, newValue, newVersion);
-
-    // Update cache with version
-    cache.put(key, new VersionedValue<>(newValue, newVersion));
-}
-
-public V get(K key) {
-    VersionedValue<V> cached = cache.get(key);
-    VersionedValue<V> dbValue = database.read(key);
-
-    // Compare versions, use latest
-    if (cached != null && dbValue != null) {
-        return cached.version >= dbValue.version ? cached.value : dbValue.value;
+        // Small window where cache misses hit DB, but at least no stale data
     }
-    // ... handle nulls
-}
-```
+    ```
 
-**Fix 3 - Cache-aside with write-through (best):**
+    **Fix 2 - Use versioning:**
 
-```java
-public void update(K key, V newValue) {
-    // Write to both atomically (within transaction if possible)
-    cache.put(key, newValue);
-    database.write(key, newValue);
-    // No invalidation needed - cache is always up to date
-}
-```
+    ```java
+    static class VersionedValue<V> {
+        V value;
+        long version;
+    }
 
-**Key insight:** Cache invalidation is notoriously hard. Order matters: invalidate before write, or use write-through to
-avoid invalidation entirely.
-</details>
+    public void update(K key, V newValue) {
+        // Increment version
+        long newVersion = getNextVersion(key);
+
+        // Write to DB with version
+        database.write(key, newValue, newVersion);
+
+        // Update cache with version
+        cache.put(key, new VersionedValue<>(newValue, newVersion));
+    }
+
+    public V get(K key) {
+        VersionedValue<V> cached = cache.get(key);
+        VersionedValue<V> dbValue = database.read(key);
+
+        // Compare versions, use latest
+        if (cached != null && dbValue != null) {
+            return cached.version >= dbValue.version ? cached.value : dbValue.value;
+        }
+        // ... handle nulls
+    }
+    ```
+
+    **Fix 3 - Cache-aside with write-through (best):**
+
+    ```java
+    public void update(K key, V newValue) {
+        // Write to both atomically (within transaction if possible)
+        cache.put(key, newValue);
+        database.write(key, newValue);
+        // No invalidation needed - cache is always up to date
+    }
+    ```
+
+    **Key insight:** Cache invalidation is notoriously hard. Order matters: invalidate before write, or use write-through to
+    avoid invalidation entirely.
 
 ---
 
@@ -1365,6 +1167,264 @@ After finding and fixing all bugs:
 - <span class="fill-in">[Fill in patterns you learned]</span>
 - <span class="fill-in">[Fill in]</span>
 - <span class="fill-in">[Fill in]</span>
+
+---
+
+## Before/After: Why This Pattern Matters
+
+**Your task:** Compare direct database access vs caching to understand the impact.
+
+### Example: Product Lookup API
+
+**Problem:** Fetch product details for 1000 concurrent users.
+
+#### Approach 1: Direct Database Query (No Cache)
+
+```java
+// Naive approach - Query database for every request
+public class DirectDatabaseLookup {
+
+    private final Database database;
+
+    public Product getProduct(String productId) {
+        // Direct database query every time
+        return database.query("SELECT * FROM products WHERE id = ?", productId);
+    }
+}
+
+// Performance test
+public static void benchmarkDirectDB() {
+    DirectDatabaseLookup service = new DirectDatabaseLookup(database);
+
+    long start = System.currentTimeMillis();
+    for (int i = 0; i < 1000; i++) {
+        service.getProduct("prod-123"); // Same product queried 1000 times
+    }
+    long end = System.currentTimeMillis();
+
+    System.out.println("Total time: " + (end - start) + "ms");
+}
+```
+
+**Analysis:**
+
+- Time per DB query: ~50ms
+- For 1000 requests: 1000 × 50ms = **50,000ms (50 seconds)**
+
+- Database load: 1000 queries/sec
+- Cost: High (database compute, network latency)
+- Throughput: ~20 requests/sec per thread
+
+#### Approach 2: LRU Cache (Optimized)
+
+```java
+// Optimized approach - Cache frequent lookups
+public class CachedProductLookup {
+
+    private final LRUCache<String, Product> cache;
+    private final Database database;
+
+    public CachedProductLookup(int cacheSize, Database database) {
+        this.cache = new LRUCache<>(cacheSize);
+        this.database = database;
+    }
+
+    public Product getProduct(String productId) {
+        // Try cache first (O(1), ~1ms)
+        Product product = cache.get(productId);
+
+        if (product != null) {
+            return product; // Cache hit - fast!
+        }
+
+        // Cache miss - query database (~50ms)
+        product = database.query("SELECT * FROM products WHERE id = ?", productId);
+
+        if (product != null) {
+            cache.put(productId, product); // Populate cache
+        }
+
+        return product;
+    }
+}
+
+// Performance test
+public static void benchmarkCached() {
+    CachedProductLookup service = new CachedProductLookup(100, database);
+
+    long start = System.currentTimeMillis();
+    for (int i = 0; i < 1000; i++) {
+        service.getProduct("prod-123"); // Same product queried 1000 times
+    }
+    long end = System.currentTimeMillis();
+
+    System.out.println("Total time: " + (end - start) + "ms");
+}
+```
+
+**Analysis:**
+
+- First request (cache miss): ~50ms
+- Subsequent requests (cache hits): ~1ms each
+- For 1000 requests: 50ms + (999 × 1ms) = **1,049ms (~1 second)**
+
+- Database load: 1 query for 1000 requests
+- Cache hit rate: 99.9%
+- Throughput: ~950 requests/sec per thread
+
+#### Performance Comparison
+
+| Metric                         | Direct DB  | With Cache  | Improvement         |
+|--------------------------------|------------|-------------|---------------------|
+| **Total time (1000 requests)** | 50,000ms   | 1,049ms     | **47.6x faster**    |
+| **Average latency**            | 50ms       | 1.05ms      | **47.6x faster**    |
+| **Database queries**           | 1000       | 1           | **99.9% reduction** |
+| **Throughput**                 | 20 req/sec | 950 req/sec | **47.5x higher**    |
+| **DB cost (estimate)**         | $100/day   | $2/day      | **$98/day savings** |
+
+**Your calculation:** For 10,000 requests with 90% cache hit rate:
+
+- Cache hits: 10,000 × 0.9 = <span class="fill-in">_____</span> requests × 1ms = <span class="fill-in">_____</span>ms
+- Cache misses: 10,000 × 0.1 = <span class="fill-in">_____</span> requests × 50ms = <span class="fill-in">_____</span>ms
+- Total time: <span class="fill-in">_____</span> + _____ = <span class="fill-in">_____</span>ms
+- Speedup vs direct DB: <span class="fill-in">_____</span> times faster
+
+#### Hit Rate Analysis
+
+**How hit rate affects performance:**
+
+```
+Cache Hit Rate Analysis (1000 requests)
+
+Hit Rate | Cache Hits | DB Queries | Total Time | Speedup
+
+---------|------------|------------|------------|--------
+   0%    |     0      |    1000    |  50,000ms  |   1x
+  50%    |   500      |     500    |  25,500ms  |   2x
+  75%    |   750      |     250    |  13,250ms  |   3.8x
+  90%    |   900      |     100    |   5,900ms  |   8.5x
+  95%    |   950      |      50    |   3,450ms  |  14.5x
+  99%    |   990      |      10    |   1,490ms  |  33.6x
+ 99.9%   |   999      |      1     |   1,049ms  |  47.7x
+```
+
+!!! note "Key insight"
+    Even a modest 75% hit rate gives 3.8x speedup. The relationship between hit rate and speedup is non-linear — the last few percentage points of hit rate improvement produce the largest gains.
+
+**After implementing, explain in your own words:**
+
+<div class="learner-section" markdown>
+
+- Why does caching provide such dramatic speedup? <span class="fill-in">[Your answer]</span>
+- What happens when hit rate drops below 50%? <span class="fill-in">[Your answer]</span>
+- When might caching not be worth it? <span class="fill-in">[Your answer]</span>
+
+</div>
+
+#### Write Policy Comparison
+
+**Scenario:** Update user profile (name change)
+
+```java
+// Write-Through Example
+public void updateUserProfile_WriteThrough(String userId, String newName) {
+    long start = System.currentTimeMillis();
+
+    // Write to cache (1ms)
+    cache.put(userId, newName);
+
+    // Write to database (50ms) - BLOCKS until complete
+    database.update(userId, newName);
+
+    long end = System.currentTimeMillis();
+    System.out.println("Write-Through latency: " + (end - start) + "ms");
+    // Output: ~51ms
+}
+
+// Write-Back Example
+public void updateUserProfile_WriteBack(String userId, String newName) {
+    long start = System.currentTimeMillis();
+
+    // Write to cache (1ms) - IMMEDIATE RETURN
+    cache.put(userId, newName);
+
+    // Mark as dirty for async flush
+    dirtyEntries.put(userId, newName);
+
+    long end = System.currentTimeMillis();
+    System.out.println("Write-Back latency: " + (end - start) + "ms");
+    // Output: ~1ms
+
+    // Database write happens later asynchronously
+}
+```
+
+**Write Policy Performance:**
+
+| Policy        | User Latency   | DB Write     | Consistency | Data Loss Risk        |
+|---------------|----------------|--------------|-------------|-----------------------|
+| Write-Through | 51ms           | Synchronous  | Immediate   | None                  |
+| Write-Back    | 1ms            | Asynchronous | Eventual    | If crash before flush |
+| **Speedup**   | **51x faster** | -            | Trade-off   | Trade-off             |
+
+**Your analysis:** When would you choose each?
+
+- Write-Through: <span class="fill-in">[Fill in scenarios]</span>
+- Write-Back: <span class="fill-in">[Fill in scenarios]</span>
+
+!!! info "Loop back"
+    Return to the Quick Quiz now and fill in your verified answers.
+
+---
+
+## Case Studies: Caching in the Wild
+
+### Facebook's Social Graph: TAO and Memcached
+
+- **Pattern:** Cache-Aside with a custom distributed caching layer (TAO).
+- **How it works:** Facebook's social graph (friends, posts, comments) is too large and interconnected to query from a
+  database for every request. They built TAO, a geographically distributed caching system on top of Memcached. When a
+  user requests their feed, the application first queries TAO. If the data is present (cache hit), it's returned
+  instantly. If not (cache miss), TAO fetches the data from the master database (MySQL), populates the cache, and then
+  returns it.
+- **Key Takeaway:** At massive scale, a simple cache isn't enough. Facebook needed to build a custom caching *service*
+  that handles eventual consistency, replication across data centers, and the "thundering herd" problem. It showcases
+  the cache-aside pattern on a global scale.
+
+### Twitter's Timeline Cache: Redis for Real-Time Feeds
+
+- **Pattern:** Pre-computed timelines with a Cache-Aside strategy.
+- **How it works:** A user's home timeline is one of the most frequently read pieces of data. Generating it on-the-fly
+  for every request is too slow. Instead, Twitter pre-computes user timelines and stores them in a massive Redis
+  cluster. When you open Twitter, your app fetches this pre-computed list directly from the cache. When a user you
+  follow tweets, a background "fan-out" service pushes that tweet into the timeline caches of all their followers.
+- **Key Takeaway:** For read-heavy workloads with complex data generation, it's often better to do the work ahead of
+  time and cache the *results*. Redis is a perfect fit for this due to its high performance and versatile data
+  structures (like sorted lists for timelines).
+
+### Content Delivery Networks (CDNs): Caching at the Edge
+
+- **Pattern:** Multi-layered caching with LRU/LFU eviction.
+- **How it works:** A Content Delivery Network (CDN) like Cloudflare or Akamai acts as a massive, distributed cache for
+  a website's static assets (images, CSS, JS). When a user in London requests an image, it's served from the CDN's
+  London edge server, not from the origin server in California. The first request might be slow, but subsequent requests
+  from that region are served from the local cache.
+- **Key Takeaway:** Caching isn't just for databases; it's for any data that can be served closer to the user. CDNs
+  demonstrate how layered caching and intelligent eviction policies (like LRU to keep popular assets hot) can
+  dramatically improve website performance and reduce bandwidth costs for the origin server.
+
+---
+
+## Common Misconceptions
+
+!!! warning "LFU is always better than LRU for production caches"
+    LFU is better when access frequency is stable and predictable (e.g., a product catalog where bestsellers stay popular). But LFU is slow to adapt to changing patterns — a new viral post gets evicted immediately because its frequency count starts at 1. LRU handles temporal locality better and is the default in most production caches (including Redis) for this reason.
+
+!!! warning "A high cache hit rate means the cache is working well"
+    Hit rate measures how often the cache answers requests, not whether the cached data is fresh or correct. A cache full of stale data can have a 99% hit rate while serving wrong answers. Always monitor both hit rate *and* cache invalidation correctness. A low hit rate can also indicate a cache that is too small, a poor eviction policy, or a workload with low data reuse.
+
+!!! warning "Write-Back is dangerous and should be avoided"
+    Write-Back carries data loss risk only during the window between a write and the next flush. With a durable write-ahead log (WAL) or periodic snapshots, the risk can be bounded to seconds of data. Many high-performance databases (including MySQL InnoDB's buffer pool) use write-back internally. The choice is about acceptable durability guarantees, not a blanket safety rule.
 
 ---
 
@@ -1505,47 +1565,12 @@ Design and implement a data structure for Least Recently Used (LRU) cache.
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-Before moving to the next topic:
+Answer these without referring to your notes or implementation.
 
-- [ ] **Implementation**
-    - [ ] LRU Cache works with O(1) operations
-    - [ ] LFU Cache works with frequency tracking
-    - [ ] Write-Through pattern implemented correctly
-    - [ ] Write-Back pattern with async flush works
-    - [ ] All client code runs successfully
-
-- [ ] **Understanding**
-    - [ ] Filled in all ELI5 explanations
-    - [ ] Understand LRU vs LFU trade-offs
-    - [ ] Understand Write-Through vs Write-Back trade-offs
-    - [ ] Built decision tree
-
-- [ ] **Decision Making**
-    - [ ] Know when to use LRU vs LFU
-    - [ ] Know when to use Write-Through vs Write-Back
-    - [ ] Completed practice scenarios
-    - [ ] Can explain trade-offs to someone else
-
-- [ ] **Mastery Check**
-    - [ ] Could implement LRU from memory
-    - [ ] Could implement LFU from memory
-    - [ ] Could design cache for new scenario
-    - [ ] Understand when NOT to use caching
-
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
-- [ ] Implement LRU cache from memory in under 15 minutes
-- [ ] Implement LFU cache with correct frequency tracking
-- [ ] Explain when to use LRU vs LFU with real examples
-- [ ] Explain when to use Write-Through vs Write-Back
-- [ ] Calculate cache hit rates and performance impact
-- [ ] Identify and fix common caching bugs (stampede, stale data, etc.)
-- [ ] Design caching strategy for a new system
-- [ ] Explain trade-offs to both technical and non-technical audiences
-
+1. Explain why an LRU cache requires both a HashMap *and* a doubly linked list. What does each structure contribute, and why can neither alone achieve O(1) for all operations?
+2. A Write-Back cache has 500 dirty entries when the application crashes. What data is lost, and what design decision controls how much data can be lost in this scenario?
+3. Your product page cache has a 60% hit rate. DB queries take 80ms and cache hits take 1ms. Calculate the average latency at 60% and at 90% hit rate. What business case does this support?
+4. You are choosing between LRU and LFU for a news aggregator where articles trend for 2–3 hours and then go cold. Which eviction policy fits better, and why?
+5. A colleague says "Cache invalidation is easy — just delete the key when the data changes." Describe a specific race condition that this simple approach fails to prevent, and what a safer alternative looks like.

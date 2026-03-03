@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this section you will be able to:
+
+- Implement a trie from scratch with insert, search, startsWith, and delete operations
+- Explain the space-time tradeoff between tries and hash tables for string operations
+- Apply a trie to accelerate multi-word grid search (Word Search II) using shared-prefix pruning
+- Build an autocomplete system that retrieves all words matching a given prefix in O(p + k) time
+- Select between array-backed and map-backed children representations based on alphabet size and sparsity
+- Recognize when tries are the wrong tool and a sorted array or hash set is sufficient
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,26 +26,29 @@
 **Prompts to guide you:**
 
 1. **What is a trie in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">A trie is a tree where each path from root to a marked node spells out ___ by storing ___ at each node so you can find any word in ___ time</span>
 
 2. **How is a trie different from a hash table for strings?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">A trie shares ___ among words that start the same way, so prefix queries cost ___ instead of ___</span>
 
 3. **Real-world analogy:**
     - Example: "A trie is like how you organize words in a dictionary by first letter, then second letter..."
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **When does this pattern work?**
-    - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
+    - Your answer: <span class="fill-in">Tries work best when you need ___ queries or must search ___ in a grid, because ___</span>
 
 5. **What's the space-time tradeoff with tries?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">Tries use O(___) space for n words of average length m, but buy you ___ prefix lookups instead of ___</span>
 
 </div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+!!! tip "How to use this section"
+    Fill in every blank **before** you read the implementation. Your predictions will be wrong in interesting ways — that gap is where learning happens. Return here after implementing and complete the "Verified" fields.
 
 <div class="learner-section" markdown>
 
@@ -100,218 +116,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 Verify: <span class="fill-in">[Which one and why?]</span>
 
-
-</div>
-
----
-
-## Before/After: Why This Pattern Matters
-
-**Your task:** Compare naive vs optimized approaches to understand the impact.
-
-### Example: Autocomplete System
-
-**Problem:** Find all words in dictionary that start with given prefix.
-
-#### Approach 1: HashMap with Linear Scan
-
-```java
-// Naive approach - Check every word
-public static List<String> autocomplete_Naive(Set<String> dictionary, String prefix) {
-    List<String> results = new ArrayList<>();
-
-    // Check every word in dictionary
-    for (String word : dictionary) {
-        if (word.startsWith(prefix)) {
-            results.add(word);
-        }
-    }
-
-    return results;
-}
-```
-
-**Analysis:**
-
-- Time: O(n * m) - Check n words, each comparison takes m characters
-- Space: O(1) additional space (not counting results)
-- For dictionary with 100,000 words, prefix length 3: ~300,000 character comparisons
-
-#### Approach 2: Trie (Optimized)
-
-```java
-// Optimized approach - Navigate to prefix then collect
-public List<String> autocomplete_Trie(String prefix) {
-    List<String> results = new ArrayList<>();
-
-    // Navigate to prefix node: O(p) where p = prefix length
-    TrieNode node = root;
-    for (char c : prefix.toCharArray()) {
-        if (!node.children.containsKey(c)) {
-            return results; // Prefix not found
-        }
-        node = node.children.get(c);
-    }
-
-    // Collect all words under this node: O(k) where k = results
-    collectWords(node, prefix, results);
-
-    return results;
-}
-```
-
-**Analysis:**
-
-- Time: O(p + k) - p = prefix length, k = number of results
-- Space: O(n * m) for trie structure
-- For same dictionary, prefix length 3: Only 3 comparisons + collecting results
-
-#### Performance Comparison
-
-| Dictionary Size | Prefix Length | HashMap (O(n*m)) | Trie (O(p+k)) | Speedup |
-|-----------------|---------------|------------------|---------------|---------|
-| n = 1,000       | m = 5         | 5,000 ops        | 5 + k ops     | 1000x   |
-| n = 10,000      | m = 5         | 50,000 ops       | 5 + k ops     | 10000x  |
-| n = 100,000     | m = 5         | 500,000 ops      | 5 + k ops     | 100000x |
-
-**Your calculation:** For n = 50,000 and prefix length 4, the speedup is approximately _____ times faster.
-
-#### Why Does Trie Work?
-
-**Key insight to understand:**
-
-Building dictionary: ["apple", "app", "application", "apply", "banana"]
-
-```
-Trie structure:
-        root
-       /    \
-      a      b
-      |      |
-      p      a
-      |      |
-      p*     n
-     / \     |
-    l   l    a
-    |   |    |
-    e*  y*   n
-    |        |
-    a        a*
-    |
-    t
-    |
-    i
-    |
-    o
-    |
-    n*
-
-(* = isEndOfWord)
-```
-
-**Autocomplete for "app":**
-
-```
-Step 1: Navigate to 'a' → 'p' → 'p' (3 steps only!)
-Step 2: Collect all words from this subtree
-Found: "app", "apple", "application", "apply"
-```
-
-**Why can we skip other words?**
-
-- Words not starting with 'a' are in different branch (never visited)
-- Words starting with 'a' but not 'ap' are in different branch (never visited)
-- Only visit nodes relevant to prefix - massive pruning!
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why is trie better for prefix queries than hash table? <span class="fill-in">[Your answer]</span>
-- What's the space-time tradeoff? <span class="fill-in">[Your answer]</span>
-- When would hash table still be better? <span class="fill-in">[Your answer]</span>
-
-</div>
-
----
-
-### Example: Word Search in Grid
-
-**Problem:** Find all words from dictionary in 2D character grid.
-
-#### Approach 1: Brute Force with Hash Set
-
-```java
-// Naive approach - DFS from each cell for each word
-public static List<String> findWords_BruteForce(char[][] board, String[] words) {
-    Set<String> wordSet = new HashSet<>(Arrays.asList(words));
-    Set<String> found = new HashSet<>();
-
-    // Try to find each word starting from each cell
-    for (int i = 0; i < board.length; i++) {
-        for (int j = 0; j < board[0].length; j++) {
-            for (String word : words) {
-                if (dfsSearch(board, i, j, word, 0, new boolean[board.length][board[0].length])) {
-                    found.add(word);
-                }
-            }
-        }
-    }
-
-    return new ArrayList<>(found);
-}
-```
-
-**Analysis:**
-
-- Time: O(w * m * n * 4^L) - w words, m*n cells, 4^L DFS
-- For 1000 words, 4x4 grid, word length 10: Extremely slow
-- No early pruning - explores impossible paths
-
-#### Approach 2: Trie with DFS (Optimized)
-
-```java
-// Optimized approach - Single DFS using trie for pruning
-public List<String> findWords_Trie(char[][] board, String[] words) {
-    // Build trie once: O(w * L)
-    TrieNode root = buildTrie(words);
-    Set<String> found = new HashSet<>();
-
-    // DFS from each cell, trie prunes invalid paths
-    for (int i = 0; i < board.length; i++) {
-        for (int j = 0; j < board[0].length; j++) {
-            dfs(board, i, j, root, found, new boolean[board.length][board[0].length]);
-        }
-    }
-
-    return new ArrayList<>(found);
-}
-
-// Trie prunes branches early - if prefix doesn't exist in trie, stop!
-```
-
-**Analysis:**
-
-- Time: O(m * n * 4^L) - Only one DFS per cell
-- Trie pruning: If "xy" not in dictionary, never explore "xyz", "xya", etc.
-- For same problem: 1000x faster with early pruning
-
-#### Performance Comparison
-
-| Dictionary Size | Grid Size | Brute Force  | Trie with Pruning | Speedup |
-|-----------------|-----------|--------------|-------------------|---------|
-| 100 words       | 3x3       | ~100,000 ops | ~1,000 ops        | 100x    |
-| 1,000 words     | 4x4       | ~10,000,000  | ~10,000 ops       | 1000x   |
-| 10,000 words    | 5x5       | Timeout      | ~100,000 ops      | 100x+   |
-
-**Key insight:** Trie eliminates redundant work by sharing prefixes and enabling early stopping.
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- How does trie enable early pruning in DFS? <span class="fill-in">[Your answer]</span>
-- Why is single DFS with trie better than multiple DFS? <span class="fill-in">[Your answer]</span>
 
 </div>
 
@@ -460,6 +264,46 @@ public class BasicTrieClient {
 }
 ```
 
+!!! warning "Debugging Challenge — Missing Node Creation and End-of-Word Flag"
+
+    This insert method is supposed to add words to the trie. It has 2 bugs. Find them!
+
+    ```java
+    public void insert_Buggy(String word) {
+        TrieNode current = root;
+
+        for (char c : word.toCharArray()) {
+            int index = c - 'a';
+
+            if (current.children[index] == null) {
+            }
+
+            current = current.children[index];
+        }
+
+    }
+    ```
+
+    - Bug 1: <span class="fill-in">[What's the bug?]</span>
+    - Bug 2: <span class="fill-in">[What's the bug?]</span>
+
+    Test case: insert "app" and "apple", then search("app"). Expected `true`. What do you actually get?
+    <span class="fill-in">[Trace through manually]</span>
+
+    ??? success "Answer"
+
+        **Bug 1:** Missing node creation. The `if` block is empty, so children are never allocated:
+
+        ```java
+        if (current.children[index] == null) {
+            current.children[index] = new TrieNode();
+        }
+        ```
+
+        **Bug 2:** Missing `current.isEndOfWord = true;` after the loop. Without this, `search` will return `false` even for correctly inserted words.
+
+        **Result:** Without both fixes, `search("app")` returns `false` because `isEndOfWord` is never set.
+
 ---
 
 ### Pattern 2: Word Search in Grid with Trie
@@ -576,6 +420,56 @@ public class WordSearchTrieClient {
     }
 }
 ```
+
+!!! warning "Debugging Challenge — Missing Boundary Check in Grid DFS"
+
+    This DFS for word search in grid has 1 critical bug:
+
+    ```java
+    private void dfs_Buggy(char[][] board, int i, int j, TrieNode node,
+                          Set<String> result, boolean[][] visited) {
+
+        char c = board[i][j];
+
+        if (!node.children.containsKey(c)) {
+            return;
+        }
+
+        visited[i][j] = true;
+        TrieNode next = node.children.get(c);
+
+        if (next.word != null) {
+            result.add(next.word);
+        }
+
+        dfs_Buggy(board, i + 1, j, next, result, visited);
+        dfs_Buggy(board, i - 1, j, next, result, visited);
+        dfs_Buggy(board, i, j + 1, next, result, visited);
+        dfs_Buggy(board, i, j - 1, next, result, visited);
+
+        visited[i][j] = false;
+    }
+    ```
+
+    - Bug: <span class="fill-in">[What's the bug?]</span>
+    - Test case: grid `[['a','b'],['c','d']]`, dictionary `["ab"]`. What error occurs? <span class="fill-in">[Fill in]</span>
+
+    ??? success "Answer"
+
+        **Bug:** Boundary and visited checks are missing at the START of the function. The code accesses `board[i][j]` before checking whether `i` and `j` are valid indices, causing `ArrayIndexOutOfBoundsException` on every recursive call that goes out of bounds.
+
+        ```java
+        private void dfs(char[][] board, int i, int j, TrieNode node,
+                        Set<String> result, boolean[][] visited) {
+            // Check bounds and visited FIRST
+            if (i < 0 || i >= board.length || j < 0 || j >= board[0].length || visited[i][j]) {
+                return;
+            }
+            // ... rest of method
+        }
+        ```
+
+        Without this guard, all four recursive calls at the boundary immediately crash rather than returning cleanly.
 
 ---
 
@@ -854,413 +748,250 @@ public class AdvancedTrieClient {
 
 ---
 
-## Debugging Challenges
+## Before/After: Why This Pattern Matters
 
-**Your task:** Find and fix bugs in broken implementations. This tests your understanding.
+**Your task:** Compare naive vs optimized approaches to understand the impact.
 
-### Challenge 1: Broken Insert
+### Example: Autocomplete System
 
-```java
-/**
- * This insert method is supposed to add words to the trie.
- * It has 2 BUGS. Find them!
- */
-public void insert_Buggy(String word) {
-    TrieNode current = root;
+**Problem:** Find all words in dictionary that start with given prefix.
 
-    for (char c : word.toCharArray()) {
-        int index = c - 'a';
-
-        if (current.children[index] == null) {
-        }
-
-        current = current.children[index];
-    }
-
-}
-```
-
-**Your debugging:**
-
-- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
-
-- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
-
-**Test case to expose the bug:**
-
-- Insert: "app" and "apple"
-- Search for "app": Expected true, Actual: <span class="fill-in">[Trace through manually]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1:** Missing node creation! Should be:
+#### Approach 1: HashMap with Linear Scan
 
 ```java
-if (current.children[index] == null) {
-    current.children[index] = new TrieNode();
-}
-```
-
-**Bug 2:** Missing `current.isEndOfWord = true;` after the loop. Without this, search will fail even though word was
-inserted.
-
-**Result:** Without bug fixes, search("app") would return false because isEndOfWord is never set to true.
-</details>
-
----
-
-### Challenge 2: Broken Search
-
-```java
-/**
- * Search if word exists in trie.
- * This has 1 CRITICAL BUG.
- */
-public boolean search_Buggy(String word) {
-    TrieNode current = root;
-
-    for (char c : word.toCharArray()) {
-        int index = c - 'a';
-
-        if (current.children[index] == null) {
-            return false;
-        }
-
-        current = current.children[index];
-    }
-
-    return true;}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What\'s the bug?]</span>
-
-**Test case to expose the bug:**
-
-- Dictionary: ["apple", "application"]
-- Search for "app": Expected false, Actual: <span class="fill-in">[What happens?]</span>
-- Search for "apple": Expected true, Actual: <span class="fill-in">[What happens?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** Should return `current.isEndOfWord`, not just `true`.
-
-**Correct:**
-
-```java
-return current.isEndOfWord;
-```
-
-**Why:** We traversed all characters successfully, but that only means the prefix exists. We must check if it's marked
-as an actual word ending.
-
-**Result:** Without fix, search("app") returns true even though "app" wasn't inserted (only "apple" was).
-</details>
-
----
-
-### Challenge 3: Broken Autocomplete
-
-```java
-/**
- * Find all words with given prefix.
- * This has 2 BUGS causing wrong results.
- */
-public List<String> autocomplete_Buggy(String prefix) {
+// Naive approach - Check every word
+public static List<String> autocomplete_Naive(Set<String> dictionary, String prefix) {
     List<String> results = new ArrayList<>();
-    TrieNode current = root;
 
-    // Navigate to prefix
-    for (char c : prefix.toCharArray()) {
-        int index = c - 'a';
-        if (current.children[index] == null) {
-            return results;
+    // Check every word in dictionary
+    for (String word : dictionary) {
+        if (word.startsWith(prefix)) {
+            results.add(word);
         }
-        current = current.children[index];
     }
 
-
-    // Collect all words
-    collectWords(current, prefix, results);
     return results;
 }
-
-private void collectWords(TrieNode node, String currentWord, List<String> results) {
-    for (int i = 0; i < 26; i++) {
-        if (node.children[i] != null) {
-            collectWords(node.children[i], currentWord + (char)('a' + i), results);
-        }
-    }
-
-    if (node.isEndOfWord) {
-        results.add(currentWord);
-    }
-}
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- **Bug 1:** <span class="fill-in">[What check is missing?]</span>
-- **Bug 1 fix:** <span class="fill-in">[What code to add?]</span>
+- Time: O(n * m) - Check n words, each comparison takes m characters
+- Space: O(1) additional space (not counting results)
+- For dictionary with 100,000 words, prefix length 3: ~300,000 character comparisons
 
-- **Bug 2:** <span class="fill-in">[What's wrong with the order?]</span>
-- **Bug 2 fix:** <span class="fill-in">[Where should the check go?]</span>
-
-**Test case:**
-
-- Dictionary: ["app", "apple", "application"]
-- Autocomplete("app"): Expected ["app", "apple", "application"]
-- Actual: <span class="fill-in">[Trace through - what's wrong?]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1:** Missing check if prefix itself is a word. After navigating to prefix, add:
+#### Approach 2: Trie (Optimized)
 
 ```java
-if (current.isEndOfWord) {
-    results.add(prefix);
-}
-```
+// Optimized approach - Navigate to prefix then collect
+public List<String> autocomplete_Trie(String prefix) {
+    List<String> results = new ArrayList<>();
 
-**Bug 2:** The isEndOfWord check should come BEFORE recursing to children, not after. This ensures parent words are
-added before children (proper DFS order).
-
-**Correct order:**
-
-```java
-private void collectWords(TrieNode node, String currentWord, List<String> results) {
-    if (node.isEndOfWord) {
-        results.add(currentWord);  // Add current word first
-    }
-
-    for (int i = 0; i < 26; i++) {
-        if (node.children[i] != null) {
-            collectWords(node.children[i], currentWord + (char)('a' + i), results);
+    // Navigate to prefix node: O(p) where p = prefix length
+    TrieNode node = root;
+    for (char c : prefix.toCharArray()) {
+        if (!node.children.containsKey(c)) {
+            return results; // Prefix not found
         }
+        node = node.children.get(c);
     }
+
+    // Collect all words under this node: O(k) where k = results
+    collectWords(node, prefix, results);
+
+    return results;
 }
 ```
 
-</details>
+**Analysis:**
+
+- Time: O(p + k) - p = prefix length, k = number of results
+- Space: O(n * m) for trie structure
+- For same dictionary, prefix length 3: Only 3 comparisons + collecting results
+
+#### Performance Comparison
+
+| Dictionary Size | Prefix Length | HashMap (O(n*m)) | Trie (O(p+k)) | Speedup |
+|-----------------|---------------|------------------|---------------|---------|
+| n = 1,000       | m = 5         | 5,000 ops        | 5 + k ops     | 1000x   |
+| n = 10,000      | m = 5         | 50,000 ops       | 5 + k ops     | 10000x  |
+| n = 100,000     | m = 5         | 500,000 ops      | 5 + k ops     | 100000x |
+
+**Your calculation:** For n = 50,000 and prefix length 4, the speedup is approximately _____ times faster.
+
+#### Why Does Trie Work?
+
+**Key insight to understand:**
+
+Building dictionary: ["apple", "app", "application", "apply", "banana"]
+
+```
+Trie structure:
+        root
+       /    \
+      a      b
+      |      |
+      p      a
+      |      |
+      p*     n
+     / \     |
+    l   l    a
+    |   |    |
+    e*  y*   n
+    |        |
+    a        a*
+    |
+    t
+    |
+    i
+    |
+    o
+    |
+    n*
+
+(* = isEndOfWord)
+```
+
+**Autocomplete for "app":**
+
+```
+Step 1: Navigate to 'a' → 'p' → 'p' (3 steps only!)
+Step 2: Collect all words from this subtree
+Found: "app", "apple", "application", "apply"
+```
+
+**Why can we skip other words?**
+
+- Words not starting with 'a' are in different branch (never visited)
+- Words starting with 'a' but not 'ap' are in different branch (never visited)
+- Only visit nodes relevant to prefix - massive pruning!
+
+**After implementing, explain in your own words:**
+
+<div class="learner-section" markdown>
+
+- Why is trie better for prefix queries than hash table? <span class="fill-in">[Your answer]</span>
+- What's the space-time tradeoff? <span class="fill-in">[Your answer]</span>
+- When would hash table still be better? <span class="fill-in">[Your answer]</span>
+
+</div>
 
 ---
 
-### Challenge 4: Memory Leak in Delete
+### Example: Word Search in Grid
+
+**Problem:** Find all words from dictionary in 2D character grid.
+
+#### Approach 1: Brute Force with Hash Set
 
 ```java
-/**
- * Delete word from trie.
- * This has 1 SUBTLE BUG causing memory waste.
- */
-public boolean delete_Buggy(String word) {
-    return deleteHelper(root, word, 0);
-}
+// Naive approach - DFS from each cell for each word
+public static List<String> findWords_BruteForce(char[][] board, String[] words) {
+    Set<String> wordSet = new HashSet<>(Arrays.asList(words));
+    Set<String> found = new HashSet<>();
 
-private boolean deleteHelper(TrieNode node, String word, int index) {
-    if (index == word.length()) {
-        if (!node.isEndOfWord) {
-            return false;  // Word not in trie
+    // Try to find each word starting from each cell
+    for (int i = 0; i < board.length; i++) {
+        for (int j = 0; j < board[0].length; j++) {
+            for (String word : words) {
+                if (dfsSearch(board, i, j, word, 0, new boolean[board.length][board[0].length])) {
+                    found.add(word);
+                }
+            }
         }
-
-        node.isEndOfWord = false;
-        return true;    }
-
-    char c = word.charAt(index);
-    int idx = c - 'a';
-    TrieNode child = node.children[idx];
-
-    if (child == null) {
-        return false;  // Word not in trie
     }
 
-    boolean shouldDeleteChild = deleteHelper(child, word, index + 1);
-
-    if (shouldDeleteChild) {
-        node.children[idx] = null;  // Delete child
-    }
-
-    return false;  // Don't delete this node
+    return new ArrayList<>(found);
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- **Bug 1:** <span class="fill-in">[What's the logic error?]</span>
-- **Bug 2:** <span class="fill-in">[When should we delete a node?]</span>
-- **Bug 3:** <span class="fill-in">[What should the final return be?]</span>
+- Time: O(w * m * n * 4^L) - w words, m*n cells, 4^L DFS
+- For 1000 words, 4x4 grid, word length 10: Extremely slow
+- No early pruning - explores impossible paths
 
-**Test case:**
-
-- Dictionary: ["app", "apple"]
-- Delete "apple"
-- Expected: "app" still works, nodes for "le" are removed
-- Actual: <span class="fill-in">[What happens? Trace through]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** The logic for when to delete nodes is wrong. We should only delete a node if:
-
-1. It's not an end of word (after marking false)
-2. It has no children
-
-**Correct implementation:**
+#### Approach 2: Trie with DFS (Optimized)
 
 ```java
-private boolean deleteHelper(TrieNode node, String word, int index) {
-    if (index == word.length()) {
-        if (!node.isEndOfWord) {
-            return false;
-        }
+// Optimized approach - Single DFS using trie for pruning
+public List<String> findWords_Trie(char[][] board, String[] words) {
+    // Build trie once: O(w * L)
+    TrieNode root = buildTrie(words);
+    Set<String> found = new HashSet<>();
 
-        node.isEndOfWord = false;
-
-        // Can delete if no children
-        return isEmpty(node);
-    }
-
-    char c = word.charAt(index);
-    int idx = c - 'a';
-    TrieNode child = node.children[idx];
-
-    if (child == null) {
-        return false;
-    }
-
-    boolean shouldDeleteChild = deleteHelper(child, word, index + 1);
-
-    if (shouldDeleteChild) {
-        node.children[idx] = null;
-
-        // Delete this node if it's not end of word and has no children
-        return !node.isEndOfWord && isEmpty(node);
-    }
-
-    return false;
-}
-
-private boolean isEmpty(TrieNode node) {
-    for (int i = 0; i < 26; i++) {
-        if (node.children[i] != null) {
-            return false;
+    // DFS from each cell, trie prunes invalid paths
+    for (int i = 0; i < board.length; i++) {
+        for (int j = 0; j < board[0].length; j++) {
+            dfs(board, i, j, root, found, new boolean[board.length][board[0].length]);
         }
     }
-    return true;
+
+    return new ArrayList<>(found);
 }
+
+// Trie prunes branches early - if prefix doesn't exist in trie, stop!
 ```
 
-**Why:** Without proper cleanup, deleted word's unique nodes remain in memory even though they're not part of any word.
-</details>
+**Analysis:**
+
+- Time: O(m * n * 4^L) - Only one DFS per cell
+- Trie pruning: If "xy" not in dictionary, never explore "xyz", "xya", etc.
+- For same problem: 1000x faster with early pruning
+
+#### Performance Comparison
+
+| Dictionary Size | Grid Size | Brute Force  | Trie with Pruning | Speedup |
+|-----------------|-----------|--------------|-------------------|---------|
+| 100 words       | 3x3       | ~100,000 ops | ~1,000 ops        | 100x    |
+| 1,000 words     | 4x4       | ~10,000,000  | ~10,000 ops       | 1000x   |
+| 10,000 words    | 5x5       | Timeout      | ~100,000 ops      | 100x+   |
+
+!!! note "Key insight"
+    The trie converts the word-search problem from "check the grid for each word" to "explore the grid once, and let the trie tell you when to stop." Every node in the trie represents a shared prefix decision, so the pruning multiplies across all words simultaneously.
+
+**After implementing, explain in your own words:**
+
+<div class="learner-section" markdown>
+
+- How does trie enable early pruning in DFS? <span class="fill-in">[Your answer]</span>
+- Why is single DFS with trie better than multiple DFS? <span class="fill-in">[Your answer]</span>
+
+</div>
 
 ---
 
-### Challenge 5: Off-by-One in Word Search
-
-```java
-/**
- * DFS for word search in grid using trie.
- * This has 1 CRITICAL BUG causing wrong results.
- */
-private void dfs_Buggy(char[][] board, int i, int j, TrieNode node,
-                      Set<String> result, boolean[][] visited) {
-
-    char c = board[i][j];
-
-    if (!node.children.containsKey(c)) {
-        return;  // Character not in trie
-    }
-
-    visited[i][j] = true;
-    TrieNode next = node.children.get(c);
-
-    if (next.word != null) {
-        result.add(next.word);
-    }
-
-    // Explore 4 directions
-    dfs_Buggy(board, i + 1, j, next, result, visited);
-    dfs_Buggy(board, i - 1, j, next, result, visited);
-    dfs_Buggy(board, i, j + 1, next, result, visited);
-    dfs_Buggy(board, i, j - 1, next, result, visited);
-
-    visited[i][j] = false;  // Backtrack
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What\'s the bug?]</span>
-
-**Test case:**
-
-- Grid: [['a','b'],['c','d']]
-- Dictionary: ["ab"]
-- What error occurs? <span class="fill-in">[Fill in]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** Missing boundary and visited checks at the START of the function. Current code checks after accessing array,
-causing ArrayIndexOutOfBoundsException.
-
-**Correct:**
-
-```java
-private void dfs(char[][] board, int i, int j, TrieNode node,
-                Set<String> result, boolean[][] visited) {
-    // Check bounds and visited FIRST
-    if (i < 0 || i >= board.length || j < 0 || j >= board[0].length || visited[i][j]) {
-        return;
-    }
-
-    char c = board[i][j];
-
-    if (!node.children.containsKey(c)) {
-        return;
-    }
-
-    visited[i][j] = true;
-    TrieNode next = node.children.get(c);
-
-    if (next.word != null) {
-        result.add(next.word);
-    }
-
-    dfs(board, i + 1, j, next, result, visited);
-    dfs(board, i - 1, j, next, result, visited);
-    dfs(board, i, j + 1, next, result, visited);
-    dfs(board, i, j - 1, next, result, visited);
-
-    visited[i][j] = false;
-}
-```
-
-**Why:** Without boundary checks first, recursive calls will access invalid indices.
-</details>
+!!! info "Loop back"
+    Return to the Quick Quiz above and fill in every "Verified" field. Then revisit your ELI5 answers — can you now state the space-time tradeoff precisely?
 
 ---
 
-### Your Debugging Scorecard
+## Case Studies
 
-After finding and fixing all bugs:
+### Google Search Autocomplete
 
-- [ ] Found all 8+ bugs across 5 challenges
-- [ ] Understood WHY each bug causes incorrect behavior
-- [ ] Could explain the fix to someone else
-- [ ] Learned common trie mistakes to avoid
+Google's suggestion box must return completions within ~100ms for a corpus of billions of queries. A raw hash-table approach would require scanning all stored queries for each keystroke — far too slow. The production system uses a trie (combined with frequency counts and personalization signals) to navigate directly to the relevant prefix subtree, then return the top-k completions ranked by popularity. The O(p + k) query cost is independent of corpus size, which is what makes interactive latency feasible.
 
-**Common mistakes you discovered:**
+### IDE Code Completion
 
-1. <span class="fill-in">[Forgetting to mark isEndOfWord]</span>
-2. <span class="fill-in">[Not creating new nodes during insert]</span>
-3. <span class="fill-in">[Not checking isEndOfWord in search]</span>
-4. <span class="fill-in">[Wrong order in DFS collection]</span>
-5. <span class="fill-in">[Missing boundary checks in grid search]</span>
-6. <span class="fill-in">[Incomplete deletion logic]</span>
+IntelliJ IDEA and VS Code both use trie-like structures in their symbol indexes. When you type `con` in a Java file, the editor navigates to the "con" node in the project symbol trie and returns all matching class names, method names, and variables. Without prefix sharing, searching millions of symbols on every keystroke would stall the UI. The trie structure also supports wildcard patterns (e.g., camel-case abbreviation matching) by storing multiple index paths per symbol.
+
+### DNS Lookup and IP Routing
+
+Internet routers store routing tables as tries keyed on binary IP address prefixes. A packet destined for `192.168.1.42` is routed by traversing a binary trie bit-by-bit, following the longest matching prefix to find the correct outgoing interface. This is called a longest-prefix match. The trie structure makes it possible to search a table of hundreds of thousands of routes in O(32) steps (for IPv4) regardless of table size, which is essential for line-rate packet forwarding.
+
+---
+
+## Common Misconceptions
+
+!!! warning "Misconception: search() and startsWith() are the same"
+    Both methods traverse the trie following each character, so the traversal code looks identical. The difference is only in the return condition: `search` requires `node.isEndOfWord == true` at the final node, while `startsWith` returns `true` as soon as all prefix characters are found. Forgetting to check `isEndOfWord` in `search` causes it to return `true` for any prefix of an inserted word, even one that was never inserted itself.
+
+!!! warning "Misconception: tries always use less memory than hash tables"
+    For large alphabets (e.g., Unicode) or sparse word sets, a trie using an array-backed `children[26]` allocates 26 pointers per node even when most are null. A dictionary of 1,000 English words can easily consume more memory as a trie than as a hash set of strings. Map-backed children (`HashMap<Character, TrieNode>`) reduce wasted space for sparse tries but add per-entry overhead. The right choice depends on alphabet density and access patterns.
+
+!!! warning "Misconception: you can delete a node as soon as isEndOfWord is cleared"
+    Clearing `isEndOfWord` is necessary but not sufficient. If the deleted word shares a prefix with another inserted word (e.g., deleting "app" when "apple" exists), the intermediate nodes must be preserved. Nodes should only be physically removed when they have no children and are not themselves the end of another word. Incorrect deletion leaves dangling nodes that waste memory, or worse, removes nodes still needed by other words.
 
 ---
 
@@ -1381,54 +1112,21 @@ flowchart LR
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-Before moving to the next topic:
+Answer these after completing the implementations and practice problems. Return here and fill in your answers without looking at notes.
 
-- [ ] **Implementation**
-    - [ ] Basic trie: insert, search, prefix, delete all work
-    - [ ] Word search: find multiple words in grid works
-    - [ ] Autocomplete: prefix matching and suggestions work
-    - [ ] Advanced: LCP, MapSum, replace words work
-    - [ ] All client code runs successfully
+1. **What is the time complexity of inserting a word of length m into a trie, and why does it not depend on the number of words already in the trie?**
+   <span class="fill-in">[Your answer]</span>
 
-- [ ] **Pattern Recognition**
-    - [ ] Can identify when trie is appropriate
-    - [ ] Understand trie vs hash table tradeoffs
-    - [ ] Know how to store additional data in nodes
-    - [ ] Recognize prefix query patterns
+2. **A colleague writes `return true` at the end of search() instead of `return node.isEndOfWord`. Give a concrete example where this produces a wrong answer and explain why.**
+   <span class="fill-in">[Your answer]</span>
 
-- [ ] **Problem Solving**
-    - [ ] Solved 2 easy problems
-    - [ ] Solved 3-4 medium problems
-    - [ ] Analyzed time/space complexity
-    - [ ] Understood when to use array vs map for children
+3. **You have a dictionary of 50,000 English words and need to support autocomplete queries. Should you use a trie with array-backed children (size 26) or map-backed children? Justify your answer by estimating the memory difference.**
+   <span class="fill-in">[Your answer]</span>
 
-- [ ] **Understanding**
-    - [ ] Filled in all ELI5 explanations
-    - [ ] Built decision tree
-    - [ ] Identified when NOT to use tries
-    - [ ] Can explain trie structure and traversal
+4. **Explain why a single DFS with a trie over a grid is faster than running a separate DFS for each word. What specifically does the trie prune?**
+   <span class="fill-in">[Your answer]</span>
 
-- [ ] **Mastery Check**
-    - [ ] Could implement all patterns from memory
-    - [ ] Could recognize pattern in new problem
-    - [ ] Could explain to someone else
-    - [ ] Understand space complexity of tries
-
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
-- [ ] Implement basic trie (insert, search, prefix) from memory
-- [ ] Explain when and why to use trie over hash table
-- [ ] Implement autocomplete with prefix matching
-- [ ] Use trie for word search in 2D grid
-- [ ] Implement trie deletion correctly
-- [ ] Analyze space and time complexity
-- [ ] Debug common trie mistakes
-- [ ] Apply tries to real-world problems
-- [ ] Teach this concept to someone else
-
+5. **You delete the word "app" from a trie that also contains "apple". Which nodes should be physically removed, and which must be preserved? Walk through the deleteHelper logic to justify your answer.**
+   <span class="fill-in">[Your answer]</span>

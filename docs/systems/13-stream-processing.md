@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this section you should be able to:
+
+- Implement tumbling, sliding, and session windows and explain when each is appropriate
+- Describe how watermarks track event-time progress and why they enable late-data handling
+- Distinguish event time from processing time and explain the implications for out-of-order streams
+- Implement stateful stream processing with TTL-bounded state and explain why unbounded state is dangerous
+- Choose between at-most-once, at-least-once, and exactly-once semantics for a given use case
+- Debug common stream processing bugs including window boundary errors, watermark misconfiguration, and state memory leaks
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,20 +26,20 @@
 **Prompts to guide you:**
 
 1. **What is stream processing in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">Stream processing is a ___ that handles events ___ as they arrive, instead of ___</span>
 
 2. **What is a window in stream processing?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">A window is a ___ that groups events by ___ so you can ___</span>
 
 3. **Real-world analogy for tumbling window:**
     - Example: "A tumbling window is like counting cars that pass every 5 minutes..."
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **What are watermarks in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">A watermark is a ___ that tells the system "all events before time ___ have ___"</span>
 
 5. **What is the difference between event time and processing time?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">Event time is when ___, while processing time is when ___; they differ because ___</span>
 
 6. **Real-world analogy for late data handling:**
     - Example: "Late data is like receiving a postcard that was sent last week..."
@@ -37,6 +50,9 @@
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+!!! tip "How to use this section"
+    Fill in your best guesses **before** reading any code. After implementing each pattern, return here and check your predictions. The goal is to build intuition, not to get everything right on the first pass.
 
 <div class="learner-section" markdown>
 
@@ -128,212 +144,6 @@ Event occurs at 10:00:00 but arrives at system at 10:00:05:
 - Event time = <span class="fill-in">[Fill in]</span>
 - Processing time = <span class="fill-in">[Fill in]</span>
 - Which one should windowing use? <span class="fill-in">[Why?]</span>
-
-</div>
-
----
-
-## Before/After: Why Stream Processing Matters
-
-**Your task:** Compare batch processing vs stream processing to understand the impact.
-
-### Example: Real-Time Analytics
-
-**Problem:** Calculate page views per minute for a website getting 10K events/second.
-
-#### Approach 1: Batch Processing (Traditional)
-
-```java
-// Batch processing - Process accumulated data every minute
-public class BatchAnalytics {
-
-    private List<Event> eventBuffer = new ArrayList<>();
-
-    public void collectEvent(Event event) {
-        eventBuffer.add(event);
-    }
-
-    // Runs every 60 seconds
-    public Map<String, Long> computePageViews() {
-        Map<String, Long> counts = new HashMap<>();
-
-        // Process all accumulated events
-        for (Event event : eventBuffer) {
-            counts.merge(event.page, 1L, Long::sum);
-        }
-
-        // Clear buffer for next batch
-        eventBuffer.clear();
-
-        return counts;
-    }
-}
-```
-
-**Analysis:**
-
-- **Latency:** 30-60 seconds average (must wait for batch to complete)
-- **Memory:** All events in 1 minute = 10K/sec × 60 = 600K events in memory
-- **Throughput:** High (process all at once)
-- **Real-time:** No - results delayed by up to 60 seconds
-- **Use case:** Reports, ETL jobs, historical analysis
-
-**Timeline visualization:**
-
-```
-Events:     |-------- 60 seconds of collection --------|
-Processing:                                              [Compute] → Results at T+60s
-User sees:                                               ↑
-                                                    Results 60s old
-```
-
-#### Approach 2: Stream Processing (Real-Time)
-
-```java
-// Stream processing - Continuous windowing
-public class StreamAnalytics {
-
-    private Map<Long, Map<String, Long>> windows = new TreeMap<>();
-    private long windowSize = 60_000; // 60 seconds
-
-    public void processEvent(Event event) {
-        // Immediate assignment to window
-        long windowStart = (event.timestamp / windowSize) * windowSize;
-
-        // Update count immediately
-        windows.computeIfAbsent(windowStart, k -> new HashMap<>())
-               .merge(event.page, 1L, Long::sum);
-
-        // Emit results when window closes
-        long currentTime = System.currentTimeMillis();
-        closeCompletedWindows(currentTime);
-    }
-
-    private void closeCompletedWindows(long currentTime) {
-        // Windows that ended more than watermark delay ago
-        long watermark = currentTime - 5000; // 5s delay tolerance
-
-        windows.entrySet().removeIf(entry -> {
-            long windowEnd = entry.getKey() + windowSize;
-            if (windowEnd < watermark) {
-                emitResults(entry.getKey(), entry.getValue());
-                return true; // Remove closed window
-            }
-            return false;
-        });
-    }
-
-    private void emitResults(long windowStart, Map<String, Long> counts) {
-        // Results available immediately when window closes
-        System.out.println("Window [" + windowStart + "]: " + counts);
-    }
-}
-```
-
-**Analysis:**
-
-- **Latency:** 5-10 seconds (watermark delay + processing)
-- **Memory:** Only active windows = ~2 windows × events = ~100K events in memory
-- **Throughput:** Same (10K events/second)
-- **Real-time:** Yes - results within seconds
-- **Use case:** Dashboards, alerting, fraud detection
-
-**Timeline visualization:**
-
-```
-Events:     |--10s--|--10s--|--10s--|--10s--|--10s--|--10s--|
-Windows:    [-------- Window 0-60s --------]
-Processing:                                  ↑
-Results:                                     Results at T+5s
-User sees:                                   ↑
-                                        Results ~5s old
-```
-
-#### Performance Comparison
-
-| Metric                     | Batch (60s)    | Stream (Real-Time) | Improvement      |
-|----------------------------|----------------|--------------------|------------------|
-| **Latency to see results** | 30-60 seconds  | 5-10 seconds       | **6-10x faster** |
-| **Memory (peak)**          | 600K events    | 100K events        | **6x less**      |
-| **Staleness of data**      | Up to 60s old  | Up to 5s old       | **12x fresher**  |
-| **Throughput**             | 10K events/sec | 10K events/sec     | Same             |
-
-#### Real-World Impact: Fraud Detection Example
-
-**Batch approach:**
-
-```
-
-10:00:00 - Fraudulent transaction occurs
-10:00:05 - 3 more suspicious transactions
-
-10:00:45 - 5 more transactions (pattern clear)
-10:01:00 - Batch job runs, detects fraud
-
-10:01:05 - Alert sent, account frozen
-
-Total: 9 fraudulent transactions, $4,500 loss
-Detection delay: 65 seconds
-```
-
-**Stream approach:**
-
-```
-
-10:00:00 - Fraudulent transaction occurs
-10:00:05 - 3 more suspicious transactions
-
-10:00:10 - Pattern detected (window closed at watermark)
-10:00:11 - Alert sent, account frozen
-
-Total: 4 fraudulent transactions, $2,000 loss
-Detection delay: 11 seconds
-```
-
-**Impact:** Stream processing caught fraud **54 seconds faster**, preventing **$2,500 in losses**.
-
-#### Why Does Stream Processing Win?
-
-**Key insight to understand:**
-
-Batch processing treats time in discrete chunks:
-
-```
-Batch 1: [0s ────────────────── 60s] → Process → Wait
-Batch 2: [60s ──────────────── 120s] → Process → Wait
-```
-
-Stream processing treats time continuously:
-
-```
-Events: ─•──•─•───•──•─•──•─•──•─→ (continuous)
-Windows: [─────────] [─────────]
-Results:     ↑            ↑
-         (immediate)  (immediate)
-```
-
-**Your calculation:**
-
-- For 1M events/second, batch processing with 5-minute windows needs _____ GB memory
-- Stream processing with 1-minute windows needs _____ GB memory
-- Memory savings: <span class="fill-in">_____</span> times less
-
-#### When Batch Processing Is Still Better
-
-**Batch wins when:**
-
-1. **Historical analysis:** Processing months of data
-2. **Complex joins:** Multiple large datasets
-3. **Cost-sensitive:** Pay per compute hour (batch cheaper)
-4. **No urgency:** Daily reports, weekly summaries
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why does stream processing use less memory? <span class="fill-in">[Your answer]</span>
-- What's the trade-off between latency and accuracy with watermarks? <span class="fill-in">[Your answer]</span>
-- When would you still choose batch processing? <span class="fill-in">[Your answer]</span>
 
 </div>
 
@@ -550,6 +360,36 @@ public class StreamWindow<K, V> {
     }
 }
 ```
+
+!!! warning "Debugging Challenge — Window Boundary Off-by-One"
+    The following `tumblingWindow_Buggy` method has **2 bugs**. It is supposed to count events per key per window.
+
+    ```java
+    public static Map<Long, Map<String, Long>> tumblingWindow_Buggy(
+            List<Event<String, String>> events,
+            long windowSize) {
+
+        Map<Long, Map<String, Long>> windows = new TreeMap<>();
+
+        for (Event<String, String> event : events) {
+            long windowStart = event.timestamp / windowSize;
+
+            Map<String, Long> window = windows.computeIfAbsent(windowStart, k -> new HashMap<>());
+
+            window.put(event.key, 1L);
+        }
+
+        return windows;
+    }
+    ```
+
+    - Bug 1: What is wrong with the `windowStart` calculation?
+    - Bug 2: What is wrong with how each event is counted?
+
+    ??? success "Answer"
+        **Bug 1:** `windowStart` should be `(event.timestamp / windowSize) * windowSize` to align to proper window boundaries. Without the multiply, keys are window indices, not actual timestamps — so `windowStart = 1500/1000 = 1` instead of the correct `1000`.
+
+        **Bug 2:** `window.put(event.key, 1L)` always **overwrites** the count with 1. It should use `window.merge(event.key, 1L, Long::sum)` to accumulate counts instead.
 
 **Runnable Client Code:**
 
@@ -1486,500 +1326,230 @@ public class ExactlyOnceClient {
 }
 ```
 
----
-
-## Debugging Challenges
-
-**Your task:** Find and fix bugs in broken stream processing implementations. This tests your understanding.
-
-### Challenge 1: Broken Tumbling Window
-
-```java
-/**
- * This tumbling window implementation has 2 BUGS.
- * It's supposed to count events per key per window.
- */
-public static Map<Long, Map<String, Long>> tumblingWindow_Buggy(
-        List<Event<String, String>> events,
-        long windowSize) {
-
-    Map<Long, Map<String, Long>> windows = new TreeMap<>();
-
-    for (Event<String, String> event : events) {
-        long windowStart = event.timestamp / windowSize;
-
-        Map<String, Long> window = windows.computeIfAbsent(windowStart, k -> new HashMap<>());
-
-        window.put(event.key, 1L);
-    }
-
-    return windows;
-}
-```
-
-**Your debugging:**
-
-- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
-    - Current output: <span class="fill-in">[What windows?]</span>
-    - Expected output: <span class="fill-in">[What windows?]</span>
-
-- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
-    - Current count: <span class="fill-in">[What do you get?]</span>
-    - Expected count: <span class="fill-in">[Should be?]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1:** Window start should be `(event.timestamp / windowSize) * windowSize` to align to window boundaries.
-
-- Current: windowStart = 1500 / 1000 = 1 (wrong - just the window index)
-- Fixed: windowStart = (1500 / 1000) * 1000 = 1000 (correct - actual timestamp)
-
-**Bug 2:** Using `put` overwrites the count instead of incrementing it.
-
-```java
-// Wrong: Always sets count to 1
-window.put(event.key, 1L);
-
-// Correct: Increment existing count or start at 1
-window.merge(event.key, 1L, Long::sum);
-```
-
-</details>
+!!! info "Loop back"
+    Now that you have implemented all four patterns, return to the **Quick Quiz** at the top of this page. Fill in the "Verified after learning" fields. Pay particular attention to the state-size calculation — did your answer about unbounded state match what you saw in Pattern 3? Return to the **ELI5** section and complete your one-sentence explanations.
 
 ---
 
-### Challenge 2: Watermark Calculation Bug
+## Before/After: Why Stream Processing Matters
+
+!!! note "Key insight"
+    The critical difference between batch and stream processing is not throughput — it is **when results are available**. Stream processing produces output continuously as windows close, while batch processing waits for the entire dataset to accumulate before computing anything.
+
+**Your task:** Compare batch processing vs stream processing to understand the impact.
+
+### Example: Real-Time Analytics
+
+**Problem:** Calculate page views per minute for a website getting 10K events/second.
+
+#### Approach 1: Batch Processing (Traditional)
 
 ```java
-/**
- * This watermark processor has CRITICAL BUGS with late data handling.
- * Test with: Event@100ms arrives when watermark=300ms, allowedLateness=50ms
- */
-public void processEvent_Buggy(Event<String, String> event) {
-    // Update watermark
-    if (event.eventTime > currentWatermark) {
-        currentWatermark = event.eventTime;
+// Batch processing - Process accumulated data every minute
+public class BatchAnalytics {
+
+    private List<Event> eventBuffer = new ArrayList<>();
+
+    public void collectEvent(Event event) {
+        eventBuffer.add(event);
     }
 
-    // Calculate window
-    long windowStart = (event.eventTime / windowSize) * windowSize;
-    long windowEnd = windowStart + windowSize;
+    // Runs every 60 seconds
+    public Map<String, Long> computePageViews() {
+        Map<String, Long> counts = new HashMap<>();
 
-    if (event.eventTime < currentWatermark) {
-        System.out.println("LATE DATA: " + event.key);
-        lateEventCount++;
-        return; // Drop event
-    }
-
-    if (currentWatermark > windowEnd) {
-        // Window already closed, don't accept event
-        return;
-    }
-
-    // Add to window
-    Map<String, WindowState<String>> window = windows.computeIfAbsent(windowStart, k -> new HashMap<>());
-    WindowState<String> state = window.computeIfAbsent(event.key,
-        k -> new WindowState<>(event.key, windowStart, windowEnd));
-
-    state.count++;
-}
-```
-
-**Your debugging:**
-
-**Bug 1: Late data check**
-
-- **Problem:** <span class="fill-in">[What's wrong with the late data check?]</span>
-- **Scenario:** Event@100ms, watermark=300ms, allowedLateness=50ms
-    - Should be: <span class="fill-in">[Accepted or Dropped?]</span>
-    - Currently: <span class="fill-in">[What happens?]</span>
-- **Fix:** <span class="fill-in">[Correct condition?]</span>
-
-**Bug 2: Window closing**
-
-- **Problem:** <span class="fill-in">[What's wrong with window closing logic?]</span>
-- **Scenario:** Event@250ms, windowEnd=300ms, watermark=310ms, allowedLateness=50ms
-    - Should be: <span class="fill-in">[Accepted or Dropped?]</span>
-    - Currently: <span class="fill-in">[What happens?]</span>
-- **Fix:** <span class="fill-in">[How to properly check if window is still open?]</span>
-
-**Test trace:**
-
-```
-Window [0-1000ms], allowedLateness=200ms
-
-- Event@900ms arrives, watermark=900ms → ?
-- Event@800ms arrives, watermark=1100ms → ?
-- Event@800ms arrives, watermark=1300ms → ?
-```
-
-Your predictions: <span class="fill-in">[Fill in for each event]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1:** Late data check doesn't account for allowed lateness.
-
-```java
-// Wrong: Drops ANY late event
-if (event.eventTime < currentWatermark) {
-    return;
-}
-
-// Correct: Only drop if REALLY late
-if (event.eventTime < currentWatermark - allowedLateness) {
-    System.out.println("LATE DATA: " + event.key);
-    lateEventCount++;
-    return;
-}
-```
-
-**Bug 2:** Window closing doesn't account for allowed lateness.
-
-```java
-// Wrong: Closes window as soon as watermark passes windowEnd
-if (currentWatermark > windowEnd) {
-    return;
-}
-
-// Correct: Keep window open for allowed lateness period
-if (currentWatermark >= windowEnd + allowedLateness) {
-    // Window truly closed now
-    return;
-}
-```
-
-**Test trace answers:**
-
-- Event@900ms, watermark=900ms → Accepted (in window, on time)
-- Event@800ms, watermark=1100ms → Accepted (late but within 200ms)
-- Event@800ms, watermark=1300ms → Dropped (too late: 1300 - 800 = 500ms > 200ms)
-
-</details>
-
----
-
-### Challenge 3: State Management Memory Leak
-
-```java
-/**
- * This stateful processor has a MEMORY LEAK.
- * State grows unbounded even with TTL configured!
- */
-public class ValueState_Buggy<K, S> {
-    private Map<K, S> state = new HashMap<>();
-    private Map<K, Long> lastAccess = new HashMap<>();
-    private long ttlMs;
-
-    ValueState_Buggy(long ttlMs) {
-        this.ttlMs = ttlMs;
-    }
-
-    public S get(K key, long currentTime) {
-        if (state.containsKey(key)) {
-            Long lastTime = lastAccess.get(key);
-            if (currentTime - lastTime > ttlMs) {
-                // State expired, return null
-                return null;            }
-            return state.get(key);
+        // Process all accumulated events
+        for (Event event : eventBuffer) {
+            counts.merge(event.page, 1L, Long::sum);
         }
-        return null;
-    }
 
-    public void update(K key, S value, long currentTime) {
-        state.put(key, value);
-        lastAccess.put(key, currentTime);
+        // Clear buffer for next batch
+        eventBuffer.clear();
+
+        return counts;
     }
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-**Memory leak scenario:**
+- **Latency:** 30-60 seconds average (must wait for batch to complete)
+- **Memory:** All events in 1 minute = 10K/sec × 60 = 600K events in memory
+- **Throughput:** High (process all at once)
+- **Real-time:** No - results delayed by up to 60 seconds
+- **Use case:** Reports, ETL jobs, historical analysis
 
-- Process 1M unique keys over 1 hour
-- TTL = 5 minutes
-- Expected memory: <span class="fill-in">[How many keys should remain?]</span>
-- Actual memory: <span class="fill-in">[What happens?]</span>
+**Timeline visualization:**
 
-**Bug location:** <span class="fill-in">[Which method and line?]</span>
-
-**Bug explanation:** <span class="fill-in">[Why does state grow unbounded?]</span>
-
-**Bug fix:** <span class="fill-in">[What code is missing?]</span>
-
-**Performance impact:**
-
-- After 1 hour: <span class="fill-in">[How many expired keys still in memory?]</span>
-- Memory waste: <span class="fill-in">[Calculate]</span>
-- Performance degradation: <span class="fill-in">[Why does this hurt performance?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** When state expires, we return `null` but never remove the expired entries from the maps.
-
-```java
-// Wrong: Returns null but leaves garbage in memory
-if (currentTime - lastTime > ttlMs) {
-    return null;  // Memory leak!
-}
-
-// Correct: Clean up expired state
-if (currentTime - lastTime > ttlMs) {
-    // Remove expired state
-    state.remove(key);
-    lastAccess.remove(key);
-    return null;
-}
+```
+Events:     |-------- 60 seconds of collection --------|
+Processing:                                              [Compute] → Results at T+60s
+User sees:                                               ↑
+                                                    Results 60s old
 ```
 
-**Performance impact:**
-
-- After 1 hour with 1M unique keys and TTL=5min:
-    - Expected: ~100K keys (5min worth at constant rate)
-    - Actual: 1M keys (ALL keys ever seen)
-    - Memory waste: 900K entries × (state size + 2 map entries)
-    - HashMap performance degrades with size (more collisions, slower lookups)
-
-</details>
-
----
-
-### Challenge 4: Window Boundary Bug
+#### Approach 2: Stream Processing (Real-Time)
 
 ```java
-/**
- * Session window merger has a SUBTLE BUG.
- * Sometimes creates gaps, sometimes creates wrong sessions.
- */
-public static List<WindowResult<String>> sessionWindow_Buggy(
-        List<Event<String, String>> events,
-        long gapMs) {
+// Stream processing - Continuous windowing
+public class StreamAnalytics {
 
-    List<WindowResult<String>> results = new ArrayList<>();
-    Map<String, List<Event<String, String>>> eventsByKey = new HashMap<>();
+    private Map<Long, Map<String, Long>> windows = new TreeMap<>();
+    private long windowSize = 60_000; // 60 seconds
 
-    // Group by key
-    for (Event<String, String> event : events) {
-        eventsByKey.computeIfAbsent(event.key, k -> new ArrayList<>()).add(event);
+    public void processEvent(Event event) {
+        // Immediate assignment to window
+        long windowStart = (event.timestamp / windowSize) * windowSize;
+
+        // Update count immediately
+        windows.computeIfAbsent(windowStart, k -> new HashMap<>())
+               .merge(event.page, 1L, Long::sum);
+
+        // Emit results when window closes
+        long currentTime = System.currentTimeMillis();
+        closeCompletedWindows(currentTime);
     }
 
-    // Create sessions per key
-    for (Map.Entry<String, List<Event<String, String>>> entry : eventsByKey.entrySet()) {
-        String key = entry.getKey();
-        List<Event<String, String>> keyEvents = entry.getValue();
+    private void closeCompletedWindows(long currentTime) {
+        // Windows that ended more than watermark delay ago
+        long watermark = currentTime - 5000; // 5s delay tolerance
 
-        // keyEvents.sort(Comparator.comparingLong(e -> e.timestamp));
-
-        long sessionStart = keyEvents.get(0).timestamp;
-        long lastTimestamp = sessionStart;
-        long count = 0;
-
-        for (Event<String, String> event : keyEvents) {
-            if (event.timestamp - lastTimestamp >= gapMs) {
-                // Close current session
-                results.add(new WindowResult<>(key, sessionStart, lastTimestamp, count));
-
-                // Start new session
-                sessionStart = event.timestamp;
-                count = 0;
+        windows.entrySet().removeIf(entry -> {
+            long windowEnd = entry.getKey() + windowSize;
+            if (windowEnd < watermark) {
+                emitResults(entry.getKey(), entry.getValue());
+                return true; // Remove closed window
             }
-
-            lastTimestamp = event.timestamp;
-            count++;
-        }
-
-        // Close final session
-        results.add(new WindowResult<>(key, sessionStart, lastTimestamp, count));
+            return false;
+        });
     }
 
-    return results;
+    private void emitResults(long windowStart, Map<String, Long> counts) {
+        // Results available immediately when window closes
+        System.out.println("Window [" + windowStart + "]: " + counts);
+    }
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-**Bug 1: Missing sort**
+- **Latency:** 5-10 seconds (watermark delay + processing)
+- **Memory:** Only active windows = ~2 windows × events = ~100K events in memory
+- **Throughput:** Same (10K events/second)
+- **Real-time:** Yes - results within seconds
+- **Use case:** Dashboards, alerting, fraud detection
 
-- **Scenario:** Events arrive [3000ms, 1000ms, 2000ms], gap=1000ms
-- **Expected sessions:** <span class="fill-in">[Fill in after sorting]</span>
-- **Actual sessions:** <span class="fill-in">[What do you get without sorting?]</span>
-- **Why is this wrong?** <span class="fill-in">[Explain]</span>
+**Timeline visualization:**
 
-**Bug 2: Gap boundary condition**
-
-- **Scenario:** Events at [0ms, 1000ms, 2000ms], gap=1000ms
-- **Current logic:** gap check uses `>=`
-    - Event@1000ms: gap = 1000 - 0 = 1000ms → <span class="fill-in">[New session or same?]</span>
-    - Event@2000ms: gap = 2000 - 1000 = 1000ms → <span class="fill-in">[New session or same?]</span>
-- **Is this correct?** <span class="fill-in">[Should gap of exactly 1000ms create new session?]</span>
-- **Fix:** <span class="fill-in">[Use > or >=?]</span>
-
-**Bug 3: Edge case - Empty events**
-
-- **What happens if keyEvents is empty?** <span class="fill-in">[Will it crash?]</span>
-- **Fix:** <span class="fill-in">[Add what check?]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1: Missing sort**
-
-```java
-// Without sort: [3000, 1000, 2000]
-// Session 1: [3000], Session 2: [1000], Session 3: [2000]
-// Wrong! Events are scattered across sessions
-
-// With sort: [1000, 2000, 3000]
-// Session 1: [1000, 2000, 3000] (all within gap)
-// Correct!
-
-// Fix: ALWAYS sort by timestamp
-keyEvents.sort(Comparator.comparingLong(e -> e.timestamp));
+```
+Events:     |--10s--|--10s--|--10s--|--10s--|--10s--|--10s--|
+Windows:    [-------- Window 0-60s --------]
+Processing:                                  ↑
+Results:                                     Results at T+5s
+User sees:                                   ↑
+                                        Results ~5s old
 ```
 
-**Bug 2: Gap boundary**
+#### Performance Comparison
 
-```java
-// Question: Is 1000ms gap exactly equal to gapMs=1000ms a new session?
-// Typically: gap GREATER THAN threshold → new session
-// At exactly the gap threshold → still same session
+| Metric                     | Batch (60s)    | Stream (Real-Time) | Improvement      |
+|----------------------------|----------------|--------------------|------------------|
+| **Latency to see results** | 30-60 seconds  | 5-10 seconds       | **6-10x faster** |
+| **Memory (peak)**          | 600K events    | 100K events        | **6x less**      |
+| **Staleness of data**      | Up to 60s old  | Up to 5s old       | **12x fresher**  |
+| **Throughput**             | 10K events/sec | 10K events/sec     | Same             |
 
-// Wrong: >= creates new session at boundary
-if (event.timestamp - lastTimestamp >= gapMs) {
+#### Real-World Impact: Fraud Detection Example
 
-// Correct: > allows events exactly at gap boundary
-if (event.timestamp - lastTimestamp > gapMs) {
+**Batch approach:**
+
 ```
 
-**Bug 3: Empty list**
+10:00:00 - Fraudulent transaction occurs
+10:00:05 - 3 more suspicious transactions
 
-```java
-// Add check before accessing keyEvents.get(0)
-if (keyEvents.isEmpty()) {
-    continue;
-}
+10:00:45 - 5 more transactions (pattern clear)
+10:01:00 - Batch job runs, detects fraud
+
+10:01:05 - Alert sent, account frozen
+
+Total: 9 fraudulent transactions, $4,500 loss
+Detection delay: 65 seconds
 ```
 
-</details>
+**Stream approach:**
+
+```
+
+10:00:00 - Fraudulent transaction occurs
+10:00:05 - 3 more suspicious transactions
+
+10:00:10 - Pattern detected (window closed at watermark)
+10:00:11 - Alert sent, account frozen
+
+Total: 4 fraudulent transactions, $2,000 loss
+Detection delay: 11 seconds
+```
+
+**Impact:** Stream processing caught fraud **54 seconds faster**, preventing **$2,500 in losses**.
+
+#### Why Does Stream Processing Win?
+
+**Key insight to understand:**
+
+Batch processing treats time in discrete chunks:
+
+```
+Batch 1: [0s ────────────────── 60s] → Process → Wait
+Batch 2: [60s ──────────────── 120s] → Process → Wait
+```
+
+Stream processing treats time continuously:
+
+```
+Events: ─•──•─•───•──•─•──•─•──•─→ (continuous)
+Windows: [─────────] [─────────]
+Results:     ↑            ↑
+         (immediate)  (immediate)
+```
+
+**Your calculation:**
+
+- For 1M events/second, batch processing with 5-minute windows needs _____ GB memory
+- Stream processing with 1-minute windows needs _____ GB memory
+- Memory savings: <span class="fill-in">_____</span> times less
+
+#### When Batch Processing Is Still Better
+
+**Batch wins when:**
+
+1. **Historical analysis:** Processing months of data
+2. **Complex joins:** Multiple large datasets
+3. **Cost-sensitive:** Pay per compute hour (batch cheaper)
+4. **No urgency:** Daily reports, weekly summaries
+
+**After implementing, explain in your own words:**
+
+<div class="learner-section" markdown>
+
+- Why does stream processing use less memory? <span class="fill-in">[Your answer]</span>
+- What's the trade-off between latency and accuracy with watermarks? <span class="fill-in">[Your answer]</span>
+- When would you still choose batch processing? <span class="fill-in">[Your answer]</span>
+
+</div>
 
 ---
 
-### Challenge 5: Stream Join Race Condition
+## Common Misconceptions
 
-```java
-/**
- * Stream join has a RACE CONDITION and MEMORY ISSUE.
- */
-public List<String> processLeft_Buggy(Event<String, String> event) {
-    List<String> results = new ArrayList<>();
+!!! warning "Misconception 1: A larger watermark delay always gives more accurate results"
+    A watermark delay controls how long the system waits for late-arriving events before closing a window. A very large delay does reduce data loss from late events, but it also increases the **end-to-end latency** for every window result — including results that had no late data. The right delay is the smallest value that covers the typical skew in your source data, not the maximum possible skew.
 
-    List<Event<String, String>> rightEvents = rightState.get(event.key, event.timestamp);
+!!! warning "Misconception 2: Exactly-once processing means events are never duplicated in the network"
+    Exactly-once semantics refers to the **effect** on state and output, not to how many times messages physically travel over the wire. The implementation typically sends some messages multiple times (at-least-once delivery) and uses idempotency or deduplication to ensure the state machine transitions exactly once per logical event. If your sink is not idempotent, exactly-once at the processor level does not protect against duplicate output.
 
-    if (rightEvents != null) {
-        for (Event<String, String> right : rightEvents) {
-            // Join window check
-            if (Math.abs(event.timestamp - right.timestamp) <= joinWindowMs) {
-                results.add(event.value + "+" + right.value);
-            }
-        }
-    }
-
-    leftState.append(event.key, event, event.timestamp);
-
-    return results;
-}
-```
-
-**Your debugging:**
-
-**Bug: Join order matters**
-
-- **Scenario:**
-    - Left event L1 arrives at T=0
-    - Right event R1 arrives at T=1 (within join window)
-- **Expected:** L1+R1 joined
-- **What happens?**
-    - processLeft(L1): Looks in rightState, empty, no match → stores L1
-    - processRight(R1): Looks in leftState, finds L1, match! → stores R1
-    - **Problem:** <span class="fill-in">[Is this symmetric? Do we emit join twice or once?]</span>
-
-- **Scenario 2:**
-    - Right event R1 arrives first at T=0
-    - Left event L1 arrives at T=1
-- **What happens?**
-    - processRight(R1): Looks in leftState, empty, no match → stores R1
-    - processLeft(L1): Looks in rightState, finds R1, match! → stores L1
-    - **Problem:** <span class="fill-in">[Same or different from scenario 1?]</span>
-
-**Question:** Should the join be emitted by processLeft, processRight, or both?
-
-Your answer: <span class="fill-in">[Fill in]</span>
-
-**Memory issue:**
-
-- **Without TTL on state, what happens?** <span class="fill-in">[Fill in]</span>
-- **With join window = 5 seconds, what TTL should you use?** <span class="fill-in">[Fill in]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug explanation:**
-The current code stores left events AFTER checking right state. This is fine, but the symmetric operation in
-`processRight` must also store right events AFTER checking left state. The join will be emitted only once (either by
-left or right, whichever processes second).
-
-**Correct pattern:** Store BEFORE matching (then match both directions):
-
-```java
-// CORRECT: Store first, then match
-leftState.append(event.key, event, event.timestamp);
-
-// Then look for matches in right state
-List<Event<String, String>> rightEvents = rightState.get(event.key, event.timestamp);
-// ... matching logic ...
-```
-
-This ensures both sides can find each other. The join will be emitted by whichever event arrives second.
-
-**Memory issue:**
-
-- Without TTL: All events stay in state forever → memory leak
-- With join window = 5s: Set TTL = 2 × join window = 10s (safety margin)
-- Why 2×? Events might arrive late, need extra retention
-
-</details>
-
----
-
-### Your Debugging Scorecard
-
-After finding and fixing all bugs:
-
-- [ ] Found all window calculation bugs
-- [ ] Understood watermark and late data handling
-- [ ] Fixed memory leaks in state management
-- [ ] Corrected session window boundary issues
-- [ ] Resolved stream join race conditions
-- [ ] Learned common stream processing mistakes
-
-**Common mistakes you discovered:**
-
-1. <span class="fill-in">[List the patterns - e.g., "Not accounting for allowed lateness"]</span>
-2. <span class="fill-in">[Fill in]</span>
-3. <span class="fill-in">[Fill in]</span>
-4. <span class="fill-in">[Fill in]</span>
-
-**Prevention checklist:**
-
-- [ ] Always align windows to proper boundaries
-- [ ] Always check: eventTime vs (watermark - allowedLateness)
-- [ ] Always remove expired state in TTL checks
-- [ ] Always sort events by timestamp for session windows
-- [ ] Always set TTL for stateful joins
-- [ ] Always test with out-of-order events
+!!! warning "Misconception 3: Stateless stream processing has no memory growth"
+    Stateless operators (map, filter) do not accumulate per-key state, so they have constant memory usage regardless of throughput. However, windowing itself is stateful — each open window stores partial aggregates. A pipeline with many windows, large window sizes, or high key cardinality can still grow memory substantially even if you consider the individual operators "stateless."
 
 ---
 
@@ -2215,65 +1785,16 @@ Output: <span class="fill-in">[How to avoid duplicate writes to database?]</span
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-Before moving to the next topic:
+Answer these questions without looking at your implementation. They are designed to probe understanding, not recall.
 
-- [ ] **Implementation**
-    - [ ] Tumbling window implementation works
-    - [ ] Sliding window implementation works
-    - [ ] Session window implementation works
-    - [ ] Watermark processing works
-    - [ ] Late data handling works
-    - [ ] Stateful processing works
-    - [ ] Deduplication works
-    - [ ] All client code runs successfully
+1. **You set `allowedLateness = 0` and observe that some events are unexpectedly dropped even though they arrive only milliseconds after their window closes. Why does this happen, and what value would you choose instead?**
 
-- [ ] **Understanding**
-    - [ ] Filled in all ELI5 explanations
-    - [ ] Understand difference between window types
-    - [ ] Know event time vs processing time
-    - [ ] Understand watermarks and their purpose
-    - [ ] Know how state works and TTL
-    - [ ] Understand exactly-once semantics
-    - [ ] Can explain checkpointing
+2. **A session window with a 5-second gap creates 10 sessions for a given user over 1 hour. If you reduce the gap to 2 seconds, will there be more or fewer sessions? Explain why.**
 
-- [ ] **Decision Making**
-    - [ ] Know when to use each window type
-    - [ ] Can design watermark strategy
-    - [ ] Know when to use state
-    - [ ] Can choose consistency level
-    - [ ] Completed all practice scenarios
-    - [ ] Can justify design choices
+3. **Your stateful processor tracks a running sum per user ID with a 10-minute TTL. After running for 24 hours, you observe that memory is still growing. What is the most likely cause, and how would you verify it?**
 
-- [ ] **Performance**
-    - [ ] Understand time/space complexity
-    - [ ] Know state size implications
-    - [ ] Can estimate resource needs
-    - [ ] Know throughput vs latency trade-offs
+4. **A stream join buffers left-stream events waiting for matching right-stream events. You configure a join window of 30 seconds but set state TTL to 20 seconds. What problem will you observe, and what is the correct TTL value?**
 
-- [ ] **Mastery Check**
-    - [ ] Could implement basic stream processor
-    - [ ] Could design windowing strategy
-    - [ ] Could handle late data appropriately
-    - [ ] Could implement exactly-once processing
-    - [ ] Know common streaming pitfalls
-    - [ ] Can debug watermark issues
-
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
-- [ ] Implement tumbling, sliding, and session windows from memory
-- [ ] Configure watermarks and handle late data correctly
-- [ ] Design state management with appropriate TTL
-- [ ] Implement exactly-once processing
-- [ ] Explain event time vs processing time
-- [ ] Debug watermark and window closing issues
-- [ ] Choose appropriate consistency levels
-- [ ] Estimate memory and performance requirements
-- [ ] Design complete stream processing pipelines
-- [ ] Teach these concepts to someone else
-
+5. **Design decision: You are building a billing pipeline that charges customers based on usage events. A downstream payment service is idempotent (accepts a charge ID and ignores duplicates). Should you use at-least-once or exactly-once semantics at the stream processor layer? Justify your choice with a specific trade-off argument.**

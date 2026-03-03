@@ -1,6 +1,19 @@
 # Load Balancing
 
-> Distributing requests across multiple servers for scalability and reliability
+> Distributing traffic across multiple servers for availability and performance
+
+---
+
+## Learning Objectives
+
+By the end of this topic you will be able to:
+
+- Implement round robin, least connections, weighted round robin, consistent hashing, and IP hash algorithms from scratch
+- Explain why consistent hashing minimises key redistribution when servers are added or removed compared to simple modulo hashing
+- Compare the five algorithms across their handling of heterogeneous servers, stateful sessions, and server failures
+- Identify thread-safety bugs in load balancer implementations including missing synchronisation and race conditions on the healthy-server list
+- Choose the appropriate algorithm given requirements for session persistence, capacity difference, or cache-key locality
+- Design virtual-node placement for consistent hashing and explain the trade-off between node count and distribution uniformity
 
 ---
 
@@ -8,35 +21,29 @@
 
 <div class="learner-section" markdown>
 
-**Your task:** After implementing different load balancing algorithms, explain them simply.
+**Your task:** After implementing load balancing algorithms, explain them simply.
 
 **Prompts to guide you:**
 
 1. **What is load balancing in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">Load balancing is a ___ that works by ___</span>
 
-2. **Why do we need load balancers?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+2. **Why do we need load balancing?**
+    - Your answer: <span class="fill-in">Without load balancing, a single server would ___, which causes ___</span>
 
 3. **Real-world analogy for round robin:**
-    - Example: "Round robin is like a carousel where..."
-    - Your analogy: <span class="fill-in">[Fill in]</span>
+    - Example: "Round robin is like a teacher calling on students in order..."
+    - Your analogy: <span class="fill-in">Think about how a checkout manager would assign customers to available cashiers one at a time — what rule would make it fair?</span>
 
-4. **What is round robin in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+4. **Real-world analogy for least connections:**
+    - Example: "Least connections is like a bank choosing the shortest queue..."
+    - Your analogy: <span class="fill-in">Think about how a supermarket manager watching multiple checkout lines would decide where to direct the next customer in line...</span>
 
-5. **How is least connections different from round robin?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+5. **Why is consistent hashing useful?**
+    - Your answer: <span class="fill-in">Consistent hashing is preferred when ___ because it avoids the cost of ___</span>
 
-6. **Real-world analogy for consistent hashing:**
-    - Example: "Consistent hashing is like a clock where..."
-    - Your analogy: <span class="fill-in">[Fill in]</span>
-
-7. **What is consistent hashing in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
-
-8. **When would you use weighted load balancing?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+6. **What problem does IP hash solve that round robin can't?**
+    - Your answer: <span class="fill-in">IP hash ensures ___ by ___, which round robin cannot guarantee because ___</span>
 
 </div>
 
@@ -44,214 +51,63 @@
 
 ## Quick Quiz (Do BEFORE implementing)
 
+!!! tip "How to use this section"
+    Complete your predictions now, before reading further. You will revisit and verify each answer after running the benchmark (or completing the implementation).
+
 <div class="learner-section" markdown>
 
-**Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
+**Your task:** Test your load balancing intuition. Answer these, then verify after implementation.
 
-### Complexity Predictions
+### Algorithm Understanding Predictions
 
-1. **Round robin server selection:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
+1. **Round Robin with 3 servers, sending 10 requests:**
+    - Distribution: <span class="fill-in">[How many per server?]</span>
+    - Server sequence: <span class="fill-in">[S1, S2, S3, S1, ...]</span>
+    - Verified after implementation: <span class="fill-in">[Actual]</span>
 
-2. **Least connections server selection:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
+2. **Least Connections: 3 servers with [5, 2, 8] connections:**
+    - Next request goes to: <span class="fill-in">[Which server?]</span>
+    - After that request, connections: <span class="fill-in">[New counts?]</span>
+    - Verified: <span class="fill-in">[Fill in]</span>
 
-3. **Consistent hashing lookup:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
+3. **Consistent Hashing: 3 servers, adding 1 more:**
+    - With 3 servers, keys redistributed: <span class="fill-in">[Your guess: ~33%? ~25%? ~10%?]</span>
+    - With simple hash (key % servers), keys redistributed: <span class="fill-in">[Your guess: ~66%? ~75%?]</span>
     - Verified: <span class="fill-in">[Actual]</span>
 
 ### Scenario Predictions
 
-**Scenario 1:** 3 identical servers, 12 requests using round robin
+**Scenario 1:** 5 identical web servers serving a stateless application
 
-- **How many requests does each server get?** <span class="fill-in">[Fill in]</span>
-- **If we add a 4th server after 8 requests, what happens?** <span class="fill-in">[Explain]</span>
-- **Is this distribution optimal for all workloads?** <span class="fill-in">[Yes/No - Why?]</span>
+- **Best algorithm:** <span class="fill-in">[Round Robin/Least Connections/Consistent Hash?]</span>
+- **Why:** <span class="fill-in">[Your reasoning]</span>
 
-**Scenario 2:** 3 servers, server 1 has 5 connections, server 2 has 2, server 3 has 3
+**Scenario 2:** Users have shopping carts stored in server memory
 
-- **Which server does least connections choose?** <span class="fill-in">[Fill in]</span>
-- **Why not round robin in this case?** <span class="fill-in">[Explain]</span>
-- **What if requests have varying durations?** <span class="fill-in">[Which algorithm is better?]</span>
+- **Problem with round robin:** <span class="fill-in">[What happens to cart?]</span>
+- **Best algorithm:** <span class="fill-in">[Which preserves session?]</span>
+- **Why:** <span class="fill-in">[Your reasoning]</span>
 
-**Scenario 3:** Consistent hashing with 3 servers, 100 cache keys
+**Scenario 3:** Cache cluster with 20 nodes, frequent node additions
 
-- **If you add a 4th server, approximately what % of keys are remapped?** <span class="fill-in">[Fill in]</span>
-- **If you remove 1 server, what % of keys are remapped?** <span class="fill-in">[Fill in]</span>
-- **Why is this better than simple hash % server_count?** <span class="fill-in">[Explain]</span>
+- **Problem with simple hash:** <span class="fill-in">[% of cache misses when adding node?]</span>
+- **Best algorithm:** <span class="fill-in">[Which minimizes redistribution?]</span>
 
 ### Trade-off Quiz
 
-**Question:** When would IP hash be WORSE than round robin?
+**Question:** When would Least Connections be WORSE than Round Robin?
 
 - Your answer: <span class="fill-in">[Fill in before implementation]</span>
 - Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
-**Question:** What's the MAIN problem with simple hash-based load balancing?
+**Question:** What's the MAIN risk of IP Hash?
 
-- [ ] It's too slow
-- [ ] It doesn't distribute evenly
-- [ ] Adding/removing servers causes massive redistribution
-- [ ] It requires too much memory
+- [ ] Uneven distribution
+- [ ] No session persistence
+- [ ] Higher overhead
+- [ ] Doesn't work with proxies
 
-Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
-
-**Question:** What problem do virtual nodes solve in consistent hashing?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after learning]</span>
-
-</div>
-
----
-
-## Before/After: Why This Pattern Matters
-
-**Your task:** Compare different load balancing approaches to understand the impact.
-
-### Example: Distributing 10 Requests
-
-**Problem:** Route 10 requests across 3 servers with different algorithms.
-
-#### Approach 1: Round Robin
-
-```java
-// Round robin - Simple circular rotation
-List<Server> servers = Arrays.asList(server1, server2, server3);
-int currentIndex = 0;
-
-for (int i = 1; i <= 10; i++) {
-    Server selected = servers.get(currentIndex);
-    System.out.println("Request " + i + " -> " + selected.id);
-    currentIndex = (currentIndex + 1) % servers.size();
-}
-```
-
-**Output:**
-
-```
-Request 1 -> S1, Request 2 -> S2, Request 3 -> S3
-Request 4 -> S1, Request 5 -> S2, Request 6 -> S3
-Request 7 -> S1, Request 8 -> S2, Request 9 -> S3
-Request 10 -> S1
-```
-
-**Analysis:**
-
-- Distribution: S1=4, S2=3, S3=3 (even)
-- Time: O(1) per request
-- Space: O(1)
-- Problem: Doesn't consider if S1 is slower or overloaded
-
-#### Approach 2: Least Connections
-
-```java
-// Least connections - Route to server with fewest active connections
-// Assume current state: S1=5 connections, S2=2 connections, S3=3 connections
-
-ServerWithStats min = servers.get(0);
-for (ServerWithStats s : servers) {
-    if (s.activeConnections < min.activeConnections) {
-        min = s;
-    }
-}
-System.out.println("Route to: " + min.server.id);
-min.activeConnections++;
-```
-
-**Analysis:**
-
-- Routes to S2 (only 2 connections vs 5 and 3)
-- Time: O(n) per request (scan all servers)
-- Space: O(n) (track connection counts)
-- Benefit: Adapts to varying request durations
-- Problem: More overhead than round robin
-
-#### Approach 3: Consistent Hashing
-
-```java
-// Consistent hashing - Map user to consistent server
-TreeMap<Integer, Server> ring = new TreeMap<>();
-
-// Place servers on ring with virtual nodes
-for (Server s : servers) {
-    for (int i = 0; i < 3; i++) {
-        int hash = hash(s.id + "-" + i);
-        ring.put(hash, s);
-    }
-}
-
-// Route request by user ID
-String userId = "user123";
-int userHash = hash(userId);
-Map.Entry<Integer, Server> entry = ring.ceilingEntry(userHash);
-if (entry == null) entry = ring.firstEntry();
-System.out.println(userId + " -> " + entry.getValue().id);
-```
-
-**Analysis:**
-
-- Time: O(log n) per request (TreeMap lookup)
-- Space: O(n * virtual_nodes)
-- Benefit: Adding server only remaps ~1/n keys
-- Problem: More complex, uneven distribution without enough virtual nodes
-
-#### Performance Comparison: Adding a Server
-
-| Algorithm             | Before    | After     | Keys Remapped          |
-|-----------------------|-----------|-----------|------------------------|
-| Simple Hash (key % n) | 3 servers | 4 servers | ~75% (3 out of 4 keys) |
-| Consistent Hashing    | 3 servers | 4 servers | ~25% (1 out of 4 keys) |
-
-**Why does this matter for caching?**
-
-- Simple hash: 75% cache miss rate after adding server
-- Consistent hash: 25% cache miss rate after adding server
-- 3x improvement in cache hit rate during scaling
-
-**Your calculation:** With 100 servers and 1,000,000 cached keys:
-
-- Simple hash remapping: <span class="fill-in">_____</span> keys need to move
-- Consistent hash remapping: <span class="fill-in">_____</span> keys need to move
-- Improvement factor: <span class="fill-in">_____</span> times better
-
-#### Comparison: Session Persistence
-
-**Scenario:** User with shopping cart stored in server memory
-
-**Round Robin:**
-
-```
-Request 1 (user123) -> S1 (cart created)
-Request 2 (user123) -> S2 (cart lost! No session data)
-Request 3 (user123) -> S3 (cart lost! No session data)
-```
-
-Result: Cart lost, poor user experience
-
-**IP Hash:**
-
-```
-hash("192.168.1.100") % 3 = 1 -> S2
-Request 1 (user123 from 192.168.1.100) -> S2 (cart created)
-Request 2 (user123 from 192.168.1.100) -> S2 (cart found!)
-Request 3 (user123 from 192.168.1.100) -> S2 (cart persists)
-```
-
-Result: Same server every time, session maintained
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- When would you choose round robin over least connections? <span class="fill-in">[Your answer]</span>
-- Why use consistent hashing for a cache cluster? <span class="fill-in">[Your answer]</span>
-- What are the trade-offs of IP hash for session persistence? <span class="fill-in">[Your answer]</span>
+Verify after implementation: <span class="fill-in">[Which one(s) and why?]</span>
 
 </div>
 
@@ -259,30 +115,39 @@ Result: Same server every time, session maintained
 
 ## Case Studies: Load Balancing in the Wild
 
-### Netflix: Zuul API Gateway
+### Netflix: Consistent Hashing for CDN Content Routing
 
-- **Pattern:** L7 Load Balancing.
-- **How it works:** Netflix's Zuul gateway acts as a smart L7 router. It inspects incoming HTTP requests and routes them
-  to the appropriate microservice (e.g., `api/v1/movies` -> Movie Service, `api/v1/billing` -> Billing Service).
-- **Key Takeaway:** They use it for more than just traffic distribution; it handles dynamic routing, security, and
-  monitoring, acting as the "front door" to their entire microservices architecture.
+- **Pattern:** Consistent hashing for routing video content requests.
+- **How it works:** Netflix's CDN must serve video chunks to millions of concurrent viewers. Each video chunk is
+  identified by a key. Using consistent hashing, a request for a specific chunk is always routed to the same CDN
+  server, maximizing cache hits. When a server is added or removed (e.g., during scaling or a failure), consistent
+  hashing ensures that only a small fraction of keys (~1/N) need to be remapped, dramatically reducing cache misses
+  compared to a naive `key % N` approach.
+- **Key Takeaway:** For caching systems where cache-hit rate is critical, consistent hashing is the standard choice.
+  The virtual node technique further smooths the distribution across physical servers.
 
-### Facebook: Katran Load Balancer
+### AWS Elastic Load Balancer: Least Outstanding Requests
 
-- **Pattern:** L4 Load Balancing.
-- **How it works:** Katran is a high-performance L4 load balancer that operates at the network packet level (TCP/UDP).
-  It uses a technique called Direct Server Return (DSR) where the backend server responds directly to the client,
-  bypassing the load balancer on the return path to reduce latency.
-- **Key Takeaway:** For massive scale, Facebook optimized at a lower level to achieve extreme performance, sacrificing
-  application-level routing logic at the edge for raw speed.
+- **Pattern:** A variant of least connections called Least Outstanding Requests.
+- **How it works:** AWS ELB's Application Load Balancer uses a "least outstanding requests" algorithm by default. This
+  is similar to least connections but counts in-flight requests rather than total connections, making it more accurate
+  for HTTP/2 connections that multiplex many requests. Each target's request count is tracked, and new requests are
+  sent to the target with the fewest outstanding requests. This naturally handles heterogeneous workloads where some
+  requests take much longer than others.
+- **Key Takeaway:** For modern HTTP workloads with variable request duration, least-connections-style algorithms
+  significantly outperform round robin. They are especially powerful when some requests are 10x or 100x slower than
+  the average, as they prevent slow servers from accumulating a backlog.
 
-### Cloudflare: Anycast and Geo-Routing
+### Memcached / Redis Clusters: Client-Side Consistent Hashing
 
-- **Pattern:** Global Load Balancing (GSLB).
-- **How it works:** Cloudflare uses Anycast DNS to route users to the nearest data center based on network topology. An
-  L4/L7 load balancer within that data center then distributes traffic locally.
-- **Key Takeaway:** Load balancing isn't just for a single data center. It's a critical tool for global traffic
-  management, improving latency and providing DDoS protection by distributing traffic geographically.
+- **Pattern:** Client-side consistent hashing for cache key distribution.
+- **How it works:** In a Memcached or Redis cluster, clients (not a central proxy) implement consistent hashing to
+  decide which server to contact for a given cache key. The client library maintains the hash ring in memory and
+  performs the lookup locally, eliminating the central load balancer as a bottleneck or single point of failure.
+  Libraries like Jedis (Java), ioredis (Node.js), and pylibmc (Python) implement this transparently.
+- **Key Takeaway:** For high-throughput caching systems, client-side load balancing eliminates the latency and
+  availability risk of a centralized load balancer. The trade-off is increased client complexity and the need to
+  propagate cluster topology changes to all clients.
 
 ---
 
@@ -290,13 +155,11 @@ Result: Same server every time, session maintained
 
 ### Part 1: Round Robin Load Balancer
 
-**Your task:** Implement simple round robin algorithm.
+**Your task:** Implement round robin algorithm for equal traffic distribution.
 
 ```java
-import java.util.*;
-
 /**
- * Round Robin: Distribute requests evenly in rotation
+ * Round Robin: Rotate through servers in order
  *
  * Key principles:
  * - Circular iteration through servers
@@ -386,6 +249,37 @@ public class RoundRobinLoadBalancer {
     }
 }
 ```
+
+!!! warning "Debugging Challenge — Missing Wraparound in Round Robin"
+
+    The implementation below works for the first N requests, then throws an exception. Find the bug.
+
+    ```java
+    public synchronized Server getNextServer_Buggy() {
+        if (servers.isEmpty()) {
+            throw new IllegalStateException("No servers available");
+        }
+
+        Server server = servers.get(currentIndex);
+        currentIndex = currentIndex + 1;
+        return server;
+    }
+    ```
+
+    Trace what happens on request N+1 when `servers.size() == 3` and `currentIndex == 3`.
+
+    ??? success "Answer"
+
+        **Bug:** `currentIndex` increments without wrapping around. After the third request, `currentIndex = 3`, and `servers.get(3)` throws `IndexOutOfBoundsException` on a list of size 3.
+
+        **Fix:**
+        ```java
+        currentIndex = (currentIndex + 1) % servers.size();
+        ```
+
+        The modulo ensures the index wraps to 0 after reaching the end, creating circular iteration. This is one of the most common bugs in round-robin implementations.
+
+---
 
 ### Part 2: Least Connections Load Balancer
 
@@ -588,6 +482,9 @@ public class WeightedRoundRobinLoadBalancer {
 ### Part 4: Consistent Hashing
 
 **Your task:** Implement consistent hashing for distributed caching.
+
+!!! tip "Why virtual nodes matter"
+    Without virtual nodes, each physical server occupies only one point on the ring. With an unlucky placement, one server could end up responsible for 80% of the key space. Virtual nodes (placing each server at N positions) smooth the distribution: with 100–150 virtual nodes per server, distribution error typically falls below 5%.
 
 ```java
 /**
@@ -922,443 +819,21 @@ public class LoadBalancingClient {
 }
 ```
 
----
-
-## Debugging Challenges
-
-**Your task:** Find and fix bugs in broken load balancing implementations. This tests your understanding.
-
-### Challenge 1: Broken Round Robin
-
-```java
-/**
- * Round robin with wraparound bug
- * This has 1 CRITICAL BUG that causes crashes.
- */
-public synchronized Server getNextServer_Buggy() {
-    if (servers.isEmpty()) {
-        throw new IllegalStateException("No servers available");
-    }
-
-    Server server = servers.get(currentIndex);
-    currentIndex = currentIndex + 1;
-    return server;
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What\'s the bug?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** Missing modulo operation for wraparound. After 3 requests, `currentIndex = 3` which is out of bounds for a list
-of size 3.
-
-**Correct:**
-
-```java
-currentIndex = (currentIndex + 1) % servers.size();
-```
-
-**Why:** The modulo ensures the index wraps to 0 after reaching the end, creating circular iteration.
-</details>
+!!! info "Loop back"
+    Return to the Quick Quiz now and fill in your verified answers.
 
 ---
 
-### Challenge 2: Broken Least Connections
+## Common Misconceptions
 
-```java
-/**
- * Least connections with race condition
- * This has 1 SUBTLE BUG in concurrent scenarios.
- */
-public Server getNextServer_Buggy() {
-    ServerWithStats minServer = null;
-    int minConnections = Integer.MAX_VALUE;
+!!! warning "Least connections always outperforms round robin"
+    Least connections is better when request duration varies widely (some requests take 10ms, others 2 seconds). For truly uniform request durations, round robin is equivalent in outcome and has lower overhead — it needs no per-server connection counter updates on every request start and end. Use least connections when request duration variance is high; use round robin when servers are homogeneous and requests are similar in cost.
 
-    for (ServerWithStats s : servers) {
-        if (s.activeConnections < minConnections) {
-            minConnections = s.activeConnections;
-            minServer = s;
-        }
-    }
+!!! warning "Consistent hashing eliminates all redistribution when servers change"
+    Consistent hashing minimises redistribution: adding one server to a ring of N causes only ~1/(N+1) of keys to move, compared to ~N/(N+1) with simple modulo hashing. It does not eliminate redistribution. If you need truly zero redistribution for a specific key, you need a manually managed key-to-server mapping table, which comes with its own operational cost.
 
-    minServer.activeConnections++;
-
-    return minServer.server;
-}
-
-public void releaseConnection_Buggy(Server server) {
-    for (ServerWithStats s : servers) {
-        if (s.server.equals(server)) {
-            s.activeConnections--;            break;
-        }
-    }
-}
-```
-
-**Your debugging:**
-
-- **Bug 1:** <span class="fill-in">[What's the concurrency issue?]</span>
-- **Bug 1 fix:** <span class="fill-in">[How to make it thread-safe?]</span>
-- **Bug 2:** <span class="fill-in">[What if connections goes negative?]</span>
-- **Bug 2 fix:** <span class="fill-in">[Add safety check]</span>
-
-**Trace through scenario:**
-
-```
-Thread 1: Reads S1.connections = 5
-Thread 2: Reads S1.connections = 5 (same value!)
-Thread 1: Increments to 6
-Thread 2: Increments to 6 (should be 7!)
-Result: Connection count is wrong
-```
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1:** Missing synchronization on activeConnections increment/decrement. Multiple threads can read the same value
-and create inconsistent state.
-
-**Fix 1 - Add synchronized:**
-
-```java
-public synchronized Server getNextServer() {
-    // ... selection logic ...
-    minServer.activeConnections++;
-    return minServer.server;
-}
-
-public synchronized void releaseConnection(Server server) {
-    for (ServerWithStats s : servers) {
-        if (s.server.equals(server)) {
-            s.activeConnections = Math.max(0, s.activeConnections - 1);
-            break;
-        }
-    }
-}
-```
-
-**Fix 2 - Use AtomicInteger:**
-
-```java
-static class ServerWithStats {
-    Server server;
-    AtomicInteger activeConnections;
-
-    public ServerWithStats(Server server) {
-        this.server = server;
-        this.activeConnections = new AtomicInteger(0);
-    }
-}
-
-// Then use:
-minServer.activeConnections.incrementAndGet();
-```
-
-**Bug 2:** Connection count could go negative if `releaseConnection` called without matching `getNextServer`. Fix with
-`Math.max(0, ...)`.
-</details>
-
----
-
-### Challenge 3: Broken Consistent Hashing
-
-```java
-/**
- * Consistent hashing with distribution bug
- * This has 1 LOGIC BUG causing poor distribution.
- */
-public ConsistentHashingLoadBalancer_Buggy(List<Server> servers, int virtualNodesPerServer) {
-    this.ring = new TreeMap<>();
-    this.virtualNodesPerServer = virtualNodesPerServer;
-
-    for (Server server : servers) {
-        int hash = hash(server.id);
-        ring.put(hash, server);
-    }
-}
-```
-
-**Your debugging:**
-
-- **Bug:** <span class="fill-in">[What's wrong with this initialization?]</span>
-- **Result:** <span class="fill-in">[How does this affect distribution?]</span>
-- **Fix:** <span class="fill-in">[What should the code be?]</span>
-
-**Test case:**
-
-```
-3 servers, virtualNodesPerServer = 3
-Expected: 9 entries in ring
-Actual: 3 entries in ring
-Problem: Poor key distribution, some servers get no keys
-```
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** Missing loop to create virtual nodes. Only creating 1 node per server instead of `virtualNodesPerServer`.
-
-**Correct:**
-
-```java
-for (Server server : servers) {
-    for (int i = 0; i < virtualNodesPerServer; i++) {
-        String virtualKey = server.id + "-" + i;
-        int hash = hash(virtualKey);
-        ring.put(hash, server);
-    }
-}
-```
-
-**Why virtual nodes matter:**
-
-- Without them: Each server gets 1 point on ring, uneven distribution
-- With them: Each server gets N points, smoother distribution
-- More virtual nodes = better balance, but more memory
-
-</details>
-
----
-
-### Challenge 4: Consistent Hashing Wraparound Bug
-
-```java
-/**
- * Missing wraparound in hash ring lookup
- * This has 1 EDGE CASE BUG.
- */
-public Server getServer_Buggy(String key) {
-    if (ring.isEmpty()) {
-        throw new IllegalStateException("No servers in ring");
-    }
-
-    int hash = hash(key);
-
-    Map.Entry<Integer, Server> entry = ring.ceilingEntry(hash);
-    return entry.getValue();  // NullPointerException!
-}
-```
-
-**Your debugging:**
-
-- **Bug:** <span class="fill-in">[When does ceilingEntry return null?]</span>
-- **Scenario:** <span class="fill-in">[Give an example where this fails]</span>
-- **Fix:** <span class="fill-in">[How to handle wraparound?]</span>
-
-**Example:**
-
-```
-Ring has entries at: [100, 200, 300]
-Key hashes to: 350 (larger than all ring entries)
-ceilingEntry(350) returns: null
-Result: NullPointerException
-```
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** `ceilingEntry` returns null when the hash is greater than all keys in the ring. Need to wrap around to first
-entry.
-
-**Correct:**
-
-```java
-public Server getServer(String key) {
-    if (ring.isEmpty()) {
-        throw new IllegalStateException("No servers in ring");
-    }
-
-    int hash = hash(key);
-    Map.Entry<Integer, Server> entry = ring.ceilingEntry(hash);
-
-    // Handle wraparound: if no entry found, use first entry
-    if (entry == null) {
-        entry = ring.firstEntry();
-    }
-
-    return entry.getValue();
-}
-```
-
-**Why:** The hash ring is conceptually circular. When you go past the largest position, you wrap to the beginning.
-</details>
-
----
-
-### Challenge 5: Weighted Round Robin Distribution Bug
-
-```java
-/**
- * Weighted round robin with incorrect distribution
- * This has 1 ALGORITHM BUG.
- */
-public Server getNextServer_Buggy() {
-    while (true) {
-        currentIndex = (currentIndex + 1) % servers.size();
-
-        WeightedServer ws = servers.get(currentIndex);
-
-        if (ws.currentWeight < ws.weight) {
-            ws.currentWeight++;
-            return ws.server;
-        } else {
-            ws.currentWeight = 0;
-        }
-    }
-}
-```
-
-**Your debugging:**
-
-- **Bug:** <span class="fill-in">[What's wrong with this distribution logic?]</span>
-- **Result:** Servers with weight=3 get 3 requests in a row, then none
-- **Expected:** Smooth distribution mixed with other servers
-- **Fix:** <span class="fill-in">[How to implement smooth weighted round robin?]</span>
-
-**Example with weights [1, 2, 3]:**
-
-```
-Buggy output: S1, S2, S2, S3, S3, S3, S1, S2, S2, S3, S3, S3
-(Clumpy distribution)
-
-Expected output: S3, S2, S3, S1, S2, S3
-(Smooth distribution using GCD algorithm)
-```
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** Using per-server counters doesn't create smooth distribution. Need to use the GCD-based algorithm with global
-currentWeight.
-
-**Correct approach:**
-
-```java
-public Server getNextServer() {
-    while (true) {
-        currentIndex = (currentIndex + 1) % servers.size();
-
-        if (currentIndex == 0) {
-            currentWeight = currentWeight - gcd;
-            if (currentWeight <= 0) {
-                currentWeight = maxWeight;
-            }
-        }
-
-        WeightedServer ws = servers.get(currentIndex);
-        if (ws.weight >= currentWeight) {
-            return ws.server;
-        }
-    }
-}
-```
-
-**Why:** The GCD algorithm ensures servers are selected proportionally but interleaved smoothly, not in blocks.
-</details>
-
----
-
-### Challenge 6: Health Check Race Condition
-
-```java
-/**
- * Load balancer with health checks
- * This has 2 RACE CONDITION BUGS.
- */
-public class HealthAwareLoadBalancer {
-    private List<Server> servers;
-    private List<Server> healthyServers;
-
-    public Server getNextServer() {
-        if (healthyServers.isEmpty()) {
-            throw new IllegalStateException("No healthy servers");
-        }
-
-        int index = currentIndex++ % healthyServers.size();
-        return healthyServers.get(index);
-    }
-
-    // Health check thread updates this
-    public void updateHealthStatus(Server server, boolean healthy) {
-        if (healthy && !healthyServers.contains(server)) {
-            healthyServers.add(server);        } else if (!healthy) {
-            healthyServers.remove(server);        }
-    }
-}
-```
-
-**Your debugging:**
-
-- **Bug 1:** <span class="fill-in">[What happens if health check runs during getNextServer?]</span>
-- **Bug 2:** <span class="fill-in">[What if list size changes during modulo operation?]</span>
-- **Fix:** <span class="fill-in">[How to make this thread-safe?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bugs:** Multiple race conditions with concurrent modification of `healthyServers` list.
-
-**Fix:**
-
-```java
-public class HealthAwareLoadBalancer {
-    private final List<Server> servers;
-    private volatile List<Server> healthyServers;  // volatile for visibility
-    private final AtomicInteger currentIndex = new AtomicInteger(0);
-
-    public Server getNextServer() {
-        List<Server> snapshot = healthyServers;  // Local copy
-
-        if (snapshot.isEmpty()) {
-            throw new IllegalStateException("No healthy servers");
-        }
-
-        int index = currentIndex.getAndIncrement() % snapshot.size();
-        return snapshot.get(index);
-    }
-
-    public synchronized void updateHealthStatus(Server server, boolean healthy) {
-        List<Server> newList = new ArrayList<>(healthyServers);
-
-        if (healthy && !newList.contains(server)) {
-            newList.add(server);
-        } else if (!healthy) {
-            newList.remove(server);
-        }
-
-        healthyServers = newList;  // Atomic replacement
-    }
-}
-```
-
-**Key insights:**
-
-- Use immutable snapshots for reads
-- Copy-on-write for updates
-- Volatile for visibility across threads
-
-</details>
-
----
-
-### Your Debugging Scorecard
-
-After finding and fixing all bugs:
-
-- [ ] Found all 8+ bugs across 6 challenges
-- [ ] Understood WHY each bug causes incorrect behavior
-- [ ] Could explain the fix to someone else
-- [ ] Learned common load balancing mistakes to avoid
-
-**Common mistakes you discovered:**
-
-1. <span class="fill-in">[List the patterns you noticed]</span>
-2. <span class="fill-in">[Fill in]</span>
-3. <span class="fill-in">[Fill in]</span>
+!!! warning "IP hash provides reliable session persistence at scale"
+    IP hash breaks when clients are behind a NAT gateway (many users share one IP) or when users are behind a proxy (IP changes between requests). It also breaks session persistence whenever the server list changes, since all hashes shift. For robust session persistence, prefer consistent hashing with the session ID as the key, or externalise session state to a shared store (Redis) so any server can serve the session.
 
 ---
 
@@ -1488,30 +963,12 @@ flowchart LR
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-- [ ] Round robin implemented with circular iteration
-- [ ] Least connections implemented with connection tracking
-- [ ] Weighted round robin implemented with GCD algorithm
-- [ ] Consistent hashing implemented with virtual nodes
-- [ ] IP hash implemented for session persistence
-- [ ] Understand when to use each algorithm
-- [ ] Can explain trade-offs between algorithms
-- [ ] Built decision tree for algorithm selection
-- [ ] Completed practice scenarios
+Answer these without referring to your notes or implementation.
 
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
-- [ ] Implement all five load balancing algorithms from memory
-- [ ] Explain when and why to use each algorithm
-- [ ] Identify the correct algorithm for new scenarios
-- [ ] Analyze time and space complexity of each approach
-- [ ] Compare trade-offs between algorithms
-- [ ] Debug common load balancing bugs
-- [ ] Design load balancing for production systems
-- [ ] Teach these concepts to someone else
-
+1. You have a cluster of 10 cache servers using simple modulo hashing (`key % 10`). You add one more server, making it 11. Approximately what percentage of cached keys will need to move? Now explain how consistent hashing reduces this. Show the math for both.
+2. Your least-connections load balancer is supposed to be thread-safe because every method is `synchronized`. A colleague points out a race condition in `releaseConnection`. Describe a scenario with two threads that produces an incorrect connection count despite `synchronized` methods.
+3. A user complains their shopping cart disappears randomly. Your load balancer uses round robin. Explain precisely why this happens and describe two solutions — one that keeps round robin and one that does not.
+4. You are configuring consistent hashing for a cache cluster. The documentation says to use 150 virtual nodes per server. Your manager asks why not just 1, since that's simpler. Give a concrete explanation with an example showing what goes wrong with 1 virtual node and why 150 fixes it.
+5. A colleague says "IP hash is strictly better than round robin for any application that has user sessions, because it keeps users on the same server." What is wrong with this claim? Describe at least two real-world scenarios where IP hash would give worse results than round robin plus externalised sessions.

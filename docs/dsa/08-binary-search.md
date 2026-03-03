@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this section you should be able to:
+
+- Explain why binary search requires the sorted (or monotonic) property, and give one example of each of the four patterns: classic search, rotated array search, 2D matrix search, and binary search on the answer space
+- Write the three binary search template lines from memory: `int mid = left + (right - left) / 2`, `while (left <= right)`, and `left = mid + 1` / `right = mid - 1`
+- Explain why `(left + right) / 2` can overflow and why `left + (right - left) / 2` cannot
+- Diagnose the three most common binary search bugs: off-by-one in initialisation (`right = nums.length` instead of `nums.length - 1`), infinite loop from `right = mid` instead of `right = mid - 1` in find-first, and wrong pointer update direction in rotated-array search
+- Apply binary search on the answer space: identify the monotonic predicate, set the search bounds, and write the `canAchieve(capacity)` validation function
+- Choose between the `left <= right` template (classic search returning -1) and the `left < right` template (find-boundary returning `left`)
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,17 +26,17 @@
 **Prompts to guide you:**
 
 1. **What is binary search in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">[Binary search is a technique for finding a value in a sorted collection by repeatedly checking the middle element and eliminating ___ of the remaining candidates, so the search space shrinks from n to ___ to ___ to 1 in just O(log n) steps]</span>
 
 2. **Why is O(log n) so fast?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">[O(log n) is fast because doubling n only adds ___ extra step; at n = 1,000,000 you need only about ___ comparisons, compared to up to 1,000,000 for linear search]</span>
 
 3. **Real-world analogy:**
     - Example: "Binary search is like finding a word in a dictionary by opening to the middle..."
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **When does binary search work?**
-    - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
+    - Your answer: <span class="fill-in">[Binary search works whenever there is a ___ property: if we test the middle element and the answer is clearly not in one half, we can discard that half entirely. The array does not need to be sorted in the traditional sense — it just needs a ___ predicate that divides the space cleanly into two halves]</span>
 
 5. **What breaks binary search?**
     - Your answer: <span class="fill-in">[Fill in after testing]</span>
@@ -33,6 +46,9 @@
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+!!! tip "How to use this section"
+    Write your best guess in each fill-in span **before** reading any implementation code. Your predictions do not need to be correct — the act of committing to an answer first makes the correct answer stick much better when you verify it later.
 
 <div class="learner-section" markdown>
 
@@ -200,6 +216,12 @@ n = 1,024 → log₂(1,024) = 10 steps
 n = 2,048 → log₂(2,048) = 11 steps  (doubled n, only +1 step!)
 n = 1,048,576 → log₂(1,048,576) = 20 steps
 ```
+
+!!! note "Why doubling n adds only one step"
+    When you double the input from n to 2n, binary search needs just one extra comparison to discard one half and reduce
+    the problem back to size n. This is the defining property of logarithmic growth: it takes log₂(n) steps to get from n
+    down to 1, and adding another power of 2 adds exactly 1 more step. Linear search has no such property — doubling the
+    input doubles the worst-case comparisons.
 
 **After implementing, explain in your own words:**
 
@@ -393,6 +415,49 @@ public class ClassicBinarySearch {
     }
 }
 ```
+
+!!! warning "Debugging Challenge — Two Classic Binary Search Bugs"
+    ```java
+    /**
+     * This code is supposed to find target in sorted array.
+     * It has 2 BUGS. Find them!
+     */
+    public static int binarySearch_Buggy(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (nums[mid] == target) {
+                return mid;
+            }
+            if (nums[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+
+        return -1;
+    }
+    ```
+
+    - Bug 1: <span class="fill-in">[What's the bug?]</span>
+    - Bug 2: <span class="fill-in">[What's the bug?]</span>
+
+??? success "Answer"
+    **Bug 1:** `right` is initialised to `nums.length` but should be `nums.length - 1`. Arrays are 0-indexed so the last
+    valid index is `length - 1`. When `left = right = nums.length`, the loop runs and accesses `nums[mid]` at an
+    out-of-bounds index, throwing `ArrayIndexOutOfBoundsException`.
+
+    **Bug 2:** `(left + right) / 2` can overflow when both `left` and `right` are close to `Integer.MAX_VALUE`. Their sum
+    can exceed `Integer.MAX_VALUE` and wrap to a negative number. The safe formula is `left + (right - left) / 2`, which
+    computes the same midpoint without overflow.
+
+    **Fixed code:**
+    ```java
+    int right = nums.length - 1;          // Fix Bug 1
+    int mid = left + (right - left) / 2;  // Fix Bug 2
+    ```
 
 **Runnable Client Code:**
 
@@ -758,384 +823,34 @@ public class BinarySearchOnAnswerClient {
 
 ---
 
-## Debugging Challenges
-
-**Your task:** Find and fix bugs in broken binary search implementations. This tests your understanding.
-
-### Challenge 1: Broken Classic Binary Search
-
-```java
-/**
- * This code is supposed to find target in sorted array.
- * It has 2 BUGS. Find them!
- */
-public static int binarySearch_Buggy(int[] nums, int target) {
-    int left = 0;
-    int right = nums.length;
-    while (left <= right) {
-        int mid = (left + right) / 2;
-        if (nums[mid] == target) {
-            return mid;
-        }
-        if (nums[mid] < target) {
-            left = mid + 1;
-        } else {
-            right = mid - 1;
-        }
-    }
-
-    return -1;
-}
-```
-
-**Your debugging:**
-
-- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
-
-- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1 (Line 7):** `right` should be `nums.length - 1`, not `nums.length`. Array indices are 0-based, so valid range is
-0 to length-1. Using `nums.length` will cause ArrayIndexOutOfBoundsException.
-
-**Bug 2 (Line 10):** `(left + right) / 2` can overflow when left and right are large integers. Should use
-`left + (right - left) / 2` to avoid overflow.
-
-**Correct version:**
-
-```java
-int right = nums.length - 1;  // Fix Bug 1
-int mid = left + (right - left) / 2;  // Fix Bug 2
-```
-
-</details>
+!!! info "Loop back"
+    Now that you have implemented all four patterns, return to the **ELI5** section and fill in prompts 1, 2, and 4. Prompt 4 (monotonic property) is the most important: binary search on the answer space (Pattern 4) does not sort an array — it searches a range of candidate answers using a monotonic predicate like "can I ship all packages in D days with capacity C?". Make sure you can articulate why that predicate is monotonic and how you set the search bounds.
 
 ---
 
-### Challenge 2: Broken Infinite Loop
-
-```java
-/**
- * Find first occurrence of target.
- * This has 1 CRITICAL BUG that causes infinite loop.
- */
-public static int findFirst_Buggy(int[] nums, int target) {
-    int left = 0;
-    int right = nums.length - 1;
-    int result = -1;
-
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-
-        if (nums[mid] == target) {
-            result = mid;
-            right = mid;        } else if (nums[mid] < target) {
-            left = mid + 1;
-        } else {
-            right = mid - 1;
-        }
-    }
-
-    return result;
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What\'s the bug?]</span>
-
-**Test case to expose the bug:**
-
-- Input: `[5, 7, 7, 8, 8, 8, 10]`, target = 8
-- Expected: index 3 (first occurrence)
-- Actual: <span class="fill-in">[What happens? Trace through manually]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug (Line 12):** Should be `right = mid - 1`, not `right = mid`.
-
-**Why:** When `nums[mid] == target`, we want to search the left half for an earlier occurrence. But if we set
-`right = mid`, and if `mid` happens to equal `left` (when left and right differ by 1), the loop never terminates because
-mid stays the same.
-
-**Example trace with bug:**
-
-```
-nums = [5, 7, 7, 8, 8, 8, 10], target = 8
-left=3, right=5, mid=4, nums[4]=8 → right=4
-left=3, right=4, mid=3, nums[3]=8 → right=3
-left=3, right=3, mid=3, nums[3]=8 → right=3  ← INFINITE LOOP!
-```
-
-**Correct version:**
-
-```java
-if (nums[mid] == target) {
-    result = mid;
-    right = mid - 1;  // Continue searching left half
-}
-```
-
-</details>
-
----
-
-### Challenge 3: Broken Rotated Array Search
-
-```java
-/**
- * Search in rotated sorted array.
- * This has 1 LOGIC BUG.
- */
-public static int searchRotated_Buggy(int[] nums, int target) {
-    int left = 0;
-    int right = nums.length - 1;
-
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-
-        if (nums[mid] == target) return mid;
-
-        if (nums[left] < nums[mid]) {
-            // Left half is sorted
-            if (target >= nums[left] && target <= nums[mid]) {
-                right = mid - 1;
-            } else {
-                left = mid + 1;
-            }
-        } else {
-            // Right half is sorted
-            if (target >= nums[mid] && target <= nums[right]) {
-                left = mid + 1;
-            } else {
-                right = mid - 1;
-            }
-        }
-    }
-
-    return -1;
-}
-```
-
-**Your debugging:**
-
-- **Bug:** <span class="fill-in">[What's the logic error in the left-sorted check?]</span>
-- **Example:** Test with `[3, 1]`, target = 1
-    - Step 1: left=0, right=1, mid=0, nums[0]=3, nums[1]=1
-    - nums[left] < nums[mid]? <span class="fill-in">[What happens?]</span>
-    - Expected: return 1
-    - Actual: <span class="fill-in">[What do you get?]</span>
-- **Fix:** <span class="fill-in">[How to correct the condition?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** Should be `nums[left] <= nums[mid]` (with equals), not `nums[left] < nums[mid]`.
-
-**Why:** When left == mid (happens when there are only 2 elements left and mid rounds down), the condition
-`nums[left] < nums[mid]` is false (3 is not < 3), so we incorrectly assume the right half is sorted.
-
-**Example trace with bug:**
-
-```
-nums = [3, 1], target = 1
-left=0, right=1, mid=0
-nums[left]=3, nums[mid]=3
-3 < 3? FALSE → assumes right half sorted
-target=1 >= nums[mid]=3? FALSE
-→ right = mid - 1 = -1
-→ loop ends, returns -1 (WRONG!)
-```
-
-**Correct version:**
-
-```java
-if (nums[left] <= nums[mid]) {  // Include equals case
-    // Left half is sorted
-    if (target >= nums[left] && target < nums[mid]) {  // Also: < not <=
-        right = mid - 1;
-    } else {
-        left = mid + 1;
-    }
-}
-```
-
-</details>
-
----
-
-### Challenge 4: Wrong Mid Calculation in Search Insert
-
-```java
-/**
- * Find insert position for target.
- * This produces WRONG results.
- */
-public static int searchInsert_Buggy(int[] nums, int target) {
-    int left = 0;
-    int right = nums.length - 1;
-
-    while (left < right) {        int mid = left + (right - left) / 2;
-
-        if (nums[mid] == target) {
-            return mid;
-        } else if (nums[mid] < target) {
-            left = mid + 1;
-        } else {
-            right = mid - 1;
-        }
-    }
-
-    return left;}
-```
-
-**Your debugging:**
-
-- **Bug 1:** <span class="fill-in">[Should loop condition be `<` or `<=`?]</span>
-- **Bug 2:** <span class="fill-in">[What if target should go after all elements?]</span>
-- **Example:** Input `[1, 3, 5]`, target = 4
-    - Expected: 2 (insert between 3 and 5)
-    - Trace through: <span class="fill-in">[What do you get?]</span>
-- **Example:** Input `[1, 3, 5]`, target = 6
-    - Expected: 3 (insert at end)
-    - Trace through: <span class="fill-in">[What do you get?]</span>
-- **Fix:** <span class="fill-in">[How to handle both cases correctly?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** The loop condition and pointer updates don't work together correctly.
-
-**Two correct approaches:**
-
-**Approach 1: Use `left <= right`**
-
-```java
-while (left <= right) {
-    int mid = left + (right - left) / 2;
-    if (nums[mid] == target) {
-        return mid;
-    } else if (nums[mid] < target) {
-        left = mid + 1;
-    } else {
-        right = mid - 1;
-    }
-}
-return left;  // left is the insert position
-```
-
-**Approach 2: Use `left < right` with different pointer update**
-
-```java
-while (left < right) {
-    int mid = left + (right - left) / 2;
-    if (nums[mid] < target) {
-        left = mid + 1;
-    } else {
-        right = mid;  // Keep right at mid (don't subtract 1)
-    }
-}
-return left;
-```
-
-**The original bug:** With `left < right` and `right = mid - 1`, we can miss the correct insert position.
-</details>
-
----
-
-### Challenge 5: Off-by-One in Find Minimum (Rotated Array)
-
-```java
-/**
- * Find minimum in rotated sorted array.
- * This has OFF-BY-ONE error.
- */
-public static int findMin_Buggy(int[] nums) {
-    int left = 0;
-    int right = nums.length - 1;
-
-    while (left < right) {
-        int mid = left + (right - left) / 2;
-
-        if (nums[mid] > nums[right]) {
-            left = mid;        } else {
-            right = mid - 1;        }
-    }
-
-    return nums[left];
-}
-```
-
-**Your debugging:**
-
-- **Bug 1:** <span class="fill-in">[Line with `left = mid` - what's wrong?]</span>
-- **Bug 2:** <span class="fill-in">[Line with `right = mid - 1` - what's wrong?]</span>
-- **Example:** Input `[3, 4, 5, 1, 2]`
-    - Expected: 1
-    - Trace through buggy version: <span class="fill-in">[What do you get?]</span>
-- **Fix:** <span class="fill-in">[Correct both pointer updates]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug 1:** `left = mid` should be `left = mid + 1`. When `nums[mid] > nums[right]`, the minimum is in the right half,
-but NOT at mid (since nums[mid] is large), so we can safely skip mid.
-
-**Bug 2:** `right = mid - 1` should be `right = mid`. When `nums[mid] <= nums[right]`, the minimum could BE at mid, so
-we can't skip it.
-
-**Trace with bugs:**
-
-```
-nums = [3, 4, 5, 1, 2]
-left=0, right=4, mid=2, nums[2]=5, nums[4]=2
-5 > 2 → left=2  (WRONG! Should be 3)
-left=2, right=4, mid=3, nums[3]=1, nums[4]=2
-
-1 > 2? NO → right=2  (WRONG! Should be 3)
-left=2, right=2, loop ends
-return nums[2]=5  (WRONG! Should be 1)
-```
-
-**Correct version:**
-
-```java
-if (nums[mid] > nums[right]) {
-    left = mid + 1;  // Min is definitely in right half
-} else {
-    right = mid;     // Min could be at mid
-}
-```
-
-</details>
-
----
-
-### Your Debugging Scorecard
-
-After finding and fixing all bugs:
-
-- [ ] Found all 8+ bugs across 5 challenges
-- [ ] Understood WHY each bug causes incorrect behavior
-- [ ] Could explain the fix to someone else
-- [ ] Learned common binary search mistakes to avoid
-
-**Common mistakes you discovered:**
-
-1. <span class="fill-in">[Off-by-one errors in initialization: right = length vs length-1]</span>
-2. <span class="fill-in">[Integer overflow in mid calculation]</span>
-3. <span class="fill-in">[Infinite loops from wrong pointer updates]</span>
-4. <span class="fill-in">[Wrong loop conditions: < vs <=]</span>
-5. <span class="fill-in">[Fill in more patterns you noticed]</span>
-
-**The three most dangerous binary search bugs:**
-
-1. **Off-by-one:** <span class="fill-in">[When does this happen?]</span>
-2. **Infinite loop:** <span class="fill-in">[What causes this?]</span>
-3. **Integer overflow:** <span class="fill-in">[How to prevent?]</span>
+## Common Misconceptions
+
+!!! warning "Misconception 1: Binary search only works on arrays"
+    Binary search applies to any situation where there is a **monotonic property** that lets you discard half the candidates
+    at each step. The search space does not need to be a physical array — it can be a range of integers (finding a square
+    root), a range of capacities (shipping problem), or even an implicit space defined by a predicate. Whenever you can
+    answer "is the answer above or below mid?" in O(n) or better, binary search on the answer space gives you O(n log(range)).
+
+!!! warning "Misconception 2: `right = mid` and `right = mid - 1` are interchangeable"
+    These two pointer updates correspond to two different loop invariants and must match the loop condition. The `left <= right`
+    template requires `right = mid - 1` when discarding the right half, because `mid` has been examined and ruled out. Using
+    `right = mid` with `left <= right` creates an infinite loop when `left == right == mid` — the loop condition stays true
+    but neither pointer moves. The `left < right` template uses `right = mid` (keeping mid as a candidate), but then the loop
+    condition must be strict `<` to guarantee termination. Mixing these patterns is the single most common source of infinite
+    loops in binary search implementations.
+
+!!! warning "Misconception 3: The sorted-array requirement means the whole array must be sorted"
+    Classic binary search needs the array sorted, but several variants do not. In a rotated sorted array, neither half is
+    globally sorted — but at least one half is locally sorted, which is enough. In 2D staircase search, neither row nor
+    column is globally sorted, but starting from the top-right corner guarantees that you can always eliminate a row or a
+    column. In binary search on the answer space, the "array" is a conceptual range and the sorted property is replaced by
+    the monotonic predicate. The real requirement is: "can I determine which half contains the answer without examining
+    every element?"
 
 ---
 
@@ -1253,53 +968,14 @@ flowchart LR
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-Before moving to the next topic:
+1. The safe mid formula is `left + (right - left) / 2`. Demonstrate with concrete numbers why `(left + right) / 2` can overflow: give the smallest values of `left` and `right` (using Java's `Integer.MAX_VALUE = 2,147,483,647`) that cause overflow, and show the exact incorrect mid value produced.
 
-- [ ] **Implementation**
-    - [ ] Classic: search, insert, find range all work
-    - [ ] Rotated: search and find min both work
-    - [ ] 2D: all three matrix patterns work
-    - [ ] On answer: sqrt, capacity, kth missing work
-    - [ ] All client code runs successfully
+2. Finding the first occurrence of a target uses `right = mid - 1` (not `right = mid`) when `nums[mid] == target`. Construct a concrete array (e.g., `[5, 7, 7, 8, 8, 8, 10]`, target = 8) and trace the execution with `right = mid` to show the infinite loop, then explain the invariant that `right = mid - 1` maintains.
 
-- [ ] **Pattern Recognition**
-    - [ ] Can identify when to use binary search
-    - [ ] Understand sorted vs rotated arrays
-    - [ ] Know when to search on answer space
-    - [ ] Recognize 2D matrix patterns
+3. The rotated array search uses `nums[left] <= nums[mid]` (with equals) rather than `nums[left] < nums[mid]`. Construct the specific two-element array that breaks the strict inequality version and trace the execution to show the wrong result. Why does the equals case arise from how integer division computes mid?
 
-- [ ] **Problem Solving**
-    - [ ] Solved 4 easy problems
-    - [ ] Solved 3-4 medium problems
-    - [ ] Analyzed time/space complexity
-    - [ ] Handled edge cases (empty, single element)
+4. Binary search on the answer space (Pattern 4) requires a monotonic predicate. For the "ship packages in D days" problem, state the predicate formally (in terms of capacity C and days D), prove it is monotonic (if capacity C works, then capacity C+1 also works), and explain how you set the initial `left` and `right` bounds.
 
-- [ ] **Understanding**
-    - [ ] Filled in all ELI5 explanations
-    - [ ] Built decision tree
-    - [ ] Identified when NOT to use binary search
-    - [ ] Can explain why O(log n) is fast
-
-- [ ] **Mastery Check**
-    - [ ] Could implement all patterns from memory
-    - [ ] Could recognize pattern in new problem
-    - [ ] Could explain to someone else
-    - [ ] Understand off-by-one errors and how to avoid them
-
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
-- [ ] Implement classic binary search from memory
-- [ ] Explain why O(log n) is fundamentally different from O(n)
-- [ ] Identify and fix common binary search bugs
-- [ ] Choose the correct binary search variant for new problems
-- [ ] Analyze when binary search is better than alternatives
-- [ ] Avoid off-by-one errors and infinite loops
-- [ ] Explain the sorted/monotonic requirement clearly
-- [ ] Teach this concept to someone else
-
+5. The `searchInsert` function should return the index where target would be inserted to keep the array sorted. After the `while (left <= right)` loop exits without finding the target, prove that `left` is always the correct insert position — specifically, prove that `nums[left - 1] < target <= nums[left]` holds when the loop exits.

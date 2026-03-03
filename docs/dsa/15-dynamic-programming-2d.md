@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this topic you will be able to:
+
+- Identify when a problem requires two-dimensional state (two strings, grid coordinates, item + capacity)
+- Write correct recurrence relations for grid path, string matching, knapsack, and interval DP patterns
+- Initialize 2D DP base cases correctly, including edge rows/columns and obstacle handling
+- Distinguish DP table indices from string/array indices and avoid off-by-one errors
+- Optimize a 2D DP table to 1D space when only one previous row is needed
+- Recognize interval DP problems and implement the "last to burst" subproblem formulation
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,9 +26,13 @@
 **Prompts to guide you:**
 
 1. **What is 2D DP in one sentence?**
+    - 2D DP solves problems with two independent ___ by building a table where each cell stores the answer for a
+      ___, computed from ___ cells already filled in.
     - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 2. **How is 2D DP different from 1D DP?**
+    - 1D DP has ___ state variable, while 2D DP has ___ state variables representing ___ dimensions of the problem
+      simultaneously.
     - Your answer: <span class="fill-in">[Fill in after implementation]</span>
 
 3. **Real-world analogy:**
@@ -23,9 +40,13 @@
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **When does this pattern work?**
+    - This pattern works when the optimal solution for a problem of size (i, j) can be ___ from solutions to smaller
+      problems, and those smaller problems ___.
     - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
 
 5. **How do you know when you need 2D instead of 1D?**
+    - You need 2D when ___ dimensions are simultaneously important — for example, when comparing ___ strings
+      character by character, or choosing items against a ___ constraint.
     - Your answer: <span class="fill-in">[Fill in after learning the pattern]</span>
 
 </div>
@@ -33,6 +54,10 @@
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+!!! tip "How to use this section"
+    Complete your predictions now, before reading further. You will revisit and verify each answer after running the
+    benchmark (or completing the implementation).
 
 <div class="learner-section" markdown>
 
@@ -102,205 +127,6 @@ What does dp[3][2] represent?
 - [ ] Something else: <span class="fill-in">[Fill in]</span>
 
 Verify after implementation: <span class="fill-in">[Which one is correct?]</span>
-
-
-</div>
-
----
-
-## Before/After: Why This Pattern Matters
-
-**Your task:** Compare naive vs optimized approaches to understand the impact.
-
-### Example 1: Longest Common Subsequence
-
-**Problem:** Find the length of the longest common subsequence of two strings.
-
-#### Approach 1: Brute Force Recursion (No Memoization)
-
-```java
-// Naive recursive approach - Try all possibilities
-public static int lcs_Recursive(String s1, String s2, int i, int j) {
-    // Base case: reached end of either string
-    if (i == s1.length() || j == s2.length()) {
-        return 0;
-    }
-
-    // If characters match, include and move both
-    if (s1.charAt(i) == s2.charAt(j)) {
-        return 1 + lcs_Recursive(s1, s2, i + 1, j + 1);
-    }
-
-    // Characters don't match - try both options
-    int skipS1 = lcs_Recursive(s1, s2, i + 1, j);
-    int skipS2 = lcs_Recursive(s1, s2, i, j + 1);
-
-    return Math.max(skipS1, skipS2);
-}
-```
-
-**Analysis:**
-
-- Time: O(2^(m+n)) - Exponential! Each call branches into 2 recursive calls
-- Space: O(m+n) - Recursion stack depth
-- For m = n = 20: ~1,000,000,000 operations (over 1 billion!)
-
-**Why so slow?** Recalculates the same subproblems repeatedly.
-
-#### Approach 2: 2D DP Table (Bottom-Up)
-
-```java
-// Optimized 2D DP - Build table from base cases
-public static int lcs_DP(String s1, String s2) {
-    int m = s1.length();
-    int n = s2.length();
-    int[][] dp = new int[m + 1][n + 1];
-
-    // Base case: dp[0][j] = 0, dp[i][0] = 0 (already initialized)
-
-    for (int i = 1; i <= m; i++) {
-        for (int j = 1; j <= n; j++) {
-            if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
-                dp[i][j] = dp[i - 1][j - 1] + 1;  // Match: take both
-            } else {
-                dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);  // No match: try both
-            }
-        }
-    }
-
-    return dp[m][n];
-}
-```
-
-**Analysis:**
-
-- Time: O(m × n) - Fill each cell once
-- Space: O(m × n) - Store entire table
-- For m = n = 20: 400 operations (just 400!)
-
-#### Performance Comparison
-
-| String Lengths | Recursive (2^(m+n)) | 2D DP (m×n) | Speedup |
-|----------------|---------------------|-------------|---------|
-| m=10, n=10     | ~1,000,000          | 100         | 10,000x |
-| m=15, n=15     | ~1,000,000,000      | 225         | 4.4M x  |
-| m=20, n=20     | ~1,000,000,000,000  | 400         | 2.5B x  |
-
-**Your calculation:** For m = 25, n = 25, the speedup is approximately _____ times faster.
-
-#### Why Does 2D DP Work?
-
-**Key insight to understand:**
-
-For strings "ace" and "abcde":
-
-```
-    ""  a  b  c  d  e
-""   0  0  0  0  0  0
-a    0  1  1  1  1  1    ← 'a' matches: dp[1][1] = dp[0][0] + 1
-c    0  1  1  2  2  2    ← 'c' matches: dp[2][3] = dp[1][2] + 1
-e    0  1  1  2  2  3    ← 'e' matches: dp[3][5] = dp[2][4] + 1
-
-Answer: dp[3][5] = 3 (LCS = "ace")
-```
-
-**Why do we need the extra row/column of zeros?**
-
-- Fill in after understanding - what do they represent? <span class="fill-in">[Your answer]</span>
-
-**Why can we skip recomputation?**
-
-- Each cell depends only on: <span class="fill-in">[which cells?]</span>
-- We compute in order: <span class="fill-in">[top-to-bottom, left-to-right]</span>
-- So dependencies are always ready when needed!
-
----
-
-### Example 2: 0/1 Knapsack
-
-**Problem:** Given items with weights and values, maximize value without exceeding capacity.
-
-#### Approach 1: Recursive Exploration
-
-```java
-// Try all combinations - exponential time
-public static int knapsack_Recursive(int[] weights, int[] values,
-                                     int capacity, int index) {
-    // Base case: no items left or no capacity
-    if (index == weights.length || capacity == 0) {
-        return 0;
-    }
-
-    // Can't take current item - too heavy
-    if (weights[index] > capacity) {
-        return knapsack_Recursive(weights, values, capacity, index + 1);
-    }
-
-    // Try both: take it or skip it
-    int take = values[index] +
-               knapsack_Recursive(weights, values,
-                                 capacity - weights[index], index + 1);
-    int skip = knapsack_Recursive(weights, values, capacity, index + 1);
-
-    return Math.max(take, skip);
-}
-```
-
-**Analysis:**
-
-- Time: O(2^n) - For each item, branch into take/skip
-- For n = 30 items: Over 1 billion recursive calls!
-
-#### Approach 2: 2D DP Table
-
-```java
-// Build table: dp[item][capacity]
-public static int knapsack_DP(int[] weights, int[] values, int capacity) {
-    int n = weights.length;
-    int[][] dp = new int[n + 1][capacity + 1];
-
-    for (int i = 1; i <= n; i++) {
-        for (int w = 0; w <= capacity; w++) {
-            // Skip current item
-            dp[i][w] = dp[i - 1][w];
-
-            // Take current item (if it fits)
-            if (weights[i - 1] <= w) {
-                int takeValue = values[i - 1] + dp[i - 1][w - weights[i - 1]];
-                dp[i][w] = Math.max(dp[i][w], takeValue);
-            }
-        }
-    }
-
-    return dp[n][capacity];
-}
-```
-
-**Analysis:**
-
-- Time: O(n × capacity)
-- For n = 30, capacity = 1000: 30,000 operations vs 1 billion!
-
-#### Visualization: Knapsack Table
-
-Items: weights=[1, 2, 3], values=[10, 5, 15], capacity=5
-
-```
-       Capacity: 0  1  2  3  4  5
-No items (i=0):  0  0  0  0  0  0
-Item 1 (w=1,v=10): 0 10 10 10 10 10  ← Take item 1
-Item 2 (w=2,v=5):  0 10 10 15 15 15  ← Take items 1+2 or just 1
-Item 3 (w=3,v=15): 0 10 10 15 25 25  ← Take items 1+3
-
-Answer: dp[3][5] = 25 (take items 1 and 3)
-```
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why does each cell represent "best value using first i items with capacity w"? <span class="fill-in">[Your answer]</span>
-- Why do we need to check both "take" and "skip" options? <span class="fill-in">[Your answer]</span>
 
 </div>
 
@@ -439,6 +265,37 @@ public class GridPathProblemsClient {
 }
 ```
 
+!!! warning "Debugging Challenge — Broken Unique Paths"
+    The following code has two bugs — one in initialization and one in the recurrence:
+
+    ```java
+    public static int uniquePaths_Buggy(int m, int n) {
+        int[][] dp = new int[m][n];
+
+        for (int i = 0; i < m; i++) dp[i][0] = 0;   // BUG 1
+        for (int j = 0; j < n; j++) dp[0][j] = 1;
+
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[i][j] = dp[i-1][j] * dp[i][j-1];  // BUG 2
+            }
+        }
+        return dp[m-1][n-1];
+    }
+    ```
+
+    For m=3, n=3, expected is 6. What does the buggy code return? Name both fixes.
+
+    ??? success "Answer"
+        **Bug 1:** `dp[i][0] = 0` is wrong. There is exactly ONE way to reach any cell in the first column (move
+        straight down). Should be `dp[i][0] = 1`.
+
+        **Bug 2:** Multiplication is wrong. The number of paths to cell (i,j) is the SUM of paths from above and
+        from the left, not the product. Should be `dp[i][j] = dp[i-1][j] + dp[i][j-1]`.
+
+        **With the bugs:** The first column is all zeros, so every cell computed from it becomes 0×something = 0.
+        The result is 0 instead of 6.
+
 ---
 
 ### Pattern 2: String Matching (LCS, Edit Distance)
@@ -569,6 +426,41 @@ public class StringMatchingClient {
     }
 }
 ```
+
+!!! warning "Debugging Challenge — Broken LCS"
+    The following LCS implementation has three bugs:
+
+    ```java
+    public static int lcs_Buggy(String s1, String s2) {
+        int m = s1.length();
+        int n = s2.length();
+        int[][] dp = new int[m][n];           // BUG 1
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (s1.charAt(i) == s2.charAt(j)) {   // BUG 2
+                    dp[i][j] = dp[i-1][j-1] + 1;
+                } else {
+                    dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
+                }
+            }
+        }
+        return dp[m][n];                      // BUG 3
+    }
+    ```
+
+    All three bugs are interconnected. What is the root cause?
+
+    ??? success "Answer"
+        **Root cause:** Not allocating space for the empty string base case.
+
+        **Bug 1:** `new int[m][n]` should be `new int[m+1][n+1]`. The extra row/column represents the empty string
+        prefix and stores the base case dp[0][j] = dp[i][0] = 0.
+
+        **Bug 2:** `s1.charAt(i)` should be `s1.charAt(i-1)`. The DP table is 1-indexed (rows 1..m), but strings
+        are 0-indexed. Row i corresponds to the i-th character at index i-1.
+
+        **Bug 3:** With Bug 1 fixed, `dp[m][n]` is now valid (the last cell in the (m+1)×(n+1) table). Without
+        fixing Bug 1, accessing `dp[m][n]` throws `ArrayIndexOutOfBoundsException`.
 
 ---
 
@@ -817,88 +709,63 @@ public class GameTheoryClient {
 
 ---
 
-## Debugging Challenges
+## Before/After: Why This Pattern Matters
 
-**Your task:** Find and fix bugs in broken 2D DP implementations. This tests your understanding of state transitions and
-edge cases.
+**Your task:** Compare naive vs optimized approaches to understand the impact.
 
-### Challenge 1: Broken LCS Implementation
+### Example 1: Longest Common Subsequence
+
+**Problem:** Find the length of the longest common subsequence of two strings.
+
+#### Approach 1: Brute Force Recursion (No Memoization)
 
 ```java
-/**
- * Longest Common Subsequence - has 3 BUGS!
- * Find them all.
- */
-public static int lcs_Buggy(String s1, String s2) {
-    int m = s1.length();
-    int n = s2.length();
-    int[][] dp = new int[m][n];
-    for (int i = 1; i <= m; i++) {
-        for (int j = 1; j <= n; j++) {
-            if (s1.charAt(i) == s2.charAt(j)) {                dp[i][j] = dp[i-1][j-1] + 1;
-            } else {
-                dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
-            }
-        }
+// Naive recursive approach - Try all possibilities
+public static int lcs_Recursive(String s1, String s2, int i, int j) {
+    // Base case: reached end of either string
+    if (i == s1.length() || j == s2.length()) {
+        return 0;
     }
 
-    return dp[m][n];}
+    // If characters match, include and move both
+    if (s1.charAt(i) == s2.charAt(j)) {
+        return 1 + lcs_Recursive(s1, s2, i + 1, j + 1);
+    }
+
+    // Characters don't match - try both options
+    int skipS1 = lcs_Recursive(s1, s2, i + 1, j);
+    int skipS2 = lcs_Recursive(s1, s2, i, j + 1);
+
+    return Math.max(skipS1, skipS2);
+}
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
+- Time: O(2^(m+n)) — Exponential! Each call branches into 2 recursive calls
+- Space: O(m+n) — Recursion stack depth
+- For m = n = 20: ~1,000,000,000 operations (over 1 billion!)
 
-- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
+**Why so slow?** Recalculates the same subproblems repeatedly.
 
-- Bug 3: <span class="fill-in">[What\'s the bug?]</span>
-
-**Test case to expose bugs:**
-
-- Input: s1 = "abc", s2 = "abc"
-- Expected: 3
-- Actual with buggy code: <span class="fill-in">[What happens? Crash or wrong answer?]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1 (Line 4):** Should be `int[][] dp = new int[m + 1][n + 1]`. We need extra row/column for the empty string base
-case.
-
-**Bug 2 (Line 8):** Should be `s1.charAt(i - 1) == s2.charAt(j - 1)`. The DP indices are 1-based but string indices are
-0-based.
-
-**Bug 3 (Line 15):** With Bug 1 unfixed, `dp[m][n]` is out of bounds. After fixing Bug 1, this is correct.
-
-**All three bugs are interconnected!** The root cause is not allocating space for the base case (empty string).
-</details>
-
----
-
-### Challenge 2: Broken Edit Distance
+#### Approach 2: 2D DP Table (Bottom-Up)
 
 ```java
-/**
- * Edit Distance - has 2 SUBTLE BUGS
- * One is an off-by-one error, one is a logic error
- */
-public static int editDistance_Buggy(String word1, String word2) {
-    int m = word1.length();
-    int n = word2.length();
+// Optimized 2D DP - Build table from base cases
+public static int lcs_DP(String s1, String s2) {
+    int m = s1.length();
+    int n = s2.length();
     int[][] dp = new int[m + 1][n + 1];
 
-    // Initialize base cases
-    for (int i = 0; i <= m; i++) dp[i][0] = i;
-    for (int j = 0; j <= n; j++) dp[0][j] = j;
+    // Base case: dp[0][j] = 0, dp[i][0] = 0 (already initialized)
 
     for (int i = 1; i <= m; i++) {
         for (int j = 1; j <= n; j++) {
-            if (word1.charAt(i) == word2.charAt(j)) {                dp[i][j] = dp[i-1][j-1];
+            if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+                dp[i][j] = dp[i - 1][j - 1] + 1;  // Match: take both
             } else {
-                int insert = dp[i][j-1];
-                int delete = dp[i-1][j];
-                int replace = dp[i-1][j-1];
-                dp[i][j] = Math.min(insert, Math.min(delete, replace));            }
+                dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);  // No match: try both
+            }
         }
     }
 
@@ -906,270 +773,185 @@ public static int editDistance_Buggy(String word1, String word2) {
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- **Bug 1:** <span class="fill-in">[What's wrong with charAt(i)?]</span>
-- **Bug 1 fix:** <span class="fill-in">[Correct index?]</span>
+- Time: O(m × n) — Fill each cell once
+- Space: O(m × n) — Store entire table
+- For m = n = 20: 400 operations (just 400!)
 
-- **Bug 2:** <span class="fill-in">[What's missing in the min calculation?]</span>
-- **Bug 2 fix:** <span class="fill-in">[Fill in the correct formula]</span>
+#### Performance Comparison
 
-**Test case:**
+| String Lengths | Recursive (2^(m+n)) | 2D DP (m×n) | Speedup |
+|----------------|---------------------|-------------|---------|
+| m=10, n=10     | ~1,000,000          | 100         | 10,000x |
+| m=15, n=15     | ~1,000,000,000      | 225         | 4.4M x  |
+| m=20, n=20     | ~1,000,000,000,000  | 400         | 2.5B x  |
 
-- Input: "horse" → "ros"
-- Expected: 3 (delete 'h', delete 'r', replace 'e' with 's')
-- Actual: <span class="fill-in">[Trace through manually - what do you get?]</span>
+**Your calculation:** For m = 25, n = 25, the speedup is approximately _____ times faster.
 
-<details markdown>
-<summary>Click to verify your answers</summary>
+!!! note "Key insight"
+    The extra row and column of zeros in the DP table (the (m+1)×(n+1) size) represent the **empty string prefix**.
+    dp[0][j] = 0 means "the LCS of the empty string and any string is 0." This base case lets the recurrence start
+    cleanly at i=1, j=1 without checking if i-1 or j-1 are out of bounds.
 
-**Bug 1 (Line 15):** Should be `word1.charAt(i - 1) == word2.charAt(j - 1)`. DP uses 1-based indexing, strings use
-0-based.
+#### Why Does 2D DP Work?
 
-**Bug 2 (Line 21):** Each operation (insert, delete, replace) costs 1, so should be:
+For strings "ace" and "abcde":
 
-```java
-dp[i][j] = 1 + Math.min(insert, Math.min(delete, replace));
+```
+    ""  a  b  c  d  e
+""   0  0  0  0  0  0
+a    0  1  1  1  1  1    ← 'a' matches: dp[1][1] = dp[0][0] + 1
+c    0  1  1  2  2  2    ← 'c' matches: dp[2][3] = dp[1][2] + 1
+e    0  1  1  2  2  3    ← 'e' matches: dp[3][5] = dp[2][4] + 1
+
+Answer: dp[3][5] = 3 (LCS = "ace")
 ```
 
-Without the `+ 1`, we're not counting the operation cost!
-</details>
+**Why can we skip recomputation?**
+
+- Each cell depends only on: <span class="fill-in">[which cells?]</span>
+- We compute in order: top-to-bottom, left-to-right
+- So dependencies are always ready when needed!
 
 ---
 
-### Challenge 3: Broken Unique Paths
+### Example 2: 0/1 Knapsack
+
+**Problem:** Given items with weights and values, maximize value without exceeding capacity.
+
+#### Approach 1: Recursive Exploration
 
 ```java
-/**
- * Unique Paths in m×n grid
- * Has 2 BUGS: one initialization, one recurrence
- */
-public static int uniquePaths_Buggy(int m, int n) {
-    int[][] dp = new int[m][n];
-
-    // Initialize first row and column
-    for (int i = 0; i < m; i++) dp[i][0] = 0;    for (int j = 0; j < n; j++) dp[0][j] = 1;
-
-    for (int i = 1; i < m; i++) {
-        for (int j = 1; j < n; j++) {
-            dp[i][j] = dp[i-1][j] * dp[i][j-1];        }
+// Try all combinations - exponential time
+public static int knapsack_Recursive(int[] weights, int[] values,
+                                     int capacity, int index) {
+    // Base case: no items left or no capacity
+    if (index == weights.length || capacity == 0) {
+        return 0;
     }
 
-    return dp[m-1][n-1];
+    // Can't take current item - too heavy
+    if (weights[index] > capacity) {
+        return knapsack_Recursive(weights, values, capacity, index + 1);
+    }
+
+    // Try both: take it or skip it
+    int take = values[index] +
+               knapsack_Recursive(weights, values,
+                                 capacity - weights[index], index + 1);
+    int skip = knapsack_Recursive(weights, values, capacity, index + 1);
+
+    return Math.max(take, skip);
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- **Bug 1:** _[Why is dp[i][0] = 0 wrong?]_
-- **Bug 1 explanation:** <span class="fill-in">[What should the first column represent?]</span>
-- **Bug 1 fix:** <span class="fill-in">[Correct value?]</span>
+- Time: O(2^n) — For each item, branch into take/skip
+- For n = 30 items: Over 1 billion recursive calls!
 
-- **Bug 2:** <span class="fill-in">[Why is multiplication wrong?]</span>
-- **Bug 2 explanation:** <span class="fill-in">[What's the correct recurrence?]</span>
-- **Bug 2 fix:** <span class="fill-in">[Should be...?]</span>
-
-**Test case:**
-
-- Input: m = 3, n = 3
-- Expected: 6 paths
-- Actual with buggy code: <span class="fill-in">[Calculate it]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1 (Line 8):** Should be `dp[i][0] = 1`. There's exactly ONE way to reach any cell in the first column (move down
-only).
-
-**Bug 2 (Line 13):** Should be `dp[i][j] = dp[i-1][j] + dp[i][j-1]` (addition, not multiplication). We're COUNTING
-paths, not multiplying them.
-
-**Why addition?** The number of ways to reach cell (i,j) is the sum of:
-
-- Ways to reach (i-1,j) [coming from above]
-- Ways to reach (i,j-1) [coming from left]
-
-</details>
-
----
-
-### Challenge 4: Broken Knapsack
+#### Approach 2: 2D DP Table
 
 ```java
-/**
- * 0/1 Knapsack - has 3 BUGS
- * Focus on state transition and boundary conditions
- */
-public static int knapsack_Buggy(int[] weights, int[] values, int capacity) {
+// Build table: dp[item][capacity]
+public static int knapsack_DP(int[] weights, int[] values, int capacity) {
     int n = weights.length;
-    int[][] dp = new int[n][capacity + 1];
-    for (int i = 1; i < n; i++) {        for (int w = 1; w <= capacity; w++) {
-            // Don't take item i
-            dp[i][w] = dp[i-1][w];
+    int[][] dp = new int[n + 1][capacity + 1];
 
-            // Take item i (if it fits)
-            if (weights[i] <= w) {                int takeValue = values[i] + dp[i-1][w - weights[i]];
+    for (int i = 1; i <= n; i++) {
+        for (int w = 0; w <= capacity; w++) {
+            // Skip current item
+            dp[i][w] = dp[i - 1][w];
+
+            // Take current item (if it fits)
+            if (weights[i - 1] <= w) {
+                int takeValue = values[i - 1] + dp[i - 1][w - weights[i - 1]];
                 dp[i][w] = Math.max(dp[i][w], takeValue);
             }
         }
     }
 
-    return dp[n-1][capacity];
+    return dp[n][capacity];
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- **Bug 1:** <span class="fill-in">[Why might this cause issues?]</span>
-- **Bug 1 fix:** <span class="fill-in">[Correct dimensions?]</span>
+- Time: O(n × capacity)
+- For n = 30, capacity = 1000: 30,000 operations vs 1 billion!
 
-- **Bug 2:** <span class="fill-in">[What gets skipped?]</span>
-- **Bug 2 fix:** <span class="fill-in">[Should loop start at...?]</span>
+#### Visualization: Knapsack Table
 
-- **Bug 3:** <span class="fill-in">[Index mismatch between DP and arrays?]</span>
-- **Bug 3 explanation:** <span class="fill-in">[Fill in]</span>
-- **Bug 3 fix:** <span class="fill-in">[Correct index?]</span>
+Items: weights=[1, 2, 3], values=[10, 5, 15], capacity=5
 
-**Test case:**
+```
+       Capacity: 0  1  2  3  4  5
+No items (i=0):  0  0  0  0  0  0
+Item 1 (w=1,v=10): 0 10 10 10 10 10  ← Take item 1
+Item 2 (w=2,v=5):  0 10 10 15 15 15  ← Take items 1+2 or just 1
+Item 3 (w=3,v=15): 0 10 10 15 25 25  ← Take items 1+3
 
-- weights = [1, 2, 3], values = [10, 5, 15], capacity = 5
-- Expected: 25 (items 1 and 3)
-- Actual: <span class="fill-in">[Trace through - what happens?]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1 (Line 3):** Should be `int[][] dp = new int[n + 1][capacity + 1]`. Need extra row for "no items" base case.
-
-**Bug 2 (Line 5):** Should start at `i = 1`, which is actually correct! But with Bug 1 fixed, we need the +1 dimension.
-
-**Bug 3 (Line 11):** Should be `weights[i - 1]` and `values[i - 1]`. The DP table has n+1 rows but arrays have n
-elements, so there's an offset.
-
-**The complete fix:**
-
-```java
-for (int i = 1; i <= n; i++) {  // Note: <= n
-    for (int w = 1; w <= capacity; w++) {
-        dp[i][w] = dp[i-1][w];
-        if (weights[i - 1] <= w) {  // i-1 for array index
-            int takeValue = values[i - 1] + dp[i-1][w - weights[i - 1]];
-            dp[i][w] = Math.max(dp[i][w], takeValue);
-        }
-    }
-}
-return dp[n][capacity];  // Not n-1
+Answer: dp[3][5] = 25 (take items 1 and 3)
 ```
 
-</details>
+**After implementing, explain in your own words:**
+
+<div class="learner-section" markdown>
+
+- Why does each cell represent "best value using first i items with capacity w"? <span class="fill-in">[Your
+  answer]</span>
+- Why do we need to check both "take" and "skip" options? <span class="fill-in">[Your answer]</span>
+
+</div>
+
+!!! info "Loop back"
+    Return to the Quick Quiz now and fill in your verified answers.
 
 ---
 
-### Challenge 5: Missing Edge Case Initialization
+## Case Studies
 
-```java
-/**
- * Unique Paths with Obstacles
- * Has 1 CRITICAL EDGE CASE BUG
- */
-public static int uniquePathsWithObstacles_Buggy(int[][] obstacleGrid) {
-    int m = obstacleGrid.length;
-    int n = obstacleGrid[0].length;
-    int[][] dp = new int[m][n];
+### Version Control: git diff Using LCS
 
-    // Initialize first row
-    for (int j = 0; j < n; j++) {
-        dp[0][j] = 1;    }
+When you run `git diff`, Git computes the minimal edit script between two file versions. This is exactly the edit
+distance / LCS problem applied line-by-line. The "added" and "removed" lines in the output correspond to cells in the
+DP table where characters (lines) did not match. The O(m×n) table is why diffing large files is fast — the comparison
+is linear in the product of the file lengths.
 
-    // Initialize first column
-    for (int i = 0; i < m; i++) {
-        dp[i][0] = 1;    }
+### Bioinformatics: DNA Sequence Alignment
 
-    for (int i = 1; i < m; i++) {
-        for (int j = 1; j < n; j++) {
-            if (obstacleGrid[i][j] == 1) {
-                dp[i][j] = 0;
-            } else {
-                dp[i][j] = dp[i-1][j] + dp[i][j-1];
-            }
-        }
-    }
+Protein database searches (BLAST, used in genomics research) find regions of similarity between DNA sequences using
+sequence alignment — a generalization of LCS. The Smith-Waterman algorithm applies the same 2D DP table with
+biological penalties for mismatches and gaps. Every nucleotide comparison in modern genome databases runs on the same
+recurrence you implement here.
 
-    return dp[m-1][n-1];
-}
-```
+### Resource Allocation: Cloud VM Scheduling
 
-**Your debugging:**
-
-- **Bug location:** <span class="fill-in">[Lines 10 and 15]</span>
-- **Bug explanation:** <span class="fill-in">[What happens if first row/column has obstacle?]</span>
-- **Why is this critical?** <span class="fill-in">[Once blocked, all cells after it are unreachable]</span>
-- **Fix:** <span class="fill-in">[How to handle obstacles in initialization?]</span>
-
-**Test case to expose:**
-
-```
-Grid:
-0 0 0
-0 1 0  ← Obstacle in first column
-0 0 0
-
-Expected: 2 paths
-Buggy result: <span class="fill-in">[Fill in]</span>
-```
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** Must check for obstacles during initialization. If there's an obstacle in the first row/column, all cells AFTER
-it are unreachable (can't be reached).
-
-**Fix:**
-
-```java
-// Initialize first row - stop at first obstacle
-for (int j = 0; j < n; j++) {
-    if (obstacleGrid[0][j] == 1) {
-        break;  // All cells after obstacle are unreachable
-    }
-    dp[0][j] = 1;
-}
-
-// Initialize first column - stop at first obstacle
-for (int i = 0; i < m; i++) {
-    if (obstacleGrid[i][0] == 1) {
-        break;  // All cells after obstacle are unreachable
-    }
-    dp[i][0] = 1;
-}
-
-// Also need to check starting cell!
-if (obstacleGrid[0][0] == 1) return 0;
-```
-
-**Key insight:** In first row/column, once blocked, everything after is blocked (only one direction to reach them).
-</details>
+Cloud providers like AWS allocate virtual machines from physical servers using variants of the knapsack problem. Given
+a set of VMs with CPU and RAM requirements (2D knapsack), the scheduler maximizes utilization without exceeding
+physical host capacity. The ones-and-zeroes problem (Pattern 3 above) is exactly this: two resource dimensions, each
+item consumes some of each.
 
 ---
 
-### Your Debugging Scorecard
+## Common Misconceptions
 
-After finding and fixing all bugs:
+!!! warning "The DP table size equals the input size"
+    For string problems like LCS and edit distance, the DP table must be (m+1)×(n+1), not m×n. The extra row and
+    column represent the empty string base cases: dp[0][j] = 0 and dp[i][0] = 0. Using m×n causes an
+    ArrayIndexOutOfBoundsException when accessing dp[m][n] at the end, and leaves no room for the base case row.
 
-- [ ] Found all 11+ bugs across 5 challenges
-- [ ] Understood WHY each bug causes incorrect behavior
-- [ ] Could explain the difference between DP indices and array indices
-- [ ] Learned importance of base case initialization
+!!! warning "DP table indices and array indices are the same"
+    When the DP table is 1-indexed (rows 1..m correspond to characters), you must access the string with a -1 offset:
+    `s1.charAt(i-1)`, not `s1.charAt(i)`. This is the most common source of wrong answers in string DP. A clean way
+    to remember: "DP row i represents the first i characters, so the i-th character is at index i-1."
 
-**Common 2D DP mistakes you discovered:**
-
-1. **Off-by-one errors:** <span class="fill-in">[DP table size vs array size]</span>
-2. **Index mismatches:** <span class="fill-in">[1-based DP vs 0-based strings/arrays]</span>
-3. **Missing base cases:** <span class="fill-in">[Edge initialization forgotten]</span>
-4. **Wrong recurrence:** <span class="fill-in">[Addition vs multiplication, missing +1 cost]</span>
-5. **Edge case bugs:** <span class="fill-in">[Obstacles, empty strings, zero capacity]</span>
-
-**Your reflection:** Which bug was hardest to find? <span class="fill-in">[Fill in]</span>
+!!! warning "You can always optimize 2D DP to 1D space"
+    You can only reduce to 1D when the current row depends only on the immediately previous row (and possibly the
+    current row itself). Grid path problems (right+down movement) reduce easily. Edit distance reduces to two rows.
+    Interval DP (burst balloons, stone game) cannot be reduced because dp[i][j] depends on dp[i][k] and dp[k][j] for
+    all k — the dependencies span multiple rows.
 
 ---
 
@@ -1207,6 +989,7 @@ Answer after solving problems:
 - Take or skip: <span class="fill-in">[Compare options]</span>
 
 ### Your Decision Tree
+
 ```mermaid
 flowchart LR
     Start["2D DP Pattern Selection"]
@@ -1235,10 +1018,7 @@ flowchart LR
     Q9 -->|"Burst/merge"| N11
     N12(["Min-max DP ✓"])
     Q9 -->|"Game theory"| N12
-    Q13{"Items with capacity?"}
-    Start --> Q13
 ```
-
 
 ---
 
@@ -1297,54 +1077,17 @@ flowchart LR
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-Before moving to the next topic:
+Answer these without referring to your notes or implementation.
 
-- [ ] **Implementation**
-    - [ ] Grid paths: unique, with obstacles, min sum all work
-    - [ ] String matching: LCS, edit distance, palindrome all work
-    - [ ] Knapsack: 0/1, target sum, ones-zeroes all work
-    - [ ] Game theory: stone game, burst balloons work
-    - [ ] All client code runs successfully
-
-- [ ] **Pattern Recognition**
-    - [ ] Can identify when 2D state is needed
-    - [ ] Understand recurrence in each pattern
-    - [ ] Know when to optimize space to 1D
-    - [ ] Recognize interval DP problems
-
-- [ ] **Problem Solving**
-    - [ ] Solved 2 easy problems
-    - [ ] Solved 4-5 medium problems
-    - [ ] Analyzed time/space complexity
-    - [ ] Understood state transitions
-
-- [ ] **Understanding**
-    - [ ] Filled in all ELI5 explanations
-    - [ ] Built decision tree
-    - [ ] Identified when NOT to use 2D DP
-    - [ ] Can explain how to derive 2D recurrence
-
-- [ ] **Mastery Check**
-    - [ ] Could implement all patterns from memory
-    - [ ] Could recognize pattern in new problem
-    - [ ] Could explain to someone else
-    - [ ] Understand space optimization techniques
-
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
-- [ ] Design 2D DP state from problem description
-- [ ] Write correct recurrence relations
-- [ ] Handle base cases and edge initialization properly
-- [ ] Identify and fix off-by-one errors
-- [ ] Optimize 2D → 1D space when possible
-- [ ] Explain why a problem needs 2D vs 1D
-- [ ] Trace through a DP table by hand
-- [ ] Debug incorrect implementations quickly
-- [ ] Teach 2D DP concepts to someone else
-
+1. Draw the complete LCS DP table for s1 = "ace" and s2 = "abcde". Label the dimensions and explain what dp[2][3]
+   represents.
+2. In edit distance, the base cases are dp[i][0] = i and dp[0][j] = j. Explain what these represent in plain English.
+   What would go wrong if you forgot to initialize them?
+3. In the knapsack DP table, why must you access `weights[i-1]` and `values[i-1]` (not `weights[i]`) when filling row
+   i of the table?
+4. For grid paths with obstacles, why must you stop initializing the first row/column as soon as you encounter an
+   obstacle, rather than just setting that cell to 0 and continuing?
+5. A colleague says "I'll reduce my 2D LCS table to 1D to save space — I'll just keep one row at a time." Is this
+   correct? What is the space complexity after this optimization?

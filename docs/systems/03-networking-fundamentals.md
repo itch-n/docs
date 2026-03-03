@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this topic you will be able to:
+
+- Explain the reliability guarantees TCP provides and the cost at which it provides them, compared to UDP
+- Compare HTTP/1.1, HTTP/2, and HTTP/3 and identify which problem each version solves
+- Choose between HTTP polling, Server-Sent Events, and WebSockets given a real-time communication requirement
+- Explain the DNS resolution chain and how TTL affects both performance and failover speed
+- Describe the TLS 1.3 handshake and the strategies used to reduce its latency overhead
+- Choose between L4 and L7 load balancing and select an appropriate load-balancing algorithm for a given workload
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,30 +26,35 @@
 **Prompts to guide you:**
 
 1. **What is the difference between TCP and UDP in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after learning]</span>
+    - TCP is a protocol that ___ every packet, while UDP is a protocol that <span class="fill-in">[___ packets without waiting for ___, trading ___ for lower ___]</span>
 
 2. **Why do we need DNS?**
-    - Your answer: <span class="fill-in">[Fill in after learning]</span>
+    - DNS exists because <span class="fill-in">[humans remember ___ but computers route traffic using ___, so DNS acts as a ___ that translates between them]</span>
 
 3. **Real-world analogy for TCP vs UDP:**
     - Example: "TCP is like certified mail where..."
+    - Think about the difference between sending a registered letter (confirmation of delivery) vs dropping a flyer in a post box (fire and forget).
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **What does HTTP/2 multiplexing solve?**
-    - Your answer: <span class="fill-in">[Fill in after learning]</span>
+    - HTTP/2 multiplexing solves ___ blocking by <span class="fill-in">[allowing ___ requests to travel over a ___ TCP connection simultaneously, so a slow response on stream ___ no longer blocks stream ___]</span>
 
 5. **Real-world analogy for WebSockets:**
     - Example: "WebSockets are like a phone call where..."
+    - Think about the difference between sending text messages (each a separate round trip) vs staying on an open phone call.
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
 6. **Why do we need load balancers?**
-    - Your answer: <span class="fill-in">[Fill in after practice]</span>
+    - Load balancers are needed when <span class="fill-in">[a single server can no longer handle ___, so traffic must be ___ across multiple servers — and the load balancer decides ___ based on ___]</span>
 
 </div>
 
 ---
 
 ## Quick Quiz (Do BEFORE learning)
+
+!!! tip "How to use this section"
+    Complete your predictions now, before reading further. You will revisit and verify each answer after working through the core concepts.
 
 <div class="learner-section" markdown>
 
@@ -77,132 +95,6 @@
 - **Connection pooling:** <span class="fill-in">[Helpful?]</span>
 
 </div>
-
----
-
-## Before/After: Why Networking Fundamentals Matter
-
-**Your task:** Compare naive networking assumptions vs proper understanding to see the impact.
-
-### Example: HTTP Connection Management
-
-**Problem:** Mobile app making 100 API requests to load user dashboard
-
-#### Approach 1: Naive HTTP/1.1 (Sequential Requests)
-
-```
-Client needs to load dashboard with:
-
-- User profile (1 request)
-- 20 recent posts (20 requests)
-- 50 friend suggestions (50 requests)
-- 10 notifications (10 requests)
-- Analytics data (19 requests)
-
-Total: 100 requests
-
-HTTP/1.1 behavior:
-
-- Opens connection
-- Request 1 → Response 1
-- Request 2 → Response 2
-- ...
-- Request 100 → Response 100
-- Closes connection
-
-Time analysis:
-
-- Each request: ~50ms (network RTT) + processing
-- Sequential: 100 * 50ms = 5,000ms = 5 seconds!
-- User sees: Loading spinner for 5 seconds
-```
-
-**Problems:**
-
-- Head-of-line blocking (each request waits for previous)
-- Connection overhead repeated
-- Poor mobile experience
-- Inefficient bandwidth usage
-
-#### Approach 2: HTTP/2 Multiplexing
-
-```
-HTTP/2 behavior:
-
-- Opens single connection
-- Sends all 100 requests simultaneously (multiplexed)
-- Server streams responses back as ready
-- Uses single TCP connection efficiently
-
-Time analysis:
-
-- All requests sent: ~50ms (single RTT)
-- Server processing: ~200ms (parallel)
-- Total: ~250ms vs 5,000ms
-- 20x faster!
-
-Additional benefits:
-
-- Header compression (HPACK)
-- Server push (preload resources)
-- Stream prioritization
-```
-
-**Real-world impact:**
-
-- HTTP/1.1: 5 second load time → user abandonment
-- HTTP/2: 250ms load time → seamless experience
-- Mobile data savings: ~40% from header compression
-
-**Your calculation:** For 50 concurrent requests:
-
-- HTTP/1.1 time: <span class="fill-in">_____</span> ms
-- HTTP/2 time: <span class="fill-in">_____</span> ms
-- Speedup factor: <span class="fill-in">_____</span>x
-
----
-
-## Case Studies: Networking in the Wild
-
-### Online Gaming (Fortnite, Call of Duty): UDP for Speed
-
-- **Pattern:** UDP for real-time game data.
-- **How it works:** Player movements, actions, and shots are sent via UDP packets. If a packet is lost (e.g., showing a
-  player's position from 50ms ago), the game doesn't wait. It simply discards the old data and uses the next available
-  packet. Waiting for a TCP retransmission would cause noticeable lag (rubber-banding).
-- **Key Takeaway:** For applications where the most recent data is more important than guaranteed delivery of every
-  single piece of data, UDP is the superior choice. The trade-off is that the application layer must handle potential
-  packet loss.
-
-### Google & YouTube: HTTP/2 and HTTP/3 (QUIC) Adoption
-
-- **Pattern:** Modern HTTP protocols for web performance.
-- **How it works:** Google was a pioneer of both SPDY (the precursor to HTTP/2) and QUIC (the transport protocol for
-  HTTP/3). On sites like YouTube, QUIC significantly reduces connection and stream setup time. This is especially
-  noticeable on mobile networks, where it can seamlessly migrate a user's connection from Wi-Fi to cellular data without
-  interrupting the video stream, a major weakness of TCP.
-- **Key Takeaway:** Adopting modern protocols like HTTP/2 and HTTP/3 is critical for performance at scale. The move from
-  TCP to a UDP-based protocol (QUIC) in HTTP/3 solves fundamental transport-layer problems like Head-of-Line blocking.
-
-### Slack & Discord: WebSockets for Real-Time Chat
-
-- **Pattern:** WebSockets for persistent, bidirectional communication.
-- **How it works:** When you open Slack or Discord, your client establishes a single, long-lived WebSocket connection to
-  their servers. When a new message is sent in a channel, the server pushes that message immediately to all connected
-  clients in that channel.
-- **Key Takeaway:** Compared to old-school HTTP polling, WebSockets reduce latency from seconds to milliseconds and
-  drastically decrease unnecessary network traffic and server load, making them essential for any real-time interactive
-  application.
-
-### Netflix: DNS for Global Load Balancing
-
-- **Pattern:** DNS-based Global Server Load Balancing (GSLB).
-- **How it works:** When you press play on Netflix, your device makes a DNS request for the server hosting the video
-  content. Netflix's DNS servers don't just return a single IP address; they return the IP address of the Open Connect
-  Appliance (OCA) cache server that is geographically and topologically closest to you.
-- **Key Takeaway:** DNS is not just for finding IPs. It's a powerful tool for global traffic routing. By directing users
-  to the nearest server at the DNS level, Netflix ensures low latency, high-quality streaming and distributes load
-  across its global content delivery network.
 
 ---
 
@@ -272,6 +164,9 @@ Timeout! Retransmit packet 5
        ↓
                   ←-------  ACK 5 (success)
 ```
+
+!!! note "Why TCP retransmission hurts real-time applications"
+    When a TCP packet is lost, the sender stops advancing the window until that specific packet is acknowledged. This is called head-of-line blocking at the transport layer. For a video stream, waiting 50–200 ms to retransmit a frame that is already stale is worse than simply skipping it — which is exactly what UDP-based protocols do.
 
 **Decision Matrix:**
 
@@ -603,6 +498,9 @@ Query at 1:01 PM:
   example.com → 1.2.3.5 (IP changed!)
 ```
 
+!!! tip "TTL is a trade-off between freshness and latency"
+    A short TTL (e.g., 60 seconds) means DNS changes propagate quickly — useful during failovers — but every DNS query hits the resolver more often, adding latency. A long TTL (e.g., 86400 seconds) reduces resolver load but means clients may be pointing at a stale IP for up to a day after a change. Most production systems use 300–3600 seconds.
+
 **DNS Load Balancing:**
 
 ```
@@ -790,6 +688,168 @@ Unhealthy server:
   └─ Drain existing connections (graceful)
 ```
 
+!!! warning "Debugging Challenge — Silent DNS Caching Bug"
+
+    A team changes their load balancer's IP address and updates the DNS A record. Some users continue hitting the old server for over an hour after the change. No code was changed.
+
+    ```
+    Before: api.example.com → 1.2.3.4  (TTL: 3600)
+    After:  api.example.com → 1.2.3.5  (TTL: 3600)
+
+    User A: resolves immediately to 1.2.3.5 ✓
+    User B: still hitting 1.2.3.4 60 minutes later ✗
+    ```
+
+    What is causing User B's problem and how should the team have prepared for this?
+
+    ??? success "Answer"
+
+        **Cause:** User B's resolver (or their OS cache) cached the old A record with a 1-hour TTL before the change was made. DNS caches honour the TTL that was in place at the time of the lookup — the new record's TTL only starts counting for resolvers that query after the change.
+
+        **Preparation:** Lower the TTL to 60 seconds at least 24–48 hours *before* any planned IP change, so existing caches expire quickly. After the migration is stable, raise the TTL again.
+
+---
+
+## Before/After: Why Networking Fundamentals Matter
+
+**Your task:** Compare naive networking assumptions vs proper understanding to see the impact.
+
+### Example: HTTP Connection Management
+
+**Problem:** Mobile app making 100 API requests to load user dashboard
+
+#### Approach 1: Naive HTTP/1.1 (Sequential Requests)
+
+```
+Client needs to load dashboard with:
+
+- User profile (1 request)
+- 20 recent posts (20 requests)
+- 50 friend suggestions (50 requests)
+- 10 notifications (10 requests)
+- Analytics data (19 requests)
+
+Total: 100 requests
+
+HTTP/1.1 behavior:
+
+- Opens connection
+- Request 1 → Response 1
+- Request 2 → Response 2
+- ...
+- Request 100 → Response 100
+- Closes connection
+
+Time analysis:
+
+- Each request: ~50ms (network RTT) + processing
+- Sequential: 100 * 50ms = 5,000ms = 5 seconds!
+- User sees: Loading spinner for 5 seconds
+```
+
+**Problems:**
+
+- Head-of-line blocking (each request waits for previous)
+- Connection overhead repeated
+- Poor mobile experience
+- Inefficient bandwidth usage
+
+#### Approach 2: HTTP/2 Multiplexing
+
+```
+HTTP/2 behavior:
+
+- Opens single connection
+- Sends all 100 requests simultaneously (multiplexed)
+- Server streams responses back as ready
+- Uses single TCP connection efficiently
+
+Time analysis:
+
+- All requests sent: ~50ms (single RTT)
+- Server processing: ~200ms (parallel)
+- Total: ~250ms vs 5,000ms
+- 20x faster!
+
+Additional benefits:
+
+- Header compression (HPACK)
+- Server push (preload resources)
+- Stream prioritization
+```
+
+**Real-world impact:**
+
+- HTTP/1.1: 5 second load time → user abandonment
+- HTTP/2: 250ms load time → seamless experience
+- Mobile data savings: ~40% from header compression
+
+**Your calculation:** For 50 concurrent requests:
+
+- HTTP/1.1 time: <span class="fill-in">_____</span> ms
+- HTTP/2 time: <span class="fill-in">_____</span> ms
+- Speedup factor: <span class="fill-in">_____</span>x
+
+!!! info "Loop back"
+    Return to the Quick Quiz now and fill in your verified answers.
+
+---
+
+## Case Studies: Networking in the Wild
+
+### Online Gaming (Fortnite, Call of Duty): UDP for Speed
+
+- **Pattern:** UDP for real-time game data.
+- **How it works:** Player movements, actions, and shots are sent via UDP packets. If a packet is lost (e.g., showing a
+  player's position from 50ms ago), the game doesn't wait. It simply discards the old data and uses the next available
+  packet. Waiting for a TCP retransmission would cause noticeable lag (rubber-banding).
+- **Key Takeaway:** For applications where the most recent data is more important than guaranteed delivery of every
+  single piece of data, UDP is the superior choice. The trade-off is that the application layer must handle potential
+  packet loss.
+
+### Google & YouTube: HTTP/2 and HTTP/3 (QUIC) Adoption
+
+- **Pattern:** Modern HTTP protocols for web performance.
+- **How it works:** Google was a pioneer of both SPDY (the precursor to HTTP/2) and QUIC (the transport protocol for
+  HTTP/3). On sites like YouTube, QUIC significantly reduces connection and stream setup time. This is especially
+  noticeable on mobile networks, where it can seamlessly migrate a user's connection from Wi-Fi to cellular data without
+  interrupting the video stream, a major weakness of TCP.
+- **Key Takeaway:** Adopting modern protocols like HTTP/2 and HTTP/3 is critical for performance at scale. The move from
+  TCP to a UDP-based protocol (QUIC) in HTTP/3 solves fundamental transport-layer problems like Head-of-Line blocking.
+
+### Slack & Discord: WebSockets for Real-Time Chat
+
+- **Pattern:** WebSockets for persistent, bidirectional communication.
+- **How it works:** When you open Slack or Discord, your client establishes a single, long-lived WebSocket connection to
+  their servers. When a new message is sent in a channel, the server pushes that message immediately to all connected
+  clients in that channel.
+- **Key Takeaway:** Compared to old-school HTTP polling, WebSockets reduce latency from seconds to milliseconds and
+  drastically decrease unnecessary network traffic and server load, making them essential for any real-time interactive
+  application.
+
+### Netflix: DNS for Global Load Balancing
+
+- **Pattern:** DNS-based Global Server Load Balancing (GSLB).
+- **How it works:** When you press play on Netflix, your device makes a DNS request for the server hosting the video
+  content. Netflix's DNS servers don't just return a single IP address; they return the IP address of the Open Connect
+  Appliance (OCA) cache server that is geographically and topologically closest to you.
+- **Key Takeaway:** DNS is not just for finding IPs. It's a powerful tool for global traffic routing. By directing users
+  to the nearest server at the DNS level, Netflix ensures low latency, high-quality streaming and distributes load
+  across its global content delivery network.
+
+---
+
+## Common Misconceptions
+
+!!! warning "HTTPS is significantly slower than HTTP"
+    TLS 1.3 adds only one additional round trip on the initial connection, and session resumption can reduce that to zero extra round trips (0-RTT). With connection pooling and keep-alive, the TLS handshake cost is amortised across hundreds of requests. The CPU overhead for modern AES-GCM encryption is under 5% on current hardware. The performance gap between HTTP and HTTPS is negligible in practice.
+
+!!! warning "HTTP/2 eliminates all head-of-line blocking"
+    HTTP/2 eliminates *application-layer* HOL blocking (multiple streams on one connection). However, because it runs over a single TCP connection, a lost TCP packet still blocks *all* HTTP/2 streams until the packet is retransmitted — this is *transport-layer* HOL blocking. HTTP/3 (QUIC) solves this by running streams independently over UDP.
+
+!!! warning "DNS round-robin is sufficient for load balancing"
+    DNS round-robin cycles IP addresses but has no health checks — it will happily return the IP of a crashed server. It also cannot respond to actual server load; an overloaded server receives the same share as an idle one. And client-side DNS caching means the "rotation" is unpredictable in practice. DNS round-robin is a last resort, not a real load balancing strategy.
+
 ---
 
 ## Decision Framework
@@ -944,50 +1004,12 @@ Quality vs Latency:
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-Before moving to the next topic:
+Answer these without referring to your notes or implementation.
 
--   [ ] **Understanding**
-    -   [ ] Understand TCP 3-way handshake
-    -   [ ] Know difference between TCP and UDP
-    -   [ ] Understand HTTP/2 multiplexing
-    -   [ ] Know how WebSockets work
-    -   [ ] Understand DNS resolution process
-    -   [ ] Know TLS handshake basics
-    -   [ ] Understand L4 vs L7 load balancing
-
--   [ ] **Protocol Selection**
-    -   [ ] Can choose between TCP and UDP
-    -   [ ] Know when to use HTTP/2 vs HTTP/3
-    -   [ ] Understand WebSocket use cases
-    -   [ ] Can design DNS strategy
-
--   [ ] **Performance Optimization**
-    -   [ ] Know connection pooling benefits
-    -   [ ] Understand header compression
-    -   [ ] Can calculate latency impact
-    -   [ ] Know caching strategies
-
--   [ ] **Decision Making**
-    -   [ ] Completed practice scenarios
-    -   [ ] Can explain trade-offs
-    -   [ ] Understand failure modes
-
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
--   [ ] Explain TCP vs UDP trade-offs
--   [ ] Design protocol choice for new system
--   [ ] Understand HTTP evolution benefits
--   [ ] Choose appropriate real-time protocol
--   [ ] Configure DNS for performance
--   [ ] Explain TLS handshake process
--   [ ] Select load balancing strategy
--   [ ] Optimize network performance
--   [ ] Debug networking issues
--   [ ] Teach networking concepts to others
-
+1. A TCP packet is lost mid-stream on an HTTP/2 connection carrying four multiplexed streams. Describe precisely what happens to each of the four streams and explain why HTTP/3 behaves differently.
+2. You need to reduce the time it takes to fail over a service to a new IP address from 1 hour to under 2 minutes. What change do you make and when must you make it relative to the failover event?
+3. A chat application currently polls the server every 2 seconds. At 50,000 concurrent users, calculate the approximate number of HTTP requests per minute this generates, then explain what switching to WebSockets changes.
+4. An L4 load balancer and an L7 load balancer are both available. A request comes in for `/api/users` and another for `/static/logo.png`. Which load balancer can route these to different server pools, and why?
+5. A colleague says "We use TLS everywhere so our API is secure." What important security concern does TLS *not* address?

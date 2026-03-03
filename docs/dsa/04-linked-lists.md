@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this topic you will be able to:
+
+- Explain the structural difference between arrays and linked lists and articulate when each is preferable
+- Implement iterative and recursive list reversal using the three-pointer (prev/curr/next) pattern
+- Detect cycles and find the cycle-entry node using Floyd's algorithm with O(1) space
+- Merge two sorted lists and K sorted lists, using a dummy head node to eliminate edge cases
+- Remove the Nth node from the end in a single pass using a two-pointer gap technique
+- Diagnose and fix the most common bugs: missing `prev = curr`, returning `curr` instead of `prev`, and incorrect null checks for fast/slow pointers
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,10 +26,10 @@
 **Prompts to guide you:**
 
 1. **What is a linked list in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">[A linked list is a sequence of nodes where each node holds a value and a pointer to ___, unlike an array which stores elements in ___ memory locations]</span>
 
 2. **Why can't we use array indices?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">[Linked list nodes are not stored in contiguous memory, so there is no formula to compute the address of the nth node — you must ___ from the head]</span>
 
 3. **Real-world analogy:**
     - Example: "Linked lists are like a treasure hunt where each clue leads to the next..."
@@ -33,6 +46,9 @@
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+!!! tip "How to use this section"
+    Write your best guess in each fill-in span **before** reading any implementation code. After you finish coding and running the tests, come back and fill in the "Verified" answers. The gap between your prediction and the actual answer is where the real learning happens.
 
 <div class="learner-section" markdown>
 
@@ -94,202 +110,6 @@
 
 Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
-
-</div>
-
----
-
-## Before/After: Why This Pattern Matters
-
-**Your task:** Compare array operations vs linked list operations to understand trade-offs.
-
-### Example 1: Insertion at Beginning
-
-**Problem:** Insert element at the beginning of a collection.
-
-#### Approach 1: Array (Dynamic)
-
-```java
-// Array approach - Shift all elements
-public static int[] insertAtBeginning_Array(int[] arr, int value) {
-    int[] newArr = new int[arr.length + 1];
-    newArr[0] = value;
-
-    // Copy all existing elements (shifted right)
-    for (int i = 0; i < arr.length; i++) {
-        newArr[i + 1] = arr[i];
-    }
-
-    return newArr;
-}
-```
-
-**Analysis:**
-
-- Time: O(n) - Must shift all elements
-- Space: O(n) - Need new array
-- For n = 10,000: ~10,000 copy operations
-
-#### Approach 2: Linked List
-
-```java
-// Linked list approach - Just update pointers
-public static ListNode insertAtBeginning_List(ListNode head, int value) {
-    ListNode newNode = new ListNode(value);
-    newNode.next = head;
-    return newNode;  // New head
-}
-```
-
-**Analysis:**
-
-- Time: O(1) - Just two pointer assignments
-- Space: O(1) - Single new node
-- For n = 10,000: Always 2 operations (constant!)
-
-#### Performance Comparison
-
-| Collection Size | Array (O(n)) | Linked List (O(1)) | Speedup |
-|-----------------|--------------|--------------------|---------|
-| n = 100         | 100 ops      | 2 ops              | 50x     |
-| n = 1,000       | 1,000 ops    | 2 ops              | 500x    |
-| n = 10,000      | 10,000 ops   | 2 ops              | 5,000x  |
-
-**Your calculation:** For n = 5,000, inserting at beginning is _____ times faster with linked list.
-
----
-
-### Example 2: Access Middle Element
-
-**Problem:** Access the middle element of a collection.
-
-#### Approach 1: Array
-
-```java
-// Array approach - Direct access
-public static int getMiddle_Array(int[] arr) {
-    return arr[arr.length / 2];  // O(1) access!
-}
-```
-
-**Analysis:**
-
-- Time: O(1) - Direct index access
-- Space: O(1)
-- Operations: 1 (always!)
-
-#### Approach 2: Linked List (Naive)
-
-```java
-// Linked list approach - Must traverse
-public static int getMiddle_List_Naive(ListNode head) {
-    // First pass: count nodes
-    int count = 0;
-    ListNode curr = head;
-    while (curr != null) {
-        count++;
-        curr = curr.next;
-    }
-
-    // Second pass: traverse to middle
-    curr = head;
-    for (int i = 0; i < count / 2; i++) {
-        curr = curr.next;
-    }
-
-    return curr.val;
-}
-```
-
-**Analysis:**
-
-- Time: O(n) - Must traverse to middle
-- Space: O(1)
-- For n = 10,000: ~15,000 steps (count + traverse to middle)
-
-#### Approach 3: Linked List (Optimized with Fast/Slow)
-
-```java
-// Optimized: slow/fast pointers - single pass
-public static int getMiddle_List_Optimized(ListNode head) {
-    ListNode slow = head, fast = head;
-
-    while (fast != null && fast.next != null) {
-        slow = slow.next;        // Move 1 step
-        fast = fast.next.next;   // Move 2 steps
-    }
-
-    return slow.val;  // Slow is at middle when fast reaches end
-}
-```
-
-**Analysis:**
-
-- Time: O(n) - Single pass
-- Space: O(1)
-- For n = 10,000: ~5,000 steps (half as many as naive)
-
-#### Performance Comparison
-
-| Collection Size | Array (O(1)) | List Naive (O(n)) | List Optimized (O(n)) |
-|-----------------|--------------|-------------------|-----------------------|
-| n = 100         | 1 op         | 150 ops           | 50 ops                |
-| n = 1,000       | 1 op         | 1,500 ops         | 500 ops               |
-| n = 10,000      | 1 op         | 15,000 ops        | 5,000 ops             |
-
-**Key insight:** Arrays win for access, linked lists win for insertion/deletion.
-
----
-
-### Why Does Pointer Manipulation Work?
-
-**Key insight to understand:**
-
-When reversing `1 -> 2 -> 3 -> null`:
-
-```
-Initial:     1 -> 2 -> 3 -> null
-             ^
-            head
-
-Goal:   null <- 1 <- 2 <- 3
-                         ^
-                       new head
-
-How? Change each 'next' pointer to point backwards!
-```
-
-**Step-by-step visualization:**
-
-```
-Step 0: prev = null, curr = 1
-        null    1 -> 2 -> 3 -> null
-        ^       ^
-       prev    curr
-
-Step 1: Save next, reverse curr.next, move forward
-        null <- 1    2 -> 3 -> null
-                ^    ^
-               prev curr
-
-Step 2: Continue
-        null <- 1 <- 2    3 -> null
-                     ^    ^
-                    prev curr
-
-Step 3: Continue
-        null <- 1 <- 2 <- 3    null
-                          ^
-                         prev (new head!)
-```
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why do we need three pointers (prev, curr, next)? <span class="fill-in">[Your answer]</span>
-- What happens if we skip saving 'next'? <span class="fill-in">[Your answer]</span>
-- Why does prev end up as the new head? <span class="fill-in">[Your answer]</span>
 
 </div>
 
@@ -434,6 +254,38 @@ public class ReverseLinkedListClient {
     }
 }
 ```
+
+!!! warning "Debugging Challenge — Broken Reverse Implementation"
+    The code below has **2 critical bugs**. Trace through `1 -> 2 -> 3 -> null` before checking the answer.
+
+    ```java
+    public static ListNode reverseList_Buggy(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        while (curr != null) {
+            ListNode next = curr.next;
+            curr.next = prev;
+            curr = next;    }
+        return curr;
+    }
+    ```
+
+    - Bug 1: <span class="fill-in">[Which pointer never advances? What is lost?]</span>
+    - Bug 2: <span class="fill-in">[What does `curr` equal when the loop exits?]</span>
+
+    ??? success "Answer"
+        **Bug 1:** Missing `prev = curr` before `curr = next`. The `prev` pointer never advances, so the reversed portion is lost — every node's `next` is set back to `null` (the initial value of `prev`).
+
+        **Bug 2:** `curr` is `null` when the loop exits (that's the exit condition). Returning `curr` returns `null`. Should return `prev`, which points to the new head (the last node processed).
+
+        **Correct inner loop body:**
+        ```java
+        ListNode next = curr.next;
+        curr.next = prev;
+        prev = curr;    // MUST advance prev
+        curr = next;
+        ```
+        **Correct return:** `return prev;`
 
 ---
 
@@ -711,6 +563,35 @@ public class MergeListsClient {
 }
 ```
 
+!!! warning "Debugging Challenge — Missing `curr = curr.next` in Merge"
+    The merge below compiles and runs but produces a single-node result instead of a full merged list. Trace through `l1 = 1->3->5` and `l2 = 2->4->6` before checking the answer.
+
+    ```java
+    public static ListNode mergeTwoLists_Buggy(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(0);
+        ListNode curr = dummy;
+        while (l1 != null && l2 != null) {
+            if (l1.val < l2.val) {
+                curr.next = l1;
+                l1 = l1.next;
+            } else {
+                curr.next = l2;
+                l2 = l2.next;
+            }
+        }
+        if (l1 != null) curr.next = l1;
+        if (l2 != null) curr.next = l2;
+        return dummy.next;
+    }
+    ```
+
+    - Bug: <span class="fill-in">[Which pointer never advances? What does `dummy.next` actually point to?]</span>
+
+    ??? success "Answer"
+        **Bug:** `curr = curr.next` is missing at the end of each loop iteration. Without it, `curr` stays at `dummy` throughout, and `curr.next` is overwritten every iteration. Only the last node appended survives; the rest are silently discarded.
+
+        **Fix:** Add `curr = curr.next;` as the last statement inside the `while` loop body.
+
 ---
 
 ### Pattern 4: Remove Nth Node
@@ -829,417 +710,218 @@ public class RemoveNodeClient {
 
 ---
 
-## Debugging Challenges
-
-**Your task:** Find and fix bugs in broken linked list implementations. This tests your understanding of pointer
-manipulation.
-
-### Challenge 1: Broken Reverse Implementation
-
-```java
-/**
- * This code is supposed to reverse a linked list.
- * It has 2 CRITICAL BUGS. Find them!
- */
-public static ListNode reverseList_Buggy(ListNode head) {
-    ListNode prev = null;
-    ListNode curr = head;
-
-    while (curr != null) {
-        ListNode next = curr.next;
-        curr.next = prev;
-        curr = next;    }
-
-    return curr;}
-```
-
-**Your debugging:**
-
-- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
-
-- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
-
-**Trace through example:**
-
-- Input: `1 -> 2 -> 3 -> null`
-- Expected: `3 -> 2 -> 1 -> null`
-- With bugs: <span class="fill-in">[What happens? Where does it fail?]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1 (Line 10):** Missing `prev = curr` before `curr = next`. The prev pointer never advances, so we lose track of
-the reversed portion.
-
-**Correct:**
-
-```java
-while (curr != null) {
-    ListNode next = curr.next;
-    curr.next = prev;
-    prev = curr;    // MUST update prev!
-    curr = next;
-}
-```
-
-**Bug 2 (Line 13):** Returning `curr` which is null at the end. Should return `prev`, which points to the new head (the
-last node we processed).
-
-**Correct:** `return prev;`
-</details>
+!!! info "Loop back"
+    Before moving on, return to the ELI5 section and Quick Quiz at the top. Fill in any answers you left blank. Pay special attention to the recursion space-complexity question — many learners expect O(1) for recursive reversal and are surprised it is O(n).
 
 ---
 
-### Challenge 2: Lost References in Cycle Detection
+## Before/After: Why This Pattern Matters
+
+**Your task:** Compare array operations vs linked list operations to understand trade-offs.
+
+### Example 1: Insertion at Beginning
+
+**Problem:** Insert element at the beginning of a collection.
+
+#### Approach 1: Array (Dynamic)
 
 ```java
-/**
- * Detect if linked list has a cycle and return the cycle start node.
- * This has 1 SUBTLE BUG that causes NullPointerException.
- */
-public static ListNode detectCycle_Buggy(ListNode head) {
-    ListNode slow = head;
-    ListNode fast = head;
+// Array approach - Shift all elements
+public static int[] insertAtBeginning_Array(int[] arr, int value) {
+    int[] newArr = new int[arr.length + 1];
+    newArr[0] = value;
 
-    // Find if cycle exists
-    while (fast != null && fast.next != null) {
-        slow = slow.next;
-        fast = fast.next.next;
-
-        if (slow == fast) {
-            // Cycle found, now find start
-            slow = head;
-            while (slow != fast) {
-                slow = slow.next;
-                fast = fast.next.next;            }
-            return slow;
-        }
+    // Copy all existing elements (shifted right)
+    for (int i = 0; i < arr.length; i++) {
+        newArr[i + 1] = arr[i];
     }
 
-    return null;
+    return newArr;
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- Bug: <span class="fill-in">[What\'s the bug?]</span>
+- Time: O(n) - Must shift all elements
+- Space: O(n) - Need new array
+- For n = 10,000: ~10,000 copy operations
 
-**Trace through example:**
-
-- List with cycle: `1 -> 2 -> 3 -> 4 -> 2` (cycle back to 2)
-- Expected: Return node 2
-- With bug: <span class="fill-in">[What happens in second while loop?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug (Line 18):** In the second phase (finding cycle start), both pointers should move ONE step at a time, not two
-steps for fast.
-
-**Why it fails:** After finding the cycle, we're looking for the entry point. Moving fast by 2 steps can skip over the
-cycle start or cause fast to go past the end (if there's a path outside the cycle).
-
-**Correct:**
+#### Approach 2: Linked List
 
 ```java
-slow = head;
-while (slow != fast) {
-    slow = slow.next;
-    fast = fast.next;  // Move ONE step, not two!
+// Linked list approach - Just update pointers
+public static ListNode insertAtBeginning_List(ListNode head, int value) {
+    ListNode newNode = new ListNode(value);
+    newNode.next = head;
+    return newNode;  // New head
 }
 ```
 
-**Mathematical proof:** When slow and fast meet at distance k from cycle start, resetting slow to head and moving both
-one step at a time guarantees they meet at the cycle start. Moving fast by 2 breaks this property.
-</details>
+**Analysis:**
+
+- Time: O(1) - Just two pointer assignments
+- Space: O(1) - Single new node
+- For n = 10,000: Always 2 operations (constant!)
+
+#### Performance Comparison
+
+| Collection Size | Array (O(n)) | Linked List (O(1)) | Speedup |
+|-----------------|--------------|--------------------|---------|
+| n = 100         | 100 ops      | 2 ops              | 50x     |
+| n = 1,000       | 1,000 ops    | 2 ops              | 500x    |
+| n = 10,000      | 10,000 ops   | 2 ops              | 5,000x  |
+
+**Your calculation:** For n = 5,000, inserting at beginning is _____ times faster with linked list.
 
 ---
 
-### Challenge 3: Merge Lists Pointer Loss
+### Example 2: Access Middle Element
+
+**Problem:** Access the middle element of a collection.
+
+#### Approach 1: Array
 
 ```java
-/**
- * Merge two sorted linked lists.
- * This code has 1 CRITICAL BUG causing infinite loop or lost nodes.
- */
-public static ListNode mergeTwoLists_Buggy(ListNode l1, ListNode l2) {
-    ListNode dummy = new ListNode(0);
-    ListNode curr = dummy;
-
-    while (l1 != null && l2 != null) {
-        if (l1.val < l2.val) {
-            curr.next = l1;
-            l1 = l1.next;
-        } else {
-            curr.next = l2;
-            l2 = l2.next;
-        }
-    }
-
-    // Attach remaining nodes
-    if (l1 != null) curr.next = l1;
-    if (l2 != null) curr.next = l2;
-
-    return dummy.next;
+// Array approach - Direct access
+public static int getMiddle_Array(int[] arr) {
+    return arr[arr.length / 2];  // O(1) access!
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- Bug: <span class="fill-in">[What\'s the bug?]</span>
+- Time: O(1) - Direct index access
+- Space: O(1)
+- Operations: 1 (always!)
 
-**Trace through example:**
-
-- l1: `1 -> 3 -> 5`
-- l2: `2 -> 4 -> 6`
-- Expected: `1 -> 2 -> 3 -> 4 -> 5 -> 6`
-- With bug: <span class="fill-in">[What does curr point to throughout?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug (After line 16):** Missing `curr = curr.next;`. The curr pointer never advances, so we keep overwriting curr.next
-instead of building a chain.
-
-**Correct:**
+#### Approach 2: Linked List (Naive)
 
 ```java
-while (l1 != null && l2 != null) {
-    if (l1.val < l2.val) {
-        curr.next = l1;
-        l1 = l1.next;
-    } else {
-        curr.next = l2;
-        l2 = l2.next;
-    }
-    curr = curr.next;  // MUST advance curr!
-}
-```
-
-**Why it matters:** Without advancing curr, curr.next always points to the last node we attached. We're not building a
-proper linked list chain.
-</details>
-
----
-
-### Challenge 4: Remove Nth From End - Off By One
-
-```java
-/**
- * Remove the Nth node from the end of list.
- * This has 2 BUGS causing incorrect removal.
- */
-public static ListNode removeNthFromEnd_Buggy(ListNode head, int n) {
-    ListNode dummy = new ListNode(0);
-    dummy.next = head;
-
-    ListNode fast = dummy;
-    ListNode slow = dummy;
-
-    // Move fast n steps ahead
-    for (int i = 0; i < n; i++) {        fast = fast.next;
-    }
-
-    // Move both until fast reaches end
-    while (fast != null) {        slow = slow.next;
-        fast = fast.next;
-    }
-
-    // Remove node
-    slow.next = slow.next.next;
-
-    return dummy.next;
-}
-```
-
-**Your debugging:**
-
-- **Bug 1:** <span class="fill-in">[Should loop run n times or n+1 times? Why?]</span>
-- **Bug 2:** <span class="fill-in">[Should we check `fast != null` or `fast.next != null`? Why?]</span>
-
-**Test case:**
-
-- Input: `1 -> 2 -> 3 -> 4 -> 5`, n = 2
-- Expected: `1 -> 2 -> 3 -> 5` (remove 4)
-- With bugs: <span class="fill-in">[Which node gets removed?]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1 (Line 11):** Loop should run `n + 1` times, not `n` times.
-
-**Why:** We want slow to be positioned ONE NODE BEFORE the node to remove, not at the node itself. This requires an
-extra step of gap.
-
-**Correct:** `for (int i = 0; i <= n; i++)`
-
-**Bug 2 (Line 16):** Should check `fast.next != null`, not `fast != null`.
-
-**Why:** We want to stop when fast is at the last node (so fast.next is null), not when fast goes past it. This
-positions slow at the node before the one to remove.
-
-**Correct:** `while (fast.next != null)`
-
-**Combined fix:**
-
-```java
-// Move fast n+1 steps ahead
-for (int i = 0; i <= n; i++) {
-    fast = fast.next;
-}
-
-// Move both until fast reaches end
-while (fast.next != null) {
-    slow = slow.next;
-    fast = fast.next;
-}
-```
-
-</details>
-
----
-
-### Challenge 5: Accidental Cycle Creation
-
-```java
-/**
- * Reverse first K nodes of a linked list.
- * This code creates an ACCIDENTAL CYCLE! Find why.
- */
-public static ListNode reverseFirstK_Buggy(ListNode head, int k) {
-    if (head == null || k <= 1) return head;
-
-    ListNode prev = null;
-    ListNode curr = head;
-    ListNode tail = head;  // Remember original head (will be tail after reverse)
-
-    // Reverse first k nodes
+// Linked list approach - Must traverse
+public static int getMiddle_List_Naive(ListNode head) {
+    // First pass: count nodes
     int count = 0;
-    while (curr != null && count < k) {
-        ListNode next = curr.next;
-        curr.next = prev;
-        prev = curr;
-        curr = next;
+    ListNode curr = head;
+    while (curr != null) {
         count++;
+        curr = curr.next;
     }
 
-    tail.next = curr;
+    // Second pass: traverse to middle
+    curr = head;
+    for (int i = 0; i < count / 2; i++) {
+        curr = curr.next;
+    }
 
-    return prev;  // New head after reversing first k
+    return curr.val;
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- Bug: <span class="fill-in">[What\'s the bug?]</span>
+- Time: O(n) - Must traverse to middle
+- Space: O(1)
+- For n = 10,000: ~15,000 steps (count + traverse to middle)
 
-**Trace through example:**
+#### Approach 3: Linked List (Optimized with Fast/Slow)
 
-- Input: `1 -> 2 -> 3 -> 4 -> 5`, k = 3
-- Expected: `3 -> 2 -> 1 -> 4 -> 5`
-- With bug: <span class="fill-in">[What cycle is created? Draw it]</span>
+```java
+// Optimized: slow/fast pointers - single pass
+public static int getMiddle_List_Optimized(ListNode head) {
+    ListNode slow = head, fast = head;
 
-<details markdown>
-<summary>Click to verify your answer</summary>
+    while (fast != null && fast.next != null) {
+        slow = slow.next;        // Move 1 step
+        fast = fast.next.next;   // Move 2 steps
+    }
 
-**Bug (Line 22):** Actually, this code is CORRECT! There's no bug here - it's a trick question to test your
-understanding.
+    return slow.val;  // Slow is at middle when fast reaches end
+}
+```
 
-**Why it works:**
+**Analysis:**
 
-1. `tail` points to original head (value 1)
-2. After reversing first k nodes, the list is: `3 -> 2 -> 1` (with 1.next = null)
-3. `curr` points to node 4 (the first node after k nodes)
-4. Setting `tail.next = curr` connects: `3 -> 2 -> 1 -> 4 -> 5`
+- Time: O(n) - Single pass
+- Space: O(1)
+- For n = 10,000: ~5,000 steps (half as many as naive)
 
-**No cycle created!** The original head (now tail of reversed portion) correctly points to the rest of the list.
+#### Performance Comparison
 
-**However, there IS a subtle issue:** If k >= list length, curr will be null, and tail.next should remain null. The code
-handles this correctly because setting tail.next = null is fine.
+| Collection Size | Array (O(1)) | List Naive (O(n)) | List Optimized (O(n)) |
+|-----------------|--------------|-------------------|-----------------------|
+| n = 100         | 1 op         | 150 ops           | 50 ops                |
+| n = 1,000       | 1 op         | 1,500 ops         | 500 ops               |
+| n = 10,000      | 1 op         | 15,000 ops        | 5,000 ops             |
 
-**Actually, if you thought there was a bug because you weren't sure, you're thinking critically - good! But trace
-through carefully and you'll see it works.**
-
-The real lesson: Always trace through pointer manipulations step by step to verify correctness.
-</details>
+!!! note "The fundamental trade-off"
+    Arrays offer O(1) random access but O(n) insertion/deletion at arbitrary positions. Linked lists offer O(1) insertion/deletion at a known position but O(n) access to reach that position. Choose based on which operation dominates in your use case.
 
 ---
 
-### Challenge 6: Null Pointer Nightmare
+### Why Does Pointer Manipulation Work?
 
-```java
-/**
- * Find the middle node of a linked list.
- * This has a NULL POINTER exception waiting to happen.
- */
-public static ListNode findMiddle_Buggy(ListNode head) {
-    ListNode slow = head;
-    ListNode fast = head;
+**Key insight to understand:**
 
-    while (fast.next != null) {        slow = slow.next;
-        fast = fast.next.next;
-    }
+When reversing `1 -> 2 -> 3 -> null`:
 
-    return slow;
-}
+```
+Initial:     1 -> 2 -> 3 -> null
+             ^
+            head
+
+Goal:   null <- 1 <- 2 <- 3
+                         ^
+                       new head
+
+How? Change each 'next' pointer to point backwards!
 ```
 
-**Your debugging:**
+**Step-by-step visualization:**
 
-- **Bug 1:** <span class="fill-in">[What happens if head is null?]</span>
-- **Bug 2:** <span class="fill-in">[What happens if list has even length?]</span>
-- **Bug fix:** <span class="fill-in">[What should the while condition be?]</span>
+```
+Step 0: prev = null, curr = 1
+        null    1 -> 2 -> 3 -> null
+        ^       ^
+       prev    curr
 
-**Test cases that expose bugs:**
+Step 1: Save next, reverse curr.next, move forward
+        null <- 1    2 -> 3 -> null
+                ^    ^
+               prev curr
 
-- Input: `null` → <span class="fill-in">[What error?]</span>
-- Input: `1 -> 2` → <span class="fill-in">[What error?]</span>
-- Input: `1 -> 2 -> 3` → <span class="fill-in">[Does this work?]</span>
+Step 2: Continue
+        null <- 1 <- 2    3 -> null
+                     ^    ^
+                    prev curr
 
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1:** If `head` is null, then `fast.next` throws NullPointerException.
-
-**Bug 2:** If list has even length (e.g., `1 -> 2`), then fast.next.next will try to access next of null on second
-iteration.
-
-**Fix:** Check both `fast != null` AND `fast.next != null`:
-
-```java
-while (fast != null && fast.next != null) {
-    slow = slow.next;
-    fast = fast.next.next;
-}
+Step 3: Continue
+        null <- 1 <- 2 <- 3    null
+                          ^
+                         prev (new head!)
 ```
 
-**Why both checks:**
+**After implementing, explain in your own words:**
 
-- `fast != null` - Handles odd-length lists (fast reaches last node)
-- `fast.next != null` - Handles even-length lists (fast reaches null)
-- Also handles empty list (fast is null initially)
+<div class="learner-section" markdown>
 
-**Rule of thumb:** When doing `fast.next.next`, ALWAYS check both `fast != null && fast.next != null`.
-</details>
+- Why do we need three pointers (prev, curr, next)? <span class="fill-in">[Your answer]</span>
+- What happens if we skip saving 'next'? <span class="fill-in">[Your answer]</span>
+- Why does prev end up as the new head? <span class="fill-in">[Your answer]</span>
+
+</div>
 
 ---
 
-### Your Debugging Scorecard
+## Common Misconceptions
 
-After finding and fixing all bugs:
+!!! warning "Misconception 1: Recursive reversal uses O(1) space"
+    Every recursive call creates a new stack frame. Reversing a list of n nodes recurses n levels deep, consuming O(n) stack space. For very long lists this can cause a stack overflow. Iterative reversal with three pointers uses O(1) space and is generally preferred in production code.
 
-- [ ] Found all 8+ bugs across 6 challenges
-- [ ] Understood WHY each bug causes incorrect behavior
-- [ ] Could explain the fix to someone else
-- [ ] Learned common linked list mistakes to avoid
+!!! warning "Misconception 2: `fast.next != null` is enough for the loop condition"
+    If `fast` itself can be null (even-length lists), then checking `fast.next` first causes a `NullPointerException`. The condition must be `fast != null && fast.next != null` — short-circuit evaluation ensures the second check only runs when `fast` is non-null.
 
-**Common mistakes you discovered:**
-
-1. <span class="fill-in">[Forgetting to update pointers (prev, curr)]</span>
-2. <span class="fill-in">[Null pointer checks - always verify before accessing .next]</span>
-3. <span class="fill-in">[Off-by-one errors in two-pointer gap problems]</span>
-4. <span class="fill-in">[Missing curr = curr.next when building lists]</span>
-5. <span class="fill-in">[Fill in others you noticed]</span>
+!!! warning "Misconception 3: The cycle-start algorithm just needs both pointers moving one step"
+    In the second phase of Floyd's algorithm (finding the cycle entry), resetting `slow` to `head` and advancing **both** pointers one step at a time is correct. If you advance `fast` by two steps in the second phase you break the mathematical guarantee — the two pointers will no longer converge at the cycle entry node.
 
 ---
 
@@ -1357,70 +1039,17 @@ flowchart LR
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-Before moving to the next topic:
+Answer these questions without looking at your notes. Write a sentence or two for each.
 
-- [ ] **Implementation**
-    - [ ] Reverse: iterative and recursive both work
-    - [ ] Cycle: detection and find start both work
-    - [ ] Merge: two lists and K lists both work
-    - [ ] Remove: Nth from end and duplicates both work
-    - [ ] All client code runs successfully
+1. **Explain exactly why three pointers (prev, curr, next) are needed to reverse a linked list iteratively. What specific information would be lost if you used only two pointers?**
 
-- [ ] **Pattern Recognition**
-    - [ ] Can identify when to use reversal pattern
-    - [ ] Understand Floyd's cycle detection
-    - [ ] Know when to use dummy node
-    - [ ] Recognize two-pointer with gap pattern
+2. **Floyd's cycle detection resets `slow` to `head` after the first meeting and then moves both pointers one step at a time. Prove informally why they must meet at the cycle entry node — what mathematical property guarantees this?**
 
-- [ ] **Problem Solving**
-    - [ ] Solved 4 easy problems
-    - [ ] Solved 3-4 medium problems
-    - [ ] Analyzed time/space complexity
-    - [ ] Handled edge cases (null, single node)
+3. **You are asked to remove the Nth node from the end of a list in one pass. Your implementation works for all inputs except when N equals the list length (removing the head). What causes this edge case and how does a dummy node fix it?**
 
-- [ ] **Understanding**
-    - [ ] Filled in all ELI5 explanations
-    - [ ] Built decision tree
-    - [ ] Identified when NOT to use linked lists
-    - [ ] Can explain trade-offs vs arrays
+4. **A colleague implements `mergeKLists` by repeatedly calling `mergeTwoLists` on adjacent pairs. Compare this approach's time complexity with the min-heap approach. For what value of k does the difference become significant?**
 
-- [ ] **Mastery Check**
-    - [ ] Could implement all patterns from memory
-    - [ ] Could recognize pattern in new problem
-    - [ ] Could explain to someone else
-    - [ ] Understand pointer manipulation deeply
+5. **Describe a real-world application where a singly linked list is clearly the right data structure and arrays would be significantly worse. Explain which specific operation drives that choice.**
 
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
-- [ ] Reverse a linked list (both iterative and recursive) from memory
-- [ ] Detect and find the start of a cycle using Floyd's algorithm
-- [ ] Merge two sorted lists without bugs
-- [ ] Remove nth node from end using two pointers with gap
-- [ ] Explain when to use linked lists vs arrays
-- [ ] Debug common pointer manipulation errors
-- [ ] Analyze time and space complexity of all patterns
-- [ ] Teach these concepts to someone else
-
-### Real-World Application Test
-
-**Scenario:** You're implementing an undo feature for a text editor.
-
-**Question 1:** Would you use an array or linked list to store the history of changes?
-
-- Your answer: <span class="fill-in">[Fill in]</span>
-- Reasoning: <span class="fill-in">[Consider operations: add, remove from end, traverse]</span>
-
-**Question 2:** If you used a doubly linked list, what advantage does that give?
-
-- Your answer: <span class="fill-in">[Fill in]</span>
-
-**Question 3:** What's the space trade-off?
-
-- Linked list overhead: <span class="fill-in">[Fill in - what extra space per node?]</span>
-- Worth it for this use case? <span class="fill-in">[Yes/No - Why?]</span>

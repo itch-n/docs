@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this topic you will be able to:
+
+- Explain why two pointers reduces O(n²) nested-loop problems to O(n)
+- Implement all three two-pointer variants: opposite-direction, same-direction, and different-speed
+- Identify which variant applies to a given problem (pair search vs. in-place modification vs. linked-list properties)
+- Analyse the time and space complexity of each pattern
+- Recognise when the sorted-array requirement is necessary and when it is not
+- Compare two-pointer solutions against HashSet alternatives and justify the choice
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,10 +26,10 @@
 **Prompts to guide you:**
 
 1. **What is the two pointers pattern in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">[Two pointers is a technique where instead of checking every pair with nested loops, you place one index at each end (or use two indexes moving together) so that ___ and each step eliminates multiple candidates at once]</span>
 
 2. **Why is it faster than nested loops?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">[Instead of revisiting the same pairs over and over, each pointer move rules out ___ candidates permanently, so the total work is ___ instead of ___]</span>
 
 3. **Real-world analogy:**
     - Example: "Two pointers is like two people searching..."
@@ -33,6 +46,9 @@
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+!!! tip "How to use this section"
+    Write your best guess in each fill-in span **before** reading any implementation code. After you finish coding and running the tests, come back and fill in the "Verified" answers. The gap between your prediction and the actual answer is where the real learning happens.
 
 <div class="learner-section" markdown>
 
@@ -89,107 +105,6 @@
 
 Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
-
-</div>
-
----
-
-## Before/After: Why This Pattern Matters
-
-**Your task:** Compare naive vs optimized approaches to understand the impact.
-
-### Example: Find Pair Sum
-
-**Problem:** Find two numbers in a sorted array that sum to a target.
-
-#### Approach 1: Brute Force (Nested Loops)
-
-```java
-// Naive approach - Check all possible pairs
-public static boolean hasPairSum_BruteForce(int[] nums, int target) {
-    for (int i = 0; i < nums.length; i++) {
-        for (int j = i + 1; j < nums.length; j++) {
-            if (nums[i] + nums[j] == target) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-```
-
-**Analysis:**
-
-- Time: O(n²) - For each element, check all remaining elements
-- Space: O(1) - No extra space
-- For n = 10,000: ~100,000,000 operations
-
-#### Approach 2: Two Pointers (Optimized)
-
-```java
-// Optimized approach - Use two pointers from opposite ends
-public static boolean hasPairSum_TwoPointers(int[] nums, int target) {
-    int left = 0;
-    int right = nums.length - 1;
-
-    while (left < right) {
-        int sum = nums[left] + nums[right];
-        if (sum == target) return true;
-        if (sum < target) left++;    // Need larger sum
-        else right--;                 // Need smaller sum
-    }
-
-    return false;
-}
-```
-
-**Analysis:**
-
-- Time: O(n) - Each pointer moves at most n/2 steps
-- Space: O(1) - No extra space
-- For n = 10,000: ~10,000 operations
-
-#### Performance Comparison
-
-| Array Size | Brute Force (O(n²)) | Two Pointers (O(n)) | Speedup |
-|------------|---------------------|---------------------|---------|
-| n = 100    | 10,000 ops          | 100 ops             | 100x    |
-| n = 1,000  | 1,000,000 ops       | 1,000 ops           | 1,000x  |
-| n = 10,000 | 100,000,000 ops     | 10,000 ops          | 10,000x |
-
-**Your calculation:** For n = 5,000, the speedup is approximately _____ times faster.
-
-#### Why Does Two Pointers Work?
-
-**Key insight to understand:**
-
-In a sorted array `[1, 3, 5, 7, 9]` looking for sum = 10:
-
-```
-Step 1: left=0 (val=1), right=4 (val=9), sum=10 → FOUND!
-```
-
-If we were looking for sum = 12:
-
-```
-Step 1: left=0 (val=1), right=4 (val=9), sum=10 (too small)
-        → Move left++ because we need a LARGER sum
-
-Step 2: left=1 (val=3), right=4 (val=9), sum=12 → FOUND!
-```
-
-**Why can we skip pairs?**
-
-- When sum is too small, moving `right--` makes it even smaller (not helpful)
-- When sum is too large, moving `left++` makes it even larger (not helpful)
-- So each move eliminates multiple pairs in one step!
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why does sorted order matter? <span class="fill-in">[Your answer]</span>
-- What pairs do we skip and why is it safe? <span class="fill-in">[Your answer]</span>
 
 </div>
 
@@ -286,6 +201,32 @@ public class OppositeDirectionClient {
 }
 ```
 
+!!! warning "Debugging Challenge — Broken Palindrome Checker"
+    The `isPalindrome_Buggy` below has **2 bugs**. Find them before running the code.
+
+    ```java
+    public static boolean isPalindrome_Buggy(String s) {
+        int left = 0;
+        int right = s.length();
+        while (left < right) {
+            if (s.charAt(left) != s.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+    ```
+
+    - Bug 1: <span class="fill-in">[What's the bug?]</span>
+    - Bug 2: <span class="fill-in">[What's the bug?]</span>
+
+    ??? success "Answer"
+        **Bug 1 (initialisation):** `right` should be `s.length() - 1`, not `s.length()`. Array indices are 0-based, so `s.charAt(s.length())` throws `StringIndexOutOfBoundsException`.
+
+        **Bug 2 (trick question):** Once Bug 1 is fixed the code is correct — the apparent second bug was a deliberate distraction. The lesson: always fix the most fundamental error first and re-trace before hunting for more.
+
 ---
 
 ### Pattern 2: Same Direction Pointers (Slow/Fast)
@@ -377,6 +318,39 @@ public class SameDirectionClient {
     }
 }
 ```
+
+!!! warning "Debugging Challenge — Broken Remove Duplicates"
+    The `removeDuplicates_Buggy` below has **1 critical bug** and **1 return-value bug**. Trace through `[1, 1, 2, 2, 3]` manually before checking the answer.
+
+    ```java
+    public static int removeDuplicates_Buggy(int[] nums) {
+        int slow = 0;
+        int fast = 1;
+        while (fast < nums.length) {
+            if (nums[fast] != nums[slow]) {
+                nums[slow] = nums[fast];            slow++;
+            }
+            fast++;
+        }
+        return slow;
+    }
+    ```
+
+    - Bug 1: <span class="fill-in">[What gets overwritten incorrectly?]</span>
+    - Bug 2: <span class="fill-in">[What should the return value be?]</span>
+
+    ??? success "Answer"
+        **Bug 1:** `slow++` must come **before** `nums[slow] = nums[fast]`. The current order overwrites the unique element at `slow` before the write pointer has advanced, corrupting the first unique value.
+
+        **Correct:**
+        ```java
+        if (nums[fast] != nums[slow]) {
+            slow++;
+            nums[slow] = nums[fast];
+        }
+        ```
+
+        **Bug 2:** Should return `slow + 1`, not `slow`. The length is one more than the last written index.
 
 ---
 
@@ -525,233 +499,119 @@ public class DifferentSpeedClient {
 
 ---
 
-## Debugging Challenges
-
-**Your task:** Find and fix bugs in broken implementations. This tests your understanding.
-
-### Challenge 1: Broken Palindrome Checker
-
-```java
-/**
- * This code is supposed to check if a string is a palindrome.
- * It has 2 BUGS. Find them!
- */
-public static boolean isPalindrome_Buggy(String s) {
-    int left = 0;
-    int right = s.length();
-    while (left < right) {
-        if (s.charAt(left) != s.charAt(right)) {
-            return false;
-        }
-        left++;
-        right--;
-    }
-
-    return true;}
-```
-
-**Your debugging:**
-
-- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
-
-- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1 (Line 7):** `right` should be `s.length() - 1`, not `s.length()`. Array indices are 0-based.
-
-**Bug 2 (Line 7 again):** Even after fixing Bug 1, there's an off-by-one error. When accessing `s.charAt(right)` in the
-first iteration with right = s.length() - 1, it works. But the real issue is that we're not properly checking the
-condition.
-
-**Actually, after fixing Bug 1, the code works!** The second "bug" was a trick - once you fix the index, it's correct.
-</details>
+!!! info "Loop back"
+    Before moving on, return to the ELI5 section and Quick Quiz at the top. Fill in any answers you left blank. If your complexity predictions were off, write a one-sentence explanation of why — that note is more valuable than the correct answer alone.
 
 ---
 
-### Challenge 2: Broken Remove Duplicates
+## Before/After: Why This Pattern Matters
+
+**Your task:** Compare naive vs optimized approaches to understand the impact.
+
+### Example: Find Pair Sum
+
+**Problem:** Find two numbers in a sorted array that sum to a target.
+
+#### Approach 1: Brute Force (Nested Loops)
 
 ```java
-/**
- * Remove duplicates from sorted array.
- * This has 1 CRITICAL BUG and 1 EDGE CASE BUG.
- */
-public static int removeDuplicates_Buggy(int[] nums) {
-    int slow = 0;
-    int fast = 1;
-
-    while (fast < nums.length) {
-        if (nums[fast] != nums[slow]) {
-            nums[slow] = nums[fast];            slow++;
+// Naive approach - Check all possible pairs
+public static boolean hasPairSum_BruteForce(int[] nums, int target) {
+    for (int i = 0; i < nums.length; i++) {
+        for (int j = i + 1; j < nums.length; j++) {
+            if (nums[i] + nums[j] == target) {
+                return true;
+            }
         }
-        fast++;
     }
-
-    return slow;}
-```
-
-**Your debugging:**
-
-- **Bug 1:** <span class="fill-in">[What's the problem? What gets overwritten incorrectly?]</span>
-- **Bug 1 fix:** <span class="fill-in">[Correct the order of operations]</span>
-
-- **Bug 2:** <span class="fill-in">[What should the return value be?]</span>
-- **Bug 2 fix:** <span class="fill-in">[Fill in]</span>
-
-**Test case to expose the bug:**
-
-- Input: `[1, 1, 2, 2, 3]`
-- Expected output: `[1, 2, 3, ?, ?]` and return length = 3
-- Actual output with buggy code: <span class="fill-in">[Trace through manually]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1:** Should be `slow++` BEFORE `nums[slow] = nums[fast]`. Current code overwrites the unique element before
-advancing.
-
-**Correct:**
-
-```java
-if (nums[fast] != nums[slow]) {
-    slow++;
-    nums[slow] = nums[fast];
-}
-```
-
-**Bug 2:** Should return `slow + 1`, not `slow`. The length is one more than the index.
-</details>
-
----
-
-### Challenge 3: Broken Cycle Detection
-
-```java
-/**
- * Detect cycle in linked list.
- * This has 1 SUBTLE BUG that causes infinite loop.
- */
-public static boolean hasCycle_Buggy(ListNode head) {
-    if (head == null) return false;
-
-    ListNode slow = head;
-    ListNode fast = head;
-
-    while (fast != null && fast.next != null) {
-        slow = slow.next;
-        fast = fast.next.next;
-    }
-    if (slow == fast) return true;
     return false;
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- Bug: <span class="fill-in">[What\'s the bug?]</span>
+- Time: O(n²) - For each element, check all remaining elements
+- Space: O(1) - No extra space
+- For n = 10,000: ~100,000,000 operations
 
-**Trace through example:**
-
-- List with cycle: 1 → 2 → 3 → 4 → 2 (cycle back to 2)
-- Expected: `true`
-- Actual: <span class="fill-in">[What happens?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** The check `if (slow == fast)` should be INSIDE the while loop, not after!
-
-**Correct:**
+#### Approach 2: Two Pointers (Optimized)
 
 ```java
-while (fast != null && fast.next != null) {
-    slow = slow.next;
-    fast = fast.next.next;
+// Optimized approach - Use two pointers from opposite ends
+public static boolean hasPairSum_TwoPointers(int[] nums, int target) {
+    int left = 0;
+    int right = nums.length - 1;
 
-    if (slow == fast) return true;  // Check inside loop!
-}
-return false;  // No cycle found
-```
-
-**Why:** If there's a cycle, slow and fast will meet inside the loop. Checking after means we exit the loop (which only
-happens when there's NO cycle), so we'd never detect the cycle.
-</details>
-
----
-
-### Challenge 4: Move Zeroes Logic Error
-
-```java
-/**
- * Move all zeros to the end while maintaining order of non-zeros.
- * This code compiles but produces WRONG output.
- */
-public static void moveZeroes_Buggy(int[] nums) {
-    int slow = 0;
-
-    for (int fast = 0; fast < nums.length; fast++) {
-        if (nums[fast] != 0) {
-            nums[slow] = nums[fast];            slow++;
-        }
+    while (left < right) {
+        int sum = nums[left] + nums[right];
+        if (sum == target) return true;
+        if (sum < target) left++;    // Need larger sum
+        else right--;                 // Need smaller sum
     }
+
+    return false;
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- **Bug:** <span class="fill-in">[What's the logic error?]</span>
-- **Example:** Input `[0, 1, 0, 3, 12]`, output is <span class="fill-in">[Fill in - trace manually]</span>
-- **Expected:** `[1, 3, 12, 0, 0]`
-- **Actual:** <span class="fill-in">[What do you get?]</span>
-- **Fix:** <span class="fill-in">[How to correct it?]</span>
+- Time: O(n) - Each pointer moves at most n/2 steps
+- Space: O(1) - No extra space
+- For n = 10,000: ~10,000 operations
 
-<details markdown>
-<summary>Click to verify your answer</summary>
+#### Performance Comparison
 
-**Bug:** When `slow == fast`, we're copying a number onto itself. Then we increment slow, leaving the original position
-unchanged. We need to ZERO OUT the original position OR use a swap.
+| Array Size | Brute Force (O(n²)) | Two Pointers (O(n)) | Speedup |
+|------------|---------------------|---------------------|---------|
+| n = 100    | 10,000 ops          | 100 ops             | 100x    |
+| n = 1,000  | 1,000,000 ops       | 1,000 ops           | 1,000x  |
+| n = 10,000 | 100,000,000 ops     | 10,000 ops          | 10,000x |
 
-**Fix Option 1 - Use swap:**
+**Your calculation:** For n = 5,000, the speedup is approximately _____ times faster.
 
-```java
-if (nums[fast] != 0) {
-    // Swap nums[slow] and nums[fast]
-    int temp = nums[slow];
-    nums[slow] = nums[fast];
-    nums[fast] = temp;
-    slow++;
-}
+#### Why Does Two Pointers Work?
+
+**Key insight to understand:**
+
+In a sorted array `[1, 3, 5, 7, 9]` looking for sum = 10:
+
+```
+Step 1: left=0 (val=1), right=4 (val=9), sum=10 → FOUND!
 ```
 
-**Fix Option 2 - Zero out after first pass:**
+If we were looking for sum = 12:
 
-```java
-// ... existing code ...
-// After the loop, fill remaining with zeros
-for (int i = slow; i < nums.length; i++) {
-    nums[i] = 0;
-}
+```
+Step 1: left=0 (val=1), right=4 (val=9), sum=10 (too small)
+        → Move left++ because we need a LARGER sum
+
+Step 2: left=1 (val=3), right=4 (val=9), sum=12 → FOUND!
 ```
 
-</details>
+!!! note "Why can we skip pairs safely?"
+    When `sum < target`, moving `right--` makes the sum even smaller — that direction is provably useless. Likewise, when `sum > target`, moving `left++` only increases the sum further. Sorted order guarantees that each pointer move eliminates an entire row or column of pairs from consideration, which is the source of the O(n) behaviour.
+
+**After implementing, explain in your own words:**
+
+<div class="learner-section" markdown>
+
+- Why does sorted order matter? <span class="fill-in">[Your answer]</span>
+- What pairs do we skip and why is it safe? <span class="fill-in">[Your answer]</span>
+
+</div>
 
 ---
 
-### Your Debugging Scorecard
+## Common Misconceptions
 
-After finding and fixing all bugs:
+!!! warning "Misconception 1: Two pointers always requires a sorted array"
+    Opposite-direction pointers for pair-sum **do** require sorted order, but same-direction and different-speed patterns do not. `moveZeroes`, `removeDuplicates`, and Floyd's cycle detection all work on unsorted or linked-list input. The sorting requirement is specific to the convergence proof for opposite-direction, not to the technique itself.
 
-- [ ] Found all 6+ bugs across 4 challenges
-- [ ] Understood WHY each bug causes incorrect behavior
-- [ ] Could explain the fix to someone else
-- [ ] Learned common two-pointer mistakes to avoid
+!!! warning "Misconception 2: Two pointers and sliding window are the same thing"
+    Both use two indices, but the goals differ. Two pointers typically search for a **pair of elements** satisfying a condition, while sliding window maintains a **contiguous subarray** and tracks aggregate state (sum, frequency map) within it. A dynamic sliding window is a two-pointer technique, but two pointers is a broader category.
 
-**Common mistakes you discovered:**
-
-1. <span class="fill-in">[List the patterns you noticed]</span>
-2. <span class="fill-in">[Fill in]</span>
-3. <span class="fill-in">[Fill in]</span>
+!!! warning "Misconception 3: Same-direction slow/fast pointers need different starting positions"
+    It is tempting to start `slow = 0, fast = 1` always, but the correct starting position depends on the problem. For `removeDuplicates` both start at 0 (or 0 and 1); for Floyd's cycle detection both start at `head`. Internalise the **invariant** each pattern maintains rather than memorising the starting positions.
 
 ---
 
@@ -859,48 +719,17 @@ flowchart LR
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-Before moving to the next topic:
+Answer these questions without looking at your notes. Write a sentence or two for each.
 
-- [ ] **Implementation**
-    - [ ] Opposite direction: palindrome, two sum, reverse all work
-    - [ ] Same direction: remove duplicates, move zeros, partition all work
-    - [ ] Different speed: cycle detection, find middle, kth from end all work
-    - [ ] All client code runs successfully
+1. **You are given an unsorted array and asked to find whether any two elements sum to a target. A colleague suggests two pointers. Is that correct? What must be done first, and what is the total time complexity including that step?**
 
-- [ ] **Pattern Recognition**
-    - [ ] Can identify which pattern to use for new problems
-    - [ ] Understand when each pattern applies
-    - [ ] Know the movement rules for each variant
+2. **Explain in your own words why Floyd's cycle detection (slow/fast pointers) is guaranteed to detect a cycle if one exists. What happens to the gap between the pointers inside a cycle?**
 
-- [ ] **Problem Solving**
-    - [ ] Solved 3 easy problems
-    - [ ] Solved 2-3 medium problems
-    - [ ] Analyzed time/space complexity
+3. **You implement `removeDuplicates` and get the wrong length back. You print the array and the values look correct. What is the most likely bug, and why does the array look right even though the length is wrong?**
 
-- [ ] **Understanding**
-    - [ ] Filled in all ELI5 explanations
-    - [ ] Built decision tree
-    - [ ] Identified when NOT to use two pointers
-    - [ ] Can explain trade-offs vs other approaches
+4. **A friend says "same-direction pointers are just a slower version of sliding window." What is the key distinction? Give one problem that clearly belongs to same-direction two pointers but not sliding window.**
 
-- [ ] **Mastery Check**
-    - [ ] Could implement all patterns from memory
-    - [ ] Could recognize pattern in new problem
-    - [ ] Could explain to someone else
-
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
-- [ ] Implement all three two-pointer patterns from memory
-- [ ] Explain when and why to use each pattern
-- [ ] Identify the correct pattern for new problems
-- [ ] Analyze time and space complexity
-- [ ] Compare trade-offs with alternative approaches
-- [ ] Debug common two-pointer mistakes
-- [ ] Teach this concept to someone else
+5. **Trapping Rain Water (LeetCode 42) can be solved with O(n) space using prefix arrays, or with O(1) space using two pointers. Describe the core insight that lets the two-pointer solution avoid the prefix arrays.**
 

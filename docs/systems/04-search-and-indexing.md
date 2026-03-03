@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this topic you will be able to:
+
+- Explain the structure of an inverted index and why it enables sub-second search over millions of documents
+- Implement a basic inverted index with tokenisation, normalisation, and boolean query intersection
+- Compare TF-IDF and BM25 scoring and explain why BM25 produces better ranking for varied document lengths
+- Identify which text analysis technique (stemming, n-grams, fuzzy matching) is appropriate for a given search requirement
+- Design a sharding and replication strategy for a distributed search cluster given throughput and availability requirements
+- Choose between trie-based and edge-n-gram autocomplete given performance and storage constraints
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,30 +26,35 @@
 **Prompts to guide you:**
 
 1. **What is an inverted index in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after learning]</span>
+    - An inverted index is a data structure that maps each ___ to the list of <span class="fill-in">[___ that contain it, so a search query only needs to look up ___ rather than scanning every ___]</span>
 
 2. **Why can't we just search through all documents linearly?**
-    - Your answer: <span class="fill-in">[Fill in after learning]</span>
+    - Linear search is impractical because <span class="fill-in">[with N documents each of size M, every query costs O(___), which at 1M documents means ___ comparisons per search — roughly ___ ms per query]</span>
 
 3. **Real-world analogy for inverted index:**
     - Example: "An inverted index is like a book's index where..."
+    - Think about how a book's back-of-page index lists each topic and then the page numbers where it appears — rather than you reading every page to find a topic.
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **What makes search results "relevant"?**
-    - Your answer: <span class="fill-in">[Fill in after learning]</span>
+    - Relevance is determined by <span class="fill-in">[how ___ a term appears in a document (___), balanced against how ___ the term is across all documents (___), so common words like "the" get ___ weight]</span>
 
 5. **Real-world analogy for search ranking:**
     - Example: "TF-IDF is like voting where..."
+    - Think about how a reference appearing many times in a single thesis (high TF) but rarely in any other thesis (high IDF) signals a very specific and important topic.
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
 6. **Why do we need sharding for search?**
-    - Your answer: <span class="fill-in">[Fill in after practice]</span>
+    - Sharding is needed when <span class="fill-in">[the index is too large to fit on ___ machine, so it is split across ___ shards that each search ___ of the data in ___, with results merged by ___]</span>
 
 </div>
 
 ---
 
 ## Quick Quiz (Do BEFORE learning)
+
+!!! tip "How to use this section"
+    Complete your predictions now, before reading further. You will revisit and verify each answer after working through the core concepts.
 
 <div class="learner-section" markdown>
 
@@ -80,139 +98,6 @@
 - **Personalization:** <span class="fill-in">[How to incorporate?]</span>
 
 </div>
-
----
-
-## Before/After: Why Search Indexing Matters
-
-**Your task:** Compare naive search vs indexed search to understand the impact.
-
-### Example: Product Search on E-Commerce Site
-
-**Problem:** Search for "wireless headphones" across 10 million products
-
-#### Approach 1: Naive Linear Search
-
-```sql
-SELECT * FROM products
-WHERE
-  LOWER(name) LIKE '%wireless%'
-  AND LOWER(name) LIKE '%headphones%'
-OR
-  LOWER(description) LIKE '%wireless%'
-  AND LOWER(description) LIKE '%headphones%';
-```
-
-**What happens:**
-```
-Database scans all 10M rows:
-Row 1: Check name, check description → No match
-Row 2: Check name, check description → No match
-...
-Row 45,234: Check name → MATCH! (add to results)
-...
-Row 10,000,000: Check name, check description → No match
-
-Time: ~10-30 seconds
-Database CPU: 100%
-User experience: Loading spinner... user leaves
-```
-
-**Problems:**
-
-- O(N × M) where N = documents, M = avg document size
-- No ranking (random order)
-- No fuzzy matching ("wireles" returns nothing)
-- Kills database under load
-
-#### Approach 2: Inverted Index Search
-
-**Index structure:**
-```
-Inverted Index:
-"wireless" → [doc45234, doc89123, doc234556, ...]
-"headphones" → [doc12345, doc45234, doc67890, ...]
-
-Intersection: [doc45234] ← Both terms present
-
-Ranking (TF-IDF):
-doc45234: score = 8.7 (both in title, high frequency)
-doc89123: score = 6.2 (both in description)
-doc12345: score = 4.1 (only "headphones" in title)
-```
-
-**Query execution:**
-```
-
-1. Look up "wireless" → [45234, 89123, 234556, ...] (1ms)
-2. Look up "headphones" → [12345, 45234, 67890, ...] (1ms)
-3. Intersect lists → [45234, ...] (5ms)
-4. Rank by score → sorted results (10ms)
-5. Return top 20 results (1ms)
-
-Total: ~20ms
-Database CPU: 5%
-User experience: Instant results ✓
-```
-
-**Performance comparison:**
-
-| Metric | Linear Search | Inverted Index | Improvement |
-|--------|--------------|----------------|-------------|
-| Time | 10-30s | 20ms | 500-1500x faster |
-| CPU usage | 100% | 5% | 20x less |
-| Scalability | O(N) | O(log N) | Sublinear |
-| Ranking | No | Yes (TF-IDF) | Better UX |
-| Fuzzy match | Hard | Easy | More results |
-
-**Real-world impact:**
-
-- Without indexing: 80% bounce rate (users leave)
-- With indexing: 5% bounce rate, 10x more conversions
-- Cost: $100K/month in extra servers vs $10K/month with proper indexing
-
-**Your calculation:** For 100M documents:
-
-- Linear search time: <span class="fill-in">_____</span> seconds
-- Indexed search time: <span class="fill-in">_____</span> ms
-- Users served per second: Linear <span class="fill-in">_____</span> vs Indexed <span class="fill-in">_____</span>
-
----
-
-## Case Studies: Search & Indexing in the Wild
-
-### Google Search: PageRank and the Inverted Index
-
-- **Pattern:** Distributed Inverted Index combined with the PageRank ranking algorithm.
-- **How it works:** Google's crawlers build a massive inverted index of the web. When you search, your query terms are
-  used to retrieve a list of matching documents. The magic is in the ranking: PageRank analyzes the web's link
-  structure, treating a link from page A to page B as a "vote" for page B. It ranks pages higher if they are linked to
-  by many other high-ranking pages.
-- **Key Takeaway:** A fast inverted index is only half the battle. The relevance of search results is determined by
-  sophisticated ranking algorithms. PageRank revolutionized search by using the collective intelligence of the web
-  itself to determine authority and importance.
-
-### Elasticsearch: Powering Enterprise Search
-
-- **Pattern:** Distributed, Sharded Inverted Index (using Apache Lucene).
-- **How it works:** Companies like **Uber** (for searching trips), **Stack Overflow** (for finding questions), and *
-  *Netflix** (for catalog search) use Elasticsearch. It automatically builds an inverted index on JSON documents. To
-  scale, it partitions the index into multiple **shards**, and replicates them for fault tolerance. A query is sent to
-  all shards in parallel, and the results are aggregated by a coordinating node.
-- **Key Takeaway:** Elasticsearch democratized high-quality search. It packages the complex concepts of inverted
-  indexes, text analysis, and distributed systems into a scalable, easy-to-use product, making it the de-facto standard
-  for adding search capabilities to applications.
-
-### Algolia: Search-as-a-Service for Speed
-
-- **Pattern:** In-Memory, Prefix-based Trie/Index Hybrid.
-- **How it works:** Algolia is designed for "instant search" and autocomplete experiences. They store their indices
-  entirely in RAM and distribute them across multiple data centers for low latency. Their ranking is often based on a
-  tie-breaking algorithm that can be heavily customized with business metrics (e.g., for an e-commerce site, rank
-  products with more sales higher).
-- **Key Takeaway:** For user-facing search where speed is paramount, in-memory indices and pre-computed ranking can
-  provide a superior user experience. The trade-off is higher cost and a focus on prefix-matching rather than complex
-  full-text relevance ranking.
 
 ---
 
@@ -338,6 +223,43 @@ class InvertedIndex {
     }
 }
 ```
+
+!!! warning "Debugging Challenge — Off-by-One in Posting List Intersection"
+
+    The intersection below silently misses matching documents when the two posting lists have equal document IDs at a boundary. Find the bug.
+
+    ```java
+    List<Integer> intersect(List<Integer> list1, List<Integer> list2) {
+        List<Integer> result = new ArrayList<>();
+        int i = 0, j = 0;
+
+        while (i < list1.size() && j < list2.size()) {
+            if (list1.get(i) < list2.get(j)) {
+                i++;
+            } else if (list1.get(i) > list2.get(j)) {
+                j++;
+            } else {
+                result.add(list1.get(i));
+                i++;
+                // Missing advance of j!
+            }
+        }
+        return result;
+    }
+    ```
+
+    Trace with `list1 = [1, 3, 5]` and `list2 = [1, 1, 3]`.
+
+    ??? success "Answer"
+
+        **Bug:** When a match is found and `i` is incremented, `j` is not advanced. On the next iteration `list1.get(i)` has moved past `1` but `list2.get(j)` still points at the second `1`, causing the algorithm to miss the match for doc `3` in some configurations and potentially loop forever if the same ID appears twice in `list2`.
+
+        **Fix:** Advance both pointers on a match:
+        ```java
+        result.add(list1.get(i));
+        i++;
+        j++;
+        ```
 
 **Time Complexity:**
 
@@ -502,6 +424,9 @@ Where:
 k₁ = term frequency saturation (default: 1.2)
 b = length normalization (default: 0.75)
 ```
+
+!!! note "Why BM25 replaced TF-IDF in production systems"
+    TF-IDF scores grow linearly with term frequency — a document mentioning "java" 100 times scores 100x higher than one mentioning it once, even if the first document is just repetitive filler. BM25's saturation parameter `k₁` caps this growth so that additional occurrences provide diminishing returns. Elasticsearch switched to BM25 as its default scorer in version 5.0 for exactly this reason.
 
 **Practical Example (Elasticsearch):**
 
@@ -885,6 +810,158 @@ GET /products?scroll=1m
 → Iterate through batches
 ```
 
+!!! tip "Use filter context for structured criteria"
+    Any condition that is a binary yes/no — status flags, date ranges, category IDs — should go in `filter` context rather than `must`/`should`. Filters are not scored, which makes them faster, and Elasticsearch caches filter results at the shard level. This is one of the highest-leverage query optimisations available.
+
+---
+
+## Before/After: Why Search Indexing Matters
+
+**Your task:** Compare naive search vs indexed search to understand the impact.
+
+### Example: Product Search on E-Commerce Site
+
+**Problem:** Search for "wireless headphones" across 10 million products
+
+#### Approach 1: Naive Linear Search
+
+```sql
+SELECT * FROM products
+WHERE
+  LOWER(name) LIKE '%wireless%'
+  AND LOWER(name) LIKE '%headphones%'
+OR
+  LOWER(description) LIKE '%wireless%'
+  AND LOWER(description) LIKE '%headphones%';
+```
+
+**What happens:**
+```
+Database scans all 10M rows:
+Row 1: Check name, check description → No match
+Row 2: Check name, check description → No match
+...
+Row 45,234: Check name → MATCH! (add to results)
+...
+Row 10,000,000: Check name, check description → No match
+
+Time: ~10-30 seconds
+Database CPU: 100%
+User experience: Loading spinner... user leaves
+```
+
+**Problems:**
+
+- O(N × M) where N = documents, M = avg document size
+- No ranking (random order)
+- No fuzzy matching ("wireles" returns nothing)
+- Kills database under load
+
+#### Approach 2: Inverted Index Search
+
+**Index structure:**
+```
+Inverted Index:
+"wireless" → [doc45234, doc89123, doc234556, ...]
+"headphones" → [doc12345, doc45234, doc67890, ...]
+
+Intersection: [doc45234] ← Both terms present
+
+Ranking (TF-IDF):
+doc45234: score = 8.7 (both in title, high frequency)
+doc89123: score = 6.2 (both in description)
+doc12345: score = 4.1 (only "headphones" in title)
+```
+
+**Query execution:**
+```
+
+1. Look up "wireless" → [45234, 89123, 234556, ...] (1ms)
+2. Look up "headphones" → [12345, 45234, 67890, ...] (1ms)
+3. Intersect lists → [45234, ...] (5ms)
+4. Rank by score → sorted results (10ms)
+5. Return top 20 results (1ms)
+
+Total: ~20ms
+Database CPU: 5%
+User experience: Instant results ✓
+```
+
+**Performance comparison:**
+
+| Metric | Linear Search | Inverted Index | Improvement |
+|--------|--------------|----------------|-------------|
+| Time | 10-30s | 20ms | 500-1500x faster |
+| CPU usage | 100% | 5% | 20x less |
+| Scalability | O(N) | O(log N) | Sublinear |
+| Ranking | No | Yes (TF-IDF) | Better UX |
+| Fuzzy match | Hard | Easy | More results |
+
+**Real-world impact:**
+
+- Without indexing: 80% bounce rate (users leave)
+- With indexing: 5% bounce rate, 10x more conversions
+- Cost: $100K/month in extra servers vs $10K/month with proper indexing
+
+**Your calculation:** For 100M documents:
+
+- Linear search time: <span class="fill-in">_____</span> seconds
+- Indexed search time: <span class="fill-in">_____</span> ms
+- Users served per second: Linear <span class="fill-in">_____</span> vs Indexed <span class="fill-in">_____</span>
+
+!!! info "Loop back"
+    Return to the Quick Quiz now and fill in your verified answers.
+
+---
+
+## Case Studies: Search & Indexing in the Wild
+
+### Google Search: PageRank and the Inverted Index
+
+- **Pattern:** Distributed Inverted Index combined with the PageRank ranking algorithm.
+- **How it works:** Google's crawlers build a massive inverted index of the web. When you search, your query terms are
+  used to retrieve a list of matching documents. The magic is in the ranking: PageRank analyzes the web's link
+  structure, treating a link from page A to page B as a "vote" for page B. It ranks pages higher if they are linked to
+  by many other high-ranking pages.
+- **Key Takeaway:** A fast inverted index is only half the battle. The relevance of search results is determined by
+  sophisticated ranking algorithms. PageRank revolutionized search by using the collective intelligence of the web
+  itself to determine authority and importance.
+
+### Elasticsearch: Powering Enterprise Search
+
+- **Pattern:** Distributed, Sharded Inverted Index (using Apache Lucene).
+- **How it works:** Companies like **Uber** (for searching trips), **Stack Overflow** (for finding questions), and
+  **Netflix** (for catalog search) use Elasticsearch. It automatically builds an inverted index on JSON documents. To
+  scale, it partitions the index into multiple **shards**, and replicates them for fault tolerance. A query is sent to
+  all shards in parallel, and the results are aggregated by a coordinating node.
+- **Key Takeaway:** Elasticsearch democratized high-quality search. It packages the complex concepts of inverted
+  indexes, text analysis, and distributed systems into a scalable, easy-to-use product, making it the de-facto standard
+  for adding search capabilities to applications.
+
+### Algolia: Search-as-a-Service for Speed
+
+- **Pattern:** In-Memory, Prefix-based Trie/Index Hybrid.
+- **How it works:** Algolia is designed for "instant search" and autocomplete experiences. They store their indices
+  entirely in RAM and distribute them across multiple data centers for low latency. Their ranking is often based on a
+  tie-breaking algorithm that can be heavily customized with business metrics (e.g., for an e-commerce site, rank
+  products with more sales higher).
+- **Key Takeaway:** For user-facing search where speed is paramount, in-memory indices and pre-computed ranking can
+  provide a superior user experience. The trade-off is higher cost and a focus on prefix-matching rather than complex
+  full-text relevance ranking.
+
+---
+
+## Common Misconceptions
+
+!!! warning "More shards always means faster search"
+    Each shard adds coordination overhead. A query must be sent to every shard, results collected from all of them, and then merged and re-ranked by the coordinator. With 50 small shards on a 3-node cluster, the coordination overhead can outweigh the parallelism benefit. The Elasticsearch recommendation is to keep shard sizes between 10–50 GB. Fewer, larger shards often outperform many tiny ones.
+
+!!! warning "Stop-word removal is always a good idea"
+    Removing common words like "the", "a", "in" reduces index size and speeds up queries — but it can break phrase searches. A user searching for "The Who" (the band) or "to be or not to be" relies on those stop words being in the index. Modern systems prefer using IDF naturally to down-weight common terms rather than removing them entirely.
+
+!!! warning "TF-IDF and BM25 measure semantic meaning"
+    Both algorithms are purely statistical — they measure how often terms appear and how rare they are across documents. They have no understanding of meaning. "Bank" (financial institution) and "bank" (river bank) receive identical scores. Semantic search (using dense vector embeddings) is a separate technique that explicitly models meaning, and it complements rather than replaces inverted index search.
+
 ---
 
 ## Decision Framework
@@ -1010,43 +1087,12 @@ Features:
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-Before moving to the next topic:
+Answer these without referring to your notes or implementation.
 
--   [ ] **Understanding**
-    -   [ ] Understand inverted index structure
-    -   [ ] Know tokenization pipeline
-    -   [ ] Understand TF-IDF and BM25
-    -   [ ] Know sharding and replication
-    -   [ ] Understand query execution flow
-
--   [ ] **Implementation**
-    -   [ ] Can design index mapping
-    -   [ ] Know when to use analyzers
-    -   [ ] Understand filter vs query context
-    -   [ ] Can optimize queries
-
--   [ ] **Decision Making**
-    -   [ ] Know when to shard
-    -   [ ] Can choose ranking algorithm
-    -   [ ] Understand trade-offs
-    -   [ ] Completed practice scenarios
-
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
--   [ ] Explain inverted index structure
--   [ ] Design search system for requirements
--   [ ] Choose appropriate text analysis
--   [ ] Implement ranking algorithms
--   [ ] Optimize query performance
--   [ ] Configure sharding strategy
--   [ ] Debug search relevance issues
--   [ ] Build autocomplete feature
--   [ ] Handle multi-language search
--   [ ] Teach search concepts to others
-
+1. A term appears 10 times in document A (500 words) and 10 times in document B (5,000 words). Which document receives a higher TF score for that term, and why does this matter for ranking quality?
+2. You have an Elasticsearch cluster with 5 shards. A query must return the top 10 results globally. Explain exactly how many documents are transferred between shards and the coordinator, and why deep pagination (page 1000) is expensive.
+3. A product search returns zero results when a user types "wireles headphone" (two typos). What text analysis or query configuration change would fix this, and what is the performance trade-off?
+4. Your team wants to add a filter for `status = "published"` to every search query. Should this go in `must` (query context) or `filter` (filter context)? Explain the difference in how Elasticsearch handles each.
+5. A colleague says "Our index has 200 shards across 5 nodes — more shards means more parallelism and faster queries." What is wrong with this reasoning, and what is the actual recommended guidance?

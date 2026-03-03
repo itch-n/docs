@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this section you should be able to:
+
+- Name the four standard traversal orders and state the visit sequence each uses (Left-Root-Right, Root-Left-Right, Left-Right-Root, level by level)
+- Explain why inorder traversal of a BST produces values in sorted order
+- Implement both recursive and iterative versions of inorder traversal and state the key difference between the loop condition `curr != null` and the full condition `curr != null || !stack.isEmpty()`
+- Describe what Morris traversal achieves, what thread it temporarily creates, and why it must remove that thread before moving on
+- Choose the correct traversal for a given task: sorted extraction (inorder), tree copy or serialisation (preorder), safe deletion (postorder), shortest path or level-wise processing (level-order)
+- Diagnose common traversal bugs: wrong loop condition in iterative inorder, processing all nodes in one pass in level-order, and using a stack instead of a queue for BFS
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,10 +26,10 @@
 **Prompts to guide you:**
 
 1. **What are tree traversals in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">[Tree traversals are systematic ways to visit every node in a tree exactly once, where the only difference between them is ___ — the order in which you visit the root relative to its left and right subtrees]</span>
 
 2. **Why do we need different traversal orders?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">[Different orders expose different relationships: inorder gives ___ for a BST, preorder gives the root before its children which is useful for ___, and postorder processes children before the parent which is required when ___]</span>
 
 3. **Real-world analogy:**
     - Example: "Tree traversals are like different ways to read a family tree..."
@@ -26,13 +39,16 @@
     - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
 
 5. **What's the difference between iterative and recursive?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">[Recursive traversal uses the call stack implicitly, so it has O(h) space from recursion frames; iterative traversal uses an explicit ___ data structure and avoids ___ overflow risk for very deep trees, though both have the same O(h) worst-case space]</span>
 
 </div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+!!! tip "How to use this section"
+    Write your best guess in each fill-in span **before** reading any implementation code. Your predictions do not need to be correct — the act of committing to an answer first makes the correct answer stick much better when you verify it later.
 
 <div class="learner-section" markdown>
 
@@ -110,176 +126,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 ---
 
-## Before/After: Why This Pattern Matters
-
-**Your task:** Compare naive vs optimized approaches to understand the impact.
-
-### Example: Collecting Tree Values
-
-**Problem:** Get all values from a tree in sorted order (BST).
-
-#### Approach 1: Collect All, Then Sort
-
-```java
-// Naive approach - Collect values in any order, then sort
-public static List<Integer> getTreeValues_BruteForce(TreeNode root) {
-    List<Integer> result = new ArrayList<>();
-
-    // Collect values using preorder (any order)
-    collectValues(root, result);
-
-    // Sort the collected values
-    Collections.sort(result);
-
-    return result;
-}
-
-private static void collectValues(TreeNode node, List<Integer> result) {
-    if (node == null) return;
-    result.add(node.val);
-    collectValues(node.left, result);
-    collectValues(node.right, result);
-}
-```
-
-**Analysis:**
-
-- Time: O(n log n) - O(n) to collect + O(n log n) to sort
-- Space: O(n) for list + O(log n) for recursion stack
-- For n = 10,000: ~140,000 operations
-
-#### Approach 2: Inorder Traversal (Optimized)
-
-```java
-// Optimized approach - Use inorder traversal for BST
-public static List<Integer> getTreeValues_Inorder(TreeNode root) {
-    List<Integer> result = new ArrayList<>();
-
-    inorderHelper(root, result);
-
-    return result; // Already sorted!
-}
-
-private static void inorderHelper(TreeNode node, List<Integer> result) {
-    if (node == null) return;
-
-    inorderHelper(node.left, result);   // Visit left subtree
-    result.add(node.val);                // Visit root
-    inorderHelper(node.right, result);   // Visit right subtree
-}
-```
-
-**Analysis:**
-
-- Time: O(n) - Visit each node exactly once
-- Space: O(n) for list + O(h) for recursion stack (h = height)
-- For n = 10,000: ~10,000 operations
-
-#### Performance Comparison
-
-| Tree Size  | Collect + Sort (O(n log n)) | Inorder (O(n)) | Speedup |
-|------------|-----------------------------|----------------|---------|
-| n = 100    | ~664 ops                    | 100 ops        | 6.6x    |
-| n = 1,000  | ~9,966 ops                  | 1,000 ops      | 10x     |
-| n = 10,000 | ~132,877 ops                | 10,000 ops     | 13x     |
-
-**Your calculation:** For n = 5,000, the speedup is approximately _____ times faster.
-
-#### Recursive vs Iterative: Stack Space
-
-**Problem:** Inorder traversal of a deeply nested tree.
-
-**Approach 1: Recursive**
-
-```java
-public static void inorderRecursive(TreeNode root) {
-    if (root == null) return;
-
-    inorderRecursive(root.left);
-    System.out.print(root.val + " ");
-    inorderRecursive(root.right);
-}
-```
-
-**Analysis:**
-
-- Space: O(h) where h = tree height
-- For balanced tree: h = log n (good!)
-- For skewed tree: h = n (danger of stack overflow!)
-- Example: Tree with 100,000 nodes in a line = 100,000 recursive calls
-
-**Approach 2: Iterative with Explicit Stack**
-
-```java
-public static void inorderIterative(TreeNode root) {
-    Stack<TreeNode> stack = new Stack<>();
-    TreeNode curr = root;
-
-    while (curr != null || !stack.isEmpty()) {
-        while (curr != null) {
-            stack.push(curr);
-            curr = curr.left;
-        }
-        curr = stack.pop();
-        System.out.print(curr.val + " ");
-        curr = curr.right;
-    }
-}
-```
-
-**Analysis:**
-
-- Space: O(h) - same as recursive, but explicit stack
-- No stack overflow risk - heap memory is larger
-- More control over the process
-- Production-safe for deep trees
-
-#### Why Does Traversal Order Matter?
-
-**Key insight to understand:**
-
-For this tree:
-
-```
-       4
-      / \
-     2   6
-    / \
-   1   3
-```
-
-**Inorder (Left, Root, Right):** 1, 2, 3, 4, 6
-
-- Visits left child before parent
-- **Use case:** Get sorted values from BST
-
-**Preorder (Root, Left, Right):** 4, 2, 1, 3, 6
-
-- Visits parent before children
-- **Use case:** Copy tree structure, serialize tree
-
-**Postorder (Left, Right, Root):** 1, 3, 2, 6, 4
-
-- Visits children before parent
-- **Use case:** Delete tree (delete children first!)
-
-**Level-order (BFS):** [[4], [2, 6], [1, 3]]
-
-- Visits level by level
-- **Use case:** Find shortest path, level-wise processing
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why does postorder make sense for tree deletion? <span class="fill-in">[Your answer]</span>
-- Why does preorder make sense for copying a tree? <span class="fill-in">[Your answer]</span>
-- When would level-order be preferred over depth-first? <span class="fill-in">[Your answer]</span>
-
-</div>
-
----
-
 ## Core Implementation
 
 ### Pattern 1: Inorder Traversal (Left, Root, Right)
@@ -352,6 +198,55 @@ public class InorderTraversal {
     }
 }
 ```
+
+!!! warning "Debugging Challenge — Wrong Loop Condition in Iterative Inorder"
+    ```java
+    /**
+     * Iterative inorder with stack.
+     * This has 2 CRITICAL BUGS with stack logic.
+     */
+    public static List<Integer> inorderIterative_Buggy(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode curr = root;
+
+        while (!stack.isEmpty()) {        while (curr != null) {
+                stack.push(curr);
+                curr = curr.left;
+            }
+
+            TreeNode node = stack.pop();
+            result.add(node.val);
+            curr = curr.left;    }
+
+        return result;
+    }
+    ```
+
+    - **Bug 1:** <span class="fill-in">[What's wrong with the outer while condition?]</span>
+    - **Bug 2:** <span class="fill-in">[Which direction should curr move after visiting a node?]</span>
+
+??? success "Answer"
+    **Bug 1:** The outer condition `while (!stack.isEmpty())` is wrong. At the very start the stack is empty, so the loop
+    never executes even when root is non-null. The correct condition is `while (curr != null || !stack.isEmpty())`.
+    This keeps the loop alive as long as either there are nodes yet to push (curr != null) or nodes already pushed that
+    have not been visited yet (!stack.isEmpty()).
+
+    **Bug 2:** After popping and visiting a node, `curr` should be set to `node.right`, not `curr.left`. After visiting a
+    node we need to explore its **right** subtree. Using `curr.left` causes an infinite loop or NullPointerException.
+
+    **Correct code:**
+    ```java
+    while (curr != null || !stack.isEmpty()) {
+        while (curr != null) {
+            stack.push(curr);
+            curr = curr.left;
+        }
+        TreeNode node = stack.pop();
+        result.add(node.val);
+        curr = node.right;  // Go right after visiting
+    }
+    ```
 
 **Runnable Client Code:**
 
@@ -744,431 +639,202 @@ public class LevelOrderTraversalClient {
 
 ---
 
-## Debugging Challenges
-
-**Your task:** Find and fix bugs in broken implementations. This tests your understanding of traversal mechanics.
-
-### Challenge 1: Broken Inorder Traversal
-
-```java
-/**
- * This recursive inorder is supposed to return [1, 2, 3, 4, 5]
- * for a BST, but it has 2 BUGS. Find them!
- */
-public static List<Integer> inorderRecursive_Buggy(TreeNode root) {
-    List<Integer> result = new ArrayList<>();
-
-    if (root != null) {  // Base case check
-        inorderRecursive_Buggy(root.left);        result.add(root.val);
-        inorderRecursive_Buggy(root.right);
-    }
-
-    return result;}
-```
-
-**Your debugging:**
-
-- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
-
-- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
-
-**Test case:**
-
-- Input: Tree with values 1, 2, 3
-- Expected: [1, 2, 3]
-- Actual with buggy code: <span class="fill-in">[What do you get?]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1:** The recursive calls don't use the returned result! Each recursive call creates a new empty list.
-
-**Bug 2:** We're creating a new `result` list in each call, so left and right subtree results are lost.
-
-**Fix - Need to pass result as parameter:**
-
-```java
-public static List<Integer> inorderRecursive(TreeNode root) {
-    List<Integer> result = new ArrayList<>();
-    inorderHelper(root, result);
-    return result;
-}
-
-private static void inorderHelper(TreeNode root, List<Integer> result) {
-    if (root == null) return;
-
-    inorderHelper(root.left, result);
-    result.add(root.val);
-    inorderHelper(root.right, result);
-}
-```
-
-</details>
+!!! info "Loop back"
+    Now that you have implemented all four patterns, return to the **ELI5** section and fill in the scaffolded prompts. In particular, lock in prompt 2 (why different orders matter) and prompt 5 (iterative vs recursive trade-off). Then return to the **Quick Quiz** and verify whether your level-order space prediction was O(w) or O(n). For a complete binary tree the last level holds n/2 nodes, so the queue can hold up to n/2 nodes simultaneously — confirm you understand why that still counts as O(n) space in the worst case.
 
 ---
 
-### Challenge 2: Broken Iterative Inorder
+## Before/After: Why This Pattern Matters
+
+**Your task:** Compare naive vs optimized approaches to understand the impact.
+
+### Example: Collecting Tree Values
+
+**Problem:** Get all values from a tree in sorted order (BST).
+
+#### Approach 1: Collect All, Then Sort
 
 ```java
-/**
- * Iterative inorder with stack.
- * This has 2 CRITICAL BUGS with stack logic.
- */
-public static List<Integer> inorderIterative_Buggy(TreeNode root) {
+// Naive approach - Collect values in any order, then sort
+public static List<Integer> getTreeValues_BruteForce(TreeNode root) {
     List<Integer> result = new ArrayList<>();
+
+    // Collect values using preorder (any order)
+    collectValues(root, result);
+
+    // Sort the collected values
+    Collections.sort(result);
+
+    return result;
+}
+
+private static void collectValues(TreeNode node, List<Integer> result) {
+    if (node == null) return;
+    result.add(node.val);
+    collectValues(node.left, result);
+    collectValues(node.right, result);
+}
+```
+
+**Analysis:**
+
+- Time: O(n log n) - O(n) to collect + O(n log n) to sort
+- Space: O(n) for list + O(log n) for recursion stack
+- For n = 10,000: ~140,000 operations
+
+#### Approach 2: Inorder Traversal (Optimized)
+
+```java
+// Optimized approach - Use inorder traversal for BST
+public static List<Integer> getTreeValues_Inorder(TreeNode root) {
+    List<Integer> result = new ArrayList<>();
+
+    inorderHelper(root, result);
+
+    return result; // Already sorted!
+}
+
+private static void inorderHelper(TreeNode node, List<Integer> result) {
+    if (node == null) return;
+
+    inorderHelper(node.left, result);   // Visit left subtree
+    result.add(node.val);                // Visit root
+    inorderHelper(node.right, result);   // Visit right subtree
+}
+```
+
+**Analysis:**
+
+- Time: O(n) - Visit each node exactly once
+- Space: O(n) for list + O(h) for recursion stack (h = height)
+- For n = 10,000: ~10,000 operations
+
+#### Performance Comparison
+
+| Tree Size  | Collect + Sort (O(n log n)) | Inorder (O(n)) | Speedup |
+|------------|-----------------------------|----------------|---------|
+| n = 100    | ~664 ops                    | 100 ops        | 6.6x    |
+| n = 1,000  | ~9,966 ops                  | 1,000 ops      | 10x     |
+| n = 10,000 | ~132,877 ops                | 10,000 ops     | 13x     |
+
+**Your calculation:** For n = 5,000, the speedup is approximately _____ times faster.
+
+#### Recursive vs Iterative: Stack Space
+
+**Problem:** Inorder traversal of a deeply nested tree.
+
+**Approach 1: Recursive**
+
+```java
+public static void inorderRecursive(TreeNode root) {
+    if (root == null) return;
+
+    inorderRecursive(root.left);
+    System.out.print(root.val + " ");
+    inorderRecursive(root.right);
+}
+```
+
+**Analysis:**
+
+- Space: O(h) where h = tree height
+- For balanced tree: h = log n (good!)
+- For skewed tree: h = n (danger of stack overflow!)
+- Example: Tree with 100,000 nodes in a line = 100,000 recursive calls
+
+**Approach 2: Iterative with Explicit Stack**
+
+```java
+public static void inorderIterative(TreeNode root) {
     Stack<TreeNode> stack = new Stack<>();
     TreeNode curr = root;
 
-    while (!stack.isEmpty()) {        while (curr != null) {
+    while (curr != null || !stack.isEmpty()) {
+        while (curr != null) {
             stack.push(curr);
             curr = curr.left;
         }
-
-        TreeNode node = stack.pop();
-        result.add(node.val);
-        curr = curr.left;    }
-
-    return result;
+        curr = stack.pop();
+        System.out.print(curr.val + " ");
+        curr = curr.right;
+    }
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- **Bug 1:** <span class="fill-in">[What's wrong with the while condition?]</span>
-- **Bug 1 effect:** <span class="fill-in">[What happens? When does loop start/stop?]</span>
-- **Bug 1 fix:** <span class="fill-in">[Correct condition]</span>
+- Space: O(h) - same as recursive, but explicit stack
+- No stack overflow risk - heap memory is larger
+- More control over the process
+- Production-safe for deep trees
 
-- **Bug 2:** <span class="fill-in">[Which direction should curr move?]</span>
-- **Bug 2 effect:** <span class="fill-in">[What happens? Infinite loop? Wrong order?]</span>
-- **Bug 2 fix:** <span class="fill-in">[Fill in]</span>
+!!! note "Why the iterative version is safer for production"
+    The JVM's call stack is typically limited to a few thousand frames (configurable but small). A skewed tree with 100,000 nodes will overflow that stack recursively but NOT with the iterative version — because the `Stack<TreeNode>` on the heap can grow as large as available memory. Both approaches are O(h) in theory, but in practice the iterative version handles the worst case far more reliably.
 
-**Trace through example:**
-
-- Input: Tree with values 1, 2, 3
-- Expected: [1, 2, 3]
-- With Bug 1: <span class="fill-in">[What happens?]</span>
-- With Bug 2: <span class="fill-in">[What happens?]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1:** Loop condition should be `while (curr != null || !stack.isEmpty())`. Current code won't even start if root is
-not null.
-
-**Bug 2:** Should be `curr = node.right`, not `curr = curr.left`. After visiting a node, we need to go to its right
-subtree.
-
-**Correct code:**
-
-```java
-while (curr != null || !stack.isEmpty()) {
-    while (curr != null) {
-        stack.push(curr);
-        curr = curr.left;
-    }
-    TreeNode node = stack.pop();
-    result.add(node.val);
-    curr = node.right;  // Go right after visiting
-}
-```
-
-</details>
-
----
-
-### Challenge 3: Broken Postorder Traversal
-
-```java
-/**
- * Postorder using two stacks.
- * This has 1 LOGIC BUG in the order of operations.
- */
-public static List<Integer> postorderIterative_Buggy(TreeNode root) {
-    List<Integer> result = new ArrayList<>();
-    if (root == null) return result;
-
-    Stack<TreeNode> stack1 = new Stack<>();
-    Stack<TreeNode> stack2 = new Stack<>();
-    stack1.push(root);
-
-    while (!stack1.isEmpty()) {
-        TreeNode node = stack1.pop();
-        stack2.push(node);
-
-        if (node.right != null) stack1.push(node.right);
-        if (node.left != null) stack1.push(node.left);
-    }
-
-    while (!stack2.isEmpty()) {
-        result.add(stack2.pop().val);
-    }
-
-    return result;
-}
-```
-
-**Your debugging:**
-
-- **Bug location:** <span class="fill-in">[Which lines push to stack1?]</span>
-- **Bug explanation:** <span class="fill-in">[Why does order matter here?]</span>
-- **Expected order:** <span class="fill-in">[Postorder is Left, Right, Root - so what should we push first?]</span>
-
-**Think through it:**
-
-- Postorder visits: Left, Right, Root
-- Stack2 reverses the order
-- So stack1 should create what order? <span class="fill-in">[Fill in your reasoning]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Actually, this code is CORRECT!** It's a trick question.
-
-**Why it works:**
-
-- We want postorder: Left, Right, Root
-- Stack2 reverses the order we put in
-- So we create: Root, Right, Left (which reverses to Left, Right, Root)
-- To create Root, Right, Left in stack2, we push Right then Left to stack1
-
-**The code is fine as-is.** This tests if you understand the two-stack technique!
-</details>
-
----
-
-### Challenge 4: Broken Level-Order Traversal
-
-```java
-/**
- * Level-order traversal using queue.
- * This has 2 BUGS with level tracking.
- */
-public static List<List<Integer>> levelOrder_Buggy(TreeNode root) {
-    List<List<Integer>> result = new ArrayList<>();
-    if (root == null) return result;
-
-    Queue<TreeNode> queue = new LinkedList<>();
-    queue.offer(root);
-
-    while (!queue.isEmpty()) {
-        List<Integer> level = new ArrayList<>();
-
-        while (!queue.isEmpty()) {  // Wrong loop!
-            TreeNode node = queue.poll();
-            level.add(node.val);
-
-            if (node.left != null) queue.offer(node.left);
-            if (node.right != null) queue.offer(node.right);
-        }
-
-        result.add(level);
-    }
-
-    return result;
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What\'s the bug?]</span>
-
-**Test case:**
-
-```
-Tree:     4
-         / \
-        2   6
-       /
-      1
-```
-
-- Expected: [[4], [2, 6], [1]]
-- Actual with buggy code: <span class="fill-in">[Trace through - what do you get?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** The inner while loop processes until the queue is empty, which means it processes ALL levels at once, not one
-level at a time.
-
-**Fix - Capture level size before inner loop:**
-
-```java
-while (!queue.isEmpty()) {
-    int levelSize = queue.size();  // Capture current level size
-    List<Integer> level = new ArrayList<>();
-
-    for (int i = 0; i < levelSize; i++) {  // Only process current level
-        TreeNode node = queue.poll();
-        level.add(node.val);
-
-        if (node.left != null) queue.offer(node.left);
-        if (node.right != null) queue.offer(node.right);
-    }
-
-    result.add(level);
-}
-```
-
-**Why:** By capturing `queue.size()` before the loop, we know exactly how many nodes are in the current level. New nodes
-added during the loop belong to the NEXT level.
-</details>
-
----
-
-### Challenge 5: Stack vs Queue Confusion
-
-```java
-/**
- * This is supposed to do level-order traversal.
- * But someone used the WRONG data structure!
- */
-public static List<Integer> traversal_Buggy(TreeNode root) {
-    List<Integer> result = new ArrayList<>();
-    if (root == null) return result;
-
-    Stack<TreeNode> stack = new Stack<>();    stack.push(root);
-
-    while (!stack.isEmpty()) {
-        TreeNode node = stack.pop();
-        result.add(node.val);
-
-        if (node.left != null) stack.push(node.left);
-        if (node.right != null) stack.push(node.right);
-    }
-
-    return result;
-}
-```
-
-**Your debugging:**
-
-- **What traversal does this actually perform?** <span class="fill-in">[Hint: Stack = DFS, Queue = BFS]</span>
-- **What would the output be for a simple tree?** <span class="fill-in">[Trace through]</span>
-- **If we want level-order, what should we use?** <span class="fill-in">[Stack/Queue/Other?]</span>
+#### Why Does Traversal Order Matter?
 
 **Key insight to understand:**
 
-- Stack (LIFO) gives you: <span class="fill-in">[BFS/DFS - which one?]</span>
-- Queue (FIFO) gives you: <span class="fill-in">[BFS/DFS - which one?]</span>
+For this tree:
 
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**This performs PREORDER (DFS), not LEVEL-ORDER (BFS)!**
-
-**Why:**
-
-- Stack is LIFO (Last In, First Out) - goes deep first
-- Queue is FIFO (First In, First Out) - goes wide first
-
-**Fix:**
-
-```java
-Queue<TreeNode> queue = new LinkedList<>();  // Use Queue!
-queue.offer(root);
-
-while (!queue.isEmpty()) {
-    TreeNode node = queue.poll();
-    result.add(node.val);
-
-    if (node.left != null) queue.offer(node.left);
-    if (node.right != null) queue.offer(node.right);
-}
+```
+       4
+      / \
+     2   6
+    / \
+   1   3
 ```
 
-</details>
+**Inorder (Left, Root, Right):** 1, 2, 3, 4, 6
+
+- Visits left child before parent
+- **Use case:** Get sorted values from BST
+
+**Preorder (Root, Left, Right):** 4, 2, 1, 3, 6
+
+- Visits parent before children
+- **Use case:** Copy tree structure, serialize tree
+
+**Postorder (Left, Right, Root):** 1, 3, 2, 6, 4
+
+- Visits children before parent
+- **Use case:** Delete tree (delete children first!)
+
+**Level-order (BFS):** [[4], [2, 6], [1, 3]]
+
+- Visits level by level
+- **Use case:** Find shortest path, level-wise processing
+
+**After implementing, explain in your own words:**
+
+<div class="learner-section" markdown>
+
+- Why does postorder make sense for tree deletion? <span class="fill-in">[Your answer]</span>
+- Why does preorder make sense for copying a tree? <span class="fill-in">[Your answer]</span>
+- When would level-order be preferred over depth-first? <span class="fill-in">[Your answer]</span>
+
+</div>
 
 ---
 
-### Challenge 6: Null Pointer Trap
+## Common Misconceptions
 
-```java
-/**
- * Morris traversal attempt.
- * This has a CRITICAL null pointer bug!
- */
-public static List<Integer> morrisTraversal_Buggy(TreeNode root) {
-    List<Integer> result = new ArrayList<>();
-    TreeNode curr = root;
+!!! warning "Misconception 1: Stack (LIFO) and Queue (FIFO) give the same traversal order"
+    Using a stack gives DFS (depth-first), which processes the deepest nodes first. Using a queue gives BFS (breadth-first),
+    which processes the shallowest nodes first. They are fundamentally different traversals. A common mistake is writing
+    `Stack<TreeNode>` when the problem asks for level-order — the code compiles and produces *some* output, but it is
+    DFS preorder, not level-order. Always use a `Queue` for level-order traversal.
 
-    while (curr != null) {
-        if (curr.left == null) {
-            result.add(curr.val);
-            curr = curr.right;
-        } else {
-            // Find predecessor
-            TreeNode pred = curr.left;
-            while (pred.right != null) {                pred = pred.right;
-            }
+!!! warning "Misconception 2: The inner loop in level-order should run until the queue is empty"
+    Level-order groups nodes by level. The inner loop must process exactly the nodes that belong to the **current** level,
+    not all nodes currently in the queue. The correct pattern is to capture `int levelSize = queue.size()` before the
+    inner loop and iterate exactly `levelSize` times. Running until `queue.isEmpty()` collapses all levels into one list.
 
-            // Create thread
-            pred.right = curr;
-            curr = curr.left;
-        }
-    }
-
-    return result;
-}
-```
-
-**Your debugging:**
-
-- **Bug:** <span class="fill-in">[What causes infinite loop?]</span>
-- **When does it happen?** <span class="fill-in">[When we revisit a threaded node]</span>
-- **Fix:** <span class="fill-in">[What condition should we check in the while loop?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** The while loop `while (pred.right != null)` will loop forever once we create a thread (pred.right = curr),
-because we never check if pred.right == curr.
-
-**Fix - Check for existing thread:**
-
-```java
-TreeNode pred = curr.left;
-while (pred.right != null && pred.right != curr) {  // Check for thread!
-    pred = pred.right;
-}
-
-if (pred.right == null) {
-    // No thread yet - create it
-    pred.right = curr;
-    curr = curr.left;
-} else {
-    // Thread exists - remove it, visit node, go right
-    pred.right = null;
-    result.add(curr.val);
-    curr = curr.right;
-}
-```
-
-</details>
-
----
-
-### Your Debugging Scorecard
-
-After finding and fixing all bugs:
-
-- [ ] Found all 8+ bugs across 6 challenges
-- [ ] Understood WHY each bug causes incorrect behavior
-- [ ] Could explain the fix to someone else
-- [ ] Learned common traversal mistakes to avoid
-
-**Common mistakes you discovered:**
-
-1. <span class="fill-in">[List the patterns you noticed]</span>
-2. <span class="fill-in">[Fill in]</span>
-3. <span class="fill-in">[Fill in]</span>
-
-**Key insights:**
-
-- Recursive traversals need: <span class="fill-in">[What pattern for combining results?]</span>
-- Iterative inorder needs: <span class="fill-in">[What loop condition?]</span>
-- Level-order needs: <span class="fill-in">[Stack or Queue?]</span>
-- Morris traversal needs: <span class="fill-in">[What check to avoid infinite loops?]</span>
+!!! warning "Misconception 3: Inorder of any binary tree gives sorted output"
+    Inorder traversal gives sorted output **only for a Binary Search Tree (BST)** — a tree where every node's left
+    subtree contains only smaller values and right subtree contains only larger values. For a general binary tree with
+    arbitrary values, inorder traversal just visits nodes in Left-Root-Right order with no guarantee of sorted output.
+    Always confirm the tree is a BST before relying on inorder for sorted results.
 
 ---
 
@@ -1281,53 +947,14 @@ flowchart LR
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-Before moving to the next topic:
+1. The iterative inorder traversal uses the condition `while (curr != null || !stack.isEmpty())`. Explain precisely what each part of this condition guards against. Then show what happens if you use only `while (!stack.isEmpty())` by tracing the execution on a two-node tree (root with only a left child).
 
-- [ ] **Implementation**
-    - [ ] Inorder: recursive, iterative, Morris all work
-    - [ ] Preorder: recursive and iterative both work
-    - [ ] Postorder: recursive and iterative both work
-    - [ ] Level-order: standard, zigzag, right view all work
-    - [ ] All client code runs successfully
+2. Morris traversal achieves O(1) space by temporarily modifying the tree. Describe the thread it creates, when it removes it, and why failing to remove the thread causes an infinite loop. Then explain why Morris traversal is rarely used in production despite its space advantage.
 
-- [ ] **Pattern Recognition**
-    - [ ] Can identify which traversal order to use
-    - [ ] Understand when to use recursive vs iterative
-    - [ ] Know BFS vs DFS trade-offs
-    - [ ] Recognize when Morris traversal helps
+3. The level-order implementation must capture `int levelSize = queue.size()` **before** the inner loop. Explain what goes wrong if you instead write `while (!queue.isEmpty())` as the inner loop condition. Trace the execution on a three-level tree to demonstrate.
 
-- [ ] **Problem Solving**
-    - [ ] Solved 4 easy problems
-    - [ ] Solved 3-4 medium problems
-    - [ ] Analyzed time/space complexity
-    - [ ] Handled edge cases (null, single node)
+4. A colleague claims "postorder is just inorder but reversed." Provide a concrete counter-example — a small tree where postorder and reverse-inorder produce different sequences — and explain why the claim is false.
 
-- [ ] **Understanding**
-    - [ ] Filled in all ELI5 explanations
-    - [ ] Built decision tree
-    - [ ] Identified when NOT to use traversals
-    - [ ] Can explain each traversal order's purpose
-
-- [ ] **Mastery Check**
-    - [ ] Could implement all patterns from memory
-    - [ ] Could recognize pattern in new problem
-    - [ ] Could explain to someone else
-    - [ ] Understand stack space vs heap space trade-offs
-
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
-- [ ] Implement all four traversal patterns (inorder, preorder, postorder, level-order) from memory
-- [ ] Implement both recursive and iterative versions
-- [ ] Explain when and why to use each traversal order
-- [ ] Identify the correct traversal for new problems
-- [ ] Analyze time and space complexity for each approach
-- [ ] Debug common traversal mistakes (stack/queue confusion, wrong loop conditions)
-- [ ] Choose between recursive, iterative, and Morris based on constraints
-- [ ] Teach this concept to someone else
-
+5. You are asked to find the rightmost node at each level of a binary tree. Which traversal order do you use, and what is the key implementation detail that selects the rightmost node rather than just any node from that level? Now explain how you would adapt the same approach to find the **leftmost** node at each level.

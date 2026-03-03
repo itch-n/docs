@@ -57,6 +57,7 @@ nav:
       - "17. Advanced Topics": dsa/17-advanced-topics.md
 
 markdown_extensions:
+  - admonition
   - codehilite
   - fenced_code
   - tables

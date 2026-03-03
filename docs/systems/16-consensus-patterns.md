@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this section you should be able to:
+
+- Explain why majority quorum prevents split-brain and prove it using the overlap property
+- Describe the three Raft roles (leader, candidate, follower), the term counter, and why terms prevent stale leaders
+- Identify the two bugs in a broken leader election implementation and explain which safety property each violates
+- Implement distributed lock acquisition with TTL and fencing tokens, and explain what fencing protects against
+- Calculate quorum sizes (R and W) for a given replication factor and consistency requirement
+- Choose between leader-based (Raft) and leaderless (quorum) consensus for a given use case
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,30 +26,33 @@
 **Prompts to guide you:**
 
 1. **What is consensus in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">Consensus is the process by which ___ nodes in a distributed system ___ on a single ___</span>
 
 2. **Why do distributed systems need consensus?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">Without consensus, multiple nodes could ___ simultaneously, causing ___ and ___</span>
 
 3. **Real-world analogy for leader election:**
     - Example: "Leader election is like choosing a class president where..."
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **What is the split-brain problem in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">Split-brain occurs when ___ nodes each believe they are the ___, so they ___ independently</span>
 
 5. **Real-world analogy for distributed locks:**
     - Example: "A distributed lock is like a bathroom key that..."
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
 6. **Why do we need quorums?**
-    - Your answer: <span class="fill-in">[Fill in after practice]</span>
+    - Your answer: <span class="fill-in">Quorums ensure that any ___ always overlaps with any ___, so you always see ___</span>
 
 </div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+!!! tip "How to use this section"
+    Fill in your best guesses **before** reading any code. After implementing each pattern, return here and check your predictions. The quorum math question has a precise answer — work it out and verify against the R + W > N formula.
 
 <div class="learner-section" markdown>
 
@@ -102,241 +118,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)? Why?]</span>
 - Verified answer: <span class="fill-in">[Fill in after implementing Pattern 3]</span>
 
 </div>
-
----
-
-## Before/After: Why Consensus Matters
-
-**Your task:** Compare naive distributed coordination vs proper consensus to understand the impact.
-
-### Example: Leader Election Without Consensus
-
-**Problem:** Multiple nodes need to coordinate on a single leader for a distributed database.
-
-#### Approach 1: Naive Leader Election (No Consensus)
-
-```java
-// Naive approach - Highest ID claims leadership
-public class NaiveLeaderElection {
-    private int myId;
-    private int leaderId;
-
-    public void electLeader(Set<Integer> visibleNodes) {
-        // Just pick the highest ID we can see
-        int maxId = myId;
-        for (int nodeId : visibleNodes) {
-            if (nodeId > maxId) {
-                maxId = nodeId;
-            }
-        }
-        leaderId = maxId;
-
-        if (leaderId == myId) {
-            System.out.println("I am the leader!");
-        }
-    }
-}
-```
-
-**What goes wrong: Network Partition Scenario**
-
-```
-Before partition:
-Cluster: [Node 1, Node 2, Node 3, Node 4, Node 5]
-Leader: Node 5 (highest ID)
-
-After network partition:
-Partition A: [Node 1, Node 2, Node 3]
-Partition B: [Node 4, Node 5]
-
-Partition A thinks: Node 3 is leader (highest visible)
-Partition B thinks: Node 5 is leader (highest visible)
-
-SPLIT-BRAIN: Two leaders accepting writes simultaneously!
-
-Result:
-
-- Data divergence (inconsistent state)
-- Lost updates when partition heals
-- Violated uniqueness guarantee
-```
-
-**Analysis:**
-
-- Time: O(N) to scan visible nodes
-- Space: O(1)
-- Problem: No consensus, **split-brain during partition!**
-
-- Failure rate: ~50% in networks with partitions
-
-#### Approach 2: Raft Consensus (Safe Leader Election)
-
-```java
-// Raft approach - Majority vote required
-public class RaftLeaderElection {
-    private int currentTerm;
-    private int votedFor;
-    private int myId;
-
-    public boolean electLeader(Set<Integer> allNodes) {
-        currentTerm++;
-        votedFor = myId;
-
-        int votesReceived = 1; // Vote for self
-        int majoritySize = (allNodes.size() / 2) + 1;
-
-        // Request votes from all nodes
-        for (int nodeId : allNodes) {
-            if (nodeId != myId && requestVote(nodeId, currentTerm)) {
-                votesReceived++;
-            }
-        }
-
-        // Only become leader if MAJORITY votes received
-        if (votesReceived >= majoritySize) {
-            System.out.println("I am leader with " + votesReceived + " votes");
-            return true;
-        }
-        return false;
-    }
-}
-```
-
-**Same network partition with Raft:**
-
-```
-After network partition:
-Partition A: [Node 1, Node 2, Node 3] - 3 nodes, majority = 2
-Partition B: [Node 4, Node 5]         - 2 nodes, majority = 2
-
-Partition A attempts election:
-
-- Node 3 requests votes from Node 1, Node 2 (both visible)
-- Node 3 gets 3 votes total → SUCCESS (3 ≥ 2 majority)
-- Node 3 becomes leader ✓
-
-Partition B attempts election:
-
-- Node 5 requests votes from Node 4 (only visible node)
-- Node 5 gets 2 votes total → FAIL (2 < 3 majority of 5 total)
-- No leader elected ✗
-
-Result:
-
-- Only ONE leader (Node 3)
-- Partition B cannot accept writes (no leader)
-- Partition A continues operating safely
-- No split-brain! ✓
-- When partition heals, Node 5 recognizes Node 3 as leader
-```
-
-**Analysis:**
-
-- Time: O(N) to request votes
-- Space: O(1)
-- Safety: **Prevents split-brain through majority requirement**
-
-- Availability: Minority partition cannot elect leader (trade-off for safety)
-
-#### Performance Comparison: Failure Scenarios
-
-| Scenario           | Naive Election            | Raft Consensus                |
-|--------------------|---------------------------|-------------------------------|
-| Network partition  | Split-brain (2 leaders)   | Single leader in majority     |
-| Node failure       | Immediate re-election     | Election only if leader fails |
-| Data consistency   | Violated during partition | Preserved (CP in CAP)         |
-| Write availability | Both partitions accept    | Only majority partition       |
-
-#### Why Does Raft Work?
-
-**Key insight: The Majority Principle**
-
-With 5 nodes, majority = 3:
-
-- Any two majorities must overlap by at least 1 node
-- That overlapping node prevents conflicting decisions
-- Example: {Node 1, 2, 3} and {Node 3, 4, 5} both contain Node 3
-
-```
-Election term visualization:
-Term 1: Node 5 is leader (got votes from 1, 3, 5)
-Network partition occurs
-Term 2: Node 3 attempts election
-        - Gets votes from 1, 2, 3 (majority) → SUCCESS
-        - Node 5 in minority cannot get majority → FAILS
-Term 3: When partition heals, Node 5 sees Node 3 has higher term → steps down
-```
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why does majority prevent split-brain? <span class="fill-in">[Your answer]</span>
-- What's the trade-off between safety and availability? <span class="fill-in">[Your answer]</span>
-- Why can't the minority partition elect a leader? <span class="fill-in">[Your answer]</span>
-
-</div>
-
-### Real-World Impact
-
-**Without consensus (naive approach):**
-
-- Google Cloud DNS split-brain (2015): Traffic routed to wrong servers
-- MongoDB 2.4 split-brain: Accepted conflicting writes, data corruption
-- Recovery time: Hours to manually resolve conflicts
-
-**With consensus (Raft/Paxos):**
-
-- etcd (Kubernetes): Thousands of clusters, zero split-brain incidents
-- Consul: Service discovery with guaranteed consistency
-- Recovery time: Seconds (automatic election)
-
-**Your calculation:** For a 7-node cluster with network partition into {4, 3}:
-
-- Naive approach: <span class="fill-in">_____</span> leaders elected (how many?)
-- Raft consensus: <span class="fill-in">_____</span> leader(s) elected (in which partition?)
-- Which partition can serve writes: <span class="fill-in">_____</span>
-
----
-
-## Case Studies: Consensus in the Wild
-
-### Kubernetes: Cluster Coordination with etcd (Raft)
-
-- **Pattern:** Raft for consistent state replication.
-- **How it works:** Kubernetes, the container orchestration system, needs to reliably store the state of the entire
-  cluster: which nodes are active, what pods should be running, what secrets are available, etc. It uses **etcd**, a
-  distributed key-value store, for this. `etcd` forms a small cluster (typically 3 or 5 nodes) and uses the **Raft**
-  consensus algorithm to ensure that all nodes have a consistent, replicated log of all changes. The Raft leader
-  receives all writes, and a write is only considered "committed" when it has been replicated to a majority of the
-  nodes.
-- **Key Takeaway:** Raft provides the safety and consistency needed for critical infrastructure components. By requiring
-  a majority quorum for all decisions, it can tolerate node failures while preventing split-brain scenarios and
-  maintaining a consistent view of the system state.
-
-### Google's Chubby: Distributed Locking with Paxos
-
-- **Pattern:** Paxos for distributed locking and leader election.
-- **How it works:** Inside Google, many distributed systems need to elect a single primary or "leader" from a group of
-  identical replicas. They use a service called **Chubby**. A group of service replicas will attempt to acquire an
-  exclusive lock in Chubby. The one that succeeds becomes the leader. All other replicas become standbys, watching the
-  lock. If the leader crashes and its session with Chubby expires, the lock is released, and the standby replicas are
-  notified so they can attempt to acquire the lock and elect a new leader.
-- **Key Takeaway:** Consensus algorithms provide the foundation for reliable leader election, a fundamental pattern in
-  distributed systems. By using a consistent lock service, systems can ensure that there is only one active leader at
-  any given time, preventing data corruption and split-brain issues.
-
-### Apache Kafka: Cluster Management with ZooKeeper
-
-- **Pattern:** Consensus for metadata management and leader election.
-- **How it works:** Apache Kafka uses **Apache ZooKeeper** (which uses a Paxos-like protocol called Zab) to manage the
-  state of the Kafka cluster. ZooKeeper is responsible for tracking which brokers are alive, which broker is the "
-  controller" (the leader for the whole cluster), the configuration of all topics, and which replica is the leader for
-  each topic partition. If a broker fails, the controller (elected via ZooKeeper) is responsible for electing new
-  partition leaders from the available replicas.
-- **Key Takeaway:** Many distributed data systems (like Kafka, Hadoop, and HBase) delegate the complex task of consensus
-  to a dedicated coordination service like ZooKeeper. This separates the concern of data processing from the difficult
-  problem of managing distributed state and leader election.
 
 ---
 
@@ -558,6 +339,44 @@ and entries are never moved or deleted (append-only).
 
 This property enables Raft to keep logs consistent with simple checks.
 ```
+
+!!! warning "Debugging Challenge — Vote Count Off-by-One"
+    The following leader election implementation has **2 bugs** that allow split-brain in a partitioned cluster.
+
+    ```java
+    public void startElection(int candidateId) {
+        Node candidate = nodes.get(candidateId);
+        candidate.currentTerm++;
+
+        int votesReceived = 1; // Vote for self
+
+        for (Map.Entry<Integer, Node> entry : nodes.entrySet()) {
+            int nodeId = entry.getKey();
+            if (nodeId != candidateId) {
+                boolean voteGranted = requestVote(nodeId, candidateId);
+                votesReceived++;  // Bug A
+            }
+        }
+
+        if (votesReceived > majoritySize) {  // Bug B
+            becomeLeader(candidateId);
+        }
+    }
+    ```
+
+    With 5 nodes and `majoritySize = 3`, trace through a partition of {1,2} vs {3,4,5}. With the bugs, how many leaders are elected?
+
+    ??? success "Answer"
+        **Bug A (line with `votesReceived++`):** Increments the count unconditionally, even when `voteGranted` is `false`. It should be `if (voteGranted) votesReceived++;`. Without this fix, a node in a 2-node partition counts requests it sent as votes received, inflating its count.
+
+        **Bug B (`> majoritySize`):** Should be `>= majoritySize`. With 5 nodes, majority = 3. A candidate with exactly 3 votes evaluates `3 > 3 = false` and incorrectly does not become leader, causing re-elections.
+
+        **Split-brain trace with bugs:**
+        - Node 1 in partition {1,2} sends vote request to Node 2. Gets 1 real vote but Bug A counts every request, so `votesReceived = 3`. `3 > 3 = false`, no leader.
+        - Actually with Bug A: starts at 1 (self), sends to node 2 → gets false but still increments → `votesReceived = 2` → `2 > 3 = false`. No leader in {1,2} partition.
+        - Node 3 in {3,4,5}: gets 3 real votes, `votesReceived = 3`, `3 > 3 = false` (Bug B). No leader elected at all!
+
+        **After both fixes:** Node 3 gets 3 votes, `3 >= 3 = true` → becomes leader. Node 1 gets 2 votes, `2 >= 3 = false` → no leader in minority. One leader only, no split-brain.
 
 ---
 
@@ -1166,472 +985,259 @@ Features:
 - Version metadata: O(K) per node (small overhead)
 - Hint storage: O(H) where H = pending hints (temporary)
 
+!!! info "Loop back"
+    Now that you have worked through all four patterns, return to the **Quick Quiz** at the top of this page. Fill in the "Verified after learning" fields. Were you correct about which partition could elect a leader in a {3,2} split? Return to the **ELI5** section and complete all six fill-in sentences.
+
 ---
 
-## Debugging Challenges
+## Before/After: Why Consensus Matters
 
-**Your task:** Find and fix bugs in broken consensus implementations. This tests your understanding of distributed
-systems failure modes.
+!!! note "Key insight"
+    The majority principle is the core insight behind Raft, Paxos, quorum reads, and quorum writes. Any two sets that each contain a majority of N nodes must share at least one node in common. That shared node is the "tie-breaker" — it carries the information from the previous majority operation into the next one, preventing two conflicting decisions from both succeeding.
 
-### Challenge 1: Split-Brain in Leader Election
+**Your task:** Compare naive distributed coordination vs proper consensus to understand the impact.
+
+### Example: Leader Election Without Consensus
+
+**Problem:** Multiple nodes need to coordinate on a single leader for a distributed database.
+
+#### Approach 1: Naive Leader Election (No Consensus)
 
 ```java
-/**
- * Leader election that's supposed to prevent split-brain.
- * This has 2 CRITICAL BUGS that allow multiple leaders.
- * Find them!
- */
-public class BuggyLeaderElection {
-    private Map<Integer, Node> nodes;
-    private int majoritySize;
+// Naive approach - Highest ID claims leadership
+public class NaiveLeaderElection {
+    private int myId;
+    private int leaderId;
 
-    public void startElection(int candidateId) {
-        Node candidate = nodes.get(candidateId);
-        candidate.role = NodeRole.CANDIDATE;
-        candidate.currentTerm++;
+    public void electLeader(Set<Integer> visibleNodes) {
+        // Just pick the highest ID we can see
+        int maxId = myId;
+        for (int nodeId : visibleNodes) {
+            if (nodeId > maxId) {
+                maxId = nodeId;
+            }
+        }
+        leaderId = maxId;
+
+        if (leaderId == myId) {
+            System.out.println("I am the leader!");
+        }
+    }
+}
+```
+
+**What goes wrong: Network Partition Scenario**
+
+```
+Before partition:
+Cluster: [Node 1, Node 2, Node 3, Node 4, Node 5]
+Leader: Node 5 (highest ID)
+
+After network partition:
+Partition A: [Node 1, Node 2, Node 3]
+Partition B: [Node 4, Node 5]
+
+Partition A thinks: Node 3 is leader (highest visible)
+Partition B thinks: Node 5 is leader (highest visible)
+
+SPLIT-BRAIN: Two leaders accepting writes simultaneously!
+
+Result:
+
+- Data divergence (inconsistent state)
+- Lost updates when partition heals
+- Violated uniqueness guarantee
+```
+
+**Analysis:**
+
+- Time: O(N) to scan visible nodes
+- Space: O(1)
+- Problem: No consensus, **split-brain during partition!**
+
+- Failure rate: ~50% in networks with partitions
+
+#### Approach 2: Raft Consensus (Safe Leader Election)
+
+```java
+// Raft approach - Majority vote required
+public class RaftLeaderElection {
+    private int currentTerm;
+    private int votedFor;
+    private int myId;
+
+    public boolean electLeader(Set<Integer> allNodes) {
+        currentTerm++;
+        votedFor = myId;
 
         int votesReceived = 1; // Vote for self
+        int majoritySize = (allNodes.size() / 2) + 1;
 
-        for (Map.Entry<Integer, Node> entry : nodes.entrySet()) {
-            int nodeId = entry.getKey();
-            if (nodeId != candidateId) {
-                boolean voteGranted = requestVote(nodeId, candidateId);
-                votesReceived++;  // Counting even if vote not granted!
+        // Request votes from all nodes
+        for (int nodeId : allNodes) {
+            if (nodeId != myId && requestVote(nodeId, currentTerm)) {
+                votesReceived++;
             }
         }
 
-        if (votesReceived > majoritySize) {  // Should this be > or >= ?
-            becomeLeader(candidateId);
-        }
-    }
-}
-```
-
-**Your debugging:**
-
-- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
-
-- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
-
-**Split-brain scenario:**
-
-- 5 nodes, majoritySize = 3
-- Network partition: {1, 2} and {3, 4, 5}
-- Node 1 starts election, gets vote from Node 2
-- Node 3 starts election, gets votes from 4, 5
-- With bugs: <span class="fill-in">[How many leaders? Why?]</span>
-- After fixes: <span class="fill-in">[How many leaders? Why?]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1 (Line 15):** Increments `votesReceived` unconditionally, even when `voteGranted` is false. Should only increment
-when vote is granted.
-
-**Fix:**
-
-```java
-if (voteGranted) votesReceived++;
-```
-
-**Bug 2 (Line 19):** Uses `>` instead of `>=`. With 5 nodes, majority is 3. If candidate gets exactly 3 votes, `3 > 3`
-is false, so no leader elected!
-
-**Fix:**
-
-```java
-if (votesReceived >= majoritySize) {
-```
-
-**With bugs:** In partition {1, 2}, Node 1 gets 2 votes but bug counts as 3+ → becomes leader. In partition {3, 4, 5},
-Node 3 gets 3 votes → becomes leader. **Two leaders!**
-
-**After fixes:** Node 1 gets 2 votes < 3 majority → no leader. Node 3 gets 3 votes ≥ 3 majority → becomes leader. **One
-leader only.**
-</details>
-
----
-
-### Challenge 2: Lost Commits in Raft
-
-```java
-/**
- * Raft log replication with a CRITICAL BUG.
- * Committed entries can be LOST after leader failure!
- */
-public class BuggyRaftReplication {
-
-    public boolean appendEntry(int leaderId, String command) {
-        RaftNode leader = nodes.get(leaderId);
-        if (leader.role != NodeRole.LEADER) return false;
-
-        // Create log entry
-        int newIndex = leader.getLastLogIndex() + 1;
-        LogEntry entry = new LogEntry(leader.currentTerm, command, newIndex);
-        leader.log.add(entry);
-
-        int replicatedCount = 0;  // Forgot to count leader!
-
-        for (Map.Entry<Integer, RaftNode> e : nodes.entrySet()) {
-            int nodeId = e.getKey();
-            if (nodeId != leaderId && nodeActive.get(nodeId)) {
-                boolean success = sendAppendEntries(leaderId, nodeId);
-                if (success) replicatedCount++;
-            }
-        }
-
-        // Commit if majority replicated
-        if (replicatedCount >= majoritySize) {
-            leader.commitIndex = newIndex;
+        // Only become leader if MAJORITY votes received
+        if (votesReceived >= majoritySize) {
+            System.out.println("I am leader with " + votesReceived + " votes");
             return true;
         }
-
         return false;
     }
 }
 ```
 
-**Your debugging:**
+**Same network partition with Raft:**
 
-- Bug: <span class="fill-in">[What\'s the bug?]</span>
+```
+After network partition:
+Partition A: [Node 1, Node 2, Node 3] - 3 nodes, majority = 2
+Partition B: [Node 4, Node 5]         - 2 nodes, majority = 2
 
-**Failure scenario:**
+Partition A attempts election:
 
-- 5 nodes (Node 1 = leader), majoritySize = 3
-- Leader appends entry "SET x=1"
-- Entry replicated to Node 2, Node 3 (2 nodes)
-- Bug: replicatedCount = 2 < 3 majority → NOT committed
-- Leader crashes before replicating to Node 4
-- With bug: Entry lost (never committed)
-- Trace through: <span class="fill-in">[Step by step, what happens?]</span>
+- Node 3 requests votes from Node 1, Node 2 (both visible)
+- Node 3 gets 3 votes total → SUCCESS (3 ≥ 2 majority)
+- Node 3 becomes leader ✓
 
-<details markdown>
-<summary>Click to verify your answer</summary>
+Partition B attempts election:
 
-**Bug (Line 17):** Initializes `replicatedCount = 0`, forgetting that the leader already has the entry in its log.
-Should start at 1.
+- Node 5 requests votes from Node 4 (only visible node)
+- Node 5 gets 2 votes total → FAIL (2 < 3 majority of 5 total)
+- No leader elected ✗
 
-**Fix:**
+Result:
 
-```java
-int replicatedCount = 1; // Leader has it
+- Only ONE leader (Node 3)
+- Partition B cannot accept writes (no leader)
+- Partition A continues operating safely
+- No split-brain! ✓
+- When partition heals, Node 5 recognizes Node 3 as leader
 ```
 
-**Why it matters:** With 5 nodes, majority = 3. If leader + 2 followers have the entry, that's 3 copies (majority). But
-bug counts only 2 followers, thinks it's not committed, and entry could be lost if leader crashes.
+**Analysis:**
 
-**Correct behavior:** Leader counts self + 2 followers = 3 ≥ majority → committed. Entry is safe even if leader fails.
-</details>
+- Time: O(N) to request votes
+- Space: O(1)
+- Safety: **Prevents split-brain through majority requirement**
+
+- Availability: Minority partition cannot elect leader (trade-off for safety)
+
+#### Performance Comparison: Failure Scenarios
+
+| Scenario           | Naive Election            | Raft Consensus                |
+|--------------------|---------------------------|-------------------------------|
+| Network partition  | Split-brain (2 leaders)   | Single leader in majority     |
+| Node failure       | Immediate re-election     | Election only if leader fails |
+| Data consistency   | Violated during partition | Preserved (CP in CAP)         |
+| Write availability | Both partitions accept    | Only majority partition       |
+
+#### Why Does Raft Work?
+
+**Key insight: The Majority Principle**
+
+With 5 nodes, majority = 3:
+
+- Any two majorities must overlap by at least 1 node
+- That overlapping node prevents conflicting decisions
+- Example: {Node 1, 2, 3} and {Node 3, 4, 5} both contain Node 3
+
+```
+Election term visualization:
+Term 1: Node 5 is leader (got votes from 1, 3, 5)
+Network partition occurs
+Term 2: Node 3 attempts election
+        - Gets votes from 1, 2, 3 (majority) → SUCCESS
+        - Node 5 in minority cannot get majority → FAILS
+Term 3: When partition heals, Node 5 sees Node 3 has higher term → steps down
+```
+
+**After implementing, explain in your own words:**
+
+<div class="learner-section" markdown>
+
+- Why does majority prevent split-brain? <span class="fill-in">[Your answer]</span>
+- What's the trade-off between safety and availability? <span class="fill-in">[Your answer]</span>
+- Why can't the minority partition elect a leader? <span class="fill-in">[Your answer]</span>
+
+</div>
+
+### Real-World Impact
+
+**Without consensus (naive approach):**
+
+- Google Cloud DNS split-brain (2015): Traffic routed to wrong servers
+- MongoDB 2.4 split-brain: Accepted conflicting writes, data corruption
+- Recovery time: Hours to manually resolve conflicts
+
+**With consensus (Raft/Paxos):**
+
+- etcd (Kubernetes): Thousands of clusters, zero split-brain incidents
+- Consul: Service discovery with guaranteed consistency
+- Recovery time: Seconds (automatic election)
+
+**Your calculation:** For a 7-node cluster with network partition into {4, 3}:
+
+- Naive approach: <span class="fill-in">_____</span> leaders elected (how many?)
+- Raft consensus: <span class="fill-in">_____</span> leader(s) elected (in which partition?)
+- Which partition can serve writes: <span class="fill-in">_____</span>
 
 ---
 
-### Challenge 3: Term Confusion in Raft
+## Case Studies: Consensus in the Wild
 
-```java
-/**
- * Raft RequestVote RPC with TERM HANDLING BUG.
- * Can accept votes from candidates with STALE terms!
- */
-public class BuggyRequestVote {
+### Kubernetes: Cluster Coordination with etcd (Raft)
 
-    private boolean requestVote(int voterId, int candidateId, int candidateTerm) {
-        RaftNode voter = nodes.get(voterId);
+- **Pattern:** Raft for consistent state replication.
+- **How it works:** Kubernetes, the container orchestration system, needs to reliably store the state of the entire
+  cluster: which nodes are active, what pods should be running, what secrets are available, etc. It uses **etcd**, a
+  distributed key-value store, for this. `etcd` forms a small cluster (typically 3 or 5 nodes) and uses the **Raft**
+  consensus algorithm to ensure that all nodes have a consistent, replicated log of all changes. The Raft leader
+  receives all writes, and a write is only considered "committed" when it has been replicated to a majority of the
+  nodes.
+- **Key Takeaway:** Raft provides the safety and consistency needed for critical infrastructure components. By requiring
+  a majority quorum for all decisions, it can tolerate node failures while preventing split-brain scenarios and
+  maintaining a consistent view of the system state.
 
-        // Check term
-        if (candidateTerm < voter.currentTerm) {
-            return false; // Reject outdated candidate
-        }
+### Google's Chubby: Distributed Locking with Paxos
 
-        voter.currentTerm = candidateTerm;
-        // Missing: What should happen to voter.votedFor?
+- **Pattern:** Paxos for distributed locking and leader election.
+- **How it works:** Inside Google, many distributed systems need to elect a single primary or "leader" from a group of
+  identical replicas. They use a service called **Chubby**. A group of service replicas will attempt to acquire an
+  exclusive lock in Chubby. The one that succeeds becomes the leader. All other replicas become standbys, watching the
+  lock. If the leader crashes and its session with Chubby expires, the lock is released, and the standby replicas are
+  notified so they can attempt to acquire the lock and elect a new leader.
+- **Key Takeaway:** Consensus algorithms provide the foundation for reliable leader election, a fundamental pattern in
+  distributed systems. By using a consistent lock service, systems can ensure that there is only one active leader at
+  any given time, preventing data corruption and split-brain issues.
 
-        // Grant vote if haven't voted
-        if (voter.votedFor == -1) {
-            voter.votedFor = candidateId;
-            return true;
-        }
+### Apache Kafka: Cluster Management with ZooKeeper
 
-        return false;
-    }
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What\'s the bug?]</span>
-
-**Failure scenario:**
-
-- Term 1: Node 3 votes for Node 5
-- Term 2: Node 1 starts election, requests vote from Node 3
-- Node 3's state: currentTerm=1, votedFor=5
-- Node 1's term: currentTerm=2
-- With bug: What happens to Node 3's votedFor?
-- Expected: <span class="fill-in">[Should vote be granted? Why?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug (After line 14):** When updating term, must reset `votedFor = -1` to allow voting in new term. Current code leaves
-old vote in place.
-
-**Fix:**
-
-```java
-if (candidateTerm > voter.currentTerm) {
-    voter.currentTerm = candidateTerm;
-    voter.votedFor = -1;  // Reset vote for new term!
-}
-```
-
-**Why it matters:** In new term, voter should be able to vote again. Without reset, voter stays committed to old vote,
-can't vote for anyone in new term, election may fail.
-
-**Correct:** When Node 3 sees candidateTerm=2 > currentTerm=1, it resets votedFor=-1, then can vote for Node 1.
-</details>
+- **Pattern:** Consensus for metadata management and leader election.
+- **How it works:** Apache Kafka uses **Apache ZooKeeper** (which uses a Paxos-like protocol called Zab) to manage the
+  state of the Kafka cluster. ZooKeeper is responsible for tracking which brokers are alive, which broker is the "
+  controller" (the leader for the whole cluster), the configuration of all topics, and which replica is the leader for
+  each topic partition. If a broker fails, the controller (elected via ZooKeeper) is responsible for electing new
+  partition leaders from the available replicas.
+- **Key Takeaway:** Many distributed data systems (like Kafka, Hadoop, and HBase) delegate the complex task of consensus
+  to a dedicated coordination service like ZooKeeper. This separates the concern of data processing from the difficult
+  problem of managing distributed state and leader election.
 
 ---
 
-### Challenge 4: Log Inconsistency in Raft
+## Common Misconceptions
 
-```java
-/**
- * Raft AppendEntries with LOG CONSISTENCY BUG.
- * Follower can accept entries that create holes in log!
- */
-public class BuggyAppendEntries {
+!!! warning "Misconception 1: A majority quorum means more than half the nodes are available"
+    Majority means strictly more than half. For a 5-node cluster, majority = 3 (not 2.5 rounded down). For a 6-node cluster, majority = 4 (not 3). This asymmetry is intentional: with an even-numbered cluster, the minority partition is the same size as the majority partition, which could allow split-brain in edge cases. This is why production clusters are typically odd-numbered (3, 5, 7 nodes).
 
-    private boolean appendEntries(int followerId, int leaderTerm,
-                                   int prevLogIndex, int prevLogTerm,
-                                   List<LogEntry> entries) {
-        RaftNode follower = nodes.get(followerId);
+!!! warning "Misconception 2: Distributed locks guarantee mutual exclusion even when the TTL is very long"
+    A long TTL reduces the risk of premature expiration, but it increases the window during which a crashed lock holder blocks other processes. More importantly, no TTL length eliminates the GC-pause problem without fencing tokens. A process can be paused by the JVM for longer than any reasonable TTL. Fencing tokens — not longer TTLs — are the correct solution for preventing a stale lock holder from corrupting data.
 
-        // Check term
-        if (leaderTerm < follower.currentTerm) {
-            return false;
-        }
-
-        // Should verify follower has entry at prevLogIndex with prevLogTerm
-
-        // Append entries
-        for (LogEntry entry : entries) {
-            follower.log.add(entry);
-        }
-
-        return true;
-    }
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What\'s the bug?]</span>
-
-**Failure scenario:**
-
-- Leader log: [e1(term=1), e2(term=1), e3(term=2)]
-- Follower log: [e1(term=1), e2(term=2)] (e2 has wrong term!)
-- Leader sends: prevLogIndex=2, prevLogTerm=1, entries=[e3]
-- With bug: <span class="fill-in">[What happens?]</span>
-- Expected behavior: <span class="fill-in">[Should append be accepted?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug (After line 16):** Missing log consistency check. Must verify that follower's log at `prevLogIndex` has term
-`prevLogTerm`.
-
-**Fix:**
-
-```java
-// Check log consistency
-if (prevLogIndex > 0) {
-    if (prevLogIndex > follower.getLastLogIndex()) {
-        return false; // Follower's log too short
-    }
-    if (follower.log.get(prevLogIndex - 1).term != prevLogTerm) {
-        return false; // Term mismatch
-    }
-}
-```
-
-**Why it matters:** Raft requires logs to be consistent before appending. If follower has conflicting entry (different
-term at same index), must reject and let leader retry with earlier index.
-
-**Correct:** Leader's prevLogTerm=1, but follower has term=2 at index 2 → reject. Leader decrements prevLogIndex and
-retries until logs match.
-</details>
-
----
-
-### Challenge 5: Distributed Lock Deadlock
-
-```java
-/**
- * Distributed lock with DEADLOCK BUG.
- * Lock can remain held forever if holder crashes!
- */
-public class BuggyDistributedLock {
-
-    public Lock tryAcquire(String resourceId, String ownerId) {
-        Lock existingLock = locks.get(resourceId);
-
-        if (existingLock != null) {
-            if (!existingLock.ownerId.equals(ownerId)) {
-                return null; // Lock held by someone else
-            }
-        }
-
-        // Acquire lock
-        long fencingToken = tokenCounter.incrementAndGet();
-        Lock newLock = new Lock(resourceId, ownerId, fencingToken, ttl);
-        locks.put(resourceId, newLock);
-
-        return newLock;
-    }
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What\'s the bug?]</span>
-
-**Failure scenario:**
-
-- Client A acquires lock with 30s TTL
-- Client A crashes after 5 seconds (doesn't release)
-- Client B tries to acquire lock after 40 seconds
-- With bug: <span class="fill-in">[Can Client B acquire lock? Why?]</span>
-- Expected: <span class="fill-in">[Should lock be available?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug (Line 11):** Doesn't check if existing lock is expired. Should call `existingLock.isExpired()` before rejecting
-acquisition.
-
-**Fix:**
-
-```java
-if (existingLock != null && !existingLock.isExpired()) {
-    if (!existingLock.ownerId.equals(ownerId)) {
-        return null; // Lock still valid and held by someone else
-    }
-}
-```
-
-**Why it matters:** If lock holder crashes, lock expires after TTL. Without expiration check, lock remains held
-forever → deadlock. Other processes can never acquire.
-
-**Correct:** After TTL expires, lock is considered released, can be acquired by another process. Prevents deadlock from
-crashed holders.
-</details>
-
----
-
-### Challenge 6: Quorum Read Inconsistency
-
-```java
-/**
- * Quorum read with CONSISTENCY BUG.
- * Can return stale data even with proper R/W settings!
- */
-public class BuggyQuorumRead {
-
-    public VersionedValue read(String key) {
-        List<Node> replicas = selectNodes(key, replicationFactor);
-        List<VersionedValue> responses = new ArrayList<>();
-
-        // Read from R nodes
-        int successCount = 0;
-        for (Node node : replicas) {
-            if (node.active && successCount < readQuorum) {
-                VersionedValue value = node.get(key);
-                if (value != null) {
-                    responses.add(value);
-                    successCount++;
-                }
-            }
-        }
-
-        if (!responses.isEmpty()) {
-            return responses.get(0);  // Wrong! Might be stale!
-        }
-
-        return null;
-    }
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What\'s the bug?]</span>
-
-**Inconsistency scenario:**
-
-- R=2, W=2, N=3 (strong consistency: R+W > N)
-- Node 1: value="v1" (version=1)
-- Node 2: value="v2" (version=2, latest)
-- Node 3: value="v2" (version=2)
-- Read from Node 1, Node 2 (in that order)
-- With bug: <span class="fill-in">[What value is returned?]</span>
-- Expected: <span class="fill-in">[What should be returned?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug (Line 23):** Returns first response without comparing versions. First response might be stale (lower version).
-
-**Fix:**
-
-```java
-if (responses.size() >= readQuorum) {
-    return resolveConflicts(responses); // Pick latest version
-}
-```
-
-**Conflict resolution:**
-
-```java
-private VersionedValue resolveConflicts(List<VersionedValue> values) {
-    VersionedValue latest = values.get(0);
-    for (VersionedValue v : values) {
-        if (v.version.vectorClock > latest.version.vectorClock) {
-            latest = v;
-        }
-    }
-    return latest;
-}
-```
-
-**Why it matters:** Even with quorum, responses can have different versions. Must compare and return latest to guarantee
-consistency.
-
-**Correct:** Compare Node 1 (v1) and Node 2 (v2), return v2 (higher version). Client sees consistent, latest data.
-</details>
-
----
-
-### Your Debugging Scorecard
-
-After finding and fixing all bugs:
-
--   [ ] Found all 8+ bugs across 6 challenges
--   [ ] Understood consensus failure modes (split-brain, lost commits, inconsistency)
--   [ ] Could explain WHY each bug violates safety properties
--   [ ] Learned common distributed systems mistakes
-
-**Common consensus bugs you discovered:**
-
-1. <span class="fill-in">[List patterns: vote counting, term handling, etc.]</span>
-2. <span class="fill-in">[Fill in]</span>
-3. <span class="fill-in">[Fill in]</span>
-
-**Safety properties that bugs violated:**
-
-- **Agreement:** <span class="fill-in">[Which bugs caused nodes to disagree?]</span>
-- **Validity:** <span class="fill-in">[Which bugs caused invalid states?]</span>
-- **Termination:** <span class="fill-in">[Which bugs caused deadlock/livelock?]</span>
+!!! warning "Misconception 3: Raft is slower than Paxos"
+    Raft and Paxos have the same asymptotic complexity for log replication. The common belief that Raft is slower stems from early comparisons of specific implementations, not the algorithms themselves. Raft's main advantage is understandability: the algorithm is designed to be easier to reason about and implement correctly, which in practice means fewer subtle bugs. Production Raft implementations (etcd, Consul) handle tens of thousands of writes per second.
 
 ---
 
@@ -1816,58 +1422,16 @@ Trade-offs:
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-Before moving to the next topic:
+Answer these questions without looking at your notes. They are designed to probe understanding, not recall.
 
--   [ ] **Implementation**
-    -   [ ] Leader election works (Bully algorithm)
-    -   [ ] Raft election and log replication work
-    -   [ ] Distributed locks acquire, release, renew work
-    -   [ ] Quorum reads and writes work
-    -   [ ] All client code runs successfully
+1. **Prove mathematically that a 5-node Raft cluster can tolerate exactly 2 simultaneous node failures without losing the ability to elect a leader. Show your work using the majority formula.**
 
--   [ ] **Understanding**
-    -   [ ] Filled in all ELI5 explanations
-    -   [ ] Understand split-brain problem
-    -   [ ] Know how Raft achieves consensus
-    -   [ ] Understand fencing tokens
-    -   [ ] Know how quorums provide consistency
+2. **A distributed lock uses a 30-second TTL. The lock holder's JVM experiences a GC pause of 45 seconds while holding the lock. Describe the exact sequence of events that occurs, and explain what happens when the GC pause ends and the original holder resumes execution. How do fencing tokens prevent data corruption in this scenario?**
 
--   [ ] **Failure Scenarios**
-    -   [ ] Leader failure and re-election
-    -   [ ] Lock holder crashes (deadlock prevention)
-    -   [ ] Network partition (split-brain)
-    -   [ ] Quorum not reachable
-    -   [ ] Node recovery and catch-up
+3. **You are configuring a Cassandra cluster with N=5 replicas (replication factor = 5). Your team wants to maximize write availability while still guaranteeing strong consistency. What are the minimum values of R and W? Show that R + W > N holds.**
 
--   [ ] **Decision Making**
-    -   [ ] Know when to use leader vs leaderless
-    -   [ ] Know when to use Raft vs Paxos
-    -   [ ] Completed practice scenarios
-    -   [ ] Can explain trade-offs in CAP theorem
+4. **In Raft, why is it necessary to reset `votedFor = null` when a node's term is updated to a higher value? Construct a concrete 3-node example where failing to reset `votedFor` causes two leaders to be elected in the same term.**
 
--   [ ] **Mastery Check**
-    -   [ ] Could implement leader election from memory
-    -   [ ] Could design consensus for new system
-    -   [ ] Understand Raft log replication
-    -   [ ] Know how to prevent split-brain
-    -   [ ] Can calculate quorum sizes for requirements
-
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
--   [ ] Implement leader election (Bully or Raft) from memory
--   [ ] Explain split-brain problem and how consensus prevents it
--   [ ] Design consensus strategy for new distributed system
--   [ ] Identify correct consensus pattern for requirements
--   [ ] Analyze failure modes and their impact
--   [ ] Debug common consensus bugs (vote counting, term handling, etc.)
--   [ ] Explain trade-offs between leader-based and leaderless
--   [ ] Apply CAP theorem to consensus decisions
--   [ ] Calculate quorum sizes for consistency requirements
--   [ ] Teach consensus concepts to someone else
-
+5. **Design decision: You are building a distributed job scheduler where jobs must run exactly once, and jobs can take between 1 and 60 minutes. You plan to use distributed locks to prevent duplicate execution. What TTL would you set, and how would you prevent a crashed job runner from blocking the job for the full TTL period? Justify the specific numbers you choose.**

@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this topic you will be able to:
+
+- Implement topological sort using both DFS and Kahn's (BFS) algorithm from memory
+- Explain why Dijkstra fails with negative edge weights and what to use instead
+- Implement Kruskal's MST algorithm using union-find for cycle detection
+- Choose the correct graph algorithm (topological sort, Dijkstra, MST, union-find) for a given problem
+- Detect cycles in directed graphs using three-color DFS state tracking
+- Analyze time and space complexity for all four advanced graph algorithms
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,25 +26,32 @@
 **Prompts to guide you:**
 
 1. **What does Topological Sort give us?**
+    - Topological sort gives us a ___ of vertices so that every ___ comes ___ every ___ it points to.
     - Your answer: <span class="fill-in">[Fill in after learning]</span>
 
 2. **When do we need Topological Sort?**
+    - We need it when tasks have ___ and we must find a valid ___ to complete them.
     - Your answer: <span class="fill-in">[Course prerequisites, build systems...]</span>
 
 3. **What does Dijkstra's algorithm find?**
+    - Dijkstra finds the ___ from a ___ vertex to ___ other vertices in a graph with ___ edge weights.
     - Your answer: <span class="fill-in">[Fill in after learning]</span>
 
 4. **Real-world analogy for Dijkstra's algorithm:**
-    - Example: "Dijkstra's algorithm is like finding the cheapest flight where..."
+    - Example: "Dijkstra's algorithm is like finding the cheapest flight where you always book the next cheapest
+      available leg..."
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
 5. **Why can't we use Dijkstra for negative weights?**
+    - Because Dijkstra assumes that once a node is ___, its distance is ___ — negative edges can ___ this.
     - Your answer: <span class="fill-in">[Fill in after practice]</span>
 
 6. **Why do we need Minimum Spanning Trees?**
+    - MST connects ___ vertices using ___ weight edges without ___, useful when you want to ___.
     - Your answer: <span class="fill-in">[Fill in after learning]</span>
 
 7. **What problem does Union-Find solve?**
+    - Union-Find tracks ___ so you can quickly answer "are ___ in the same ___?" as connections are added.
     - Your answer: <span class="fill-in">[Dynamic connectivity...]</span>
 
 </div>
@@ -39,6 +59,10 @@
 ---
 
 ## Quick Quiz (Do BEFORE learning)
+
+!!! tip "How to use this section"
+    Complete your predictions now, before reading further. You will revisit and verify each answer after running the
+    benchmark (or completing the implementation).
 
 <div class="learner-section" markdown>
 
@@ -96,135 +120,20 @@
 
 ---
 
-## Before/After: Why Advanced Graph Algorithms Matter
-
-**Your task:** Compare naive approaches vs optimized algorithms to understand the impact.
-
-### Example: Network Routing (Shortest Path)
-
-**Problem:** Find shortest path between two cities in a road network with 10,000 intersections
-
-#### Approach 1: Breadth-First Search (BFS) - Unweighted
-
-```
-Treats all roads as equal distance
-
-Network:
-A --100km--> B --5km--> C
-A --50km--> D --50km--> C
-
-BFS finds: A → B → C (2 hops)
-Distance: 100 + 5 = 105 km
-
-Ignores: A → D → C (2 hops)
-Distance: 50 + 50 = 100 km ← Actually shorter!
-
-Problem: BFS optimizes for fewest edges, not shortest distance
-```
-
-**BFS Execution:**
-```
-Queue: [A]
-Visited: {}
-
-Step 1: Visit A
-Queue: [B, D]
-Visited: {A}
-
-Step 2: Visit B (first in queue)
-Queue: [D, C]
-Visited: {A, B}
-
-Step 3: Visit D
-Queue: [C, C]
-Visited: {A, B, D}
-
-Step 4: Visit C (from B path)
-Queue: [C]
-Visited: {A, B, D, C}
-
-Result: A → B → C (wrong!)
-Time: O(V + E) but gives wrong answer
-```
-
-#### Approach 2: Dijkstra's Algorithm (Weighted)
-
-```
-Same network:
-A --100km--> B --5km--> C
-A --50km--> D --50km--> C
-
-Dijkstra finds: A → D → C
-Distance: 100 km ← Optimal!
-
-How? Explores paths by cumulative distance, not hop count
-```
-
-**Dijkstra Execution:**
-```
-Priority Queue: [(A, 0)]
-Distances: {A: 0, others: ∞}
-
-Step 1: Process A (distance 0)
-Update neighbors:
-  B: 0 + 100 = 100
-  D: 0 + 50 = 50
-PQ: [(D, 50), (B, 100)]
-
-Step 2: Process D (distance 50, smallest)
-Update neighbors:
-  C: 50 + 50 = 100
-PQ: [(B, 100), (C, 100)]
-
-Step 3: Process B (distance 100)
-Update neighbors:
-  C: 100 + 5 = 105 (worse than current 100, don't update)
-PQ: [(C, 100)]
-
-Step 4: Process C (distance 100)
-Done! Path: A → D → C
-
-Result: 100 km (optimal!)
-Time: O((V + E) log V) with binary heap
-```
-
-**Performance Comparison:**
-
-| Metric | BFS | Dijkstra | Improvement |
-|--------|-----|----------|-------------|
-| Result | Wrong (105 km) | Correct (100 km) | 5% shorter |
-| Time | O(V + E) | O((V + E) log V) | Slightly slower |
-| Use case | Unweighted graphs | Weighted graphs | Essential! |
-| Optimality | # of hops | Total weight | Correct metric |
-
-**Real-world impact:**
-
-- GPS navigation: 5-20% shorter routes with Dijkstra
-- Network routing: Lower latency paths
-- Cost: Minimal (few ms difference for practical graphs)
-
-**Your calculation:** For 1000-node graph, 5000 edges:
-
-- BFS time: <span class="fill-in">_____</span> (V + E)
-- Dijkstra time: <span class="fill-in">_____</span> (E log V)
-- Trade-off: <span class="fill-in">[Worth it?]</span>
-
----
-
 ## Core Concepts
 
 **Recommended study order:**
 
-1. ⭐⭐⭐ Topological Sort (Topic 3 below) - Most common in interviews
-2. ⭐⭐ Dijkstra's Algorithm (Topic 1 below) - Important for weighted graphs
-3. ⭐⭐ Union-Find (add after completing above) - Dynamic connectivity
-4. ⭐ MST (Topic 2 below) - Optional, low interview frequency
+1. Topological Sort (Topic 3 below) — Most common in interviews
+2. Dijkstra's Algorithm (Topic 1 below) — Important for weighted graphs
+3. Union-Find — Dynamic connectivity
+4. MST (Topic 2 below) — Optional, low interview frequency
 
 ---
 
 ### Topic 1: Dijkstra's Shortest Path Algorithm
 
-**Interview Priority: ⭐⭐ GOOD TO KNOW** - Appears in ~15% of graph problems
+**Interview Priority: GOOD TO KNOW** — Appears in ~15% of graph problems
 
 **Concept:** Find shortest path from source to all other vertices in a weighted graph (non-negative weights).
 
@@ -360,9 +269,52 @@ class DijkstraShortestPath {
 }
 ```
 
+!!! warning "Debugging Challenge — Missing Visited Check"
+    The following Dijkstra implementation has a critical bug:
+
+    ```java
+    while (!pq.isEmpty()) {
+        int[] curr = pq.poll();
+        int u = curr[0];
+        int d = curr[1];
+
+        // Missing check here!
+
+        for (Edge edge : graph.get(u)) {
+            int v = edge.to;
+            int newDist = dist[u] + edge.weight;
+            if (newDist < dist[v]) {
+                dist[v] = newDist;
+                pq.offer(new int[]{v, newDist});
+            }
+        }
+    }
+    ```
+
+    What is missing after polling from the PQ? Why does this matter?
+
+    ??? success "Answer"
+        **Bug:** Missing the stale-entry check. Should add `if (d > dist[u]) continue;` after polling.
+
+        Without this check, when we add node `u` to the PQ multiple times (once for each shorter path found), we process
+        it multiple times. This wastes work and can produce incorrect results in some configurations.
+
+        **Fix:**
+
+        ```java
+        int u = curr[0];
+        int d = curr[1];
+
+        if (d > dist[u]) continue;  // Skip stale entry
+        ```
+
+        **Trace without fix:** If node 1 is added to PQ twice (at dist=5, then at dist=3), we process it at dist=3
+        correctly, then again at dist=5, potentially relaxing edges with a stale (larger) distance.
+
 **Optimizations:**
 
 **1. Fibonacci Heap (Theoretical):**
+
 ```
 Time: O(E + V log V)
 vs Binary Heap: O((V + E) log V)
@@ -372,6 +324,7 @@ Practical: Binary heap usually faster due to simpler implementation
 ```
 
 **2. Bidirectional Dijkstra:**
+
 ```
 Simultaneously search from source and target:
 
@@ -383,6 +336,7 @@ Use case: Point-to-point shortest path (GPS navigation)
 ```
 
 **3. A* Search (Heuristic):**
+
 ```
 Dijkstra: f(n) = g(n)              (distance so far)
 A*:       f(n) = g(n) + h(n)       (+ estimated distance to goal)
@@ -392,6 +346,12 @@ h(n) = heuristic (e.g., straight-line distance)
 Explores fewer nodes by guiding search toward target
 Optimal if h(n) is admissible (never overestimates)
 ```
+
+!!! note "Key insight"
+    Dijkstra's algorithm makes a greedy assumption: once a node is finalized (polled from the priority queue with the
+    minimum distance), that distance is optimal and can never improve. This assumption is **only valid if all edge
+    weights are non-negative**. A negative edge from a later node back to an already-finalized node could improve its
+    distance — but Dijkstra will never revisit it.
 
 **Limitations:**
 
@@ -428,7 +388,7 @@ Solution: Use Bellman-Ford for negative weights
 
 ### Topic 2: Minimum Spanning Tree (MST)
 
-**Interview Priority: ⭐ OPTIONAL** - Appears in <5% of interviews, study if time permits
+**Interview Priority: OPTIONAL** — Appears in <5% of interviews, study if time permits
 
 **Concept:** Subset of edges that connects all vertices with minimum total weight, no cycles.
 
@@ -598,6 +558,44 @@ class KruskalMST {
 }
 ```
 
+!!! warning "Debugging Challenge — Missing Cycle Check in Kruskal's"
+    The following Kruskal's implementation has a critical missing piece:
+
+    ```java
+    public List<Edge> kruskal(int n, List<Edge> edges) {
+        Collections.sort(edges);
+        UnionFind uf = new UnionFind(n);
+        List<Edge> mst = new ArrayList<>();
+
+        for (Edge edge : edges) {
+            // Missing cycle check!
+            mst.add(edge);
+            if (mst.size() == n - 1) break;
+        }
+        return mst;
+    }
+    ```
+
+    Given a triangle graph with edges (0,1,1), (1,2,2), (2,0,3), what does the buggy code produce and why?
+
+    ??? success "Answer"
+        **Bug:** Missing the union-find cycle check before adding each edge.
+
+        With the bug, all three edges are added: (0,1), (1,2), (2,0). This creates a cycle (not a tree). An MST for
+        3 nodes must have exactly 2 edges.
+
+        **Fix:**
+
+        ```java
+        if (uf.union(edge.u, edge.v)) {  // Only add if no cycle
+            mst.add(edge);
+            if (mst.size() == n - 1) break;
+        }
+        ```
+
+        **Correct result:** Edges (0,1) and (1,2) are added (total weight 3). Edge (2,0) is skipped because 0 and 2
+        are already in the same component via node 1.
+
 **Use Cases:**
 
 - Network design (minimize cable length)
@@ -609,9 +607,10 @@ class KruskalMST {
 
 ### Topic 3: Topological Sort
 
-**Interview Priority: ⭐⭐⭐ CRITICAL** - Course Schedule is in top 20 most common problems!
+**Interview Priority: CRITICAL** — Course Schedule is in top 20 most common problems!
 
-**Concept:** Linear ordering of vertices in a directed acyclic graph (DAG) such that for every edge (u, v), u comes before v.
+**Concept:** Linear ordering of vertices in a directed acyclic graph (DAG) such that for every edge (u, v), u comes
+before v.
 
 **Properties:**
 
@@ -762,6 +761,53 @@ class TopologicalSort {
 }
 ```
 
+!!! warning "Debugging Challenge — Not Propagating Cycle Detection"
+    The following DFS-based topological sort fails to detect cycles correctly:
+
+    ```java
+    private boolean dfs(int node, List<List<Integer>> graph,
+                       int[] visited, Stack<Integer> stack) {
+        visited[node] = 1;
+
+        for (int neighbor : graph.get(node)) {
+            if (visited[neighbor] == 1) {
+                return false;  // Cycle detected
+            }
+            if (visited[neighbor] == 0) {
+                dfs(neighbor, graph, visited, stack);  // BUG: Missing return check!
+            }
+        }
+
+        visited[node] = 2;
+        stack.push(node);
+        return true;
+    }
+    ```
+
+    For the cycle 0→1→2→0, does this method detect the cycle? Why or why not?
+
+    ??? success "Answer"
+        **Bug:** The recursive call result is not checked. Even if a descendant detects a cycle and returns `false`,
+        we ignore the return value and continue.
+
+        **Fix:**
+
+        ```java
+        if (visited[neighbor] == 0) {
+            if (!dfs(neighbor, graph, visited, stack)) {
+                return false;  // Propagate cycle detection up the call stack
+            }
+        }
+        ```
+
+        **Trace with cycle 0→1→2→0:**
+
+        Without fix: `dfs(2)` sees node 0 is in state 1 (visiting) and returns `false`. But `dfs(1)` ignores this and
+        continues. `dfs(0)` completes successfully — cycle not detected!
+
+        With fix: `dfs(2)` returns `false`, `dfs(1)` returns `false`, `dfs(0)` returns `false` — cycle detected and
+        propagated to caller.
+
 **Cycle Detection:**
 
 ```
@@ -793,7 +839,7 @@ Cycle detected!
 
 ### Topic 4: Union-Find (Disjoint Set Union)
 
-**Interview Priority: ⭐⭐ IMPORTANT** - Key data structure for dynamic connectivity (~10% of graph problems)
+**Interview Priority: IMPORTANT** — Key data structure for dynamic connectivity (~10% of graph problems)
 
 **Concept:** Efficiently track and merge disjoint sets, primarily used for dynamic connectivity problems.
 
@@ -814,17 +860,19 @@ Cycle detected!
 **Optimizations:**
 
 1. **Path Compression** (in Find):
-   ```
-   Make every node point directly to root
-   Flattens tree structure
-   Time: O(α(n)) amortized per operation
-   ```
+
+    ```
+    Make every node point directly to root
+    Flattens tree structure
+    Time: O(α(n)) amortized per operation
+    ```
 
 2. **Union by Rank**:
-   ```
-   Always attach smaller tree under larger tree
-   Keeps tree balanced
-   ```
+
+    ```
+    Always attach smaller tree under larger tree
+    Keeps tree balanced
+    ```
 
 **Implementation:**
 
@@ -881,18 +929,21 @@ class UnionFind {
 **Common Problems:**
 
 1. **Number of Connected Components**
-   - Start with n components
-   - Each union decreases count by 1
-   - Final count = n - (number of successful unions)
+
+    - Start with n components
+    - Each union decreases count by 1
+    - Final count = n - (number of successful unions)
 
 2. **Detect Cycle in Undirected Graph**
-   - For each edge (u, v):
-     - If find(u) == find(v): cycle exists!
-     - Else: union(u, v)
+
+    - For each edge (u, v):
+        - If find(u) == find(v): cycle exists!
+        - Else: union(u, v)
 
 3. **Accounts Merge (LeetCode 721)**
-   - Union accounts with common emails
-   - Each component = one person
+
+    - Union accounts with common emails
+    - Each component = one person
 
 **Example: Detect Redundant Connection**
 
@@ -918,14 +969,14 @@ for (int[] edge : edges) {
 
 **When to Use Union-Find:**
 
-✅ Dynamic connectivity (edges added over time)
-✅ Detect cycles in undirected graphs
-✅ Group elements by equivalence relation
-✅ Kruskal's MST algorithm
+- Dynamic connectivity (edges added over time)
+- Detect cycles in undirected graphs
+- Group elements by equivalence relation
+- Kruskal's MST algorithm
 
-❌ Need to remove edges (Union-Find doesn't support deletion)
-❌ Directed graph cycle detection (use DFS instead)
-❌ Shortest path queries (use BFS/Dijkstra)
+- Do NOT use when you need to remove edges (Union-Find doesn't support deletion)
+- Do NOT use for directed graph cycle detection (use DFS instead)
+- Do NOT use for shortest path queries (use BFS/Dijkstra)
 
 **Use Cases:**
 
@@ -934,6 +985,168 @@ for (int[] edge : edges) {
 - Kruskal's MST
 - Social network friend groups
 - Accounts merging
+
+---
+
+## Before/After: Why Advanced Graph Algorithms Matter
+
+**Your task:** Compare naive approaches vs optimized algorithms to understand the impact.
+
+### Example: Network Routing (Shortest Path)
+
+**Problem:** Find shortest path between two cities in a road network with 10,000 intersections
+
+#### Approach 1: Breadth-First Search (BFS) — Unweighted
+
+```
+Treats all roads as equal distance
+
+Network:
+A --100km--> B --5km--> C
+A --50km--> D --50km--> C
+
+BFS finds: A → B → C (2 hops)
+Distance: 100 + 5 = 105 km
+
+Ignores: A → D → C (2 hops)
+Distance: 50 + 50 = 100 km ← Actually shorter!
+
+Problem: BFS optimizes for fewest edges, not shortest distance
+```
+
+**BFS Execution:**
+
+```
+Queue: [A]
+Visited: {}
+
+Step 1: Visit A
+Queue: [B, D]
+Visited: {A}
+
+Step 2: Visit B (first in queue)
+Queue: [D, C]
+Visited: {A, B}
+
+Step 3: Visit D
+Queue: [C, C]
+Visited: {A, B, D}
+
+Step 4: Visit C (from B path)
+Queue: [C]
+Visited: {A, B, D, C}
+
+Result: A → B → C (wrong!)
+Time: O(V + E) but gives wrong answer
+```
+
+#### Approach 2: Dijkstra's Algorithm (Weighted)
+
+```
+Same network:
+A --100km--> B --5km--> C
+A --50km--> D --50km--> C
+
+Dijkstra finds: A → D → C
+Distance: 100 km ← Optimal!
+
+How? Explores paths by cumulative distance, not hop count
+```
+
+**Dijkstra Execution:**
+
+```
+Priority Queue: [(A, 0)]
+Distances: {A: 0, others: ∞}
+
+Step 1: Process A (distance 0)
+Update neighbors:
+  B: 0 + 100 = 100
+  D: 0 + 50 = 50
+PQ: [(D, 50), (B, 100)]
+
+Step 2: Process D (distance 50, smallest)
+Update neighbors:
+  C: 50 + 50 = 100
+PQ: [(B, 100), (C, 100)]
+
+Step 3: Process B (distance 100)
+Update neighbors:
+  C: 100 + 5 = 105 (worse than current 100, don't update)
+PQ: [(C, 100)]
+
+Step 4: Process C (distance 100)
+Done! Path: A → D → C
+
+Result: 100 km (optimal!)
+Time: O((V + E) log V) with binary heap
+```
+
+**Performance Comparison:**
+
+| Metric     | BFS               | Dijkstra           | Improvement     |
+|------------|-------------------|--------------------|-----------------|
+| Result     | Wrong (105 km)    | Correct (100 km)   | 5% shorter      |
+| Time       | O(V + E)          | O((V + E) log V)   | Slightly slower |
+| Use case   | Unweighted graphs | Weighted graphs    | Essential!      |
+| Optimality | # of hops         | Total weight       | Correct metric  |
+
+**Real-world impact:**
+
+- GPS navigation: 5–20% shorter routes with Dijkstra
+- Network routing: Lower latency paths
+- Cost: Minimal (few ms difference for practical graphs)
+
+**Your calculation:** For 1000-node graph, 5000 edges:
+
+- BFS time: <span class="fill-in">_____</span> (V + E)
+- Dijkstra time: <span class="fill-in">_____</span> (E log V)
+- Trade-off: <span class="fill-in">[Worth it?]</span>
+
+!!! info "Loop back"
+    Return to the Quick Quiz now and fill in your verified answers.
+
+---
+
+## Case Studies
+
+### GPS Navigation: Google Maps Route Planning
+
+Google Maps selects among millions of intersections for a route in under a second. The core is a bidirectional A*
+search (a heuristic variant of Dijkstra) that simultaneously expands from both the source and destination. The straight-
+line distance heuristic dramatically prunes the search space. Traffic data is encoded as time-weighted edges that update
+in near-real time.
+
+### npm Package Manager: Dependency Resolution
+
+When you run `npm install`, npm builds a dependency graph and runs topological sort (Kahn's algorithm) to determine
+install order. If any circular dependency is detected (result.size() < n), installation aborts with an error. The
+"hoisting" optimization that flattens node_modules trees is an extension of this same graph reachability analysis.
+
+### Network Infrastructure: Fiber Optic Cable Planning
+
+When a telecom company plans a new fiber network connecting data centers, Kruskal's MST gives the minimum total cable
+length to connect all sites without redundant loops. For subsequent reliability planning, Dijkstra finds the shortest
+failover route between any two sites if a cable is cut.
+
+---
+
+## Common Misconceptions
+
+!!! warning "BFS finds the shortest path in any graph"
+    BFS finds the shortest path only in **unweighted** graphs (where all edges have equal cost). In a weighted graph,
+    BFS optimizes for fewest edges, not minimum total weight — which is often the wrong metric. Use Dijkstra for
+    non-negative weights, or Bellman-Ford for graphs with negative weights.
+
+!!! warning "Dijkstra and topological sort both detect cycles"
+    Dijkstra does not detect cycles — it simply skips already-visited nodes. Topological sort (via Kahn's algorithm)
+    detects cycles because cyclic nodes never reach in-degree zero and are excluded from the result. If you need cycle
+    detection in a directed graph, use Kahn's algorithm or three-color DFS explicitly.
+
+!!! warning "Union-find can detect cycles in directed graphs"
+    Union-find detects cycles only in **undirected** graphs. In a directed graph, edge A→B→C→A creates a cycle, but
+    union(A,B), union(B,C), union(C,A) would all succeed (each pair appears not yet connected). Use three-color DFS
+    (0=unvisited, 1=in progress, 2=finished) for directed cycle detection.
 
 ---
 
@@ -1003,371 +1216,74 @@ for (int[] edge : edges) {
 
 ---
 
-## Debugging Challenges
-
-**Your task:** Find and fix bugs in broken graph algorithm implementations. This tests your understanding of algorithm correctness and edge cases.
-
-### Challenge 1: Dijkstra's Distance Check Bug
-
-```java
-/**
- * Dijkstra's algorithm with a CRITICAL BUG.
- * Can return incorrect shortest paths!
- */
-public class BuggyDijkstra {
-
-    public int[] dijkstra(List<List<Edge>> graph, int source) {
-        int n = graph.size();
-        int[] dist = new int[n];
-        Arrays.fill(dist, Integer.MAX_VALUE);
-        dist[source] = 0;
-
-        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
-        pq.offer(new int[]{source, 0});
-
-        while (!pq.isEmpty()) {
-            int[] curr = pq.poll();
-            int u = curr[0];
-            int d = curr[1];
-
-            // Missing check here!
-
-            for (Edge edge : graph.get(u)) {
-                int v = edge.to;
-                int newDist = dist[u] + edge.weight;
-
-                if (newDist < dist[v]) {
-                    dist[v] = newDist;
-                    pq.offer(new int[]{v, newDist});
-                }
-            }
-        }
-
-        return dist;
-    }
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What's missing after polling from PQ?]</span>
-
-**Failure scenario:**
-
-- Graph: 0→1(weight=5), 0→1(weight=3), 1→2(weight=1)
-- Without fix: <span class="fill-in">[How many times do we process node 1?]</span>
-- With fix: <span class="fill-in">[How many times should we process node 1?]</span>
-- Impact: <span class="fill-in">[Correctness? Performance? Both?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** Missing distance check after polling. Should verify that we haven't already found a better path to this node.
-
-**Fix:**
-
-```java
-while (!pq.isEmpty()) {
-    int[] curr = pq.poll();
-    int u = curr[0];
-    int d = curr[1];
-
-    // Skip if we've already processed this node with better distance
-    if (d > dist[u]) continue;
-
-    // ... rest of code
-}
-```
-
-**Why it matters:** We may add the same node to the priority queue multiple times with different distances. Without this check, we process outdated entries, doing unnecessary work and potentially corrupting results.
-
-**Example trace without fix:**
-```
-Step 1: Process (0, dist=0), add (1, dist=5)
-Step 2: Find shorter path, add (1, dist=3)
-Step 3: Process (1, dist=3) ✓ (correct)
-Step 4: Process (1, dist=5) ✗ (outdated entry, wastes time)
-```
-
-**With fix:** Step 4 is skipped because d=5 > dist[1]=3.
-</details>
-
----
-
-### Challenge 2: Kruskal's MST - Cycle Detection Miss
-
-```java
-/**
- * Kruskal's algorithm with MISSING CYCLE CHECK.
- * Can create cycles in MST!
- */
-public class BuggyKruskalMST {
-
-    public List<Edge> kruskal(int n, List<Edge> edges) {
-        Collections.sort(edges); // Sort by weight
-
-        UnionFind uf = new UnionFind(n);
-        List<Edge> mst = new ArrayList<>();
-
-        for (Edge edge : edges) {
-            // Missing cycle check!
-            mst.add(edge);
-
-            if (mst.size() == n - 1) break;
-        }
-
-        return mst;
-    }
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What's missing before adding edge to MST?]</span>
-
-**Failure scenario:**
-
-- Graph: Triangle with edges (0,1,1), (1,2,2), (2,0,3)
-- With bug: MST edges = <span class="fill-in">[Which edges?]</span>
-- Expected: MST edges = <span class="fill-in">[Which edges?]</span>
-- Result: <span class="fill-in">[Valid tree? Contains cycle?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** Missing Union-Find check to detect cycles. Must verify that edge doesn't connect two vertices already in the same component.
-
-**Fix:**
-
-```java
-for (Edge edge : edges) {
-    if (uf.union(edge.u, edge.v)) {  // Only add if doesn't create cycle
-        mst.add(edge);
-        if (mst.size() == n - 1) break;
-    }
-}
-```
-
-**Why it matters:** Kruskal's algorithm relies on Union-Find to detect cycles. Without this check, we'd add all edges in weight order, creating cycles instead of a tree.
-
-**Correct behavior:**
-
-- Edge (0,1,1): Add (different components) ✓
-- Edge (1,2,2): Add (different components) ✓
-- Edge (2,0,3): Skip (0 and 2 already connected via 1) ✗
-
-**MST edges:** (0,1), (1,2) with total weight = 3
-</details>
-
----
-
-### Challenge 3: Topological Sort - Term Handling Bug
-
-```java
-/**
- * Topological sort (DFS-based) with CYCLE PROPAGATION BUG.
- * Fails to detect cycles properly!
- */
-public class BuggyTopologicalSort {
-
-    public List<Integer> topologicalSort(int n, List<List<Integer>> graph) {
-        int[] visited = new int[n];  // 0: unvisited, 1: visiting, 2: visited
-        Stack<Integer> stack = new Stack<>();
-
-        for (int i = 0; i < n; i++) {
-            if (visited[i] == 0) {
-                if (!dfs(i, graph, visited, stack)) {
-                    return new ArrayList<>();  // Cycle detected
-                }
-            }
-        }
-
-        List<Integer> result = new ArrayList<>();
-        while (!stack.isEmpty()) {
-            result.add(stack.pop());
-        }
-        return result;
-    }
-
-    private boolean dfs(int node, List<List<Integer>> graph,
-                       int[] visited, Stack<Integer> stack) {
-        visited[node] = 1;  // Mark as visiting
-
-        for (int neighbor : graph.get(node)) {
-            if (visited[neighbor] == 1) {
-                return false;  // Cycle detected
-            }
-            if (visited[neighbor] == 0) {
-                dfs(neighbor, graph, visited, stack);  // BUG: Missing return check!
-            }
-        }
-
-        visited[node] = 2;  // Mark as visited
-        stack.push(node);
-        return true;
-    }
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What's missing in the recursive call?]</span>
-
-**Failure scenario:**
-
-- Graph: 0→1, 1→2, 2→0 (cycle)
-- With bug: <span class="fill-in">[Does it detect the cycle?]</span>
-- Expected: <span class="fill-in">[Should return empty list]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** Not checking the return value of recursive DFS call. Even if a recursive call detects a cycle (returns false), we ignore it and continue.
-
-**Fix:**
-
-```java
-if (visited[neighbor] == 0) {
-    if (!dfs(neighbor, graph, visited, stack)) {
-        return false;  // Propagate cycle detection
-    }
-}
-```
-
-**Why it matters:** Cycle detection must propagate back up the call stack. Without checking the return value, we lose the cycle detection signal.
-
-**Trace with cycle:**
-```
-DFS(0): visits 1
-  DFS(1): visits 2
-    DFS(2): sees 0 is visiting → return false (cycle!)
-  DFS(1): ignores return value, continues → BUG!
-DFS(0): completes successfully → WRONG!
-```
-
-**Correct:** When DFS(2) detects cycle, DFS(1) should return false, then DFS(0) should return false, signaling cycle to main function.
-</details>
-
----
-
-### Your Debugging Scorecard
-
-After finding and fixing all bugs:
-
--   [ ] Found all 3 bugs across different algorithms
--   [ ] Understood correctness vs performance issues
--   [ ] Could explain WHY each bug causes failures
--   [ ] Learned common algorithm implementation mistakes
-
-**Common graph algorithm bugs you discovered:**
-
-1. <span class="fill-in">[Missing distance check in Dijkstra after polling]</span>
-2. <span class="fill-in">[Not using Union-Find to detect cycles in Kruskal's]</span>
-3. <span class="fill-in">[Not propagating cycle detection in TopSort DFS]</span>
-
----
-
 ## Practice
 
 ### LeetCode Problems
 
-**Focus on interview-critical patterns - practice in priority order:**
+**Focus on interview-critical patterns — practice in priority order:**
 
-**Topological Sort (MUST DO - ⭐⭐⭐):**
+**Topological Sort (MUST DO):**
 
-- [ ] [207. Course Schedule](https://leetcode.com/problems/course-schedule/) ⭐⭐⭐
+- [ ] [207. Course Schedule](https://leetcode.com/problems/course-schedule/)
     - Pattern: <span class="fill-in">[Topological Sort / Cycle Detection]</span>
     - Difficulty: <span class="fill-in">[Rate 1-10]</span>
     - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
-- [ ] [210. Course Schedule II](https://leetcode.com/problems/course-schedule-ii/) ⭐⭐⭐
+- [ ] [210. Course Schedule II](https://leetcode.com/problems/course-schedule-ii/)
     - Pattern: <span class="fill-in">[Topological Sort - return order]</span>
     - Difficulty: <span class="fill-in">[Rate 1-10]</span>
     - Key insight: <span class="fill-in">[Fill in]</span>
 
-- [ ] [269. Alien Dictionary](https://leetcode.com/problems/alien-dictionary/) (Premium) ⭐⭐
+- [ ] [269. Alien Dictionary](https://leetcode.com/problems/alien-dictionary/) (Premium)
     - Pattern: <span class="fill-in">[Topological Sort]</span>
     - Difficulty: <span class="fill-in">[Rate 1-10]</span>
 
-**Union-Find (Important - ⭐⭐):**
+**Union-Find (Important):**
 
-- [ ] [547. Number of Provinces](https://leetcode.com/problems/number-of-provinces/) ⭐⭐
+- [ ] [547. Number of Provinces](https://leetcode.com/problems/number-of-provinces/)
     - Pattern: <span class="fill-in">[Union-Find / Connected Components]</span>
     - Difficulty: <span class="fill-in">[Rate 1-10]</span>
     - Key insight: <span class="fill-in">[Fill in]</span>
 
-- [ ] [684. Redundant Connection](https://leetcode.com/problems/redundant-connection/) ⭐⭐
+- [ ] [684. Redundant Connection](https://leetcode.com/problems/redundant-connection/)
     - Pattern: <span class="fill-in">[Union-Find / Cycle Detection]</span>
     - Difficulty: <span class="fill-in">[Rate 1-10]</span>
 
-- [ ] [721. Accounts Merge](https://leetcode.com/problems/accounts-merge/) ⭐⭐
+- [ ] [721. Accounts Merge](https://leetcode.com/problems/accounts-merge/)
     - Pattern: <span class="fill-in">[Union-Find / Grouping]</span>
     - Difficulty: <span class="fill-in">[Rate 1-10]</span>
 
-**Dijkstra (Good to know - ⭐⭐):**
+**Dijkstra (Good to know):**
 
-- [ ] [743. Network Delay Time](https://leetcode.com/problems/network-delay-time/) ⭐⭐
+- [ ] [743. Network Delay Time](https://leetcode.com/problems/network-delay-time/)
     - Pattern: <span class="fill-in">[Dijkstra's Algorithm]</span>
     - Difficulty: <span class="fill-in">[Rate 1-10]</span>
     - Key insight: <span class="fill-in">[Fill in]</span>
 
-- [ ] [787. Cheapest Flights Within K Stops](https://leetcode.com/problems/cheapest-flights-within-k-stops/) ⭐⭐
+- [ ] [787. Cheapest Flights Within K Stops](https://leetcode.com/problems/cheapest-flights-within-k-stops/)
     - Pattern: <span class="fill-in">[Modified Dijkstra with constraints]</span>
     - Difficulty: <span class="fill-in">[Rate 1-10]</span>
 
-**MST (Optional - ⭐):**
+**MST (Optional):**
 
-- [ ] [1584. Min Cost to Connect All Points](https://leetcode.com/problems/min-cost-to-connect-all-points/) ⭐
+- [ ] [1584. Min Cost to Connect All Points](https://leetcode.com/problems/min-cost-to-connect-all-points/)
     - Pattern: <span class="fill-in">[Prim's MST]</span>
     - Difficulty: <span class="fill-in">[Rate 1-10]</span>
-    - Note: Low frequency - only if you have extra time
+    - Note: Low frequency — only if you have extra time
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-**Before moving to next topic, ensure you've mastered:**
+Answer these without referring to your notes or implementation.
 
--   [ ] **Understanding**
-    -   [ ] Understand topological sort (DFS and Kahn's algorithms) ⭐⭐⭐
-    -   [ ] Understand Dijkstra's algorithm ⭐⭐
-    -   [ ] Know Union-Find with optimizations ⭐⭐
-    -   [ ] Understand MST algorithms (Kruskal, Prim) ⭐
-    -   [ ] Know when each algorithm applies
-
--   [ ] **Implementation**
-    -   [ ] Can implement topological sort (both methods)
-    -   [ ] Can implement Dijkstra with priority queue
-    -   [ ] Can implement Union-Find with path compression
-    -   [ ] Can implement Kruskal's MST (if time permits)
-    -   [ ] Understand complexity analysis
-
--   [ ] **Pattern Recognition**
-    -   [ ] Solved Course Schedule I & II (topological sort)
-    -   [ ] Solved 2-3 Union-Find problems
-    -   [ ] Attempted 1-2 Dijkstra problems
-    -   [ ] Understand when to use each algorithm
-
--   [ ] **Decision Making**
-    -   [ ] Know algorithm trade-offs
-    -   [ ] Can choose correct algorithm for requirements
-    -   [ ] Understand limitations (e.g., Dijkstra + negative weights)
-
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
--   [ ] Implement topological sort from memory (both DFS and Kahn's) ⭐⭐⭐
--   [ ] Solve Course Schedule problems confidently
--   [ ] Implement Union-Find with path compression and union by rank ⭐⭐
--   [ ] Detect cycles using Union-Find
--   [ ] Implement Dijkstra's algorithm ⭐⭐
--   [ ] Explain when Dijkstra fails (negative weights)
--   [ ] Understand MST algorithms (Kruskal/Prim) ⭐
--   [ ] Choose appropriate algorithm for given problem
--   [ ] Analyze time/space complexity
--   [ ] Debug common algorithm issues
--   [ ] Explain these concepts to others
-
+1. Trace Kahn's topological sort algorithm on this graph: nodes 0–3, edges 0→2, 0→3, 1→3, 2→3. What is the processing
+   order? What would happen if you added edge 3→0?
+2. Why does Dijkstra's algorithm use a min-heap (priority queue) rather than a regular queue, and why does BFS (which
+   uses a regular queue) give wrong answers for weighted graphs?
+3. In Kruskal's MST algorithm, what does the union-find check guarantee? Why is this check insufficient for directed
+   graphs?
+4. You need to detect a cycle in a directed graph. A colleague suggests using union-find because "it works for
+   undirected graphs." Give a concrete directed graph where union-find gives the wrong answer.
+5. Comparing DFS topological sort vs Kahn's algorithm: under what conditions does each one fail to produce a result,
+   and how does each one signal the failure?

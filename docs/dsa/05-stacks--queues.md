@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this section you should be able to:
+
+- Distinguish LIFO (stack) from FIFO (queue) and select the right one given a problem description
+- Implement the four core patterns: basic stack, monotonic stack, basic queue, and deque
+- Explain why the monotonic stack processes each element at most twice, giving O(n) despite an apparent inner loop
+- Identify the deque invariant (monotonically decreasing indices) and explain why it guarantees O(n) sliding-window maximum
+- Diagnose common bugs: popping from an empty stack, pushing values instead of indices in a monotonic stack, and transferring on every dequeue instead of only when the outbox is empty
+- Choose between stack, queue, and deque given the access pattern a problem requires
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,10 +26,10 @@
 **Prompts to guide you:**
 
 1. **What are stacks and queues in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">[A stack is a collection where the last element added is the first one removed, while a queue is a collection where the first element added is ___, making them useful for ___ respectively]</span>
 
 2. **What's the key difference between stack and queue?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">[A stack uses LIFO so that the most-recently-pushed item is retrieved first, whereas a queue uses FIFO so that items are retrieved in ___ order, which is why stacks are used for ___ and queues for ___]</span>
 
 3. **Real-world analogy:**
     - Example: "A stack is like a stack of plates - last one on, first one off..."
@@ -24,17 +37,17 @@
     - Your analogy for queue: <span class="fill-in">[Fill in]</span>
 
 4. **When does each pattern work?**
-    - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
+    - Your answer: <span class="fill-in">[Use a stack when you need to remember state to undo or match later; use a queue when you need to process items in ___ order; use a monotonic stack when you need the ___ greater/smaller element to the right of each position]</span>
 
 5. **What problems require stacks vs queues?**
     - Your answer: <span class="fill-in">[Fill in after practice]</span>
 
 6. **What is a monotonic stack in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">[A monotonic stack is a stack that maintains its elements in sorted order by popping all elements that violate the ordering property before each push, so that ___ and each element is pushed and popped at most ___ time]</span>
 
 7. **Why is it useful for finding the "next greater element"?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
-    
+    - Your answer: <span class="fill-in">[When we encounter a value larger than the stack top, that larger value is the "next greater" for the popped element, so we can record the answer immediately without ___ as in brute force]</span>
+
 8. **Real-world analogy for monotonic stack:**
     - Example: "A (decreasing) monotonic stack is like people of different heights standing in a line; when someone taller comes, they block the view of everyone shorter than them."
     - Your analogy: <span class="fill-in">[Fill in]</span>
@@ -44,6 +57,9 @@
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+!!! tip "How to use this section"
+    Write your best guess in each fill-in span **before** reading any implementation code. Your predictions do not need to be correct — the act of committing to an answer first makes the correct answer stick much better when you verify it later.
 
 <div class="learner-section" markdown>
 
@@ -104,254 +120,6 @@
 
 Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
-
-</div>
-
----
-
-## Before/After: Why This Pattern Matters
-
-**Your task:** Compare naive vs optimized approaches to understand the impact.
-
-### Example 1: Valid Parentheses
-
-**Problem:** Check if brackets are balanced in a string like `"([{}])"`.
-
-#### Approach 1: Brute Force (String Replacement)
-
-```java
-// Naive approach - Keep removing pairs until none left
-public static boolean isValid_BruteForce(String s) {
-    while (s.contains("()") || s.contains("[]") || s.contains("{}")) {
-        s = s.replace("()", "");
-        s = s.replace("[]", "");
-        s = s.replace("{}", "");
-    }
-    return s.isEmpty();
-}
-```
-
-**Analysis:**
-
-- Time: O(n²) - Each replacement scans the entire string, potentially n/2 iterations
-- Space: O(n) - String replacement creates new strings
-- For n = 10,000: Up to ~50,000,000 operations
-
-#### Approach 2: Stack (Optimized)
-
-```java
-// Optimized approach - Use stack to track opening brackets
-public static boolean isValid_Stack(String s) {
-    Stack<Character> stack = new Stack<>();
-
-    for (char c : s.toCharArray()) {
-        if (c == '(' || c == '[' || c == '{') {
-            stack.push(c);
-        } else {
-            if (stack.isEmpty()) return false;
-            char open = stack.pop();
-            if (c == ')' && open != '(') return false;
-            if (c == ']' && open != '[') return false;
-            if (c == '}' && open != '{') return false;
-        }
-    }
-
-    return stack.isEmpty();
-}
-```
-
-**Analysis:**
-
-- Time: O(n) - Single pass through string
-- Space: O(n) - Stack for opening brackets
-- For n = 10,000: ~10,000 operations
-
-#### Performance Comparison
-
-| String Length | Brute Force (O(n²)) | Stack (O(n)) | Speedup |
-|---------------|---------------------|--------------|---------|
-| n = 100       | ~5,000 ops          | 100 ops      | 50x     |
-| n = 1,000     | ~500,000 ops        | 1,000 ops    | 500x    |
-| n = 10,000    | ~50,000,000 ops     | 10,000 ops   | 5,000x  |
-
-**Your calculation:** For n = 5,000, the speedup is approximately _____ times faster.
-
----
-
-### Example 2: Next Greater Element
-
-**Problem:** For each element, find the next greater element to the right.
-
-#### Approach 1: Brute Force (Nested Loops)
-
-```java
-// Naive approach - For each element, scan right to find greater
-public static int[] nextGreater_BruteForce(int[] nums) {
-    int[] result = new int[nums.length];
-
-    for (int i = 0; i < nums.length; i++) {
-        result[i] = -1;  // Default: no greater element
-        for (int j = i + 1; j < nums.length; j++) {
-            if (nums[j] > nums[i]) {
-                result[i] = nums[j];
-                break;
-            }
-        }
-    }
-
-    return result;
-}
-```
-
-**Analysis:**
-
-- Time: O(n²) - For each element, scan remaining elements
-- Space: O(n) - Result array only
-- For n = 10,000: ~100,000,000 operations
-
-#### Approach 2: Monotonic Stack (Optimized)
-
-```java
-// Optimized approach - Use decreasing monotonic stack
-public static int[] nextGreater_MonotonicStack(int[] nums) {
-    int[] result = new int[nums.length];
-    Arrays.fill(result, -1);
-    Stack<Integer> stack = new Stack<>();  // Store indices
-
-    for (int i = 0; i < nums.length; i++) {
-        // Pop all smaller elements - we found their next greater
-        while (!stack.isEmpty() && nums[i] > nums[stack.peek()]) {
-            int idx = stack.pop();
-            result[idx] = nums[i];
-        }
-        stack.push(i);
-    }
-
-    return result;
-}
-```
-
-**Analysis:**
-
-- Time: O(n) - Each element pushed and popped at most once
-- Space: O(n) - Stack + result array
-- For n = 10,000: ~20,000 operations (each element visited twice max)
-
-#### Why Does Monotonic Stack Work?
-
-**Key insight to understand:**
-
-In array `[2, 1, 2, 4, 3]`:
-
-```
-i=0, val=2: stack=[0], result=[-1,-1,-1,-1,-1]
-i=1, val=1: stack=[0,1], result=[-1,-1,-1,-1,-1]  (1 < 2, just push)
-i=2, val=2: Pop index 1 (nums[1]=1 < 2), result[1]=2
-            Pop index 0 (nums[0]=2 == 2, no), push 2
-            stack=[0,2], result=[-1,2,-1,-1,-1]
-i=3, val=4: Pop index 2 (nums[2]=2 < 4), result[2]=4
-            Pop index 0 (nums[0]=2 < 4), result[0]=4
-            stack=[3], result=[4,2,4,-1,-1]
-i=4, val=3: stack=[3,4], result=[4,2,4,-1,-1]  (3 < 4, just push)
-```
-
-**Why can we skip comparisons?**
-
-- Stack maintains decreasing order from bottom to top
-- When we find a larger element, we immediately know it's the "next greater" for all smaller elements in stack
-- Each element is pushed once and popped once = O(n) total
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why does monotonic decreasing order help? <span class="fill-in">[Your answer]</span>
-- What work are we avoiding compared to brute force? <span class="fill-in">[Your answer]</span>
-
-</div>
-
----
-
-### Example 3: Sliding Window Maximum
-
-**Problem:** Find maximum in each window of size k.
-
-#### Approach 1: Brute Force (Scan Each Window)
-
-```java
-// Naive approach - Find max in each window independently
-public static int[] maxSlidingWindow_BruteForce(int[] nums, int k) {
-    int[] result = new int[nums.length - k + 1];
-
-    for (int i = 0; i <= nums.length - k; i++) {
-        int max = nums[i];
-        for (int j = i; j < i + k; j++) {
-            max = Math.max(max, nums[j]);
-        }
-        result[i] = max;
-    }
-
-    return result;
-}
-```
-
-**Analysis:**
-
-- Time: O(n * k) - For each window, scan k elements
-- Space: O(1) - Excluding result array
-- For n = 10,000, k = 100: ~1,000,000 operations
-
-#### Approach 2: Monotonic Deque (Optimized)
-
-```java
-// Optimized approach - Use decreasing monotonic deque
-public static int[] maxSlidingWindow_Deque(int[] nums, int k) {
-    int[] result = new int[nums.length - k + 1];
-    Deque<Integer> deque = new ArrayDeque<>();  // Store indices
-
-    for (int i = 0; i < nums.length; i++) {
-        // Remove indices outside window
-        while (!deque.isEmpty() && deque.peekFirst() < i - k + 1) {
-            deque.pollFirst();
-        }
-
-        // Remove smaller elements (they'll never be max)
-        while (!deque.isEmpty() && nums[i] > nums[deque.peekLast()]) {
-            deque.pollLast();
-        }
-
-        deque.offerLast(i);
-
-        // Record maximum (front of deque)
-        if (i >= k - 1) {
-            result[i - k + 1] = nums[deque.peekFirst()];
-        }
-    }
-
-    return result;
-}
-```
-
-**Analysis:**
-
-- Time: O(n) - Each element added and removed at most once
-- Space: O(k) - Deque stores at most k indices
-- For n = 10,000, k = 100: ~20,000 operations
-
-#### Performance Comparison
-
-| Array Size  | Window k | Brute Force (O(n*k)) | Deque (O(n)) | Speedup |
-|-------------|----------|----------------------|--------------|---------|
-| n = 1,000   | k = 10   | 10,000 ops           | 2,000 ops    | 5x      |
-| n = 10,000  | k = 100  | 1,000,000 ops        | 20,000 ops   | 50x     |
-| n = 100,000 | k = 1000 | 100,000,000 ops      | 200,000 ops  | 500x    |
-
-**After implementing, explain:**
-
-<div class="learner-section" markdown>
-
-- Why does deque work better than rescanning? <span class="fill-in">[Your answer]</span>
-- What invariant does the deque maintain? <span class="fill-in">[Your answer]</span>
 
 </div>
 
@@ -432,6 +200,50 @@ public class BasicStack {
     }
 }
 ```
+
+!!! warning "Debugging Challenge — Empty Stack Before Pop"
+    ```java
+    /**
+     * This code is supposed to check if brackets are balanced.
+     * It has 2 BUGS. Find them!
+     */
+    public static boolean isValid_Buggy(String s) {
+        Stack<Character> stack = new Stack<>();
+
+        for (char c : s.toCharArray()) {
+            if (c == '(' || c == '[' || c == '{') {
+                stack.push(c);
+            } else {
+                char open = stack.pop();            if (c == ')' && open != '(') return false;
+                if (c == ']' && open != '[') return false;
+                if (c == '}' && open != '{') return false;
+            }
+        }
+
+        return true;}
+    ```
+
+    - Bug 1: <span class="fill-in">[What's the bug?]</span>
+    - Bug 2: <span class="fill-in">[What's the bug?]</span>
+
+??? success "Answer"
+    **Bug 1:** Must check `if (stack.isEmpty()) return false;` **before** calling `stack.pop()`. Popping an empty stack
+    throws `EmptyStackException`. Any input starting with a closing bracket (e.g., `"]"`) exposes this.
+
+    **Bug 2:** The function returns `true` unconditionally. It should return `stack.isEmpty()`. A string like `"((("` pushes
+    three items onto the stack and never pops them, but the buggy code returns `true` anyway.
+
+    **Fixed code:**
+    ```java
+    } else {
+        if (stack.isEmpty()) return false;  // Check before pop
+        char open = stack.pop();
+        if (c == ')' && open != '(') return false;
+        if (c == ']' && open != '[') return false;
+        if (c == '}' && open != '{') return false;
+    }
+    return stack.isEmpty();  // All openers must be matched
+    ```
 
 **Runnable Client Code:**
 
@@ -546,6 +358,48 @@ public class MonotonicStack {
     }
 }
 ```
+
+!!! warning "Debugging Challenge — Index vs Value in Monotonic Stack"
+    ```java
+    /**
+     * Find next greater element to the right.
+     * This has 1 CRITICAL BUG and 1 LOGIC ERROR.
+     */
+    public static int[] nextGreaterElement_Buggy(int[] nums) {
+        int[] result = new int[nums.length];
+        Stack<Integer> stack = new Stack<>();
+
+        for (int i = 0; i < nums.length; i++) {
+            while (!stack.isEmpty() && nums[i] > nums[stack.peek()]) {
+                int idx = stack.pop();
+                result[i] = nums[i];        }
+            stack.push(nums[i]);    }
+
+        return result;
+    }
+    ```
+
+    - **Bug 1:** _[What's wrong with `result[i] = nums[i]`?]_
+    - **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
+    - **Bug 2:** _[Should we push `nums[i]` or `i`?]_
+    - **Bug 2 fix:** <span class="fill-in">[Why does it matter?]</span>
+
+??? success "Answer"
+    **Bug 1:** Should be `result[idx] = nums[i]`, not `result[i] = nums[i]`. We are answering the question for the element
+    we just **popped** (`idx`), not for the current element `i`.
+
+    **Bug 2:** Should push `i` (the index), not `nums[i]` (the value). We need the index so we can write into `result[idx]`
+    and also so we can compare `nums[i] > nums[stack.peek()]` correctly. Pushing the value makes `nums[stack.peek()]`
+    double-dereference (treating a value as an index), which gives wrong results.
+
+    **Fixed code:**
+    ```java
+    while (!stack.isEmpty() && nums[i] > nums[stack.peek()]) {
+        int idx = stack.pop();
+        result[idx] = nums[i];  // Answer for the POPPED index
+    }
+    stack.push(i);  // Push INDEX, not value
+    ```
 
 **Runnable Client Code:**
 
@@ -788,282 +642,222 @@ public class DequeOperationsClient {
 
 ---
 
-## Debugging Challenges
+!!! info "Loop back"
+    Now that you have implemented all four patterns, return to the **ELI5** section and fill in the scaffolded prompts — especially prompts 6–8 on the monotonic stack. Then revisit the **Quick Quiz** and verify your complexity predictions. Pay particular attention to the monotonic stack O(n) proof: confirm that each element is pushed exactly once and popped at most once, so the total work is O(2n) = O(n) regardless of the inner `while` loop.
 
-**Your task:** Find and fix bugs in broken implementations. This tests your understanding.
+---
 
-### Challenge 1: Broken Valid Parentheses
+## Before/After: Why This Pattern Matters
+
+**Your task:** Compare naive vs optimized approaches to understand the impact.
+
+### Example 1: Valid Parentheses
+
+**Problem:** Check if brackets are balanced in a string like `"([{}])"`.
+
+#### Approach 1: Brute Force (String Replacement)
 
 ```java
-/**
- * This code is supposed to check if brackets are balanced.
- * It has 2 BUGS. Find them!
- */
-public static boolean isValid_Buggy(String s) {
+// Naive approach - Keep removing pairs until none left
+public static boolean isValid_BruteForce(String s) {
+    while (s.contains("()") || s.contains("[]") || s.contains("{}")) {
+        s = s.replace("()", "");
+        s = s.replace("[]", "");
+        s = s.replace("{}", "");
+    }
+    return s.isEmpty();
+}
+```
+
+**Analysis:**
+
+- Time: O(n²) - Each replacement scans the entire string, potentially n/2 iterations
+- Space: O(n) - String replacement creates new strings
+- For n = 10,000: Up to ~50,000,000 operations
+
+#### Approach 2: Stack (Optimized)
+
+```java
+// Optimized approach - Use stack to track opening brackets
+public static boolean isValid_Stack(String s) {
     Stack<Character> stack = new Stack<>();
 
     for (char c : s.toCharArray()) {
         if (c == '(' || c == '[' || c == '{') {
             stack.push(c);
         } else {
-            char open = stack.pop();            if (c == ')' && open != '(') return false;
+            if (stack.isEmpty()) return false;
+            char open = stack.pop();
+            if (c == ')' && open != '(') return false;
             if (c == ']' && open != '[') return false;
             if (c == '}' && open != '{') return false;
         }
     }
 
-    return true;}
-```
-
-**Your debugging:**
-
-- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
-
-- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1 (Line 9):** Should check `if (stack.isEmpty()) return false;` BEFORE popping. Otherwise, popping from empty
-stack throws `EmptyStackException`.
-
-**Bug 2 (Line 15):** Should return `stack.isEmpty()`, not `true`. String like "(((" would leave elements in stack, so
-it's invalid.
-
-**Correct code:**
-
-```java
-} else {
-    if (stack.isEmpty()) return false;  // Check first!
-    char open = stack.pop();
-    // ... matching logic ...
+    return stack.isEmpty();
 }
-return stack.isEmpty();  // All brackets must be matched
 ```
 
-</details>
+**Analysis:**
+
+- Time: O(n) - Single pass through string
+- Space: O(n) - Stack for opening brackets
+- For n = 10,000: ~10,000 operations
+
+#### Performance Comparison
+
+| String Length | Brute Force (O(n²)) | Stack (O(n)) | Speedup |
+|---------------|---------------------|--------------|---------|
+| n = 100       | ~5,000 ops          | 100 ops      | 50x     |
+| n = 1,000     | ~500,000 ops        | 1,000 ops    | 500x    |
+| n = 10,000    | ~50,000,000 ops     | 10,000 ops   | 5,000x  |
+
+**Your calculation:** For n = 5,000, the speedup is approximately _____ times faster.
 
 ---
 
-### Challenge 2: Broken Monotonic Stack
+### Example 2: Next Greater Element
+
+**Problem:** For each element, find the next greater element to the right.
+
+#### Approach 1: Brute Force (Nested Loops)
 
 ```java
-/**
- * Find next greater element to the right.
- * This has 1 CRITICAL BUG and 1 LOGIC ERROR.
- */
-public static int[] nextGreaterElement_Buggy(int[] nums) {
+// Naive approach - For each element, scan right to find greater
+public static int[] nextGreater_BruteForce(int[] nums) {
     int[] result = new int[nums.length];
-    Stack<Integer> stack = new Stack<>();
 
     for (int i = 0; i < nums.length; i++) {
-        while (!stack.isEmpty() && nums[i] > nums[stack.peek()]) {
-            int idx = stack.pop();
-            result[i] = nums[i];        }
-        stack.push(nums[i]);    }
+        result[i] = -1;  // Default: no greater element
+        for (int j = i + 1; j < nums.length; j++) {
+            if (nums[j] > nums[i]) {
+                result[i] = nums[j];
+                break;
+            }
+        }
+    }
 
     return result;
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- **Bug 1:** _[What's wrong with result[i] = nums[i]?]_
-- **Bug 1 fix:** <span class="fill-in">[What should it be?]</span>
+- Time: O(n²) - For each element, scan remaining elements
+- Space: O(n) - Result array only
+- For n = 10,000: ~100,000,000 operations
 
-- **Bug 2:** _[Should we push nums[i] or i?]_
-- **Bug 2 fix:** <span class="fill-in">[Why does it matter?]</span>
-
-**Test case to expose the bugs:**
-
-- Input: `[2, 1, 2, 4, 3]`
-- Expected output: `[4, 2, 4, -1, -1]`
-- Actual output with buggy code: <span class="fill-in">[Trace through manually]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1:** Should be `result[idx] = nums[i]`, not `result[i] = nums[i]`. We're setting the result for the INDEX we
-popped, not the current index.
-
-**Bug 2:** Should push `i` (the index), not `nums[i]` (the value). We need indices to set the result array correctly.
-
-**Correct code:**
+#### Approach 2: Monotonic Stack (Optimized)
 
 ```java
-while (!stack.isEmpty() && nums[i] > nums[stack.peek()]) {
-    int idx = stack.pop();
-    result[idx] = nums[i];  // Set result for POPPED index
+// Optimized approach - Use decreasing monotonic stack
+public static int[] nextGreater_MonotonicStack(int[] nums) {
+    int[] result = new int[nums.length];
+    Arrays.fill(result, -1);
+    Stack<Integer> stack = new Stack<>();  // Store indices
+
+    for (int i = 0; i < nums.length; i++) {
+        // Pop all smaller elements - we found their next greater
+        while (!stack.isEmpty() && nums[i] > nums[stack.peek()]) {
+            int idx = stack.pop();
+            result[idx] = nums[i];
+        }
+        stack.push(i);
+    }
+
+    return result;
 }
-stack.push(i);  // Push INDEX, not value
 ```
 
-</details>
+**Analysis:**
+
+- Time: O(n) - Each element pushed and popped at most once
+- Space: O(n) - Stack + result array
+- For n = 10,000: ~20,000 operations (each element visited twice max)
+
+#### Why Does Monotonic Stack Work?
+
+!!! note "The each-element-once insight"
+    Even though there is a `while` loop inside a `for` loop, the total number of **pop** operations across the entire run is at most n — because each element can only be popped once after it was pushed once. This is the amortised O(n) argument. The nested loops in the brute-force version are genuinely O(n²) because they do independent work for each pair; the monotonic stack version is O(n) because the inner loop's total work is bounded by n, not n per outer iteration.
+
+In array `[2, 1, 2, 4, 3]`:
+
+```
+i=0, val=2: stack=[0], result=[-1,-1,-1,-1,-1]
+i=1, val=1: stack=[0,1], result=[-1,-1,-1,-1,-1]  (1 < 2, just push)
+i=2, val=2: Pop index 1 (nums[1]=1 < 2), result[1]=2
+            Pop index 0 (nums[0]=2 == 2, no), push 2
+            stack=[0,2], result=[-1,2,-1,-1,-1]
+i=3, val=4: Pop index 2 (nums[2]=2 < 4), result[2]=4
+            Pop index 0 (nums[0]=2 < 4), result[0]=4
+            stack=[3], result=[4,2,4,-1,-1]
+i=4, val=3: stack=[3,4], result=[4,2,4,-1,-1]  (3 < 4, just push)
+```
+
+**After implementing, explain in your own words:**
+
+<div class="learner-section" markdown>
+
+- Why does monotonic decreasing order help? <span class="fill-in">[Your answer]</span>
+- What work are we avoiding compared to brute force? <span class="fill-in">[Your answer]</span>
+
+</div>
 
 ---
 
-### Challenge 3: Broken Min Stack
+### Example 3: Sliding Window Maximum
+
+**Problem:** Find maximum in each window of size k.
+
+#### Approach 1: Brute Force (Scan Each Window)
 
 ```java
-/**
- * Implement stack with O(1) getMin().
- * This has 1 SUBTLE BUG in the pop operation.
- */
-static class MinStack_Buggy {
-    Stack<Integer> stack = new Stack<>();
-    Stack<Integer> minStack = new Stack<>();
-
-    public void push(int val) {
-        stack.push(val);
-        if (minStack.isEmpty() || val < minStack.peek()) {
-            minStack.push(val);
-        }
-    }
-
-    public void pop() {
-        stack.pop();
-        minStack.pop();    }
-
-    public int getMin() {
-        return minStack.peek();
-    }
-}
-```
-
-**Your debugging:**
-
-- Bug: <span class="fill-in">[What\'s the bug?]</span>
-
-**Trace through example:**
-
-- Operations: `push(-2), push(0), push(-3), getMin(), pop(), getMin()`
-- Expected final min: `-2`
-- Actual: <span class="fill-in">[What happens with buggy code?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** Should only pop from minStack if the value being removed equals the current minimum.
-
-**Correct code:**
-
-```java
-public void pop() {
-    int val = stack.pop();
-    if (val == minStack.peek()) {  // Only pop if it's the min
-        minStack.pop();
-    }
-}
-```
-
-**Alternative (simpler):** Always push to minStack:
-
-```java
-public void push(int val) {
-    stack.push(val);
-    int min = minStack.isEmpty() ? val : Math.min(val, minStack.peek());
-    minStack.push(min);  // Always push current min
-}
-
-public void pop() {
-    stack.pop();
-    minStack.pop();  // Now both always in sync
-}
-```
-
-</details>
-
----
-
-### Challenge 4: Broken Queue with Stacks
-
-```java
-/**
- * Implement queue using two stacks.
- * This compiles but has WRONG time complexity.
- */
-static class QueueWithStacks_Buggy {
-    Stack<Integer> inbox = new Stack<>();
-    Stack<Integer> outbox = new Stack<>();
-
-    public void enqueue(int x) {
-        inbox.push(x);
-    }
-
-    public int dequeue() {
-        while (!inbox.isEmpty()) {
-            outbox.push(inbox.pop());
-        }
-        return outbox.pop();
-    }
-}
-```
-
-**Your debugging:**
-
-- **Bug:** <span class="fill-in">[What's the performance issue?]</span>
-- **Time complexity:** <span class="fill-in">[What is it now? What should it be?]</span>
-- **Fix:** <span class="fill-in">[How to make it amortized O(1)?]</span>
-
-**Example that shows the problem:**
-
-- Operations: `enqueue(1), enqueue(2), dequeue(), dequeue()`
-- How many transfers happen? <span class="fill-in">[Count them]</span>
-- Expected transfers: <span class="fill-in">[Fill in]</span>
-- Actual with buggy code: <span class="fill-in">[Fill in]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** Should only transfer when outbox is EMPTY, not on every dequeue.
-
-**Correct code:**
-
-```java
-public int dequeue() {
-    if (outbox.isEmpty()) {  // Only transfer when needed
-        while (!inbox.isEmpty()) {
-            outbox.push(inbox.pop());
-        }
-    }
-    return outbox.pop();
-}
-```
-
-**Why it matters:**
-
-- Buggy version: O(n) per dequeue
-- Correct version: O(1) amortized (each element transferred at most once)
-
-</details>
-
----
-
-### Challenge 5: Broken Monotonic Deque (Sliding Window Max)
-
-```java
-/**
- * Find maximum in each sliding window.
- * This has 1 OFF-BY-ONE BUG and 1 LOGIC ERROR.
- */
-public static int[] maxSlidingWindow_Buggy(int[] nums, int k) {
+// Naive approach - Find max in each window independently
+public static int[] maxSlidingWindow_BruteForce(int[] nums, int k) {
     int[] result = new int[nums.length - k + 1];
-    Deque<Integer> deque = new ArrayDeque<>();
+
+    for (int i = 0; i <= nums.length - k; i++) {
+        int max = nums[i];
+        for (int j = i; j < i + k; j++) {
+            max = Math.max(max, nums[j]);
+        }
+        result[i] = max;
+    }
+
+    return result;
+}
+```
+
+**Analysis:**
+
+- Time: O(n * k) - For each window, scan k elements
+- Space: O(1) - Excluding result array
+- For n = 10,000, k = 100: ~1,000,000 operations
+
+#### Approach 2: Monotonic Deque (Optimized)
+
+```java
+// Optimized approach - Use decreasing monotonic deque
+public static int[] maxSlidingWindow_Deque(int[] nums, int k) {
+    int[] result = new int[nums.length - k + 1];
+    Deque<Integer> deque = new ArrayDeque<>();  // Store indices
 
     for (int i = 0; i < nums.length; i++) {
         // Remove indices outside window
-        while (!deque.isEmpty() && deque.peekFirst() <= i - k) {            deque.pollFirst();
+        while (!deque.isEmpty() && deque.peekFirst() < i - k + 1) {
+            deque.pollFirst();
         }
 
-        // Remove smaller elements
+        // Remove smaller elements (they'll never be max)
         while (!deque.isEmpty() && nums[i] > nums[deque.peekLast()]) {
             deque.pollLast();
         }
 
         deque.offerLast(i);
 
-        // Record maximum
-        if (i > k - 1) {            result[i - k + 1] = nums[deque.peekFirst()];
+        // Record maximum (front of deque)
+        if (i >= k - 1) {
+            result[i - k + 1] = nums[deque.peekFirst()];
         }
     }
 
@@ -1071,74 +865,55 @@ public static int[] maxSlidingWindow_Buggy(int[] nums, int k) {
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- **Bug 1:** <span class="fill-in">[Should it be <= or <? Why?]</span>
-- **Bug 1 fix:** <span class="fill-in">[Correct comparison]</span>
+- Time: O(n) - Each element added and removed at most once
+- Space: O(k) - Deque stores at most k indices
+- For n = 10,000, k = 100: ~20,000 operations
 
-- **Bug 2:** <span class="fill-in">[Should it be > or >=? When should we start recording?]</span>
-- **Bug 2 fix:** <span class="fill-in">[Correct comparison]</span>
+#### Performance Comparison
 
-**Test case:**
+| Array Size  | Window k | Brute Force (O(n*k)) | Deque (O(n)) | Speedup |
+|-------------|----------|----------------------|--------------|---------|
+| n = 1,000   | k = 10   | 10,000 ops           | 2,000 ops    | 5x      |
+| n = 10,000  | k = 100  | 1,000,000 ops        | 20,000 ops   | 50x     |
+| n = 100,000 | k = 1000 | 100,000,000 ops      | 200,000 ops  | 500x    |
 
-- Input: `nums = [1,3,-1,-3,5,3,6,7]`, `k = 3`
-- Expected: `[3,3,5,5,6,7]`
-- Actual with buggy code: <span class="fill-in">[Trace first few windows]</span>
+**After implementing, explain:**
 
-<details markdown>
-<summary>Click to verify your answers</summary>
+<div class="learner-section" markdown>
 
-**Bug 1:** Should be `<`, not `<=`. When `deque.peekFirst() == i - k`, it's still in the window.
+- Why does deque work better than rescanning? <span class="fill-in">[Your answer]</span>
+- What invariant does the deque maintain? <span class="fill-in">[Your answer]</span>
 
-- Window at i=3, k=3: includes indices [1,2,3]
-- Remove when index < 1 (i.e., index 0)
-
-**Bug 2:** Should be `>=`, not `>`. We want to start recording when i = k-1 (first complete window).
-
-- First window completes at i=2 (indices 0,1,2 for k=3)
-
-**Correct code:**
-
-```java
-while (!deque.isEmpty() && deque.peekFirst() < i - k + 1) {
-    deque.pollFirst();
-}
-// ...
-if (i >= k - 1) {
-    result[i - k + 1] = nums[deque.peekFirst()];
-}
-```
-
-</details>
+</div>
 
 ---
 
-### Your Debugging Scorecard
+## Common Misconceptions
 
-After finding and fixing all bugs:
+!!! warning "Misconception 1: You must check isEmpty() only before pop, not peek"
+    Both `pop()` and `peek()` throw `EmptyStackException` on an empty stack. Always guard **both** operations with `isEmpty()`.
+    A common pattern that still crashes:
+    ```java
+    if (!stack.isEmpty()) {
+        stack.pop();
+    }
+    char top = stack.peek();  // ← crashes if stack is now empty after the pop
+    ```
+    Guard every stack access individually unless you have a structural guarantee that the stack is non-empty.
 
-- [ ] Found all 8+ bugs across 5 challenges
-- [ ] Understood WHY each bug causes incorrect behavior
-- [ ] Could explain the fix to someone else
-- [ ] Learned common stack/queue mistakes to avoid
+!!! warning "Misconception 2: The monotonic stack stores values, not indices"
+    Storing values instead of indices is the single most common bug when implementing next-greater-element. You need the
+    index to write into the result array (`result[idx] = nums[i]`). If you store the value, you can no longer map back to
+    the position of the element that was waiting for its answer. Always push **indices** into a monotonic stack unless the
+    problem explicitly only asks for values and you have no result array to fill.
 
-**Common mistakes you discovered:**
-
-1. <span class="fill-in">[List the patterns you noticed]</span>
-2. <span class="fill-in">[Fill in]</span>
-3. <span class="fill-in">[Fill in]</span>
-
-**Stack-specific gotchas:**
-
-- What are the common stack underflow issues? <span class="fill-in">[Your answer]</span>
-- When do you check isEmpty()? <span class="fill-in">[Your answer]</span>
-- Index vs value in monotonic stack? <span class="fill-in">[Your answer]</span>
-
-**Queue-specific gotchas:**
-
-- When to transfer between stacks? <span class="fill-in">[Your answer]</span>
-- Off-by-one errors in deque? <span class="fill-in">[Your answer]</span>
-- How to maintain invariants? <span class="fill-in">[Your answer]</span>
+!!! warning "Misconception 3: Queue-with-stacks must transfer on every dequeue"
+    The lazy (amortised O(1)) implementation transfers elements from the inbox stack to the outbox stack **only when the
+    outbox is empty**. If you transfer on every dequeue, each operation is O(n) — equivalent to a naive approach. The
+    amortised argument holds because each element crosses from inbox to outbox at most once over its lifetime, so the total
+    transfer work across all operations is O(n), not O(n) per call.
 
 ---
 
@@ -1249,53 +1024,14 @@ flowchart LR
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-Before moving to the next topic:
+1. You write a `isValid_Buggy` that returns `true` instead of `stack.isEmpty()`. Give a concrete input string that produces the wrong answer, trace the execution to show why, and explain which invariant the correct implementation enforces that the buggy one breaks.
 
-- [ ] **Implementation**
-    - [ ] Basic stack: valid parentheses, RPN, min stack all work
-    - [ ] Monotonic stack: next greater, daily temps all work
-    - [ ] Queue: queue with stacks, circular queue both work
-    - [ ] Deque: sliding window maximum works
-    - [ ] All client code runs successfully
+2. A colleague implements queue-with-stacks by always transferring all elements from the inbox to the outbox on every `dequeue()` call. They test it with `enqueue(1), enqueue(2), dequeue(), dequeue()` and get correct results. Why does their implementation appear to work on this test case but is still O(n) per dequeue? Construct a sequence of operations that exposes the quadratic behaviour.
 
-- [ ] **Pattern Recognition**
-    - [ ] Can identify when to use stack vs queue
-    - [ ] Understand monotonic stack pattern
-    - [ ] Know when to use deque
-    - [ ] Recognize valid parentheses variants
+3. In the monotonic deque for sliding-window maximum, the eviction condition is `deque.peekFirst() < i - k + 1` (strictly less than). What would happen if you changed `<` to `<=`? Give a concrete example showing which window would produce the wrong maximum.
 
-- [ ] **Problem Solving**
-    - [ ] Solved 4 easy problems
-    - [ ] Solved 3-4 medium problems
-    - [ ] Analyzed time/space complexity
-    - [ ] Handled edge cases (empty, single element)
+4. When implementing a monotonic stack for the "next greater element" problem, you must push the **index** rather than the **value**. Describe a problem (distinct from next-greater-element) where you could get away with pushing values, and explain what structural property of that problem makes index tracking unnecessary.
 
-- [ ] **Understanding**
-    - [ ] Filled in all ELI5 explanations
-    - [ ] Built decision tree
-    - [ ] Identified when NOT to use stacks/queues
-    - [ ] Can explain LIFO vs FIFO clearly
-
-- [ ] **Mastery Check**
-    - [ ] Could implement all patterns from memory
-    - [ ] Could recognize pattern in new problem
-    - [ ] Could explain to someone else
-    - [ ] Understand amortized analysis for queue with stacks
-
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
-- [ ] Implement all stack patterns from memory
-- [ ] Implement all queue patterns from memory
-- [ ] Explain LIFO vs FIFO clearly
-- [ ] Recognize when to use monotonic stack
-- [ ] Understand amortized time complexity
-- [ ] Debug common stack/queue mistakes
-- [ ] Compare trade-offs with alternative approaches
-- [ ] Teach these concepts to someone else
-
+5. A monotonic stack problem sometimes needs an **increasing** stack and sometimes a **decreasing** stack. Explain the rule: for "next greater element" you use a decreasing stack, and for "largest rectangle in histogram" you use an increasing stack. Why does each problem require the opposite ordering?

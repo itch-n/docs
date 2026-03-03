@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this section you should be able to:
+
+- Explain why trees are naturally recursive structures and state the two-part definition: a tree is either null or a root node with a left subtree and a right subtree
+- Implement height, balanced-check, minimum-depth, diameter, path-sum, and LCA recursively — each with the correct base case
+- Identify when to return a single value up the call stack, when to use a helper that threads extra state (an array or a class), and when to use backtracking
+- Explain why the O(n²) diameter algorithm recomputes heights, and rewrite it as an O(n) single-pass algorithm using the combine-height-and-diameter trick
+- Diagnose the five most common tree-recursion bugs: missing base case, missing +1, using `||` instead of `&&` in leaf check, using `&&` instead of `||` in path search, and missing `root == p || root == q` in LCA
+- Choose between recursive and iterative implementations based on tree depth and stack-overflow risk
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,10 +26,10 @@
 **Prompts to guide you:**
 
 1. **What is tree recursion in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">[Tree recursion is the technique of solving a tree problem by breaking it into the same problem on smaller trees, where the base case handles ___ nodes and every other case combines the results from the ___ and ___ subtrees]</span>
 
 2. **Why is recursion natural for trees?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">[A tree is literally defined recursively: it is either empty or a root with two subtrees that are themselves trees. This means any algorithm that matches the structure of the definition — handle the null case, then combine left and right results — is already ___]</span>
 
 3. **Real-world analogy:**
     - Example: "Tree recursion is like solving a puzzle by breaking it into smaller identical puzzles..."
@@ -26,13 +39,16 @@
     - Your answer: <span class="fill-in">[Fill in after solving problems]</span>
 
 5. **What's the base case pattern for tree recursion?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">[Almost every tree recursion starts with `if (root == null) return ___`, where the return value represents the correct answer for an empty tree — for height that is ___, for path sum that is ___, and for LCA that is ___]</span>
 
 </div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+!!! tip "How to use this section"
+    Write your best guess in each fill-in span **before** reading any implementation code. Your predictions do not need to be correct — the act of committing to an answer first makes the correct answer stick much better when you verify it later.
 
 <div class="learner-section" markdown>
 
@@ -121,267 +137,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 
 ---
 
-## Before/After: Why This Pattern Matters
-
-**Your task:** Compare iterative vs recursive approaches to understand the impact.
-
-### Example 1: Tree Height
-
-**Problem:** Calculate the height of a binary tree.
-
-#### Approach 1: Iterative (Level-Order Traversal)
-
-```java
-// Iterative approach - Use queue for level-order traversal
-public static int height_Iterative(TreeNode root) {
-    if (root == null) return 0;
-
-    Queue<TreeNode> queue = new LinkedList<>();
-    queue.offer(root);
-    int height = 0;
-
-    while (!queue.isEmpty()) {
-        int levelSize = queue.size();
-        height++;
-
-        for (int i = 0; i < levelSize; i++) {
-            TreeNode node = queue.poll();
-            if (node.left != null) queue.offer(node.left);
-            if (node.right != null) queue.offer(node.right);
-        }
-    }
-
-    return height;
-}
-```
-
-**Analysis:**
-
-- Time: O(n) - Visit every node once
-- Space: O(w) - Queue holds max width of tree (could be n/2 for balanced tree)
-- Lines of code: ~15
-- Complexity: Need to track levels explicitly with queue size
-
-#### Approach 2: Recursive (Divide-and-Conquer)
-
-```java
-// Recursive approach - Natural tree structure
-public static int height_Recursive(TreeNode root) {
-    if (root == null) return 0;
-
-    int leftHeight = height_Recursive(root.left);
-    int rightHeight = height_Recursive(root.right);
-
-    return 1 + Math.max(leftHeight, rightHeight);
-}
-```
-
-**Analysis:**
-
-- Time: O(n) - Visit every node once
-- Space: O(h) - Recursion stack depth equals tree height
-- Lines of code: ~5
-- Complexity: Natural, elegant, follows tree structure
-
-#### Why Does Recursion Work Better?
-
-**Key insight to understand:**
-
-Trees are inherently recursive structures:
-
-- A tree is either empty (null) OR
-- A root node with left subtree and right subtree
-
-This natural recursion makes problems like height trivial:
-
-1. Height of empty tree = 0 (base case)
-2. Height of tree = 1 + max(left height, right height)
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why is recursion more natural for trees? <span class="fill-in">[Your answer]</span>
-- When would iterative be better? <span class="fill-in">[Your answer]</span>
-
-</div>
-
----
-
-### Example 2: Tree Diameter
-
-**Problem:** Find the longest path between any two nodes.
-
-#### Approach 1: Brute Force (Calculate height at every node)
-
-```java
-// Naive approach - Calculate height at every node separately
-public static int diameter_BruteForce(TreeNode root) {
-    if (root == null) return 0;
-
-    // Option 1: Diameter passes through root
-    int leftHeight = height(root.left);
-    int rightHeight = height(root.right);
-    int diameterThroughRoot = leftHeight + rightHeight;
-
-    // Option 2: Diameter is in left subtree
-    int diameterLeft = diameter_BruteForce(root.left);
-
-    // Option 3: Diameter is in right subtree
-    int diameterRight = diameter_BruteForce(root.right);
-
-    return Math.max(diameterThroughRoot,
-                    Math.max(diameterLeft, diameterRight));
-}
-
-private static int height(TreeNode root) {
-    if (root == null) return 0;
-    return 1 + Math.max(height(root.left), height(root.right));
-}
-```
-
-**Analysis:**
-
-- Time: O(n²) - For each node, calculate height (which visits subtree)
-- Space: O(h) - Recursion stack
-- Problem: Recalculates height multiple times
-
-#### Approach 2: Optimized Recursion (Calculate both at once)
-
-```java
-// Optimized approach - Calculate height and update diameter in one pass
-public static int diameter_Optimized(TreeNode root) {
-    int[] maxDiameter = new int[1];
-    calculateHeight(root, maxDiameter);
-    return maxDiameter[0];
-}
-
-private static int calculateHeight(TreeNode root, int[] maxDiameter) {
-    if (root == null) return 0;
-
-    int leftHeight = calculateHeight(root.left, maxDiameter);
-    int rightHeight = calculateHeight(root.right, maxDiameter);
-
-    // Update diameter while calculating height
-    maxDiameter[0] = Math.max(maxDiameter[0], leftHeight + rightHeight);
-
-    return 1 + Math.max(leftHeight, rightHeight);
-}
-```
-
-**Analysis:**
-
-- Time: O(n) - Visit every node exactly once
-- Space: O(h) - Recursion stack
-- Key insight: Combine height calculation with diameter tracking
-
-#### Performance Comparison
-
-| Tree Size  | Brute Force (O(n²)) | Optimized (O(n)) | Speedup |
-|------------|---------------------|------------------|---------|
-| n = 100    | ~10,000 ops         | 100 ops          | 100x    |
-| n = 1,000  | ~1,000,000 ops      | 1,000 ops        | 1,000x  |
-| n = 10,000 | ~100,000,000 ops    | 10,000 ops       | 10,000x |
-
-**Your calculation:** For n = 5,000, the speedup is approximately _____ times faster.
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why does the optimized version avoid recalculation? <span class="fill-in">[Your answer]</span>
-- What pattern do you see in combining calculations? <span class="fill-in">[Your answer]</span>
-
-</div>
-
----
-
-### Example 3: Path Sum
-
-**Problem:** Check if a root-to-leaf path exists with a given sum.
-
-#### Approach 1: Collect All Paths, Then Check
-
-```java
-// Less efficient - Build all paths, then check
-public static boolean hasPathSum_Naive(TreeNode root, int targetSum) {
-    List<List<Integer>> allPaths = new ArrayList<>();
-    collectPaths(root, new ArrayList<>(), allPaths);
-
-    for (List<Integer> path : allPaths) {
-        int sum = 0;
-        for (int val : path) sum += val;
-        if (sum == targetSum) return true;
-    }
-
-    return false;
-}
-
-private static void collectPaths(TreeNode root, List<Integer> current,
-                                 List<List<Integer>> allPaths) {
-    if (root == null) return;
-
-    current.add(root.val);
-
-    if (root.left == null && root.right == null) {
-        allPaths.add(new ArrayList<>(current));
-    } else {
-        collectPaths(root.left, current, allPaths);
-        collectPaths(root.right, current, allPaths);
-    }
-
-    current.remove(current.size() - 1);
-}
-```
-
-**Analysis:**
-
-- Time: O(n) to collect + O(n) to check = O(n)
-- Space: O(n) - Store all paths
-- Problem: Unnecessary space usage
-
-#### Approach 2: Check While Traversing
-
-```java
-// Efficient - Check sum during traversal
-public static boolean hasPathSum_Optimized(TreeNode root, int targetSum) {
-    if (root == null) return false;
-
-    // At leaf: check if remaining sum equals node value
-    if (root.left == null && root.right == null) {
-        return root.val == targetSum;
-    }
-
-    // Recursively check left and right with reduced sum
-    int remaining = targetSum - root.val;
-    return hasPathSum_Optimized(root.left, remaining) ||
-           hasPathSum_Optimized(root.right, remaining);
-}
-```
-
-**Analysis:**
-
-- Time: O(n) - May terminate early
-- Space: O(h) - Only recursion stack
-- Key insight: Check condition while traversing, not after
-
-**Why is the second approach better?**
-
-- Early termination: Returns as soon as a path is found
-- Less space: No need to store all paths
-- Clearer logic: Directly expresses the problem
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- When should you check conditions during recursion vs after? <span class="fill-in">[Your answer]</span>
-- What's the benefit of reducing the target while recursing? <span class="fill-in">[Your answer]</span>
-
-</div>
-
----
-
 ## Core Implementation
 
 ### Pattern 1: Height and Depth
@@ -464,6 +219,44 @@ public class TreeHeightDepth {
     }
 }
 ```
+
+!!! warning "Debugging Challenge — Missing Base Case and Missing +1"
+    ```java
+    /**
+     * Calculate height of binary tree.
+     * This has 2 BUGS. Find them!
+     */
+    public static int height_Buggy(TreeNode root) {
+
+        int leftHeight = height_Buggy(root.left);
+        int rightHeight = height_Buggy(root.right);
+
+        return Math.max(leftHeight, rightHeight);}
+    ```
+
+    - Bug 1: <span class="fill-in">[What's the bug?]</span>
+    - Bug 2: <span class="fill-in">[What's the bug?]</span>
+
+??? success "Answer"
+    **Bug 1:** Missing base case. The function calls `height_Buggy(root.left)` without first checking `if (root == null)`.
+    When the recursion reaches a null child (leaf's child), it throws a `NullPointerException`. Fix: add
+    `if (root == null) return 0;` as the very first line.
+
+    **Bug 2:** The return statement is `Math.max(leftHeight, rightHeight)` but it should be
+    `1 + Math.max(leftHeight, rightHeight)`. The "+1" counts the current node. Without it, a single-node tree returns 0
+    instead of 1, and every height is off by the number of levels.
+
+    **Fixed code:**
+    ```java
+    public static int height(TreeNode root) {
+        if (root == null) return 0;
+
+        int leftHeight = height(root.left);
+        int rightHeight = height(root.right);
+
+        return 1 + Math.max(leftHeight, rightHeight);
+    }
+    ```
 
 **Runnable Client Code:**
 
@@ -592,6 +385,49 @@ public class TreeDiameterPaths {
     }
 }
 ```
+
+!!! warning "Debugging Challenge — Leaf Check Uses Wrong Logical Operator"
+    ```java
+    /**
+     * Check if any root-to-leaf path sums to target.
+     * This has 2 SUBTLE BUGS.
+     */
+    public static boolean hasPathSum_Buggy(TreeNode root, int targetSum) {
+        if (root == null) return false;
+
+        if (root.left == null || root.right == null) {
+            return root.val == targetSum;
+        }
+
+        int remaining = targetSum - root.val;
+
+        return hasPathSum_Buggy(root.left, remaining) &&
+               hasPathSum_Buggy(root.right, remaining);
+    }
+    ```
+
+    - **Bug 1:** <span class="fill-in">[What's wrong with the leaf check?]</span>
+    - **Bug 2:** <span class="fill-in">[Should we use && or ||? Why?]</span>
+
+??? success "Answer"
+    **Bug 1:** The leaf check uses `||` (OR) but should use `&&` (AND). A leaf has BOTH children null. The condition
+    `root.left == null || root.right == null` is true for any node that is missing at least one child — including a node
+    with only a left child. That node is not a leaf, but the buggy code treats it as one and stops descending, potentially
+    returning the wrong answer.
+
+    **Bug 2:** The recursive return uses `&&` (AND) but should use `||` (OR). We need to find **any** root-to-leaf path
+    that sums to target, not every path. Using `&&` requires BOTH subtrees to contain a valid path, which is almost always
+    false.
+
+    **Fixed code:**
+    ```java
+    if (root.left == null && root.right == null) {   // leaf check: both null
+        return root.val == targetSum;
+    }
+    int remaining = targetSum - root.val;
+    return hasPathSum(root.left, remaining) ||        // any path works
+           hasPathSum(root.right, remaining);
+    ```
 
 **Runnable Client Code:**
 
@@ -837,322 +673,128 @@ public class TreeConstructionClient {
 
 ---
 
-## Debugging Challenges
+!!! info "Loop back"
+    Now that you have implemented all four patterns, return to the **ELI5** section and fill in the scaffolded prompts — especially the base-case prompt (prompt 5). Then revisit the **Quick Quiz** base-case quiz and recursion-flow quiz. One question worth spending extra time on: why does the optimised diameter algorithm need a helper that returns height while updating a global max, rather than simply calling `height()` at every node? Make sure you can explain the O(n²) vs O(n) distinction in your own words.
 
-**Your task:** Find and fix bugs in broken tree recursion implementations. This tests your understanding of recursion
-flow.
+---
 
-### Challenge 1: Broken Tree Height
+## Before/After: Why This Pattern Matters
 
-```java
-/**
- * Calculate height of binary tree.
- * This has 2 BUGS. Find them!
- */
-public static int height_Buggy(TreeNode root) {
+**Your task:** Compare iterative vs recursive approaches to understand the impact.
 
-    int leftHeight = height_Buggy(root.left);
-    int rightHeight = height_Buggy(root.right);
+### Example 1: Tree Height
 
-    return Math.max(leftHeight, rightHeight);}
-```
+**Problem:** Calculate the height of a binary tree.
 
-**Your debugging:**
-
-- Bug 1: <span class="fill-in">[What\'s the bug?]</span>
-
-- Bug 2: <span class="fill-in">[What\'s the bug?]</span>
-
-**Test case to expose bugs:**
-
-- Tree: Single node (value = 5)
-- Expected height: 1
-- Actual with bugs: <span class="fill-in">[What do you get? Trace through]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1:** Missing base case! Should check `if (root == null) return 0;` at the start.
-
-**Bug 2:** Missing the "+1" for the current node. Should be:
+#### Approach 1: Iterative (Level-Order Traversal)
 
 ```java
-return 1 + Math.max(leftHeight, rightHeight);
-```
-
-**Complete correct version:**
-
-```java
-public static int height(TreeNode root) {
+// Iterative approach - Use queue for level-order traversal
+public static int height_Iterative(TreeNode root) {
     if (root == null) return 0;
 
-    int leftHeight = height(root.left);
-    int rightHeight = height(root.right);
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
+    int height = 0;
+
+    while (!queue.isEmpty()) {
+        int levelSize = queue.size();
+        height++;
+
+        for (int i = 0; i < levelSize; i++) {
+            TreeNode node = queue.poll();
+            if (node.left != null) queue.offer(node.left);
+            if (node.right != null) queue.offer(node.right);
+        }
+    }
+
+    return height;
+}
+```
+
+**Analysis:**
+
+- Time: O(n) - Visit every node once
+- Space: O(w) - Queue holds max width of tree (could be n/2 for balanced tree)
+- Lines of code: ~15
+- Complexity: Need to track levels explicitly with queue size
+
+#### Approach 2: Recursive (Divide-and-Conquer)
+
+```java
+// Recursive approach - Natural tree structure
+public static int height_Recursive(TreeNode root) {
+    if (root == null) return 0;
+
+    int leftHeight = height_Recursive(root.left);
+    int rightHeight = height_Recursive(root.right);
 
     return 1 + Math.max(leftHeight, rightHeight);
 }
 ```
 
-</details>
+**Analysis:**
+
+- Time: O(n) - Visit every node once
+- Space: O(h) - Recursion stack depth equals tree height
+- Lines of code: ~5
+- Complexity: Natural, elegant, follows tree structure
+
+!!! note "Why recursion matches the tree's own structure"
+    A tree is defined as: empty, OR root node + left subtree + right subtree. The recursive height function mirrors this
+    exactly: base case for empty, then combine the left-subtree height and right-subtree height with `1 + max(...)`. When
+    your code's structure matches the data structure's definition, both the logic and the proof of correctness become
+    immediately obvious.
+
+#### Why Does Recursion Work Better?
+
+**Key insight to understand:**
+
+Trees are inherently recursive structures:
+
+- A tree is either empty (null) OR
+- A root node with left subtree and right subtree
+
+This natural recursion makes problems like height trivial:
+
+1. Height of empty tree = 0 (base case)
+2. Height of tree = 1 + max(left height, right height)
+
+**After implementing, explain in your own words:**
+
+<div class="learner-section" markdown>
+
+- Why is recursion more natural for trees? <span class="fill-in">[Your answer]</span>
+- When would iterative be better? <span class="fill-in">[Your answer]</span>
+
+</div>
 
 ---
 
-### Challenge 2: Broken Diameter Calculation
+### Example 2: Tree Diameter
+
+**Problem:** Find the longest path between any two nodes.
+
+#### Approach 1: Brute Force (Calculate height at every node)
 
 ```java
-/**
- * Calculate tree diameter (longest path between any two nodes).
- * This has 1 CRITICAL BUG.
- */
-public static int diameter_Buggy(TreeNode root) {
+// Naive approach - Calculate height at every node separately
+public static int diameter_BruteForce(TreeNode root) {
     if (root == null) return 0;
 
-    int leftHeight = height(root.left);
-    int rightHeight = height(root.right);
-
-    return leftHeight + rightHeight;
-}
-
-private static int height(TreeNode root) {
-    if (root == null) return 0;
-    return 1 + Math.max(height(root.left), height(root.right));
-}
-```
-
-**Your debugging:**
-
-- **Bug explanation:** <span class="fill-in">[What case is this code missing?]</span>
-- **Example that breaks it:**
-
-```
-    Tree:     1
-             /
-            2
-           / \
-          3   4
-```
-
-- Expected diameter: <span class="fill-in">[What is it? Count the edges]</span>
-- Actual with bug: <span class="fill-in">[What does the buggy code return?]</span>
-
-**Bug fix:** <span class="fill-in">[What must we also check?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** The diameter might NOT pass through the root! It could be entirely in the left or right subtree.
-
-**Example:**
-
-```
-    1
-   /
-  2
- / \
-3   4
-```
-
-The longest path is 3 → 2 → 4 (length 2), which is entirely in the left subtree of node 1.
-
-**Correct approach:**
-
-```java
-public static int diameter(TreeNode root) {
-    if (root == null) return 0;
-
+    // Option 1: Diameter passes through root
     int leftHeight = height(root.left);
     int rightHeight = height(root.right);
     int diameterThroughRoot = leftHeight + rightHeight;
 
-    // MUST also check diameter in subtrees!
-    int diameterLeft = diameter(root.left);
-    int diameterRight = diameter(root.right);
+    // Option 2: Diameter is in left subtree
+    int diameterLeft = diameter_BruteForce(root.left);
+
+    // Option 3: Diameter is in right subtree
+    int diameterRight = diameter_BruteForce(root.right);
 
     return Math.max(diameterThroughRoot,
                     Math.max(diameterLeft, diameterRight));
-}
-```
-
-**Better optimization:** Calculate both height and diameter in one pass (as shown in Pattern 2).
-</details>
-
----
-
-### Challenge 3: Broken Path Sum
-
-```java
-/**
- * Check if any root-to-leaf path sums to target.
- * This has 2 SUBTLE BUGS.
- */
-public static boolean hasPathSum_Buggy(TreeNode root, int targetSum) {
-    if (root == null) return false;
-
-    if (root.left == null || root.right == null) {
-        return root.val == targetSum;
-    }
-
-    int remaining = targetSum - root.val;
-
-    return hasPathSum_Buggy(root.left, remaining) &&
-           hasPathSum_Buggy(root.right, remaining);
-}
-```
-
-**Your debugging:**
-
-- **Bug 1:** <span class="fill-in">[What's wrong with the leaf check?]</span>
-- **Bug 1 fix:** <span class="fill-in">[How should we check if a node is a leaf?]</span>
-
-- **Bug 2:** <span class="fill-in">[Should we use && or ||? Why?]</span>
-- **Bug 2 fix:** <span class="fill-in">[Fill in the correct operator]</span>
-
-**Test case:**
-
-```
-Tree:     5
-         / \
-        4   8
-       /
-      11
-```
-
-Target: 9 (path 5 → 4, but 4 is not a leaf!)
-
-- Expected: false (no root-to-leaf path sums to 9)
-- Actual with bugs: <span class="fill-in">[What happens?]</span>
-
-<details markdown>
-<summary>Click to verify your answers</summary>
-
-**Bug 1:** Leaf check should use `&&` not `||`. A leaf has BOTH children null, not just one!
-
-**Correct:** `if (root.left == null && root.right == null)`
-
-**Bug 2:** Should use `||` not `&&`. We're checking if EITHER subtree has a valid path, not both!
-
-**Why:** We only need ONE path that sums to target. Using `&&` means BOTH subtrees must have valid paths, which is
-wrong.
-
-**Complete correct version:**
-
-```java
-public static boolean hasPathSum(TreeNode root, int targetSum) {
-    if (root == null) return false;
-
-    // Check if leaf node and sum matches
-    if (root.left == null && root.right == null) {
-        return root.val == targetSum;
-    }
-
-    int remaining = targetSum - root.val;
-    return hasPathSum(root.left, remaining) ||
-           hasPathSum(root.right, remaining);
-}
-```
-
-</details>
-
----
-
-### Challenge 4: Broken LCA
-
-```java
-/**
- * Find lowest common ancestor of two nodes.
- * This has 1 LOGIC ERROR in base case.
- */
-public static TreeNode lowestCommonAncestor_Buggy(TreeNode root,
-                                                   TreeNode p, TreeNode q) {
-    if (root == null) return null;
-
-    TreeNode left = lowestCommonAncestor_Buggy(root.left, p, q);
-    TreeNode right = lowestCommonAncestor_Buggy(root.right, p, q);
-
-    if (left != null && right != null) return root;
-    if (left != null) return left;
-    return right;
-}
-```
-
-**Your debugging:**
-
-- **Bug location:** <span class="fill-in">[What's missing in the base case?]</span>
-- **Bug explanation:** <span class="fill-in">[What should happen when root equals p or q?]</span>
-
-**Test case:**
-
-```
-Tree:     3
-         / \
-        5   1
-       / \
-      6   2
-
-p = node 5, q = node 1
-```
-
-- Expected LCA: node 3
-- Actual with bug: <span class="fill-in">[Trace through - what happens?]</span>
-
-**Bug fix:** <span class="fill-in">[What condition should be added?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** Missing the check for when `root == p` or `root == q`!
-
-**Why it matters:** If we find p or q, we should return it immediately. The LCA logic depends on this!
-
-**Correct base case:**
-
-```java
-if (root == null || root == p || root == q) return root;
-```
-
-**Why this works:**
-
-- If root is p, then either:
-    1. q is in a subtree of p → LCA is p
-    2. q is elsewhere → p will be returned up
-- When both left and right are non-null, current root is LCA
-- When only one side is non-null, LCA is in that subtree
-
-**Complete correct version:**
-
-```java
-public static TreeNode lowestCommonAncestor(TreeNode root,
-                                            TreeNode p, TreeNode q) {
-    if (root == null || root == p || root == q) return root;
-
-    TreeNode left = lowestCommonAncestor(root.left, p, q);
-    TreeNode right = lowestCommonAncestor(root.right, p, q);
-
-    if (left != null && right != null) return root;
-    return left != null ? left : right;
-}
-```
-
-</details>
-
----
-
-### Challenge 5: Broken Balanced Tree Check
-
-```java
-/**
- * Check if tree is balanced (height difference <= 1 at every node).
- * This has 1 EFFICIENCY BUG.
- */
-public static boolean isBalanced_Buggy(TreeNode root) {
-    if (root == null) return true;
-
-    int leftHeight = height(root.left);
-    int rightHeight = height(root.right);
-
-    return Math.abs(leftHeight - rightHeight) <= 1 &&
-           isBalanced_Buggy(root.left) &&
-           isBalanced_Buggy(root.right);
 }
 
 private static int height(TreeNode root) {
@@ -1161,150 +803,169 @@ private static int height(TreeNode root) {
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- **Bug type:** <span class="fill-in">[Correctness or efficiency?]</span>
-- **Time complexity:** <span class="fill-in">[What is it? O(n)? O(n²)? O(n log n)?]</span>
-- **Bug explanation:** <span class="fill-in">[Why is it inefficient?]</span>
+- Time: O(n²) - For each node, calculate height (which visits subtree)
+- Space: O(h) - Recursion stack
+- Problem: Recalculates height multiple times
 
-**Better approach:** <span class="fill-in">[How can we check balance while calculating height in one pass?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** Time complexity is O(n²)! Same issue as the diameter brute force approach.
-
-**Why:** For each node, we calculate height (O(n) in worst case), and we do this for all n nodes.
-
-**Better approach:** Return -1 to signal imbalance, actual height otherwise.
-
-**Optimized version:**
+#### Approach 2: Optimized Recursion (Calculate both at once)
 
 ```java
-public static boolean isBalanced(TreeNode root) {
-    return checkBalance(root) != -1;
+// Optimized approach - Calculate height and update diameter in one pass
+public static int diameter_Optimized(TreeNode root) {
+    int[] maxDiameter = new int[1];
+    calculateHeight(root, maxDiameter);
+    return maxDiameter[0];
 }
 
-private static int checkBalance(TreeNode root) {
+private static int calculateHeight(TreeNode root, int[] maxDiameter) {
     if (root == null) return 0;
 
-    int leftHeight = checkBalance(root.left);
-    if (leftHeight == -1) return -1;  // Left subtree unbalanced
+    int leftHeight = calculateHeight(root.left, maxDiameter);
+    int rightHeight = calculateHeight(root.right, maxDiameter);
 
-    int rightHeight = checkBalance(root.right);
-    if (rightHeight == -1) return -1;  // Right subtree unbalanced
-
-    // Check current node's balance
-    if (Math.abs(leftHeight - rightHeight) > 1) return -1;
+    // Update diameter while calculating height
+    maxDiameter[0] = Math.max(maxDiameter[0], leftHeight + rightHeight);
 
     return 1 + Math.max(leftHeight, rightHeight);
 }
 ```
 
-**Time:** O(n) - Each node visited once
-**Space:** O(h) - Recursion stack
-</details>
+**Analysis:**
+
+- Time: O(n) - Visit every node exactly once
+- Space: O(h) - Recursion stack
+- Key insight: Combine height calculation with diameter tracking
+
+#### Performance Comparison
+
+| Tree Size  | Brute Force (O(n²)) | Optimized (O(n)) | Speedup |
+|------------|---------------------|------------------|---------|
+| n = 100    | ~10,000 ops         | 100 ops          | 100x    |
+| n = 1,000  | ~1,000,000 ops      | 1,000 ops        | 1,000x  |
+| n = 10,000 | ~100,000,000 ops    | 10,000 ops       | 10,000x |
+
+**Your calculation:** For n = 5,000, the speedup is approximately _____ times faster.
+
+**After implementing, explain in your own words:**
+
+<div class="learner-section" markdown>
+
+- Why does the optimized version avoid recalculation? <span class="fill-in">[Your answer]</span>
+- What pattern do you see in combining calculations? <span class="fill-in">[Your answer]</span>
+
+</div>
 
 ---
 
-### Challenge 6: Return Value Confusion
+### Example 3: Path Sum
+
+**Problem:** Check if a root-to-leaf path exists with a given sum.
+
+#### Approach 1: Collect All Paths, Then Check
 
 ```java
-/**
- * Find minimum depth (shortest path to a leaf).
- * This has 1 SUBTLE BUG with edge cases.
- */
-public static int minDepth_Buggy(TreeNode root) {
-    if (root == null) return 0;
+// Less efficient - Build all paths, then check
+public static boolean hasPathSum_Naive(TreeNode root, int targetSum) {
+    List<List<Integer>> allPaths = new ArrayList<>();
+    collectPaths(root, new ArrayList<>(), allPaths);
 
-    int leftDepth = minDepth_Buggy(root.left);
-    int rightDepth = minDepth_Buggy(root.right);
+    for (List<Integer> path : allPaths) {
+        int sum = 0;
+        for (int val : path) sum += val;
+        if (sum == targetSum) return true;
+    }
 
-    return 1 + Math.min(leftDepth, rightDepth);
+    return false;
+}
+
+private static void collectPaths(TreeNode root, List<Integer> current,
+                                 List<List<Integer>> allPaths) {
+    if (root == null) return;
+
+    current.add(root.val);
+
+    if (root.left == null && root.right == null) {
+        allPaths.add(new ArrayList<>(current));
+    } else {
+        collectPaths(root.left, current, allPaths);
+        collectPaths(root.right, current, allPaths);
+    }
+
+    current.remove(current.size() - 1);
 }
 ```
 
-**Your debugging:**
+**Analysis:**
 
-- **Edge case that breaks:** <span class="fill-in">[What kind of tree structure fails?]</span>
+- Time: O(n) to collect + O(n) to check = O(n)
+- Space: O(n) - Store all paths
+- Problem: Unnecessary space usage
 
-**Test case:**
-
-```
-Tree:     1
-         /
-        2
-       /
-      3
-```
-
-- Expected min depth: 3 (only path is 1 → 2 → 3)
-- Actual with bug: <span class="fill-in">[What does the buggy code return?]</span>
-
-**Bug explanation:** <span class="fill-in">[Why does it return the wrong value?]</span>
-
-**Bug fix:** <span class="fill-in">[What special case must we handle?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** When a node has only one child, taking the min incorrectly uses 0 from the null child!
-
-**Example trace:**
-
-```
-Tree:  1
-      /
-     2
-    /
-   3
-
-At node 3: leftDepth=0, rightDepth=0, return 1 + min(0,0) = 1 ✓
-At node 2: leftDepth=1, rightDepth=0, return 1 + min(1,0) = 1 ✗ (WRONG!)
-At node 1: leftDepth=1, rightDepth=0, return 1 + min(1,0) = 1 ✗ (WRONG!)
-```
-
-Should return 3, but returns 1!
-
-**Fix:** Must handle single-child case specially:
+#### Approach 2: Check While Traversing
 
 ```java
-public static int minDepth(TreeNode root) {
-    if (root == null) return 0;
+// Efficient - Check sum during traversal
+public static boolean hasPathSum_Optimized(TreeNode root, int targetSum) {
+    if (root == null) return false;
 
-    int leftDepth = minDepth(root.left);
-    int rightDepth = minDepth(root.right);
+    // At leaf: check if remaining sum equals node value
+    if (root.left == null && root.right == null) {
+        return root.val == targetSum;
+    }
 
-    // If one child is null, we must take the other path
-    if (root.left == null) return 1 + rightDepth;
-    if (root.right == null) return 1 + leftDepth;
-
-    // Both children exist, take minimum
-    return 1 + Math.min(leftDepth, rightDepth);
+    // Recursively check left and right with reduced sum
+    int remaining = targetSum - root.val;
+    return hasPathSum_Optimized(root.left, remaining) ||
+           hasPathSum_Optimized(root.right, remaining);
 }
 ```
 
-**Key insight:** Min depth must be to a LEAF node. A node with one null child is NOT a leaf!
-</details>
+**Analysis:**
+
+- Time: O(n) - May terminate early
+- Space: O(h) - Only recursion stack
+- Key insight: Check condition while traversing, not after
+
+**Why is the second approach better?**
+
+- Early termination: Returns as soon as a path is found
+- Less space: No need to store all paths
+- Clearer logic: Directly expresses the problem
+
+**After implementing, explain in your own words:**
+
+<div class="learner-section" markdown>
+
+- When should you check conditions during recursion vs after? <span class="fill-in">[Your answer]</span>
+- What's the benefit of reducing the target while recursing? <span class="fill-in">[Your answer]</span>
+
+</div>
 
 ---
 
-### Your Debugging Scorecard
+## Common Misconceptions
 
-After finding and fixing all bugs:
+!!! warning "Misconception 1: The diameter always passes through the root"
+    A very common mistake is to compute `leftHeight + rightHeight` at the root and return that as the diameter. The
+    diameter is the longest path between **any** two nodes and may be entirely within a subtree. Consider a deeply
+    unbalanced tree where the left subtree is a long chain — the longest path is inside that chain and never touches the
+    root. The correct implementation must check every node as a potential "bend point" of the path, which is why the
+    O(n) algorithm threads a `maxDiameter` array through the height calculation.
 
-- [ ] Found all 8+ bugs across 6 challenges
-- [ ] Understood WHY each bug causes incorrect behavior
-- [ ] Could explain the fix to someone else
-- [ ] Learned common tree recursion mistakes to avoid
+!!! warning "Misconception 2: Recursive tree algorithms have O(n) space because of n nodes"
+    Recursive tree algorithms use O(h) stack space where h is the **height**, not O(n). For a balanced tree h = O(log n),
+    so the stack depth is logarithmic. For a completely skewed tree (like a linked list), h = n, so the stack depth is
+    linear. Always state the space complexity in terms of h and then clarify whether the tree is balanced or not. Saying
+    "O(n) space" without qualification is imprecise and misleading for balanced trees.
 
-**Common recursion mistakes you discovered:**
-
-1. <span class="fill-in">[Missing base cases]</span>
-2. <span class="fill-in">[Forgetting to add current node in calculation]</span>
-3. <span class="fill-in">[Using && instead of || (or vice versa)]</span>
-4. <span class="fill-in">[Not considering all cases (diameter in subtrees, single-child nodes)]</span>
-5. <span class="fill-in">[Recalculating values inefficiently]</span>
+!!! warning "Misconception 3: LCA requires finding p and q before searching"
+    A common brute-force approach finds the paths from root to p and root to q separately, then compares them. The
+    recursive LCA algorithm is cleaner: if we find p or q at the current node we return it immediately, and the first
+    node where both left and right subtrees return non-null is the LCA. This works in a single O(n) pass without storing
+    paths. The key base case that is frequently forgotten is `if (root == null || root == p || root == q) return root` —
+    omitting `root == p || root == q` causes the algorithm to continue searching past the target nodes.
 
 ---
 
@@ -1422,53 +1083,14 @@ flowchart LR
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-Before moving to the next topic:
+1. The brute-force diameter algorithm is O(n²) because it calls `height()` at every node. Prove this claim: write out the recurrence for the number of nodes visited and show it is quadratic for a balanced binary tree. Then explain exactly why threading `maxDiameter` through `calculateHeight` reduces this to O(n).
 
-- [ ] **Implementation**
-    - [ ] Height and depth: all metrics work
-    - [ ] Diameter and paths: calculation and search work
-    - [ ] LCA: binary tree and BST both work
-    - [ ] Construction: preorder/inorder and postorder/inorder work
-    - [ ] All client code runs successfully
+2. The `hasPathSum` function uses `&&` for the leaf check (`root.left == null && root.right == null`) and `||` for combining recursive results. Construct a specific tree and target sum where swapping either operator produces the wrong answer, and trace the execution to show the failure.
 
-- [ ] **Pattern Recognition**
-    - [ ] Can identify when to use recursion
-    - [ ] Understand base case patterns
-    - [ ] Know when to use helper functions
-    - [ ] Recognize backtracking patterns
+3. The LCA base case is `if (root == null || root == p || root == q) return root`. Consider the scenario where p is an ancestor of q. Trace through the LCA algorithm to show that it still returns the correct answer (p) without needing to continue searching inside p's subtree.
 
-- [ ] **Problem Solving**
-    - [ ] Solved 4 easy problems
-    - [ ] Solved 3-4 medium problems
-    - [ ] Analyzed time/space complexity
-    - [ ] Handled edge cases (null, single node, leaf)
+4. The `minDepth` function must handle single-child nodes as a special case. Explain precisely why `1 + Math.min(leftDepth, rightDepth)` gives the wrong answer when a node has only one child, and write the corrected version. Then explain why the same special case does not affect `maxDepth` (height).
 
-- [ ] **Understanding**
-    - [ ] Filled in all ELI5 explanations
-    - [ ] Built decision tree
-    - [ ] Identified when NOT to use recursion
-    - [ ] Can explain recursion flow for each pattern
-
-- [ ] **Mastery Check**
-    - [ ] Could implement all patterns from memory
-    - [ ] Could recognize pattern in new problem
-    - [ ] Could explain to someone else
-    - [ ] Understand recursion stack and space complexity
-
----
-
-### Mastery Certification
-
-**I certify that I can:**
-
-- [ ] Implement all tree recursion patterns from memory
-- [ ] Explain when and why to use each pattern
-- [ ] Write correct base cases without hesitation
-- [ ] Visualize the recursion flow for any tree problem
-- [ ] Optimize O(n²) solutions to O(n)
-- [ ] Debug common recursion mistakes
-- [ ] Choose between recursion and iteration
-- [ ] Teach these concepts to someone else
-
+5. Tree construction from preorder + inorder arrays uses a HashMap for O(1) inorder index lookup. What would the time complexity be if you used `Arrays.asList(inorder).indexOf(val)` instead of the HashMap, and on what kind of tree (balanced vs skewed) would this worst-case performance be triggered?

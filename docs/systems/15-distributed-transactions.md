@@ -4,6 +4,19 @@
 
 ---
 
+## Learning Objectives
+
+By the end of this section you should be able to:
+
+- Explain the two phases of 2PC (prepare and commit) and identify the conditions under which it blocks
+- Implement a Saga orchestrator with sequential steps and reverse-order compensation
+- Distinguish Saga orchestration from Saga choreography and identify when each is more appropriate
+- Implement idempotent compensating actions and explain why idempotency is required, not optional
+- Describe the orphaned-saga problem and design a recovery mechanism using durable saga logs
+- Choose between 2PC and Saga for a given consistency, latency, and availability requirement
+
+---
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
@@ -13,36 +26,39 @@
 **Prompts to guide you:**
 
 1. **What is a distributed transaction in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">A distributed transaction is a ___ that must either fully ___ or fully ___ across multiple services</span>
 
 2. **Why are distributed transactions hard?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">They are hard because ___ can fail independently, so there is no single ___ that can guarantee ___</span>
 
 3. **Real-world analogy for 2PC:**
     - Example: "Two-phase commit is like a wedding ceremony where..."
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
 4. **What is the Saga pattern in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">A Saga is a sequence of ___ steps where each step has a ___ that undoes it if ___</span>
 
 5. **How is orchestration different from choreography?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">Orchestration has a ___ that tells each service what to do; choreography has services ___ reacting to ___</span>
 
 6. **Real-world analogy for Saga choreography:**
     - Example: "Saga choreography is like a relay race where..."
     - Your analogy: <span class="fill-in">[Fill in]</span>
 
 7. **What is compensation in one sentence?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">Compensation is a ___ that ___ the effect of a previous step when the overall Saga ___</span>
 
 8. **When would you use event sourcing?**
-    - Your answer: <span class="fill-in">[Fill in after implementation]</span>
+    - Your answer: <span class="fill-in">Use event sourcing when you need a ___ of all changes for ___ or ___</span>
 
 </div>
 
 ---
 
 ## Quick Quiz (Do BEFORE implementing)
+
+!!! tip "How to use this section"
+    Fill in your best guesses **before** reading any code. After implementing each pattern, return here and check your predictions. The compensation-order question is intentionally tricky — many engineers get this wrong until they trace through a failure scenario.
 
 <div class="learner-section" markdown>
 
@@ -105,267 +121,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 - Verified answer: <span class="fill-in">[Fill in after learning]</span>
 
 </div>
-
----
-
-## Before/After: Why This Pattern Matters
-
-**Your task:** Compare naive vs optimized approaches to understand the impact.
-
-### Example: E-Commerce Order Processing
-
-**Problem:** Process an order involving inventory, payment, and shipping across 3 microservices.
-
-#### Approach 1: Naive Distributed Operations (No Transaction Management)
-
-```java
-// Naive approach - Just call services, hope for the best
-public class NaiveOrderProcessing {
-
-    public boolean processOrder(Order order) {
-        // Step 1: Reserve inventory
-        inventoryService.reserve(order.items);
-
-        // Step 2: Charge payment
-        paymentService.charge(order.customerId, order.amount);
-
-        // Step 3: Create shipment
-        shippingService.createShipment(order);
-
-        return true;
-    }
-}
-```
-
-**Problems:**
-
-- **No rollback:** If payment fails, inventory stays reserved forever
-- **Partial failures:** Customer charged but shipment never created
-- **No consistency:** Services can be in inconsistent states
-- **No retry logic:** Transient failures cause permanent data corruption
-- **Debugging nightmare:** Can't tell which step failed or what state the system is in
-
-**Real failure scenario:**
-
-```
-Step 1: Inventory reserved ✓
-Step 2: Payment charged ✓
-Step 3: Shipping service crashes ✗
-Result: Customer charged, inventory locked, no shipment!
-```
-
-#### Approach 2: Two-Phase Commit (Strong Consistency)
-
-```java
-// 2PC approach - Coordinated commit across all services
-public class TwoPhaseCommitOrderProcessing {
-
-    public boolean processOrder(Order order) {
-        String txId = generateTransactionId();
-
-        // PHASE 1: PREPARE - Ask all services if they can commit
-        boolean inventoryReady = inventoryService.prepare(txId, order.items);
-        boolean paymentReady = paymentService.prepare(txId, order.customerId, order.amount);
-        boolean shippingReady = shippingService.prepare(txId, order);
-
-        // PHASE 2: COMMIT or ABORT
-        if (inventoryReady && paymentReady && shippingReady) {
-            // All ready - commit everywhere
-            inventoryService.commit(txId);
-            paymentService.commit(txId);
-            shippingService.commit(txId);
-            return true;
-        } else {
-            // Someone can't commit - abort everywhere
-            inventoryService.abort(txId);
-            paymentService.abort(txId);
-            shippingService.abort(txId);
-            return false;
-        }
-    }
-}
-```
-
-**Benefits:**
-
-- **Atomic:** Either all commit or all abort
-- **Strong consistency:** No partial states
-- **Locks held:** Resources reserved during prepare
-
-**Drawbacks:**
-
-- **Blocking:** If coordinator crashes, participants locked
-- **Latency:** 2 network round trips minimum
-- **Availability:** Any participant down = whole transaction fails
-- **Not suitable for:** Long-running operations, high-latency networks
-
-#### Approach 3: Saga Pattern (Eventual Consistency)
-
-```java
-// Saga approach - Sequential steps with compensation
-public class SagaOrderProcessing {
-
-    public boolean processOrder(Order order) {
-        List<CompletedStep> completed = new ArrayList<>();
-
-        try {
-            // Step 1: Reserve inventory
-            inventoryService.reserve(order.items);
-            completed.add(new CompletedStep("inventory",
-                () -> inventoryService.releaseReservation(order.items)));
-
-            // Step 2: Charge payment
-            paymentService.charge(order.customerId, order.amount);
-            completed.add(new CompletedStep("payment",
-                () -> paymentService.refund(order.customerId, order.amount)));
-
-            // Step 3: Create shipment
-            shippingService.createShipment(order);
-            completed.add(new CompletedStep("shipping",
-                () -> shippingService.cancelShipment(order)));
-
-            return true;
-
-        } catch (Exception e) {
-            // Compensate in reverse order
-            for (int i = completed.size() - 1; i >= 0; i--) {
-                completed.get(i).compensate();
-            }
-            return false;
-        }
-    }
-}
-```
-
-**Benefits:**
-
-- **Non-blocking:** No locks held between steps
-- **Eventual consistency:** System reaches consistent state
-- **Resilient:** Can handle long-running operations
-- **Suitable for:** Microservices, distributed systems
-
-**Drawbacks:**
-
-- **Compensation complexity:** Must implement reverse operations
-- **Intermediate states visible:** Brief inconsistency possible
-- **Idempotency required:** Compensations may retry
-- **No isolation:** Other transactions may see partial state
-
-#### Performance Comparison
-
-| Aspect               | Naive            | 2PC                    | Saga                        |
-|----------------------|------------------|------------------------|-----------------------------|
-| **Consistency**      | None             | Strong (ACID)          | Eventual                    |
-| **Availability**     | High             | Low (any down = fail)  | High                        |
-| **Latency**          | 1 round trip     | 2+ round trips         | 1 round trip per step       |
-| **Blocking**         | No               | Yes (locks held)       | No                          |
-| **Partial failures** | Corrupt data     | All abort              | Compensate                  |
-| **Complexity**       | Low              | Medium                 | High                        |
-| **Best for**         | Nothing (unsafe) | Small, fast operations | Long-running, microservices |
-
-**Latency Example (3 services, 50ms network latency each):**
-
-- **Naive:** ~150ms (3 sequential calls) - but leaves data corrupt on failure
-- **2PC:** ~300ms (prepare phase 150ms + commit phase 150ms)
-- **Saga:** ~150ms (3 sequential calls) + compensation time if needed
-
-#### Real-World Impact
-
-**Scenario:** E-commerce site processing 1000 orders/minute
-
-**With 2PC:**
-
-- 1 stuck participant locks 100s of transactions
-- Average latency: 300-500ms
-- Failure of any service stops all orders
-- Good for: Financial transfers, small critical updates
-
-**With Saga:**
-
-- Failures isolated per order
-- Average latency: 150-200ms
-- Partial failures compensated automatically
-- Good for: Order processing, user onboarding, booking systems
-
-**Your calculation:**
-
-- For 5 microservices with 100ms latency each, 2PC takes approximately _____ ms
-- Saga with same services takes approximately _____ ms
-- If one service has 10% failure rate, 2PC success rate: <span class="fill-in">___</span>_%
-- Saga can still complete (with compensation) in: <span class="fill-in">___</span>% of cases
-
-#### Why Does Saga Work?
-
-**Key insight to understand:**
-
-In a long-running order process with potential failures:
-
-```
-Saga: Reserve → Charge → Ship (if any fails, undo previous)
-```
-
-**Why eventual consistency is acceptable:**
-
-- Customer doesn't see intermediate states (happens in seconds)
-- If compensation needed, appears as "order canceled" to user
-- Each service independently consistent
-- Auditability: Full history of actions + compensations
-
-**After implementing, explain in your own words:**
-
-<div class="learner-section" markdown>
-
-- Why is compensation in reverse order critical? <span class="fill-in">[Your answer]</span>
-- What makes a good compensation operation? <span class="fill-in">[Your answer]</span>
-- When would you need orchestration vs choreography? <span class="fill-in">[Your answer]</span>
-
-</div>
-
----
-
-## Case Studies: Distributed Transactions in the Wild
-
-### E-commerce Order Processing: The Saga Pattern
-
-- **Pattern:** Saga (Choreography-based).
-- **How it works:** When you place an order on a site like Amazon, multiple microservices are involved. This is not a
-  single ACID transaction. Instead, it's a **Saga**:
-    1. The **Orders Service** creates an order and saves it with a `PENDING` status. It then publishes an `OrderCreated`
-       event.
-    2. The **Payments Service** listens for `OrderCreated`, processes the payment, and publishes a `PaymentSucceeded`
-       event.
-    3. The **Inventory Service** listens for `PaymentSucceeded`, decrements the product stock, and publishes
-       `InventoryUpdated`.
-    4. **Compensation:** If the payment fails, the Payments Service publishes `PaymentFailed`. The Orders Service
-       listens for this and runs a *compensating action* to cancel the order.
-- **Key Takeaway:** For long-running business processes that span multiple services, Sagas provide a way to achieve
-  eventual consistency without using slow, blocking distributed locks. The key is defining a compensating action for
-  every step that could fail.
-
-### Distributed Databases (Google Spanner, CockroachDB): Two-Phase Commit
-
-- **Pattern:** Two-Phase Commit (2PC) integrated with a consensus protocol like Paxos or Raft.
-- **How it works:** Modern distributed SQL databases like Spanner and CockroachDB provide ACID transactions across
-  multiple machines. When you `BEGIN TRANSACTION` and update records that live on different nodes (shards), the database
-  uses a 2PC-like protocol. A **transaction coordinator** first asks all participating nodes if they are ready to
-  commit (Phase 1: Prepare). If all nodes agree, the coordinator tells them all to commit (Phase 2: Commit). This
-  ensures the transaction is atomic, even across a global cluster.
-- **Key Takeaway:** While brittle in traditional applications, 2PC is a core component of modern distributed databases.
-  When tightly integrated with consensus protocols, it provides the strong consistency guarantees that developers expect
-  from a SQL database, even in a distributed environment.
-
-### Ride-Sharing Apps (Uber, Lyft): Sagas for Trip Management
-
-- **Pattern:** Saga (Orchestration-based).
-- **How it works:** A single ride is a long-running process managed by a Saga orchestrator.
-    1. **Request Ride:** The orchestrator calls the `MatchingService` to find a driver.
-    2. **Driver Found:** The orchestrator calls the `NotificationService` to inform the user.
-    3. **Trip Completed:** The driver's app signals the end of the trip. The orchestrator calls the `BillingService` to
-       calculate the fare and charge the user.
-    4. **Payment Processed:** The orchestrator calls the `RatingsService` to prompt the user and driver for a rating.
-- **Key Takeaway:** An orchestrator provides a centralized way to manage a complex workflow. It's easier to see the
-  state of the entire process, but it can become a single point of failure and a bottleneck if not designed carefully.
-  This contrasts with the choreography approach where services react to each other's events.
 
 ---
 
@@ -559,6 +314,31 @@ public class TwoPhaseCommit {
 }
 ```
 
+!!! warning "Debugging Challenge — 2PC Blocking on Coordinator Crash"
+    The following code simulates the classic 2PC blocking problem. A coordinator crashes after sending commit to the first participant but before reaching the second.
+
+    ```java
+    public void commitPhase(String txId, List<Participant> participants) {
+        for (Participant p : participants) {
+            p.commit(txId);
+            // Coordinator crashes here after first commit!
+        }
+    }
+    ```
+
+    - What state is `participants.get(1)` in after the crash?
+    - Is it safe for that participant to abort on its own? Why or why not?
+    - What mechanism prevents this from causing permanent inconsistency in production systems?
+
+    ??? success "Answer"
+        **State after crash:** `participants.get(1)` is in the PREPARED state. It holds locks on its resources and is waiting indefinitely for a commit or abort instruction from the coordinator that will never come.
+
+        **Why it cannot abort alone:** `participants.get(0)` has already committed. If `participants.get(1)` aborts, the two participants are in different final states — a clear consistency violation (the transaction partially committed).
+
+        **Production mechanism:** The coordinator must durably log the COMMIT_DECISION before sending any commit messages. On recovery, a new coordinator reads the log and resends commits to all participants that have not yet acknowledged. Participants also implement a timeout-and-query protocol: after a timeout, they contact other participants to learn whether anyone has already committed, which reveals the coordinator's original decision.
+
+---
+
 ### Part 2: Saga Pattern - Orchestration
 
 **Your task:** Implement Saga with centralized orchestrator.
@@ -695,6 +475,8 @@ public class SagaOrchestrator {
 }
 ```
 
+---
+
 ### Part 3: Saga Pattern - Choreography
 
 **Your task:** Implement Saga with event-based choreography.
@@ -814,6 +596,8 @@ public class SagaChoreography {
 }
 ```
 
+---
+
 ### Part 4: Compensation Pattern
 
 **Your task:** Implement compensating transactions.
@@ -929,6 +713,8 @@ public class CompensationHandler {
     }
 }
 ```
+
+---
 
 ### Part 5: Event Sourcing
 
@@ -1304,572 +1090,285 @@ public class DistributedTransactionsClient {
 }
 ```
 
+!!! info "Loop back"
+    Now that you have implemented all five patterns, return to the **Quick Quiz** at the top of this page. Fill in the "Verified after learning" fields. Were your predictions about 2PC blocking correct? Did you underestimate the compensation challenges? Return to the **ELI5** section and complete all eight fill-in sentences.
+
 ---
 
-## Debugging Challenges
+## Before/After: Why This Pattern Matters
 
-**Your task:** Find and fix bugs in distributed transaction implementations. This tests your understanding of
-distributed systems pitfalls.
+!!! note "Key insight"
+    2PC and Saga are not simply "strong vs eventual" — they represent fundamentally different availability trade-offs. 2PC makes a system unavailable whenever any participant is unavailable. Saga keeps each service independently available but requires you to design compensation logic for every forward step. The cost of Saga is complexity; the cost of 2PC is availability.
 
-### Challenge 1: Broken Saga Compensation Order
+**Your task:** Compare naive vs optimized approaches to understand the impact.
+
+### Example: E-Commerce Order Processing
+
+**Problem:** Process an order involving inventory, payment, and shipping across 3 microservices.
+
+#### Approach 1: Naive Distributed Operations (No Transaction Management)
 
 ```java
-/**
- * This Saga implementation has a CRITICAL compensation bug.
- * It will leave the system in an inconsistent state on failure.
- */
-public class BrokenSagaCompensation {
+// Naive approach - Just call services, hope for the best
+public class NaiveOrderProcessing {
 
-    public SagaResult executeOrderSaga(Order order) {
-        List<SagaStep> completedSteps = new ArrayList<>();
+    public boolean processOrder(Order order) {
+        // Step 1: Reserve inventory
+        inventoryService.reserve(order.items);
+
+        // Step 2: Charge payment
+        paymentService.charge(order.customerId, order.amount);
+
+        // Step 3: Create shipment
+        shippingService.createShipment(order);
+
+        return true;
+    }
+}
+```
+
+**Problems:**
+
+- **No rollback:** If payment fails, inventory stays reserved forever
+- **Partial failures:** Customer charged but shipment never created
+- **No consistency:** Services can be in inconsistent states
+- **No retry logic:** Transient failures cause permanent data corruption
+- **Debugging nightmare:** Can't tell which step failed or what state the system is in
+
+**Real failure scenario:**
+
+```
+Step 1: Inventory reserved ✓
+Step 2: Payment charged ✓
+Step 3: Shipping service crashes ✗
+Result: Customer charged, inventory locked, no shipment!
+```
+
+#### Approach 2: Two-Phase Commit (Strong Consistency)
+
+```java
+// 2PC approach - Coordinated commit across all services
+public class TwoPhaseCommitOrderProcessing {
+
+    public boolean processOrder(Order order) {
+        String txId = generateTransactionId();
+
+        // PHASE 1: PREPARE - Ask all services if they can commit
+        boolean inventoryReady = inventoryService.prepare(txId, order.items);
+        boolean paymentReady = paymentService.prepare(txId, order.customerId, order.amount);
+        boolean shippingReady = shippingService.prepare(txId, order);
+
+        // PHASE 2: COMMIT or ABORT
+        if (inventoryReady && paymentReady && shippingReady) {
+            // All ready - commit everywhere
+            inventoryService.commit(txId);
+            paymentService.commit(txId);
+            shippingService.commit(txId);
+            return true;
+        } else {
+            // Someone can't commit - abort everywhere
+            inventoryService.abort(txId);
+            paymentService.abort(txId);
+            shippingService.abort(txId);
+            return false;
+        }
+    }
+}
+```
+
+**Benefits:**
+
+- **Atomic:** Either all commit or all abort
+- **Strong consistency:** No partial states
+- **Locks held:** Resources reserved during prepare
+
+**Drawbacks:**
+
+- **Blocking:** If coordinator crashes, participants locked
+- **Latency:** 2 network round trips minimum
+- **Availability:** Any participant down = whole transaction fails
+- **Not suitable for:** Long-running operations, high-latency networks
+
+#### Approach 3: Saga Pattern (Eventual Consistency)
+
+```java
+// Saga approach - Sequential steps with compensation
+public class SagaOrderProcessing {
+
+    public boolean processOrder(Order order) {
+        List<CompletedStep> completed = new ArrayList<>();
 
         try {
             // Step 1: Reserve inventory
             inventoryService.reserve(order.items);
-            completedSteps.add(new InventoryStep());
+            completed.add(new CompletedStep("inventory",
+                () -> inventoryService.releaseReservation(order.items)));
 
             // Step 2: Charge payment
-            paymentService.charge(order.amount);
-            completedSteps.add(new PaymentStep());
+            paymentService.charge(order.customerId, order.amount);
+            completed.add(new CompletedStep("payment",
+                () -> paymentService.refund(order.customerId, order.amount)));
 
-            // Step 3: Create shipment (this might fail)
+            // Step 3: Create shipment
             shippingService.createShipment(order);
-            completedSteps.add(new ShippingStep());
+            completed.add(new CompletedStep("shipping",
+                () -> shippingService.cancelShipment(order)));
 
-            return SagaResult.success();
+            return true;
 
         } catch (Exception e) {
-            for (SagaStep step : completedSteps) {
-                step.compensate();  // What's wrong with this?
+            // Compensate in reverse order
+            for (int i = completed.size() - 1; i >= 0; i--) {
+                completed.get(i).compensate();
             }
-            return SagaResult.failure();
+            return false;
         }
     }
 }
 ```
 
-**Your debugging:**
+**Benefits:**
 
-- **Bug location:** <span class="fill-in">[Which line?]</span>
-- **Bug explanation:** <span class="fill-in">[Why is the compensation order wrong?]</span>
-- **Real-world impact:** <span class="fill-in">[What could happen?]</span>
-- **Fix:** <span class="fill-in">[How to correct it?]</span>
+- **Non-blocking:** No locks held between steps
+- **Eventual consistency:** System reaches consistent state
+- **Resilient:** Can handle long-running operations
+- **Suitable for:** Microservices, distributed systems
 
-**Scenario to trace:**
+**Drawbacks:**
 
-- Inventory reserved (step 1)
-- Payment charged (step 2)
-- Shipping fails (step 3)
-- Compensation runs in forward order...
-- What happens if refund depends on shipment being canceled first?
+- **Compensation complexity:** Must implement reverse operations
+- **Intermediate states visible:** Brief inconsistency possible
+- **Idempotency required:** Compensations may retry
+- **No isolation:** Other transactions may see partial state
 
-<details markdown>
-<summary>Click to verify your answer</summary>
+#### Performance Comparison
 
-**Bug:** Compensating in forward order instead of reverse order (line with `for (SagaStep step : completedSteps)`).
+| Aspect               | Naive            | 2PC                    | Saga                        |
+|----------------------|------------------|------------------------|-----------------------------|
+| **Consistency**      | None             | Strong (ACID)          | Eventual                    |
+| **Availability**     | High             | Low (any down = fail)  | High                        |
+| **Latency**          | 1 round trip     | 2+ round trips         | 1 round trip per step       |
+| **Blocking**         | No               | Yes (locks held)       | No                          |
+| **Partial failures** | Corrupt data     | All abort              | Compensate                  |
+| **Complexity**       | Low              | Medium                 | High                        |
+| **Best for**         | Nothing (unsafe) | Small, fast operations | Long-running, microservices |
 
-**Why it's wrong:**
+**Latency Example (3 services, 50ms network latency each):**
 
-- Step 3 depends on step 2, step 2 depends on step 1
-- Must undo in reverse dependency order
-- Forward compensation can violate business rules
+- **Naive:** ~150ms (3 sequential calls) - but leaves data corrupt on failure
+- **2PC:** ~300ms (prepare phase 150ms + commit phase 150ms)
+- **Saga:** ~150ms (3 sequential calls) + compensation time if needed
 
-**Example failure:**
+#### Real-World Impact
+
+**Scenario:** E-commerce site processing 1000 orders/minute
+
+**With 2PC:**
+
+- 1 stuck participant locks 100s of transactions
+- Average latency: 300-500ms
+- Failure of any service stops all orders
+- Good for: Financial transfers, small critical updates
+
+**With Saga:**
+
+- Failures isolated per order
+- Average latency: 150-200ms
+- Partial failures compensated automatically
+- Good for: Order processing, user onboarding, booking systems
+
+**Your calculation:**
+
+- For 5 microservices with 100ms latency each, 2PC takes approximately _____ ms
+- Saga with same services takes approximately _____ ms
+- If one service has 10% failure rate, 2PC success rate: <span class="fill-in">___</span>_%
+- Saga can still complete (with compensation) in: <span class="fill-in">___</span>% of cases
+
+#### Why Does Saga Work?
+
+**Key insight to understand:**
+
+In a long-running order process with potential failures:
 
 ```
-Forward order: Compensate inventory → compensate payment → compensate shipping
-Problem: Refund issued before shipment canceled (business rule violation)
-
-Reverse order: Compensate shipping → compensate payment → compensate inventory
-Correct: Cancel shipment first, then refund, then release inventory
+Saga: Reserve → Charge → Ship (if any fails, undo previous)
 ```
 
-**Fix:**
+**Why eventual consistency is acceptable:**
 
-```java
-for (int i = completedSteps.size() - 1; i >= 0; i--) {
-    completedSteps.get(i).compensate();
-}
-```
+- Customer doesn't see intermediate states (happens in seconds)
+- If compensation needed, appears as "order canceled" to user
+- Each service independently consistent
+- Auditability: Full history of actions + compensations
 
-</details>
+**After implementing, explain in your own words:**
+
+<div class="learner-section" markdown>
+
+- Why is compensation in reverse order critical? <span class="fill-in">[Your answer]</span>
+- What makes a good compensation operation? <span class="fill-in">[Your answer]</span>
+- When would you need orchestration vs choreography? <span class="fill-in">[Your answer]</span>
+
+</div>
 
 ---
 
-### Challenge 2: Non-Idempotent Compensation
+## Case Studies: Distributed Transactions in the Wild
 
-```java
-/**
- * This compensation is NOT idempotent - running it twice causes problems!
- * In distributed systems, compensations may retry due to network failures.
- */
-public class NonIdempotentCompensation extends CompensatingAction {
+### E-commerce Order Processing: The Saga Pattern
 
-    @Override
-    public void execute() throws Exception {
-        // Deduct inventory
-        inventory.reduce(productId, quantity);
-    }
+- **Pattern:** Saga (Choreography-based).
+- **How it works:** When you place an order on a site like Amazon, multiple microservices are involved. This is not a
+  single ACID transaction. Instead, it's a **Saga**:
+    1. The **Orders Service** creates an order and saves it with a `PENDING` status. It then publishes an `OrderCreated`
+       event.
+    2. The **Payments Service** listens for `OrderCreated`, processes the payment, and publishes a `PaymentSucceeded`
+       event.
+    3. The **Inventory Service** listens for `PaymentSucceeded`, decrements the product stock, and publishes
+       `InventoryUpdated`.
+    4. **Compensation:** If the payment fails, the Payments Service publishes `PaymentFailed`. The Orders Service
+       listens for this and runs a *compensating action* to cancel the order.
+- **Key Takeaway:** For long-running business processes that span multiple services, Sagas provide a way to achieve
+  eventual consistency without using slow, blocking distributed locks. The key is defining a compensating action for
+  every step that could fail.
 
-    @Override
-    public void compensate() throws Exception {
-        inventory.add(productId, quantity);
-    }
-}
-```
+### Distributed Databases (Google Spanner, CockroachDB): Two-Phase Commit
 
-**Your debugging:**
+- **Pattern:** Two-Phase Commit (2PC) integrated with a consensus protocol like Paxos or Raft.
+- **How it works:** Modern distributed SQL databases like Spanner and CockroachDB provide ACID transactions across
+  multiple machines. When you `BEGIN TRANSACTION` and update records that live on different nodes (shards), the database
+  uses a 2PC-like protocol. A **transaction coordinator** first asks all participating nodes if they are ready to
+  commit (Phase 1: Prepare). If all nodes agree, the coordinator tells them all to commit (Phase 2: Commit). This
+  ensures the transaction is atomic, even across a global cluster.
+- **Key Takeaway:** While brittle in traditional applications, 2PC is a core component of modern distributed databases.
+  When tightly integrated with consensus protocols, it provides the strong consistency guarantees that developers expect
+  from a SQL database, even in a distributed environment.
 
-- **Bug:** <span class="fill-in">[What happens if compensate() is called twice?]</span>
-- **Scenario:** <span class="fill-in">[Network timeout causes retry - what's the result?]</span>
-- **Impact:** <span class="fill-in">[What's wrong with the inventory now?]</span>
-- **Fix:** <span class="fill-in">[How to make it idempotent?]</span>
+### Ride-Sharing Apps (Uber, Lyft): Sagas for Trip Management
 
-**Test case:**
-
-- Initial inventory: 100 units
-- Transaction reserves: 10 units (inventory now 90)
-- Compensation called first time: adds back 10 (inventory now 100) ✓
-- Network timeout, retry...
-- Compensation called second time: adds back 10 again!
-- Current inventory: <span class="fill-in">[Fill in - is this correct?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Bug:** Compensation adds inventory without checking if it was already compensated. Running twice adds 20 units instead
-of 10.
-
-**Impact:**
-
-- Inventory count becomes incorrect (ghost inventory)
-- Overselling possible
-- Accounting mismatch
-
-**Fix - Make it idempotent:**
-
-```java
-@Override
-public void compensate() throws Exception {
-    // Use idempotency key
-    String compensationId = transactionId + "-inventory-compensate";
-
-    if (compensationLog.isAlreadyProcessed(compensationId)) {
-        System.out.println("Already compensated, skipping");
-        return;
-    }
-
-    inventory.add(productId, quantity);
-    compensationLog.markProcessed(compensationId);
-}
-```
-
-**Alternative fix - Use state machine:**
-
-```java
-if (reservation.status == COMPENSATED) {
-    return; // Already done
-}
-inventory.add(productId, quantity);
-reservation.status = COMPENSATED;
-```
-
-</details>
+- **Pattern:** Saga (Orchestration-based).
+- **How it works:** A single ride is a long-running process managed by a Saga orchestrator.
+    1. **Request Ride:** The orchestrator calls the `MatchingService` to find a driver.
+    2. **Driver Found:** The orchestrator calls the `NotificationService` to inform the user.
+    3. **Trip Completed:** The driver's app signals the end of the trip. The orchestrator calls the `BillingService` to
+       calculate the fare and charge the user.
+    4. **Payment Processed:** The orchestrator calls the `RatingsService` to prompt the user and driver for a rating.
+- **Key Takeaway:** An orchestrator provides a centralized way to manage a complex workflow. It's easier to see the
+  state of the entire process, but it can become a single point of failure and a bottleneck if not designed carefully.
+  This contrasts with the choreography approach where services react to each other's events.
 
 ---
 
-### Challenge 3: Orphaned Saga (Lost Coordinator)
+## Common Misconceptions
 
-```java
-/**
- * The saga coordinator crashes after step 2 completes.
- * Steps 1 and 2 are done, but step 3 never executes.
- * How do you detect and recover from this?
- */
-public class OrphanedSaga {
+!!! warning "Misconception 1: Saga is just a distributed try/catch"
+    Saga is often described as "if step N fails, undo steps N-1 through 1." This makes it sound like distributed exception handling. The critical difference is that compensations are **semantic reversals** — they represent meaningful business actions (issue a refund, cancel a reservation), not byte-level rollbacks. A compensation can itself fail, can be seen by other transactions while it is running, and must be idempotent because it may be retried. A simple try/catch offers none of these guarantees.
 
-    public void executeSaga(String sagaId) {
-        sagaLog.write(sagaId, "STARTED");
+!!! warning "Misconception 2: 2PC guarantees no data loss"
+    2PC guarantees **atomicity** — all participants commit or all abort. It does not guarantee no data loss. If the coordinator crashes after deciding to commit but before all participants receive the decision, some participants are left holding locks in a PREPARED state indefinitely. This is the blocking problem. Data is not corrupted, but the system is unavailable until the coordinator recovers. In practice, this means 2PC requires a highly available, replicated coordinator to be truly safe.
 
-        // Step 1: Reserve inventory
-        inventoryService.reserve(sagaId, items);
-        sagaLog.write(sagaId, "INVENTORY_RESERVED");
-
-        // Step 2: Charge payment
-        paymentService.charge(sagaId, amount);
-        sagaLog.write(sagaId, "PAYMENT_CHARGED");
-
-        // CRASH HERE! Coordinator dies before step 3
-        // Step 3 never executes, saga never completes
-
-        // Step 3: Create shipment
-        shippingService.createShipment(sagaId, order);
-        sagaLog.write(sagaId, "COMPLETED");
-    }
-}
-```
-
-**Your debugging:**
-
-- **Problem:** <span class="fill-in">[What's the system state after crash?]</span>
-- **Detection:** <span class="fill-in">[How do you detect this orphaned saga?]</span>
-- **Recovery strategy:** <span class="fill-in">[Should you complete it or compensate?]</span>
-- **Prevention:** <span class="fill-in">[How to prevent this?]</span>
-
-**Scenario:**
-
-- Saga started at 10:00:00
-- Step 1 completed at 10:00:01
-- Step 2 completed at 10:00:02
-- Coordinator crashed at 10:00:02.5
-- Current time: 10:05:00 (5 minutes later)
-- Saga status: <span class="fill-in">[What does the log show?]</span>
-- Customer charged: <span class="fill-in">[Yes/No?]</span>
-- Order shipped: <span class="fill-in">[Yes/No?]</span>
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Problem:** Saga is stuck in partial state - inventory reserved, payment charged, but never shipped.
-
-**Detection strategies:**
-
-1. **Timeout monitoring:**
-
-```java
-// Background job finds incomplete sagas
-List<Saga> stuck = sagaLog.findSagasOlderThan(5 minutes, status != COMPLETED);
-for (Saga saga : stuck) {
-    recoverOrCompensate(saga);
-}
-```
-
-2. **Health check pattern:**
-
-```java
-// Coordinator sends heartbeats
-coordinator.recordHeartbeat(sagaId, timestamp);
-
-// Monitor detects missing heartbeats
-if (timeSinceLastHeartbeat > threshold) {
-    recoverSaga(sagaId);
-}
-```
-
-**Recovery strategy:**
-
-```java
-// Check saga log to determine recovery action
-SagaState state = sagaLog.getCurrentState(sagaId);
-
-if (state == "PAYMENT_CHARGED") {
-    // Decision point: complete or compensate?
-
-    // Option 1: Complete the saga (forward recovery)
-    shippingService.createShipment(sagaId, order);
-    sagaLog.write(sagaId, "COMPLETED");
-
-    // Option 2: Compensate (backward recovery)
-    paymentService.refund(sagaId);
-    inventoryService.release(sagaId);
-    sagaLog.write(sagaId, "COMPENSATED");
-}
-```
-
-**Prevention:**
-
-- Persist saga state before each step
-- Use durable message queue for step execution
-- Implement saga recovery service
-- Set timeouts for each step
-
-</details>
-
----
-
-### Challenge 4: Compensation Failure
-
-```java
-/**
- * What happens when compensation itself fails?
- * This is one of the hardest distributed transaction problems!
- */
-public class CompensationFailure {
-
-    public void executeSagaWithFailingCompensation() {
-        try {
-            // Step 1: Charge payment - succeeds
-            paymentService.charge(customerId, 100);
-
-            // Step 2: Reserve inventory - FAILS
-            inventoryService.reserve(items);
-            throw new Exception("Out of stock");
-
-        } catch (Exception e) {
-            // Try to compensate step 1
-            try {
-                paymentService.refund(customerId, 100);
-                throw new Exception("Payment gateway timeout");
-
-            } catch (Exception compensationError) {
-                // NOW WHAT? Customer charged, no order, refund failed!
-                // Your code here: <span class="fill-in">[How do you handle this?]</span>
-            }
-        }
-    }
-}
-```
-
-**Your debugging:**
-
-- **Problem:** <span class="fill-in">[What's the current state?]</span>
-- **Can you retry?** <span class="fill-in">[What if retry also fails?]</span>
-- **Manual intervention?** <span class="fill-in">[How to flag for human review?]</span>
-- **Customer impact:** <span class="fill-in">[What does the customer see?]</span>
-
-**Failure tree:**
-
-```
-Transaction: Charge $100 → Reserve inventory
-├─ Charge succeeds ✓
-├─ Reserve fails ✗
-└─ Compensation: Refund $100
-   └─ Refund FAILS ✗ (payment gateway down)
-
-Current state:
-
-- Customer charged: $100 ✓
-- Inventory reserved: No ✗
-- Refund processed: No ✗
-- System state: INCONSISTENT!
-```
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**This is a real problem with no perfect solution.** Here are the strategies:
-
-**Strategy 1: Retry with exponential backoff**
-
-```java
-catch (Exception compensationError) {
-    // Add to retry queue
-    retryQueue.add(new CompensationRetry(
-        sagaId,
-        "refund",
-        maxRetries: 10,
-        backoff: EXPONENTIAL
-    ));
-
-    // Alert monitoring
-    alerting.criticalError("Compensation failed for " + sagaId);
-}
-```
-
-**Strategy 2: Dead letter queue + manual intervention**
-
-```java
-catch (Exception compensationError) {
-    // Move to dead letter queue after max retries
-    if (retryCount > MAX_RETRIES) {
-        deadLetterQueue.add(new FailedCompensation(
-            sagaId,
-            customerId,
-            amount: 100,
-            reason: compensationError.getMessage()
-        ));
-
-        // Create support ticket
-        ticketSystem.create(
-            priority: HIGH,
-            title: "Manual refund needed",
-            details: "Customer " + customerId + " needs $100 refund"
-        );
-    }
-}
-```
-
-**Strategy 3: Eventual consistency with monitoring**
-
-```java
-catch (Exception compensationError) {
-    // Mark saga as "COMPENSATION_PENDING"
-    sagaLog.write(sagaId, "COMPENSATION_PENDING", {
-        action: "refund",
-        amount: 100,
-        customerId: customerId,
-        failureReason: compensationError.getMessage(),
-        retryAfter: now + 5.minutes
-    });
-
-    // Background job will retry
-    // Dashboard shows pending compensations
-    // Alert if pending > 1 hour
-}
-```
-
-**Key principle:** Compensation failures require:
-
-1. Persistent retry mechanism
-2. Monitoring and alerting
-3. Manual intervention workflow
-4. Clear audit trail
-5. Customer communication plan
-
-**There is no automatic fix for this - it's a fundamental distributed systems problem!**
-</details>
-
----
-
-### Challenge 5: Partial Failure in 2PC Commit Phase
-
-```java
-/**
- * In 2PC, what happens if coordinator crashes DURING commit phase?
- * Some participants committed, others still waiting!
- */
-public class TwoPhaseCommitPartialFailure {
-
-    public void executeTransaction(String txId) {
-        // PHASE 1: PREPARE - All vote YES
-        List<Vote> votes = new ArrayList<>();
-        for (Participant p : participants) {
-            votes.add(p.prepare(txId));  // All return YES
-        }
-
-        // Decision: COMMIT
-        transactionLog.write(txId, "COMMIT_DECISION");
-
-        // PHASE 2: Send commit to all
-        participants.get(0).commit(txId);  // ✓ Committed
-        participants.get(1).commit(txId);  // ✓ Committed
-
-        // CRASH HERE! Coordinator dies
-
-        // participants.get(2).commit(txId);  // Never called!
-        // participants.get(3).commit(txId);  // Never called!
-
-        // NOW: 2 participants committed, 2 still waiting!
-        // What happens to the waiting participants?
-    }
-}
-```
-
-**Your debugging:**
-
-- **Problem:** <span class="fill-in">[What state are the waiting participants in?]</span>
-- **Blocking:** <span class="fill-in">[Are they holding locks?]</span>
-- **Recovery:** <span class="fill-in">[How do they know to commit or abort?]</span>
-- **Data consistency:** <span class="fill-in">[Is data consistent across participants?]</span>
-
-**Participant states:**
-
-```
-Participant 0: COMMITTED ✓
-Participant 1: COMMITTED ✓
-Participant 2: PREPARED (waiting...) ⏳
-Participant 3: PREPARED (waiting...) ⏳
-
-Time passes...
-Participant 2: Still holding locks on resources!
-Participant 3: Still holding locks on resources!
-
-Other transactions: BLOCKED waiting for locks!
-```
-
-<details markdown>
-<summary>Click to verify your answer</summary>
-
-**Problem:** This is the classic "blocking" problem of 2PC!
-
-**What happens:**
-
-1. Participants 2 & 3 are in PREPARED state
-2. They're holding locks, waiting for commit/abort
-3. Coordinator is dead, can't send decision
-4. They can't commit on their own (might not be safe)
-5. They can't abort on their own (others might have committed)
-6. **They're STUCK!**
-
-**Recovery using transaction log:**
-
-```java
-// Participant timeout handler
-if (waitingTime > TIMEOUT) {
-    // Ask coordinator for decision
-    Decision decision = coordinator.getDecision(txId);
-
-    if (decision == COMMIT) {
-        this.commit(txId);
-    } else if (decision == ABORT) {
-        this.abort(txId);
-    } else {
-        // Coordinator unreachable - contact other participants
-        Decision consensus = askOtherParticipants(txId);
-
-        if (consensus == COMMITTED) {
-            // Someone committed - we must commit too
-            this.commit(txId);
-        } else if (consensus == ALL_PREPARED) {
-            // Everyone waiting - check coordinator log
-            Decision loggedDecision = coordinatorLog.read(txId);
-            if (loggedDecision == COMMIT) {
-                this.commit(txId);
-            }
-        }
-    }
-}
-```
-
-**Why coordinator log is critical:**
-
-```java
-// Coordinator MUST log decision BEFORE sending commits
-transactionLog.write(txId, "COMMIT_DECISION");  // Durable write!
-
-// Now even if coordinator crashes, recovery can read log
-// and complete the transaction
-```
-
-**This is why 2PC is considered "blocking":**
-
-- Participants can be stuck if coordinator fails
-- Requires timeout + recovery protocol
-- Modern systems prefer non-blocking alternatives (3PC, Paxos, Raft)
-
-**Prevention:**
-
-- Use coordinator replicas (HA)
-- Implement participant timeout and recovery
-- Use 3-phase commit (reduces blocking window)
-- Consider Saga pattern instead (no blocking)
-
-</details>
-
----
-
-### Your Debugging Scorecard
-
-After finding and fixing all bugs:
-
-- [ ] Understood why compensation order matters
-- [ ] Can implement idempotent operations
-- [ ] Know how to detect and recover orphaned sagas
-- [ ] Understand compensation failure handling
-- [ ] Recognize 2PC blocking scenarios
-- [ ] Can design recovery mechanisms
-
-**Common distributed transaction bugs you discovered:**
-
-1. <span class="fill-in">[List the patterns you noticed]</span>
-2. <span class="fill-in">[Fill in]</span>
-3. <span class="fill-in">[Fill in]</span>
-
-**Real-world war stories (fill in after implementation):**
-
-- Most surprising bug: <span class="fill-in">[Fill in]</span>
-- Hardest to debug: <span class="fill-in">[Fill in]</span>
-- Most dangerous if missed: <span class="fill-in">[Fill in]</span>
+!!! warning "Misconception 3: Choreography is always better than orchestration because it avoids a single point of failure"
+    Choreography distributes control so no single service is the coordinator — but it introduces a different problem: the overall Saga state is implicit and scattered across event logs. When a choreography-based Saga gets stuck (e.g., an event is lost), there is no single place to look to understand what happened. Orchestration concentrates failure risk but also concentrates visibility. For complex workflows with many steps and failure modes, an orchestrator with a durable saga log is often easier to operate than choreography.
 
 ---
 
@@ -1997,31 +1496,16 @@ flowchart LR
 
 ---
 
-## Review Checklist
+## Test Your Understanding
 
-- [ ] Two-phase commit implemented with prepare and commit phases
-- [ ] Saga orchestration implemented with central coordinator
-- [ ] Saga choreography implemented with event-driven flow
-- [ ] Compensation handler implemented for rollback
-- [ ] Event sourcing implemented with event replay
-- [ ] Understand when to use each pattern
-- [ ] Can explain trade-offs between patterns
-- [ ] Built decision tree for pattern selection
-- [ ] Completed practice scenarios
+Answer these questions without looking at your implementation. They are designed to probe understanding, not recall.
 
----
+1. **A Saga orchestrator crashes after completing steps 1 and 2 of a 4-step Saga. When it restarts, should it re-execute steps 1 and 2, or skip to step 3? What property of each step determines whether re-execution is safe?**
 
-### Mastery Certification
+2. **Your compensation for "charge payment" is "issue refund." The refund call times out due to a network error. Describe the exact sequence of events that could result in a customer being double-refunded, and explain how you would prevent it.**
 
-**I certify that I can:**
+3. **You are choosing between 2PC and Saga for a booking system that reserves hotel, flight, and car rental across three third-party APIs. The booking process takes 3-8 seconds. Which pattern is more appropriate, and what is the single most important reason for your choice?**
 
-- [ ] Explain 2PC, Saga (both types), and Event Sourcing
-- [ ] Identify which pattern to use for different scenarios
-- [ ] Implement basic Saga orchestrator from memory
-- [ ] Design compensation strategies
-- [ ] Handle failure scenarios (coordinator crash, participant failure, compensation failure)
-- [ ] Implement idempotent operations
-- [ ] Understand CAP theorem trade-offs
-- [ ] Debug distributed transaction issues
-- [ ] Teach these concepts to someone else
+4. **In event sourcing, a bug was deployed that caused 100 events to be recorded with incorrect data. How do you fix the current state of the aggregate without deleting any events from the event log?**
 
+5. **Design decision: You are building a multi-step onboarding flow: create account → send welcome email → assign free credits → notify analytics. If the credits step fails, should you compensate by deleting the account? Justify your answer by discussing what "compensation" means semantically for each completed step.**
