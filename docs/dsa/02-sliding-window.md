@@ -760,6 +760,8 @@ Sliding window: Previous sum (7) - 1 + 10 = 16 (2 operations)
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for when to use sliding window.
 
 ### Question 1: Is the subarray/substring contiguous?
@@ -838,10 +840,13 @@ flowchart LR
     Start --> Q12
 ```
 
+</div>
 
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### LeetCode Problems
 
@@ -898,6 +903,8 @@ flowchart LR
 - [ ] [239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)
     - Pattern: <span class="fill-in">[Fixed window with deque]</span>
     - Key insight: <span class="fill-in">[Monotonic deque technique]</span>
+
+</div>
 
 ---
 

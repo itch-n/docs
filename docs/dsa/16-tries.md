@@ -997,6 +997,8 @@ Internet routers store routing tables as tries keyed on binary IP address prefix
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for trie problems.
 
 ### Question 1: What operations do you need?
@@ -1059,10 +1061,13 @@ flowchart LR
     Q11 -->|"Longest word"| N14
 ```
 
+</div>
 
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### LeetCode Problems
 
@@ -1109,6 +1114,8 @@ flowchart LR
 - [ ] [1707. Maximum XOR With an Element From Array](https://leetcode.com/problems/maximum-xor-with-an-element-from-array/)
     - Pattern: <span class="fill-in">[Binary trie]</span>
     - Key insight: <span class="fill-in">[Fill in after solving]</span>
+
+</div>
 
 ---
 

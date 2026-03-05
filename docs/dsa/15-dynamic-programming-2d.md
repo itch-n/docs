@@ -957,6 +957,8 @@ item consumes some of each.
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for 2D DP problems.
 
 ### Question 1: What are your two dimensions?
@@ -1020,9 +1022,13 @@ flowchart LR
     Q9 -->|"Game theory"| N12
 ```
 
+</div>
+
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### LeetCode Problems
 
@@ -1074,6 +1080,8 @@ flowchart LR
 - [ ] [44. Wildcard Matching](https://leetcode.com/problems/wildcard-matching/)
     - Pattern: <span class="fill-in">[String matching]</span>
     - Key insight: <span class="fill-in">[Fill in after solving]</span>
+
+</div>
 
 ---
 

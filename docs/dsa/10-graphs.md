@@ -859,6 +859,8 @@ When a transit app calculates the route with the fewest transfers (not the faste
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for when to use each graph algorithm.
 
 ### Question 1: DFS vs BFS - Which to use?
@@ -921,10 +923,13 @@ flowchart TD
 
 **Note:** For weighted graphs, topological sort, and MST problems, see "Advanced Graph Algorithms"
 
+</div>
 
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### LeetCode Problems
 
@@ -976,6 +981,8 @@ flowchart TD
     - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
 **Next step:** After mastering these, move to "Advanced Graph Algorithms" for Course Schedule, Dijkstra, MST
+
+</div>
 
 ---
 

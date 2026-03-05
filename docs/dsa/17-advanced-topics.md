@@ -949,6 +949,8 @@ Relational databases frequently need to answer aggregate queries like "total rev
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for advanced patterns.
 
 ### Question 1: Which pattern to use?
@@ -971,9 +973,13 @@ Relational databases frequently need to answer aggregate queries like "total rev
 - Trade-off: <span class="fill-in">[O(n) space for O(1) queries]</span>
 - Examples: <span class="fill-in">[Subarray sum, range query]</span>
 
+</div>
+
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### LeetCode Problems
 
@@ -1036,6 +1042,8 @@ Relational databases frequently need to answer aggregate queries like "total rev
 - [ ] [307. Range Sum Query - Mutable](https://leetcode.com/problems/range-sum-query-mutable/)
     - Pattern: <span class="fill-in">[Segment tree or BIT]</span>
     - Key insight: <span class="fill-in">[Fill in after solving]</span>
+
+</div>
 
 ---
 

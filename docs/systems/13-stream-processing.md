@@ -1555,6 +1555,8 @@ Results:     ↑            ↑
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for when to use each stream processing pattern.
 
 ### Question 1: What type of windowing do you need?
@@ -1681,10 +1683,13 @@ flowchart LR
     Q14 -->|"Minutes"| N17
 ```
 
+</div>
 
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### Scenario 1: Real-Time Analytics Dashboard
 
@@ -1782,6 +1787,8 @@ Output: <span class="fill-in">[How to avoid duplicate writes to database?]</span
 
 - Strategy: <span class="fill-in">[Idempotent writes? Deduplication? Transactions?]</span>
 - Implementation: <span class="fill-in">[Fill in]</span>
+
+</div>
 
 ---
 

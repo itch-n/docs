@@ -3415,6 +3415,8 @@ After finding and fixing all bugs:
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for when to use each concurrency pattern.
 
 ### Question 1: When to use locks vs lock-free algorithms?
@@ -3579,10 +3581,13 @@ flowchart LR
     Q14 -->|"SynchronousQueue"| N17
 ```
 
+</div>
 
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### Scenario 1: Web Server Request Handler
 
@@ -3664,6 +3669,8 @@ Trade-offs:
 1. <span class="fill-in">[Accuracy vs performance]</span>
 2. <span class="fill-in">[Lock-free vs locked]</span>
 3. <span class="fill-in">[Memory overhead]</span>
+
+</div>
 
 ---
 

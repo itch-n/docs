@@ -927,6 +927,8 @@ Step 3: Continue
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for linked list operations.
 
 ### Question 1: What operation do you need?
@@ -976,10 +978,13 @@ flowchart LR
     Start --> Q7
 ```
 
+</div>
 
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### LeetCode Problems
 
@@ -1036,6 +1041,8 @@ flowchart LR
 - [ ] [25. Reverse Nodes in k-Group](https://leetcode.com/problems/reverse-nodes-in-k-group/)
     - Pattern: <span class="fill-in">[Extension of reversal]</span>
     - Key insight: <span class="fill-in">[Fill in after solving]</span>
+
+</div>
 
 ---
 

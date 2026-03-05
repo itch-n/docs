@@ -1712,6 +1712,8 @@ After finding and fixing all bugs:
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Questions to answer after implementation:**
 
 ### 1. Scaling Strategy Selection
@@ -1782,9 +1784,13 @@ flowchart LR
     Start -->|"Operational complexity"| N5
 ```
 
+</div>
+
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### Scenario 1: Scale read-heavy application
 
@@ -1833,6 +1839,8 @@ flowchart LR
 - How to partition? <span class="fill-in">[Fill in]</span>
 - Archival strategy? <span class="fill-in">[Fill in]</span>
 - Query optimization? <span class="fill-in">[Fill in]</span>
+
+</div>
 
 ---
 

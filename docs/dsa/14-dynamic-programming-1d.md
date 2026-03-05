@@ -833,7 +833,7 @@ fib(3): needs fib(2) + fib(1)
       These repeat!   These repeat!
 ```
 
-**Without DP:** Recalculate everything (exponential waste)
+**Without DP:** Recalculate everything (exponential waste)  
 **With DP:** Calculate once, reuse (polynomial efficiency)
 
 ---
@@ -959,6 +959,8 @@ backtracking.
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for 1D DP problems.
 
 ### Question 1: What defines a state?
@@ -1010,9 +1012,13 @@ flowchart LR
     Q4 -->|"Hold/not hold"| N4a
 ```
 
+</div>
+
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### LeetCode Problems
 
@@ -1069,6 +1075,8 @@ flowchart LR
 - [ ] [132. Palindrome Partitioning II](https://leetcode.com/problems/palindrome-partitioning-ii/)
     - Pattern: <span class="fill-in">[String DP with cut optimization]</span>
     - Key insight: <span class="fill-in">[Fill in after solving]</span>
+
+</div>
 
 ---
 

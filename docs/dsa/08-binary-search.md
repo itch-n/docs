@@ -856,6 +856,8 @@ public class BinarySearchOnAnswerClient {
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for binary search problems.
 
 ### Question 1: Is the data sorted?
@@ -905,10 +907,13 @@ flowchart LR
     Start --> Q7
 ```
 
+</div>
 
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### LeetCode Problems
 
@@ -965,6 +970,8 @@ flowchart LR
 - [ ] [410. Split Array Largest Sum](https://leetcode.com/problems/split-array-largest-sum/)
     - Pattern: <span class="fill-in">[Binary search on answer]</span>
     - Key insight: <span class="fill-in">[Fill in after solving]</span>
+
+</div>
 
 ---
 

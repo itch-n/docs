@@ -860,6 +860,8 @@ Add 3:  maxHeap=[5,3,1], minHeap=[15] → rebalance → maxHeap=[5,3], minHeap=[
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for when to use heaps.
 
 ### Question 1: What do you need to track?
@@ -918,10 +920,13 @@ flowchart LR
     Start --> Q5
 ```
 
+</div>
 
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### LeetCode Problems
 
@@ -973,6 +978,8 @@ flowchart LR
 - [ ] [480. Sliding Window Median](https://leetcode.com/problems/sliding-window-median/)
     - Pattern: <span class="fill-in">[Two heaps with removal]</span>
     - Key insight: <span class="fill-in">[Fill in after solving]</span>
+
+</div>
 
 ---
 

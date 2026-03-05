@@ -1263,6 +1263,8 @@ User → [Upload] → Response        (instant)
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Questions to answer after implementation:**
 
 ### 1. Pattern Selection
@@ -1333,9 +1335,13 @@ flowchart LR
     Start -->|"Need retry and failure handling"| N5
 ```
 
+</div>
+
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### Scenario 1: Process uploaded images
 
@@ -1387,6 +1393,8 @@ flowchart LR
 - Why? <span class="fill-in">[Fill in]</span>
 - How to handle priorities? <span class="fill-in">[Fill in]</span>
 - Retry strategy? <span class="fill-in">[Fill in]</span>
+
+</div>
 
 ---
 

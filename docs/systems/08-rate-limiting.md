@@ -1184,6 +1184,8 @@ Attack pattern:
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Questions to answer after implementation:**
 
 ### 1. Algorithm Selection
@@ -1247,9 +1249,13 @@ flowchart LR
     Start -->|"Accurate rate limiting"| N4
 ```
 
+</div>
+
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### Scenario 1: Rate limit public API
 
@@ -1298,6 +1304,8 @@ flowchart LR
 - Why? <span class="fill-in">[Fill in]</span>
 - How to handle backpressure? <span class="fill-in">[Fill in]</span>
 - Circuit breaker integration? <span class="fill-in">[Fill in]</span>
+
+</div>
 
 ---
 

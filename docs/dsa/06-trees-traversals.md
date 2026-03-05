@@ -840,6 +840,8 @@ For this tree:
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for tree traversal selection.
 
 ### Question 1: Which traversal order do you need?
@@ -884,10 +886,13 @@ flowchart LR
     Q6 -->|"Iterative"| N8
 ```
 
+</div>
 
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### LeetCode Problems
 
@@ -944,6 +949,8 @@ flowchart LR
 - [ ] [987. Vertical Order Traversal of a Binary Tree](https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/)
     - Pattern: <span class="fill-in">[Custom traversal with coordinates]</span>
     - Key insight: <span class="fill-in">[Fill in after solving]</span>
+
+</div>
 
 ---
 

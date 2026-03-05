@@ -854,6 +854,8 @@ Additional benefits:
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for when to use each networking approach.
 
 ### Question 1: Which Protocol?
@@ -924,9 +926,13 @@ Additional benefits:
 - SSL termination beneficial
 - Application-aware features needed
 
+</div>
+
 ---
 
 ## Practice Scenarios
+
+<div class="learner-section" markdown>
 
 ### Scenario 1: E-Commerce Platform
 
@@ -1002,6 +1008,8 @@ Quality vs Latency:
 - Packet loss: <span class="fill-in">[How to handle?]</span>
 - Bandwidth adaptation: <span class="fill-in">[Strategy?]</span>
 
+</div>
+
 ---
 
 ## Test Your Understanding
@@ -1013,3 +1021,20 @@ Answer these without referring to your notes or implementation.
 3. A chat application currently polls the server every 2 seconds. At 50,000 concurrent users, calculate the approximate number of HTTP requests per minute this generates, then explain what switching to WebSockets changes.
 4. An L4 load balancer and an L7 load balancer are both available. A request comes in for `/api/users` and another for `/static/logo.png`. Which load balancer can route these to different server pools, and why?
 5. A colleague says "We use TLS everywhere so our API is secure." What important security concern does TLS *not* address?
+
+---
+
+## Review Checklist
+
+<div class="learner-section" markdown>
+
+Complete this checklist after implementing and studying all networking topics.
+
+- [ ] Can explain TCP vs UDP trade-offs and cite concrete use cases for each
+- [ ] Can describe HTTP/1.1 → HTTP/2 → HTTP/3 improvements and when each is preferred
+- [ ] Can explain how WebSockets differ from HTTP polling and describe the upgrade handshake
+- [ ] Can trace a DNS resolution from browser to IP address, including recursive vs iterative queries
+- [ ] Can describe the TLS handshake steps and explain the performance cost
+- [ ] Can distinguish L4 vs L7 load balancing and choose the right layer for a given scenario
+
+</div>

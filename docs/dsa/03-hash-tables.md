@@ -787,6 +787,8 @@ public static boolean containsDuplicate_HashSet(int[] nums) {
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for when to use hash tables.
 
 ### Question 1: What operation do you need?
@@ -842,10 +844,13 @@ flowchart LR
     Q7 -->|"No"| N9
 ```
 
+</div>
 
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### LeetCode Problems
 
@@ -902,6 +907,8 @@ flowchart LR
 - [ ] [30. Substring with Concatenation of All Words](https://leetcode.com/problems/substring-with-concatenation-of-all-words/)
     - Pattern: <span class="fill-in">[Which variant?]</span>
     - Key insight: <span class="fill-in">[Fill in after solving]</span>
+
+</div>
 
 ---
 

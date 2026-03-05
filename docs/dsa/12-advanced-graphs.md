@@ -1152,6 +1152,8 @@ failover route between any two sites if a cable is cut.
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 ### Question 1: Which shortest path algorithm?
 
 **Use Dijkstra when:**
@@ -1214,9 +1216,13 @@ failover route between any two sites if a cable is cut.
 - Directed graph cycles: <span class="fill-in">[Use DFS with states instead]</span>
 - Need shortest paths: <span class="fill-in">[Use BFS/Dijkstra]</span>
 
+</div>
+
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### LeetCode Problems
 
@@ -1270,6 +1276,8 @@ failover route between any two sites if a cable is cut.
     - Pattern: <span class="fill-in">[Prim's MST]</span>
     - Difficulty: <span class="fill-in">[Rate 1-10]</span>
     - Note: Low frequency — only if you have extra time
+
+</div>
 
 ---
 

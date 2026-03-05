@@ -1430,6 +1430,8 @@ public void updateUserProfile_WriteBack(String userId, String newName) {
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Questions to answer after implementation:**
 
 ### 1. When to use LRU vs LFU?
@@ -1497,10 +1499,13 @@ flowchart LR
     Q9 -->|"Failure tolerance"| N12
 ```
 
+</div>
 
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### Scenario 1: E-commerce Product Catalog
 
@@ -1562,6 +1567,8 @@ Design and implement a data structure for Least Recently Used (LRU) cache.
 1. <span class="fill-in">[Data structures needed?]</span>
 2. <span class="fill-in">[How to achieve O(1) for both get and put?]</span>
 3. <span class="fill-in">[Edge cases to handle?]</span>
+
+</div>
 
 ---
 

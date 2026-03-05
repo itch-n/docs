@@ -1676,6 +1676,8 @@ Result: User charged $100 only once - correct!
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Questions to answer after implementation:**
 
 ### 1. REST vs GraphQL vs RPC
@@ -1729,9 +1731,13 @@ flowchart LR
     Start -->|"Complex data fetching with relationships"| N4
 ```
 
+</div>
+
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### Scenario 1: Design API for a blogging platform
 
@@ -1780,6 +1786,8 @@ flowchart LR
 - Why? <span class="fill-in">[Fill in]</span>
 - How to optimize for mobile? <span class="fill-in">[Fill in]</span>
 - Caching strategy? <span class="fill-in">[Fill in]</span>
+
+</div>
 
 ---
 

@@ -795,6 +795,8 @@ Space saved: 6 ints (24 bytes) → 1 int + 5 bytes (9 bytes) = 62% reduction
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for when to use each storage layout.
 
 ### Question 1: OLTP or OLAP Workload?
@@ -846,9 +848,13 @@ flowchart LR
     A3 --> A6["Benchmark with<br/>real queries"]
 ```
 
+</div>
+
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### Scenario 1: E-Commerce Order Table
 
@@ -909,6 +915,8 @@ Why?
 1. <span class="fill-in">[Write characteristics]</span>
 2. <span class="fill-in">[Read characteristics]</span>
 3. <span class="fill-in">[Compression opportunities]</span>
+
+</div>
 
 ---
 

@@ -985,6 +985,8 @@ groups edits into connected revision chains before merging, enabling efficient c
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for union-find problems.
 
 ### Question 1: What do you need to track?
@@ -1040,10 +1042,13 @@ flowchart LR
     Q9 -->|"Equality constraints"| N12
 ```
 
+</div>
 
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### LeetCode Problems
 
@@ -1090,6 +1095,8 @@ flowchart LR
 - [ ] [399. Evaluate Division](https://leetcode.com/problems/evaluate-division/)
     - Pattern: <span class="fill-in">[Weighted union-find]</span>
     - Key insight: <span class="fill-in">[Fill in after solving]</span>
+
+</div>
 
 ---
 

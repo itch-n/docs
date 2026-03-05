@@ -979,6 +979,8 @@ long duration = System.nanoTime() - start;
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for when to use each storage engine.
 
 ### Question 1: Write-heavy or Read-heavy?
@@ -1025,9 +1027,13 @@ flowchart LR
     Q3 -->|"Mixed<br/>workload"| A5["Your decision here<br/>based on testing"]
 ```
 
+</div>
+
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### Scenario 1: Social Media Posts Table
 
@@ -1121,6 +1127,8 @@ Trade-offs you considered:
 1. <span class="fill-in">[Fill in]</span>
 2. <span class="fill-in">[Fill in]</span>
 3. <span class="fill-in">[Fill in]</span>
+
+</div>
 
 ---
 

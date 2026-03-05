@@ -893,6 +893,8 @@ running total exceeds the target.
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for backtracking problems.
 
 ### Question 1: What are you generating?
@@ -950,9 +952,13 @@ flowchart LR
     Q5 -->|"Grid search"| N8
 ```
 
+</div>
+
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### LeetCode Problems
 
@@ -1004,6 +1010,8 @@ flowchart LR
 - [ ] [37. Sudoku Solver](https://leetcode.com/problems/sudoku-solver/)
     - Pattern: <span class="fill-in">[Grid constraint satisfaction]</span>
     - Key insight: <span class="fill-in">[Fill in after solving]</span>
+
+</div>
 
 ---
 

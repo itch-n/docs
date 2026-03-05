@@ -919,6 +919,8 @@ public static int[] maxSlidingWindow_Deque(int[] nums, int k) {
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for stack/queue selection.
 
 ### Question 1: LIFO vs FIFO?
@@ -961,10 +963,13 @@ flowchart LR
     Start --> Q5
 ```
 
+</div>
 
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### LeetCode Problems
 
@@ -1021,6 +1026,8 @@ flowchart LR
 - [ ] [239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)
     - Pattern: <span class="fill-in">[Monotonic deque]</span>
     - Key insight: <span class="fill-in">[Fill in after solving]</span>
+
+</div>
 
 ---
 

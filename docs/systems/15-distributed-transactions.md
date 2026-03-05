@@ -1374,6 +1374,8 @@ Saga: Reserve → Charge → Ship (if any fails, undo previous)
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Questions to answer after implementation:**
 
 ### 1. Pattern Selection
@@ -1439,9 +1441,13 @@ flowchart LR
     Start -->|"Highly distributed services"| N5
 ```
 
+</div>
+
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### Scenario 1: Banking transfer
 
@@ -1493,6 +1499,8 @@ flowchart LR
 - Why? <span class="fill-in">[Fill in]</span>
 - Storage strategy? <span class="fill-in">[Fill in]</span>
 - Query optimization? <span class="fill-in">[Fill in]</span>
+
+</div>
 
 ---
 

@@ -617,6 +617,8 @@ Step 2: left=1 (val=3), right=4 (val=9), sum=12 → FOUND!
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for when to use two pointers.
 
 ### Question 1: Is the data sorted?
@@ -670,10 +672,13 @@ flowchart LR
     Q8{"Check palindrome?"}
 ```
 
+</div>
 
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### LeetCode Problems
 
@@ -716,6 +721,8 @@ flowchart LR
 - [ ] [42. Trapping Rain Water](https://leetcode.com/problems/trapping-rain-water/)
     - Pattern: <span class="fill-in">[Which variant?]</span>
     - Key insight: <span class="fill-in">[Fill in after solving]</span>
+
+</div>
 
 ---
 

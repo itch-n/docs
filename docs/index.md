@@ -12,7 +12,7 @@ Numbered sequences you work through at your own pace. Each topic follows the sam
 
 ## Two Paths
 
-### [Systems Design](systems/01-storage-engines.md) (17 Topics)
+### [Systems Design](systems/01-storage-engines.md) (16 Topics)
 
 Build real implementations to understand how systems work:
 

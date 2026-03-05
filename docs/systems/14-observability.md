@@ -1821,6 +1821,8 @@ With observability:
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for observability patterns.
 
 ### Question 1: Metrics vs Logs vs Traces?
@@ -1929,10 +1931,13 @@ flowchart LR
     Q15 -->|"Trending (months)"| N19
 ```
 
+</div>
 
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### Scenario 1: Monitor E-commerce API
 
@@ -2031,6 +2036,8 @@ Planning:
 1. <span class="fill-in">[When will current capacity be exceeded?]</span>
 2. <span class="fill-in">[What needs to be scaled (compute, db, cache)?]</span>
 3. <span class="fill-in">[What are the cost implications?]</span>
+
+</div>
 
 ---
 

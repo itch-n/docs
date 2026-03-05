@@ -966,6 +966,8 @@ User experience: Instant results ✓
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 ### Question 1: When to build inverted index?
 
 **Build inverted index when:**
@@ -1008,9 +1010,13 @@ User experience: Instant results ✓
 - Co-locate related documents
 - Optimize specific query patterns
 
+</div>
+
 ---
 
 ## Practice Scenarios
+
+<div class="learner-section" markdown>
 
 ### Scenario 1: E-Commerce Product Search
 
@@ -1085,6 +1091,8 @@ Features:
 - Suggestions: <span class="fill-in">[Fuzzy + frequency?]</span>
 - Related: <span class="fill-in">[More Like This query?]</span>
 
+</div>
+
 ---
 
 ## Test Your Understanding
@@ -1096,3 +1104,20 @@ Answer these without referring to your notes or implementation.
 3. A product search returns zero results when a user types "wireles headphone" (two typos). What text analysis or query configuration change would fix this, and what is the performance trade-off?
 4. Your team wants to add a filter for `status = "published"` to every search query. Should this go in `must` (query context) or `filter` (filter context)? Explain the difference in how Elasticsearch handles each.
 5. A colleague says "Our index has 200 shards across 5 nodes — more shards means more parallelism and faster queries." What is wrong with this reasoning, and what is the actual recommended guidance?
+
+---
+
+## Review Checklist
+
+<div class="learner-section" markdown>
+
+Complete this checklist after implementing and studying search and indexing.
+
+- [ ] Can explain how an inverted index is built and why it enables fast full-text search
+- [ ] Can describe TF-IDF scoring and explain why IDF prevents common words from dominating results
+- [ ] Can explain how Elasticsearch distributes a query across shards and coordinates the results
+- [ ] Can describe fuzzy matching and articulate its accuracy/performance trade-off
+- [ ] Can explain the difference between query context and filter context, and when to use each
+- [ ] Can design a text analysis pipeline: tokenization, normalization, stemming, synonym expansion
+
+</div>

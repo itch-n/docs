@@ -839,6 +839,8 @@ public class LoadBalancingClient {
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Questions to answer after implementation:**
 
 ### 1. Algorithm Selection
@@ -909,9 +911,13 @@ flowchart LR
     Start -->|"Minimal redistribution on changes"| N5
 ```
 
+</div>
+
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### Scenario 1: Load balance web application
 
@@ -960,6 +966,8 @@ flowchart LR
 - Why? <span class="fill-in">[Fill in]</span>
 - How many virtual nodes? <span class="fill-in">[Fill in]</span>
 - Replication strategy? <span class="fill-in">[Fill in]</span>
+
+</div>
 
 ---
 

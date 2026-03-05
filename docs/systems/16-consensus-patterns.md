@@ -1243,6 +1243,8 @@ Term 3: When partition heals, Node 5 sees Node 3 has higher term → steps down
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for when to use each consensus pattern.
 
 ### Question 1: Leader Election vs Leaderless?
@@ -1336,10 +1338,13 @@ flowchart LR
     Q14 -->|"Cache invalidation"| N18
 ```
 
+</div>
 
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### Scenario 1: Distributed Database Leader Election
 
@@ -1420,6 +1425,8 @@ Trade-offs:
 2. <span class="fill-in">[Cross-DC write latency]</span>
 3. <span class="fill-in">[Conflict resolution strategy]</span>
 
+</div>
+
 ---
 
 ## Test Your Understanding
@@ -1435,3 +1442,20 @@ Answer these questions without looking at your notes. They are designed to probe
 4. **In Raft, why is it necessary to reset `votedFor = null` when a node's term is updated to a higher value? Construct a concrete 3-node example where failing to reset `votedFor` causes two leaders to be elected in the same term.**
 
 5. **Design decision: You are building a distributed job scheduler where jobs must run exactly once, and jobs can take between 1 and 60 minutes. You plan to use distributed locks to prevent duplicate execution. What TTL would you set, and how would you prevent a crashed job runner from blocking the job for the full TTL period? Justify the specific numbers you choose.**
+
+---
+
+## Review Checklist
+
+<div class="learner-section" markdown>
+
+Complete this checklist after implementing and studying consensus patterns.
+
+- [ ] Can trace a Raft leader election step-by-step, including term numbers and vote counting
+- [ ] Can explain why a majority quorum (⌊n/2⌋ + 1) guarantees at most one leader per term
+- [ ] Can describe how distributed locks use TTLs and explain the role of fencing tokens
+- [ ] Can apply CAP theorem: identify which guarantees a consensus algorithm sacrifices
+- [ ] Can choose an appropriate cluster size for a given fault-tolerance requirement
+- [ ] Can explain the performance cost of strong consistency and when eventual consistency is acceptable
+
+</div>

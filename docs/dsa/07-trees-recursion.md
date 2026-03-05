@@ -971,6 +971,8 @@ public static boolean hasPathSum_Optimized(TreeNode root, int targetSum) {
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for tree recursion.
 
 ### Question 1: What information flows up the tree?
@@ -1020,10 +1022,13 @@ flowchart LR
     Q6 -->|"Track path"| N9
 ```
 
+</div>
 
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### LeetCode Problems
 
@@ -1080,6 +1085,8 @@ flowchart LR
 - [ ] [297. Serialize and Deserialize Binary Tree](https://leetcode.com/problems/serialize-and-deserialize-binary-tree/)
     - Pattern: <span class="fill-in">[Construction/serialization]</span>
     - Key insight: <span class="fill-in">[Fill in after solving]</span>
+
+</div>
 
 ---
 

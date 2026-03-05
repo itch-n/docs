@@ -1211,6 +1211,8 @@ public class SecureSecretsManagement {
 
 ## Decision Framework
 
+<div class="learner-section" markdown>
+
 **Your task:** Build decision trees for when to use each security pattern.
 
 ### Question 1: JWT vs Session-Based Auth?
@@ -1300,10 +1302,13 @@ flowchart LR
     Q13 -->|"Offline support"| N16
 ```
 
+</div>
 
 ---
 
 ## Practice
+
+<div class="learner-section" markdown>
 
 ### Scenario 1: E-commerce API Security
 
@@ -1355,6 +1360,8 @@ flowchart LR
 - Permission model: <span class="fill-in">[Service-level RBAC?]</span>
 - Secret distribution: <span class="fill-in">[How do services get credentials?]</span>
 - Rotation: <span class="fill-in">[How to rotate without downtime?]</span>
+
+</div>
 
 ---
 
