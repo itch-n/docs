@@ -682,6 +682,11 @@ flowchart TD
     - Pattern: <span class="fill-in">[Merge all intervals, find gaps]</span>
     - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
+**Failure modes:**
+
+- What happens if two intervals share only a single endpoint, like `[1,5]` and `[5,8]` — does your merge implementation treat them as overlapping and merge them into `[1,8]`, or correctly keep them separate? <span class="fill-in">[Fill in]</span>
+- How does your merge implementation behave when the input array is not sorted by start time — does it silently produce a wrong result or does it handle unsorted input? <span class="fill-in">[Fill in]</span>
+
 </div>
 
 ---
@@ -692,10 +697,33 @@ Answer these questions without looking at your notes. Write a sentence or two fo
 
 1. **Trace through merging `[[3,5],[1,4],[6,8]]`. Show the state of the result list after sorting and after each iteration of the merge pass. What is the final output?**
 
+    ??? success "Rubric"
+        A complete answer addresses: (1) after sorting by start: [[1,4],[3,5],[6,8]]; (2) iteration 1: current=[1,4]; process [3,5]: 3 <= 4, overlap → current[1] = max(4,5) = 5, current=[1,5]; (3) iteration 2: process [6,8]: 6 > 5, no overlap → add [1,5] to result, current=[6,8]; (4) after loop: add current=[6,8] to result; (5) final output: [[1,5],[6,8]]; (6) the key step to note — the Math.max ensures [3,5] extends current to [1,5] instead of incorrectly shrinking it to [1,4] or [3,5].
+
 2. **Explain why the merge line must use `Math.max(current[1], next[1])` rather than a plain assignment `current[1] = next[1]`. Give a concrete interval pair where the plain assignment produces the wrong answer.**
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) the reason — when a new interval is fully contained within the current one (e.g., current=[1,10], next=[3,5]), next[1]=5 < current[1]=10; a plain assignment shrinks the current interval incorrectly from [1,10] to [1,5], losing coverage of [6,10]; (2) the concrete example — intervals=[1,10],[3,5]; sorted (already): current=[1,10]; process [3,5]: 3 <= 10, overlap → plain assignment gives [1,5] (WRONG); Math.max gives [1,10] (correct); (3) the general rule — Math.max is required because intervals can be partially or fully overlapping in either direction, and you always want to keep the furthest-right endpoint.
 
 3. **In Meeting Rooms II, you sort meetings by start time and maintain a min-heap of end times. Walk through `[[0,30],[5,10],[15,20]]` step by step, showing heap state after each meeting. Why is the answer `heap.size()` at the end?**
 
+    ??? success "Rubric"
+        A complete answer addresses: (1) after sorting: [[0,30],[5,10],[15,20]]; (2) process [0,30]: heap empty, add 30; heap=[30]; rooms=1; (3) process [5,10]: heap.peek()=30 > 5 (start), cannot reuse; add 10; heap=[10,30]; rooms=2; (4) process [15,20]: heap.peek()=10 <= 15 (start), reuse that room; poll 10, offer 20; heap=[20,30]; rooms stays 2; (5) why heap.size() — each entry in the heap represents one room currently in use; rooms whose meeting has ended and been reused are replaced but not removed; the size is the high-water mark of concurrently occupied rooms, which equals the minimum rooms needed.
+
 4. **The non-overlapping intervals problem asks for the minimum number of intervals to remove so the rest are non-overlapping. Why does sorting by end time and greedily keeping the interval with the earliest end time give the optimal answer? What goes wrong if you sort by start time instead?**
 
+    ??? success "Rubric"
+        A complete answer addresses: (1) the greedy argument — by keeping the interval that ends earliest, we leave the maximum possible space for future intervals; any other choice (keeping a later-ending interval) can only make future conflicts more likely; formally, an exchange argument shows that swapping a later-ending interval for an earlier-ending one at the same position never produces a worse solution; (2) what fails with start-time sort — consider [[1,100],[2,3],[3,4]]; sorted by start: keep [1,100] first (early start), then both [2,3] and [3,4] conflict with it; you'd remove 2; sorted by end: keep [2,3] first (early end), then [3,4] doesn't conflict, then [1,100] conflicts with both; keep [2,3] and [3,4], remove only [1,100]; total 1 removal — better; (3) the minimum removals equals n minus the maximum number of non-overlapping intervals you can keep.
+
 5. **You are given two sorted interval lists and want their intersection. Explain the two-pointer approach: what is the intersection condition, and which pointer do you advance at each step and why?**
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) the intersection condition — two intervals [s1,e1] and [s2,e2] intersect when max(s1,s2) <= min(e1,e2); if this holds, the intersection is [max(s1,s2), min(e1,e2)]; (2) the pointer advancement rule — advance the pointer whose interval ends first (i.e., if e1 < e2, advance i; else advance j); the reasoning is that the interval with the smaller end time cannot intersect any future interval in the other list (future intervals start no earlier than the current one), so it is safe to discard; (3) why two pointers work — both lists are sorted, so at each step we compare the "most promising" pair (the pair with the smallest end times); the pointer that would create no future intersections is discarded; total time is O(m+n).
+
+---
+
+## Connected Topics
+
+!!! info "Where this topic connects"
+
+    - **[01. Two Pointers](01-two-pointers.md)** — interval merge uses a pointer advancing through sorted intervals; meeting rooms II uses the two-pointer technique on start/end time arrays → [01. Two Pointers](01-two-pointers.md)

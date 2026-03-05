@@ -670,6 +670,11 @@ flowchart TD
     - Pattern: <span class="fill-in">[2D prefix sum + HashMap]</span>
     - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
+**Failure modes:**
+
+- What happens if integer overflow occurs during prefix sum computation on a large array of `int` values — does your implementation silently wrap around or throw an exception? <span class="fill-in">[Fill in]</span>
+- How does your `sumRange` or `subarraySum` implementation behave when given an invalid query range where `left > right`? <span class="fill-in">[Fill in]</span>
+
 </div>
 
 ---
@@ -680,10 +685,34 @@ Answer these questions without looking at your notes. Write a sentence or two fo
 
 1. **You build a prefix sum array for `[-2, 0, 3, -5, 2, -1]`. Write out all seven values of `prefixSum[]` and verify that `sumRange(2, 5)` equals -1 using only two array accesses.**
 
+    ??? success "Rubric"
+        A complete answer addresses: (1) the seven values — prefixSum[0]=0, prefixSum[1]=-2, prefixSum[2]=-2, prefixSum[3]=1, prefixSum[4]=-4, prefixSum[5]=-2, prefixSum[6]=-3; (2) the query — sumRange(2,5) = prefixSum[6] - prefixSum[2] = -3 - (-2) = -1; (3) verification — manually sum nums[2]+nums[3]+nums[4]+nums[5] = 3+(-5)+2+(-1) = -1, confirming the formula; (4) why only two accesses — the shared prefix (indices 0 to 1) cancels out in the subtraction, leaving exactly the sum of the requested range.
+
 2. **The `subarraySum` solution initializes its HashMap with `{0: 1}`. Give a concrete example (array and target k) where omitting this initialization returns a wrong answer. Trace through the algorithm step by step to show the missed count.**
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) the example — nums=[3,1], k=3; (2) the trace without {0:1}: process 3: sum=3, look up sum-k=0, not in map, miss; add {3:1}; process 1: sum=4, look up sum-k=1, not in map, miss; result=0 (wrong); (3) the trace with {0:1}: process 3: sum=3, look up 0, found with count 1, result=1; correct answer is 1 (subarray [3]); (4) the general principle — when sum==k after processing some prefix, sum-k==0 must be found in the map; without {0:1}, the subarray from index 0 to the current index is never counted, regardless of its sum.
 
 3. **Explain why sliding window cannot correctly solve Subarray Sum Equals K when the array contains negative numbers. Give a specific example to illustrate the failure.**
 
+    ??? success "Rubric"
+        A complete answer addresses: (1) the requirement — sliding window works by expanding the right pointer when the window sum is too small and contracting the left pointer when too large; this requires a monotonic property: adding elements always increases (or never decreases) the sum; (2) why negatives break this — when negative numbers are present, adding an element can decrease the sum, so contracting the left pointer may make the sum smaller, not larger; the algorithm can no longer determine in which direction to move; (3) the example — nums=[-1,1,1], k=1; a sliding window might see sum=-1, expand to sum=0, expand to sum=1 (found), but would miss the subarray [1] starting at index 1 because it already contracted past it; the prefix sum approach counts both subarrays correctly.
+
 4. **The 2D prefix sum formula uses four lookups and an inclusion-exclusion. Draw a small 3x3 example, label the four prefix sum values used in `sumRegion(1,1,2,2)`, and explain why the formula adds one value back after two subtractions.**
 
+    ??? success "Rubric"
+        A complete answer addresses: (1) the formula — sumRegion(r1,c1,r2,c2) = ps[r2+1][c2+1] - ps[r1][c2+1] - ps[r2+1][c1] + ps[r1][c1]; (2) for sumRegion(1,1,2,2): ps[3][3] - ps[1][3] - ps[3][1] + ps[1][1]; (3) the inclusion-exclusion reason — ps[r2+1][c2+1] is the entire rectangle from (0,0) to (r2,c2); subtracting ps[r1][c2+1] removes the rows above r1; subtracting ps[r2+1][c1] removes the columns left of c1; but the top-left corner ps[r1][c1] was subtracted twice (once by each subtraction), so it must be added back once; this is the standard inclusion-exclusion principle for overlapping regions.
+
 5. **Product of Array Except Self is solved in O(1) space (excluding output) using two passes. Explain what each pass computes, and why a single pass is insufficient.**
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) pass 1 (left to right) — result[i] is set to the product of all elements strictly to the LEFT of index i (result[0]=1 since nothing is to the left); (2) pass 2 (right to left) — a running suffix variable tracks the product of all elements strictly to the RIGHT of the current index; result[i] is multiplied by this suffix, producing the product of all elements except nums[i]; (3) why a single pass fails — at position i, you need both the left product (already available) and the right product (not yet computed); you cannot know the right product until you have processed elements to the right; the two-pass structure deliberately separates these two dependencies; (4) the O(1) space claim — the output array is not counted, and only one integer variable (the running suffix) is needed beyond the output array.
+
+---
+
+## Connected Topics
+
+!!! info "Where this topic connects"
+
+    - **[03. Hash Tables](03-hash-tables.md)** — the subarray-sum-equals-k pattern combines prefix sums with a HashMap to find pairs in O(n) → [03. Hash Tables](03-hash-tables.md)
+    - **[02. Sliding Window](02-sliding-window.md)** — both answer range-sum questions; prefix sums handle arbitrary range queries in O(1) after O(n) preprocessing, while sliding window handles a single moving window in O(n) total → [02. Sliding Window](02-sliding-window.md)

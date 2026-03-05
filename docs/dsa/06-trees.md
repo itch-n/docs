@@ -1963,6 +1963,11 @@ flowchart LR
     - Pattern: <span class="fill-in">[Custom traversal with coordinates]</span>
     - Key insight: <span class="fill-in">[Fill in after solving]</span>
 
+**Failure modes:**
+
+- What happens if your recursive tree function does not handle null children before recursing — which specific runtime error occurs, and on which operation on a null `TreeNode`? <span class="fill-in">[Fill in]</span>
+- How does your diameter or path-sum implementation behave on a single-node tree (no children) — does it return 0, 1, or the node's value, and is that the correct answer for each problem? <span class="fill-in">[Fill in]</span>
+
 </div>
 
 ---
@@ -1971,15 +1976,33 @@ flowchart LR
 
 1. The iterative inorder traversal uses the condition `while (curr != null || !stack.isEmpty())`. Explain precisely what each part of this condition guards against. Then show what happens if you use only `while (!stack.isEmpty())` by tracing the execution on a two-node tree (root with only a left child).
 
+    ??? success "Rubric"
+        A complete answer addresses: (1) `curr != null` keeps the loop running while there are still unvisited nodes reachable via `curr` — at the start, the stack is empty but `curr = root` is non-null, so this part handles the initial descent; (2) `!stack.isEmpty()` keeps the loop running after `curr` becomes null but there are still nodes on the stack waiting to be visited and their right subtrees explored; (3) tracing a root-with-left-child-only tree: with only `!stack.isEmpty()`, the first iteration pushes `root` and goes left to `leftChild`, pushes it, goes left to null — now `curr = null` and stack = `[root, leftChild]`; then pops `leftChild`, visits it, sets `curr = leftChild.right = null` — loop condition `!stack.isEmpty()` is still true, pops `root`, visits it, sets `curr = root.right = null` — loop ends correctly here by coincidence; but if root also had no right child and the stack were empty at some intermediate point while curr was still non-null, the loop would terminate prematurely.
+
 2. Morris traversal achieves O(1) space by temporarily modifying the tree. Describe the thread it creates, when it removes it, and why failing to remove the thread causes an infinite loop. Then explain why Morris traversal is rarely used in production despite its space advantage.
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) Morris traversal finds the inorder predecessor of `curr` (the rightmost node in `curr`'s left subtree) and sets that node's `right` pointer to `curr` — this is the "thread"; (2) the thread is removed when Morris traversal encounters it a second time (detected by `predecessor.right == curr`) — it restores `predecessor.right = null` before visiting `curr`; (3) without removal, the traversal would revisit `curr` again after following the thread back, and the predecessor's right would still point to `curr`, creating an infinite loop; (4) production code avoids Morris traversal because it temporarily corrupts the tree structure — if an exception or concurrent read occurs mid-traversal, the tree is left with dangling pointers.
 
 3. The level-order implementation must capture `int levelSize = queue.size()` **before** the inner loop. Explain what goes wrong if you instead write `while (!queue.isEmpty())` as the inner loop condition. Trace the execution on a three-level tree to demonstrate.
 
+    ??? success "Rubric"
+        A complete answer addresses: (1) if the inner loop condition is `while (!queue.isEmpty())`, the loop keeps running as long as there are any nodes in the queue — including nodes that were added by children enqueued during this same level's processing; (2) tracing a three-level tree (root, two children, four grandchildren): after processing root and enqueuing its two children, the inner loop does not stop — it immediately processes both children and enqueues all four grandchildren, all within the same "level"; (3) the result is a single-element list `[[root, leftChild, rightChild, ...all grandchildren]]` instead of three separate level lists; (4) `levelSize = queue.size()` freezes the count of nodes at the current level before any children are added, allowing the inner loop to process exactly that many nodes.
+
 4. The brute-force diameter algorithm is O(n²) because it calls `height()` at every node. Prove this claim: write out the recurrence for the number of nodes visited and show it is quadratic for a balanced binary tree. Then explain exactly why threading `maxDiameter` through `calculateHeight` reduces this to O(n).
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) in a balanced tree, `diameter(node)` calls `height(node.left)` and `height(node.right)`, each of which visits O(n/2) nodes, then recurses into the left and right children — the recurrence is T(n) = 2T(n/2) + O(n), which by Master theorem gives O(n log n), or O(n²) for a skewed tree; (2) the single-pass fix computes both the height to return AND updates `maxDiameter` as a side effect inside the same postorder traversal — `maxDiameter = Math.max(maxDiameter, leftHeight + rightHeight)` at each node; (3) since height is computed once per node and the diameter update is O(1) per node, the total work is O(n) — the height of every subtree is available as the return value of the recursive call without re-traversal.
 
 5. The LCA base case is `if (root == null || root == p || root == q) return root`. Consider the scenario where p is an ancestor of q. Trace through the LCA algorithm to show that it still returns the correct answer (p) without needing to continue searching inside p's subtree.
 
+    ??? success "Rubric"
+        A complete answer addresses: (1) when the recursion reaches node `p`, the base case `root == p` fires and returns `p` immediately — the algorithm does NOT recurse into `p`'s subtrees; (2) this is correct because `q` is somewhere inside `p`'s subtree — since we found `p` first, `p` is by definition the lowest ancestor that contains both `p` and `q`; (3) at the level above `p`, one recursive call returns `p` (non-null) and the other returns either `null` (if `q` is in `p`'s subtree, which was not explored) or a non-null node; since only one side returns non-null, the LCA function returns `p` — the correct answer without needing to verify that `q` is actually below `p`.
+
 6. The `minDepth` function must handle single-child nodes as a special case. Explain precisely why `1 + Math.min(leftDepth, rightDepth)` gives the wrong answer when a node has only one child, and write the corrected version. Then explain why the same special case does not affect `maxDepth` (height).
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) when a node has only a left child (right is null), `minDepth(right) = 0` — `Math.min(leftDepth, 0)` always returns 0, so the formula gives `1 + 0 = 1` regardless of left subtree depth; this is wrong because minDepth must follow the only existing path, not a non-existent null path; (2) the corrected version: if `left == null` return `1 + minDepth(right)`; if `right == null` return `1 + minDepth(left)`; otherwise return `1 + Math.min(minDepth(left), minDepth(right))`; (3) `maxDepth` is unaffected because `Math.max(leftDepth, 0) = leftDepth` when right is null — taking the maximum naturally ignores the null side and follows the real path, so no special case is needed.
 
 ---
 
@@ -1997,3 +2020,13 @@ Complete this checklist after implementing and studying both traversal and recur
 - [ ] Can choose between recursive and iterative implementations based on tree depth and stack-overflow risk
 
 </div>
+
+---
+
+## Connected Topics
+
+!!! info "Where this topic connects"
+
+    - **08. Heaps** — a binary heap is a complete binary tree stored as an array; tree height reasoning applies directly to heap operations → [08. Heaps](08-heaps.md)
+    - **09. Graphs** — trees are acyclic connected graphs; tree traversals (DFS/BFS) generalise directly to graph traversals → [09. Graphs](09-graphs.md)
+    - **12. Dynamic Programming** — many tree DP problems (diameter, path sum, LCA) use post-order traversal to propagate subproblem results up the tree → [12. Dynamic Programming](12-dynamic-programming.md)

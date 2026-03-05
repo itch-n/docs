@@ -665,6 +665,11 @@ Reasoning:
 - Slide interval: <span class="fill-in">[Fill in]</span>
 - Why this choice: <span class="fill-in">[Fill in]</span>
 
+**Failure modes:**
+
+- What happens if the Kafka topic that feeds page-view events becomes unavailable for 2 minutes? <span class="fill-in">[Fill in]</span>
+- How does your design behave when a mobile app delivers a backlog of 30-second-late events after the relevant sliding windows have already closed? <span class="fill-in">[Fill in]</span>
+
 ### Scenario 2: Fraud Detection System
 
 **Requirements:**
@@ -682,6 +687,11 @@ Pattern detection: <span class="fill-in">[How to detect patterns across events?]
 - Windowing: <span class="fill-in">[Fill in]</span>
 - State needed: <span class="fill-in">[Fill in]</span>
 - Join strategy: <span class="fill-in">[Fill in]</span>
+
+**Failure modes:**
+
+- What happens if the stream processor crashes mid-window while accumulating per-user login attempt state? <span class="fill-in">[Fill in]</span>
+- How does your design behave when the downstream fraud alert sink (e.g. the block-account API) is temporarily unavailable and events continue arriving? <span class="fill-in">[Fill in]</span>
 
 ### Scenario 3: IoT Sensor Aggregation
 
@@ -701,6 +711,11 @@ Windowing: <span class="fill-in">[Which type and why?]</span>
 - Size: <span class="fill-in">[Fill in]</span>
 - Reasoning: <span class="fill-in">[Fill in]</span>
 
+**Failure modes:**
+
+- What happens if a sensor goes offline for 3 hours and then re-connects, sending all buffered readings at once as a burst? <span class="fill-in">[Fill in]</span>
+- How does your design behave when the database sink rejects a write due to a constraint violation, risking duplicate aggregates if the window is retried? <span class="fill-in">[Fill in]</span>
+
 
 </div>
 
@@ -711,3 +726,15 @@ Windowing: <span class="fill-in">[Which type and why?]</span>
 Answer these questions without looking at your implementation. They are designed to probe understanding, not recall.
 
 1. **A session window with a 5-second gap creates 10 sessions for a given user over 1 hour. If you reduce the gap to 2 seconds, will there be more or fewer sessions? Explain why.**
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) a smaller gap threshold causes more pairs of consecutive events to exceed the threshold, so previously merged sessions get split into separate sessions — the count increases; (2) the exact increase depends on the inter-event time distribution: events with inter-arrival times between 2s and 5s that were in the same session now start a new session; (3) reducing the gap to the limit of zero would make every event its own session, while increasing it to infinity would collapse all events into one session.
+
+---
+
+## Connected Topics
+
+!!! info "Where this topic connects"
+
+    - **12. Message Queues** — stream processors consume from queues; understanding delivery guarantees is prerequisite to windowing correctness → [12. Message Queues](12-message-queues.md)
+    - **14. Observability** — windowed aggregations are a primary source of real-time metrics; observability pipelines often use stream processing internally → [14. Observability](14-observability.md)

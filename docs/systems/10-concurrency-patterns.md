@@ -2446,6 +2446,11 @@ Reasoning:
 3. <span class="fill-in">[How does it handle bursts?]</span>
 4. <span class="fill-in">[What about database connection pool coordination?]</span>
 
+**Failure modes:**
+
+- What happens if the database connection pool is exhausted and all 20 connections are in use when a new request arrives? <span class="fill-in">[Fill in]</span>
+- How does your design behave when the thread pool queue fills up during a traffic spike and the rejection policy triggers? <span class="fill-in">[Fill in]</span>
+
 ### Scenario 2: Real-Time Analytics Pipeline
 
 **Requirements:**
@@ -2469,6 +2474,11 @@ Ordering guarantee:
 
 - How to maintain order per user_id: <span class="fill-in">[Your approach]</span>
 - Trade-off: <span class="fill-in">[Ordering vs throughput]</span>
+
+**Failure modes:**
+
+- What happens if one processing stage (e.g., enrich) becomes slow and its bounded queue fills up? <span class="fill-in">[Fill in]</span>
+- How does your design behave when a single user_id generates a burst of events that overwhelms the thread assigned to that partition? <span class="fill-in">[Fill in]</span>
 
 ### Scenario 3: Distributed Cache
 
@@ -2500,6 +2510,11 @@ Trade-offs:
 2. <span class="fill-in">[Lock-free vs locked]</span>
 3. <span class="fill-in">[Memory overhead]</span>
 
+**Failure modes:**
+
+- What happens if a thread holding the write lock during an eviction is interrupted or throws an exception before releasing the lock? <span class="fill-in">[Fill in]</span>
+- How does your design behave under a cache stampede where many threads simultaneously find the same key missing and attempt to populate it? <span class="fill-in">[Fill in]</span>
+
 </div>
 
 ---
@@ -2509,7 +2524,36 @@ Trade-offs:
 Answer these without referring to your notes or implementation.
 
 1. A bank account has `balance = 1000`. Thread A and Thread B both call `withdraw(600)` at the same time. Neither method is synchronized. Trace the exact sequence of operations that produces a final balance of `-200`, and explain why this is a check-then-act race condition.
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) the interleaving: Thread A reads balance=1000, Thread B reads balance=1000, Thread A checks 1000>=600 (true) and sets balance=400, Thread B checks 1000>=600 (true, stale read) and sets balance=400-600=-200, (2) the race is specifically check-then-act: the guard condition and the mutation are two separate non-atomic operations, so another thread can change state between them, (3) the fix is to make the check and act atomic under a lock or `synchronized` block.
+
 2. You have a fixed thread pool of size 2. Thread 1 is running a task that submits a subtask to the same pool and blocks on `future.get()`. Thread 2 is doing the same. Explain why this causes deadlock, and give two ways to fix it.
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) both worker threads are blocked waiting for subtasks that are queued but cannot run because there are no free threads — a classic thread pool deadlock, (2) fix 1: use a separate executor for subtasks so that the submitting threads are not blocking threads needed to execute the submitted work, (3) fix 2: use `CompletableFuture`/async chaining so the worker thread is not held while waiting for subtask completion, freeing it to execute other work.
+
 3. You change a `boolean stopFlag` field to `volatile boolean stopFlag`. A colleague says this is now fully thread-safe. Under what specific circumstances is `volatile` sufficient, and when is it not enough even with `volatile`?
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) `volatile` is sufficient for a simple single-writer flag where one thread writes and others only read — it guarantees visibility with no mutual exclusion needed, (2) `volatile` is not sufficient for read-modify-write operations such as `counter++` because that is three steps (read, increment, write) and two threads can interleave them, producing lost updates despite volatile, (3) for compound operations, use `synchronized`, `AtomicXxx`, or `ReentrantLock` to guarantee both visibility and atomicity.
+
 4. You need to implement a read-heavy cache: 95% reads, 5% writes, 100 threads. Compare using `synchronized`, `ConcurrentHashMap`, and `ReadWriteLock`. Which do you choose and why, considering both correctness and performance?
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) `synchronized` on the whole map serialises all reads and writes — correct but reduces concurrency to 1 thread at a time regardless of operation type, (2) `ConcurrentHashMap` uses lock striping so reads are mostly non-blocking and writes lock only the relevant segment — good for simple key/value operations but does not support compound conditional updates atomically without extra coordination, (3) `ReadWriteLock` allows all 95% reads to proceed concurrently (multiple readers simultaneously) while writes block all readers — the best fit for this workload's access pattern, at the cost of slightly more complex code.
+
 5. A colleague says "virtual threads are just like coroutines — they avoid blocking by being non-blocking." Identify what is wrong with this statement. What actually happens when a virtual thread calls a blocking I/O operation?
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) virtual threads do not avoid blocking calls — they make the same blocking API calls as platform threads, (2) what actually happens: the JVM detects a blocking operation on a virtual thread, unmounts the virtual thread from its carrier (OS) thread, parks it, and the carrier thread is freed to run other virtual threads — the virtual thread itself is blocked but the OS thread is not, (3) the difference from coroutines is that virtual threads require no async/await syntax changes; existing blocking code works unchanged, but the scaling benefit comes from the JVM scheduler, not from making code non-blocking.
+
+---
+
+## Connected Topics
+
+!!! info "Where this topic connects"
+
+    - **12. Message Queues** — the producer-consumer pattern implemented here with threads and blocking queues is the same pattern message queues implement across distributed services → [12. Message Queues](12-message-queues.md)
+    - **15. Distributed Transactions** — distributed locking extends per-process lock patterns to span multiple machines; the same race conditions occur but are harder to detect and diagnose → [15. Distributed Transactions](15-distributed-transactions.md)
+    - **16. Consensus Patterns** — consensus state machines require the same thread-safe design as the monitor pattern here, applied across multiple nodes → [16. Consensus Patterns](16-consensus-patterns.md)

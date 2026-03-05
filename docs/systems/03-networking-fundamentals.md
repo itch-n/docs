@@ -827,6 +827,11 @@ DNS strategy:
 - TTL: <span class="fill-in">[How long?]</span>
 - Multi-region: <span class="fill-in">[GeoDNS?]</span>
 
+**Failure modes:**
+
+- What happens if the WebSocket server handling real-time inventory updates crashes while 10K users are connected during a flash sale? <span class="fill-in">[Fill in]</span>
+- How does your design behave when GeoDNS misconfiguration routes all global users to a single region, overloading that data centre? <span class="fill-in">[Fill in]</span>
+
 ### Scenario 2: Multiplayer Game
 
 **Requirements:**
@@ -850,6 +855,11 @@ Latency optimization:
 - Connection pooling: <span class="fill-in">[Helpful?]</span>
 - Regional servers: <span class="fill-in">[Required?]</span>
 
+**Failure modes:**
+
+- What happens if a regional game server becomes unavailable mid-match for 20 of the 100 players due to a network partition? <span class="fill-in">[Fill in]</span>
+- How does your design behave when mobile network jitter pushes packet loss above your acceptable rate and the UDP-based game state diverges between clients? <span class="fill-in">[Fill in]</span>
+
 ### Scenario 3: Video Conferencing
 
 **Requirements:**
@@ -872,6 +882,11 @@ Quality vs Latency:
 - Packet loss: <span class="fill-in">[How to handle?]</span>
 - Bandwidth adaptation: <span class="fill-in">[Strategy?]</span>
 
+**Failure modes:**
+
+- What happens if the TURN relay server (used for NAT traversal) becomes unavailable for participants behind strict firewalls? <span class="fill-in">[Fill in]</span>
+- How does your design behave when a participant's available bandwidth drops sharply mid-call and the system cannot adapt quickly enough to prevent audio/video freeze? <span class="fill-in">[Fill in]</span>
+
 </div>
 
 ---
@@ -881,9 +896,24 @@ Quality vs Latency:
 Answer these without referring to your notes or implementation.
 
 1. A TCP packet is lost mid-stream on an HTTP/2 connection carrying four multiplexed streams. Describe precisely what happens to each of the four streams and explain why HTTP/3 behaves differently.
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) when TCP detects the lost packet, it halts delivery of all data in the receive buffer to the application — all four HTTP/2 streams stall even if their data arrived intact, because TCP guarantees in-order delivery, (2) this is transport-layer head-of-line blocking, distinct from the application-layer HOL blocking that HTTP/2 already solved, and (3) HTTP/3 over QUIC handles each stream independently at the transport layer so a lost packet for stream 2 only blocks stream 2; streams 1, 3, and 4 continue uninterrupted.
+
 2. You need to reduce the time it takes to fail over a service to a new IP address from 1 hour to under 2 minutes. What change do you make and when must you make it relative to the failover event?
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) the 1-hour delay is caused by a DNS TTL of 3600 seconds — cached resolvers and clients will not query for a new IP until the TTL expires, (2) the fix is to lower the TTL (e.g., to 60 seconds) *before* the planned failover — ideally hours or days in advance, so old caches expire the long TTL before it matters, and (3) lowering TTL after the incident has already started does not help because caches are already holding the old value for up to the original TTL duration.
+
 3. A chat application currently polls the server every 2 seconds. At 50,000 concurrent users, calculate the approximate number of HTTP requests per minute this generates, then explain what switching to WebSockets changes.
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) 50,000 users × 30 polls/minute = 1,500,000 HTTP requests per minute, regardless of whether there are any new messages, (2) switching to WebSockets replaces this constant polling load with a persistent connection per user — the server only pushes data when a message actually exists, reducing request volume to approximately the actual message rate, and (3) WebSockets also eliminate the per-request HTTP overhead (headers, connection setup) and reduce server CPU and bandwidth proportionally.
+
 4. A colleague says "We use TLS everywhere so our API is secure." What important security concern does TLS *not* address?
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) TLS protects data *in transit* — it prevents eavesdropping and tampering on the network — but does nothing about data at rest, (2) TLS does not provide authentication or authorisation of the caller: it proves the server's identity via its certificate but does not verify that the authenticated server-side principal is *authorised* to perform the requested operation, and (3) TLS does not protect against application-layer vulnerabilities such as SQL injection, broken access control, or a compromised client sending valid but malicious requests.
 
 ---
 
@@ -900,3 +930,13 @@ Complete this checklist after implementing and studying all networking topics.
 - [ ] Can describe the TLS handshake steps and explain the performance cost
 
 </div>
+
+---
+
+## Connected Topics
+
+!!! info "Where this topic connects"
+
+    - **06. API Design** — HTTP/1.1, HTTP/2, and HTTP/3 directly shape API design choices for latency, multiplexing, and connection management → [06. API Design](06-api-design.md)
+    - **07. Security Patterns** — TLS (covered here) is the transport layer that makes token-based authentication safe; without it, JWTs and API keys are exposed in transit → [07. Security Patterns](07-security-patterns.md)
+    - **09. Load Balancing** — TCP (Layer 4) and HTTP (Layer 7) are the two layers at which load balancers operate; the protocol coverage here provides context for that routing decision → [09. Load Balancing](09-load-balancing.md)

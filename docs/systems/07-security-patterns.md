@@ -1000,6 +1000,11 @@ flowchart LR
 - Token expiry: <span class="fill-in">[Short-lived or long-lived? Refresh strategy?]</span>
 - Rate limiting: <span class="fill-in">[Per user? Per API key?]</span>
 
+**Failure modes:**
+
+- What happens if the JWT signing secret is accidentally committed to a public GitHub repository? <span class="fill-in">[Fill in]</span>
+- How does your design behave when the token validation service becomes unavailable and 10K users try to authenticate simultaneously? <span class="fill-in">[Fill in]</span>
+
 ### Scenario 2: Multi-Tenant SaaS Platform
 
 **Requirements:**
@@ -1016,6 +1021,11 @@ flowchart LR
 - SSO integration: <span class="fill-in">[SAML, OAuth2, or both?]</span>
 - Token claims: <span class="fill-in">[What to include in JWT?]</span>
 - Cross-tenant attacks: <span class="fill-in">[How to prevent?]</span>
+
+**Failure modes:**
+
+- What happens if a misconfigured RBAC rule grants a tenant-admin role access to another tenant's data? <span class="fill-in">[Fill in]</span>
+- How does your design behave when an SSO provider goes down and enterprise customers cannot authenticate? <span class="fill-in">[Fill in]</span>
 
 ### Scenario 3: Microservices Internal Auth
 
@@ -1034,6 +1044,11 @@ flowchart LR
 - Secret distribution: <span class="fill-in">[How do services get credentials?]</span>
 - Rotation: <span class="fill-in">[How to rotate without downtime?]</span>
 
+**Failure modes:**
+
+- What happens if a service's mTLS certificate expires and is not rotated in time, blocking all inter-service calls? <span class="fill-in">[Fill in]</span>
+- How does your design behave when the secrets manager is unavailable and services cannot retrieve their credentials on startup? <span class="fill-in">[Fill in]</span>
+
 </div>
 
 ---
@@ -1043,7 +1058,35 @@ flowchart LR
 Answer these without referring to your notes or implementation.
 
 1. A JWT token arrives with a valid HMAC signature but the `exp` claim is 10 minutes in the past. Should the request be allowed? Explain what would happen in a high-traffic system if you skipped the expiration check and tokens were never refreshed.
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) the request must be rejected — a valid signature only proves the token was issued by the correct server, not that it is still valid; expiration is a separate and mandatory check, (2) without expiration checks, stolen tokens remain valid forever — a token leaked via a compromised client or log file becomes a permanent backdoor, (3) in a high-traffic system with no expiration, token revocation becomes impossible without a centralized blocklist, defeating the statelessness that makes JWT attractive.
+
 2. You are implementing `hasPermission(userId, permission)` for a user who has three roles. Walk through the algorithm step by step and explain what data structures you would choose and why.
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) step-by-step: look up the user's role set in a HashMap<String, Set<Role>>, iterate over each role, look up each role's permissions in a HashMap<Role, Set<Permission>>, return true on first match, (2) HashSet for both roles and permissions gives O(1) contains checks so the overall algorithm is O(R) where R is the number of roles, (3) null-safety: return false immediately if the user has no roles or a role has no permission mapping — never default to allow.
+
 3. Your team wants to store the JWT signing secret as an environment variable set at deploy time. Compare this to using a dedicated secrets manager. What are the specific risks of the environment-variable approach that a secrets manager would eliminate?
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) environment variables are often readable by any process on the host and can appear in crash dumps, `/proc` listings, or CI logs — a secrets manager restricts access to authorised callers only, (2) environment variables have no rotation mechanism; rotating the secret requires a full redeployment, whereas a secrets manager supports versioned rotation with zero downtime, (3) a secrets manager provides audit logs showing who accessed the secret and when, which is impossible with environment variables.
+
 4. A colleague proposes using `String.equals()` to validate an API key submitted by a client. What is the security flaw, and how would you fix it while still keeping the comparison O(n)?
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) `String.equals()` short-circuits on the first differing character, leaking timing information — an attacker measuring response times can determine the correct key one character at a time (timing attack), (2) the fix is a constant-time comparison that always examines every character regardless of where a mismatch occurs (e.g., `MessageDigest.isEqual()` or a custom loop with XOR accumulator), (3) constant-time comparison is still O(n) — it processes all n characters every time — it just removes the early-exit that enables timing attacks.
+
 5. A colleague says "we don't need RBAC because we only have two user types: admin and regular user." What would you say to convince them that a proper role-permission mapping is worth implementing even now, before the system grows?
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) two hardcoded roles with scattered `if (isAdmin)` checks become brittle as the system grows — adding a third role (e.g., moderator) requires hunting down every check in the codebase, (2) a role-permission mapping separates the definition of access rules from the enforcement, making it easy to add or modify roles without changing business logic, (3) a proper RBAC foundation also enables audit logging, per-operation permission checks, and future ABAC extensions without a ground-up rewrite.
+
+---
+
+## Connected Topics
+
+!!! info "Where this topic connects"
+
+    - **06. API Design** — JWTs and API keys are the standard authentication mechanisms for REST APIs; idempotency and versioning affect token refresh and revocation strategies → [06. API Design](06-api-design.md)
+    - **03. Networking Fundamentals** — TLS provides transport-layer security that makes token-based authentication safe; without it, all tokens are exposed in plaintext → [03. Networking Fundamentals](03-networking-fundamentals.md)

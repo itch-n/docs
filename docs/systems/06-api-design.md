@@ -1173,6 +1173,11 @@ flowchart LR
 - Key endpoints/queries: <span class="fill-in">[Fill in]</span>
 - How to handle feed generation? <span class="fill-in">[Fill in]</span>
 
+**Failure modes:**
+
+- What happens if the feed generation service becomes unavailable and clients retry aggressively? <span class="fill-in">[Fill in]</span>
+- How does your design behave when a post deletion must propagate across all cached feed responses? <span class="fill-in">[Fill in]</span>
+
 ### Scenario 2: Design API for microservices
 
 **Requirements:**
@@ -1188,6 +1193,11 @@ flowchart LR
 - Why? <span class="fill-in">[Fill in]</span>
 - How to handle errors? <span class="fill-in">[Fill in]</span>
 - How to handle retries? <span class="fill-in">[Fill in]</span>
+
+**Failure modes:**
+
+- What happens if the Payment service is down when the Order service calls it mid-transaction? <span class="fill-in">[Fill in]</span>
+- How does your design behave when a Notification service call times out and the retry triggers a duplicate notification? <span class="fill-in">[Fill in]</span>
 
 ### Scenario 3: Design API for mobile app with poor network
 
@@ -1205,6 +1215,11 @@ flowchart LR
 - How to optimize for mobile? <span class="fill-in">[Fill in]</span>
 - Caching strategy? <span class="fill-in">[Fill in]</span>
 
+**Failure modes:**
+
+- What happens if the mobile client loses connectivity mid-request and retries with the same payload? <span class="fill-in">[Fill in]</span>
+- How does your design behave when the server returns a partial response due to a timeout on a slow 3G connection? <span class="fill-in">[Fill in]</span>
+
 </div>
 
 ---
@@ -1214,10 +1229,29 @@ flowchart LR
 Answer these without referring to your notes or implementation.
 
 1. A REST `DELETE /users/123` is called twice. The first call succeeds and deletes the user. The second call finds no user. Should the second call return 200, 204, or 404? Justify your answer in terms of idempotency.
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) both 204 and 404 are defensible — the choice depends on API contract; 404 is the more common production choice, (2) the key insight is that idempotency means the server state is identical after multiple identical requests, not that the status code must be identical, (3) returning 404 on the second call is acceptable because the resource is gone; documenting this behaviour in the API contract is the critical requirement.
+
 2. A mobile client needs a user's profile, their last 5 posts, and the like count on each post — all on one screen. Compare the number of HTTP round trips required with REST versus GraphQL, and explain which wins here and why.
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) REST requires at least 3 round trips: GET /users/{id}, GET /users/{id}/posts, then N GET /posts/{id}/likes calls (N+1 problem), (2) GraphQL requires 1 round trip with a nested query specifying exactly the fields needed, (3) on a slow mobile network the latency saving from 1 vs 3+ round trips outweighs GraphQL's added server complexity, making GraphQL the better choice here.
+
 3. Your team is adding a `middleName` field to the User resource. Is this a breaking change? What about removing the `age` field? Explain the difference and what versioning strategy each requires.
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) adding an optional field is non-breaking — existing clients that ignore unknown fields continue to work, so no new version is needed, (2) removing an existing field is breaking — any client that reads `age` will receive null or an error, requiring a new API version (e.g., `/v2/users`), (3) a sunset header on the old version gives clients a migration window before the old endpoint is decommissioned.
+
 4. A payment endpoint uses `POST /payments` without an idempotency key. A client sends a request, receives a network timeout, and retries. Describe exactly what can go wrong and what the correct fix looks like.
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) the server may have processed the first request and charged the card before the timeout, so the retry creates a second charge — double billing the customer, (2) the fix is an `Idempotency-Key` header (a client-generated UUID) stored by the server; if the same key arrives again, return the cached response without re-processing, (3) the idempotency key store must be durable so a server restart does not lose the record and allow re-processing.
+
 5. A colleague says "We should use GraphQL for our internal microservice communication because it's more flexible than REST." What is the better choice and why, and what does GraphQL not provide that internal services actually need?
+
+    ??? success "Rubric"
+        A complete answer addresses: (1) gRPC (RPC with Protocol Buffers) is the better choice for internal microservice communication because it provides binary serialisation, HTTP/2 multiplexing, and generated typed clients, (2) GraphQL's flexibility is designed for external clients with varied data needs, not for internal services with known, stable interfaces, (3) GraphQL does not provide the strongly-typed generated contracts and low-latency binary protocol that internal services need for high-throughput inter-service calls.
 
 ---
 
@@ -1246,3 +1280,13 @@ Based on everything you've learned, write your personal API design checklist:
 - [ ] <span class="fill-in">[Your checklist item]</span>
 - [ ] <span class="fill-in">[Your checklist item]</span>
 - [ ] <span class="fill-in">[Your checklist item]</span>
+
+---
+
+## Connected Topics
+
+!!! info "Where this topic connects"
+
+    - **07. Security Patterns** — all external APIs require authentication (JWT or API keys) and authorization (RBAC); API design choices affect token scope and validation overhead → [07. Security Patterns](07-security-patterns.md)
+    - **08. Rate Limiting** — rate limiting protects API endpoints from abuse; API versioning strategy affects whether limits are applied per-version or globally → [08. Rate Limiting](08-rate-limiting.md)
+    - **03. Networking Fundamentals** — HTTP versions covered in topic 03 determine which API features are possible (e.g. HTTP/2 enables server push and header compression) → [03. Networking Fundamentals](03-networking-fundamentals.md)
