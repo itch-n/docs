@@ -824,6 +824,27 @@ public class LoadBalancingClient {
 
 ---
 
+## Layer 4 vs Layer 7
+
+The five algorithms above answer *how* requests are distributed. A separate question is *where* in the network stack the load balancer sits.
+
+| | L4 — Transport layer | L7 — Application layer |
+|---|---|---|
+| **Sees** | IP address, port, protocol | HTTP headers, URL path, cookies |
+| **SSL termination** | No — TLS passes through opaque | Yes — LB decrypts, inspects, re-encrypts |
+| **Routing basis** | IP + port only | URL path, hostname, header values, cookies |
+| **Overhead** | Low — no protocol parsing | Higher — full HTTP parsing per request |
+| **Typical use** | Raw TCP, non-HTTP protocols | HTTP/HTTPS, microservices, API gateways |
+
+**Choose L4 when** you need minimum overhead, are balancing non-HTTP protocols (game servers, MQTT, raw gRPC), or don't need to inspect request content.
+
+**Choose L7 when** you need URL-based routing (e.g., `/api/*` → service-A, `/static/*` → CDN), SSL termination at the load balancer, cookie-based sticky sessions, or canary/A-B deployments.
+
+!!! warning "L7 doesn't replace algorithm choice — it stacks on top of it"
+    Choosing L7 determines what information the load balancer can use. You still need to choose *which algorithm* routes those requests. An L7 load balancer commonly runs round robin or least connections across the backend pool, while using URL path or headers to decide *which pool* to send to at all.
+
+---
+
 ## Common Misconceptions
 
 !!! warning "Least connections always outperforms round robin"
@@ -911,6 +932,18 @@ flowchart LR
     Start -->|"Minimal redistribution on changes"| N5
 ```
 
+### 4. Layer selection
+
+**Use L4 when:**
+
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key signals: <span class="fill-in">[Fill in]</span>
+
+**Use L7 when:**
+
+- Your scenario: <span class="fill-in">[Fill in]</span>
+- Key signals: <span class="fill-in">[Fill in]</span>
+
 </div>
 
 ---
@@ -980,3 +1013,4 @@ Answer these without referring to your notes or implementation.
 3. A user complains their shopping cart disappears randomly. Your load balancer uses round robin. Explain precisely why this happens and describe two solutions — one that keeps round robin and one that does not.
 4. You are configuring consistent hashing for a cache cluster. The documentation says to use 150 virtual nodes per server. Your manager asks why not just 1, since that's simpler. Give a concrete explanation with an example showing what goes wrong with 1 virtual node and why 150 fixes it.
 5. A colleague says "IP hash is strictly better than round robin for any application that has user sessions, because it keeps users on the same server." What is wrong with this claim? Describe at least two real-world scenarios where IP hash would give worse results than round robin plus externalised sessions.
+6. Your team needs to route `/api/*` requests to a backend service cluster and `/static/*` requests to an object-storage CDN, while also terminating TLS at the load balancer. Should this be an L4 or L7 load balancer? What specifically breaks if you use the other layer instead?

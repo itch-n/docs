@@ -589,6 +589,9 @@ Mitigation strategies:
 - Connection pooling (amortize handshake cost)
 ```
 
+!!! info "TCP and HTTP as load balancing layers"
+    TCP (Layer 4) and HTTP (Layer 7) are also the two layers at which load balancers operate. A Layer 4 load balancer routes based on IP address and port without reading the payload; a Layer 7 load balancer reads HTTP headers and URLs and can make content-aware routing decisions. The choice between them and when each is appropriate is covered in [09. Load Balancing](09-load-balancing.md).
+
 ---
 
 ## Before/After: Why Networking Fundamentals Matter
