@@ -28,7 +28,7 @@ Build real implementations to understand how systems work:
 - [ ] **Concurrency Patterns** - Locks, producer-consumer, thread safety
 - [ ] **Database Scaling** - Replication, sharding, partitioning
 - [ ] **Message Queues** - Queue vs pub/sub, delivery guarantees
-- [ ] **Stream Processing** - Windowing, watermarks, exactly-once semantics
+- [ ] **Stream Processing** - Windowing patterns for real-time event aggregation
 - [ ] **Observability** - Metrics, logging, tracing, SLOs
 - [ ] **Distributed Transactions** - Saga pattern, idempotency
 - [ ] **Consensus Patterns** - Raft, leader election, distributed locks
