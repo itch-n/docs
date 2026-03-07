@@ -119,45 +119,7 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 **Use case:** Palindromes, pair sum in sorted array.
 
 ```java
-public class OppositeDirectionPointers {
-
-    /**
-     * Problem: Check if string is a palindrome
-     * Time: O(n), Space: O(1)
-     *
-     * TODO: Implement using two pointers from opposite ends
-     */
-    public static boolean isPalindrome(String s) {
-        // TODO: Use two pointers moving towards each other
-        // Consider the loop termination condition
-
-        return false; // Replace with implementation
-    }
-
-    /**
-     * Problem: Find pair in sorted array that sums to target
-     * Time: O(n), Space: O(1)
-     *
-     * TODO: Implement two-pointer pair sum
-     */
-    public static int[] twoSum(int[] nums, int target) {
-        // TODO: Start pointers at opposite ends
-        // How should pointers move based on current sum vs target?
-
-        return new int[] {-1, -1}; // Replace with implementation
-    }
-
-    /**
-     * Problem: Reverse array in-place
-     * Time: O(n), Space: O(1)
-     *
-     * TODO: Implement using two pointers
-     */
-    public static void reverseArray(int[] arr) {
-        // TODO: Use two pointers to swap elements
-        // What positions should they start at?
-    }
-}
+--8<-- "com/study/dsa/twopointers/OppositeDirectionPointers.java"
 ```
 
 **Runnable Client Code:**
@@ -236,48 +198,7 @@ public class OppositeDirectionClient {
 **Use case:** Remove duplicates, partition array, in-place modifications.
 
 ```java
-public class SameDirectionPointers {
-
-    /**
-     * Problem: Remove duplicates from sorted array in-place
-     * Return new length
-     * Time: O(n), Space: O(1)
-     *
-     * TODO: Implement using slow/fast pointers
-     */
-    public static int removeDuplicates(int[] nums) {
-        if (nums.length == 0) return 0;
-
-        // TODO: One pointer tracks unique elements, other explores
-        // When should you copy a value? What should be returned?
-
-        return 0; // Replace with implementation
-    }
-
-    /**
-     * Problem: Move all zeros to end, maintain order of non-zeros
-     * Time: O(n), Space: O(1)
-     *
-     * TODO: Implement using slow/fast pointers
-     */
-    public static void moveZeroes(int[] nums) {
-        // TODO: Track position for non-zero elements
-        // How can swapping help maintain order?
-    }
-
-    /**
-     * Problem: Partition array - all elements < pivot go left
-     * Time: O(n), Space: O(1)
-     *
-     * TODO: Implement partition logic
-     */
-    public static int partition(int[] arr, int pivot) {
-        // TODO: Maintain a boundary between partitions
-        // What determines when to swap elements?
-
-        return 0; // Replace with implementation
-    }
-}
+--8<-- "com/study/dsa/twopointers/SameDirectionPointers.java"
 ```
 
 **Runnable Client Code:**
@@ -361,84 +282,7 @@ public class SameDirectionClient {
 **Use case:** Linked list cycle detection, finding middle element.
 
 ```java
-public class DifferentSpeedPointers {
-
-    // Simple ListNode definition
-    static class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode(int val) {
-            this.val = val;
-        }
-    }
-
-    /**
-     * Problem: Detect cycle in linked list
-     * Time: O(n), Space: O(1)
-     *
-     * TODO: Implement using slow/fast pointers
-     */
-    public static boolean hasCycle(ListNode head) {
-        // TODO: Move pointers at different speeds
-        // What happens when they meet?
-
-        return false; // Replace with implementation
-    }
-
-    /**
-     * Problem: Find middle of linked list
-     * If even length, return second middle node
-     * Time: O(n), Space: O(1)
-     *
-     * TODO: Implement using slow/fast pointers
-     */
-    public static ListNode findMiddle(ListNode head) {
-        // TODO: Use different pointer speeds
-        // Where is the slow pointer when fast reaches the end?
-
-        return null; // Replace with implementation
-    }
-
-    /**
-     * Problem: Find kth node from end
-     * Time: O(n), Space: O(1)
-     *
-     * TODO: Implement using two pointers with gap
-     */
-    public static ListNode findKthFromEnd(ListNode head, int k) {
-        // TODO: Create a fixed gap between pointers
-        // When one reaches the end, where is the other?
-
-        return null; // Replace with implementation
-    }
-
-    // Helper: Create linked list from array
-    static ListNode createList(int[] values) {
-        if (values.length == 0) return null;
-
-        ListNode head = new ListNode(values[0]);
-        ListNode current = head;
-
-        for (int i = 1; i < values.length; i++) {
-            current.next = new ListNode(values[i]);
-            current = current.next;
-        }
-
-        return head;
-    }
-
-    // Helper: Print linked list
-    static void printList(ListNode head) {
-        ListNode current = head;
-        while (current != null) {
-            System.out.print(current.val);
-            if (current.next != null) System.out.print(" -> ");
-            current = current.next;
-        }
-        System.out.println();
-    }
-}
+--8<-- "com/study/dsa/twopointers/DifferentSpeedPointers.java"
 ```
 
 **Runnable Client Code:**
