@@ -171,37 +171,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 --8<-- "com/study/systems/security/JWTAuthenticator.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-public class JWTClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== JWT Authentication ===\n");
-
-        String secret = "your-256-bit-secret";
-        long expirationMs = 3600000; // 1 hour
-
-        JWTAuthenticator auth = new JWTAuthenticator(secret, expirationMs);
-
-        // Test 1: Generate token
-        System.out.println("--- Test 1: Generate Token ---");
-        String token = auth.generateToken("user123");
-        System.out.println("Generated token: " + token);
-
-        // Test 2: Validate token
-        System.out.println("\n--- Test 2: Validate Token ---");
-        String userId = auth.validateToken(token);
-        System.out.println("Extracted user: " + userId);
-
-        // Test 3: Invalid token
-        System.out.println("\n--- Test 3: Invalid Token ---");
-        String invalidToken = "invalid.token.here";
-        String result = auth.validateToken(invalidToken);
-        System.out.println("Validation result: " + result);
-    }
-}
-```
 
 !!! warning "Debugging Challenge — Missing Signature Validation"
 
@@ -258,42 +227,6 @@ public class JWTClient {
 --8<-- "com/study/systems/security/RBACAuthorizer.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-import static RBACAuthorizer.*;
-
-public class RBACClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== RBAC Authorization ===\n");
-
-        RBACAuthorizer rbac = new RBACAuthorizer();
-
-        // Test 1: Assign roles
-        System.out.println("--- Test 1: Role Assignment ---");
-        rbac.assignRole("alice", Role.ADMIN);
-        rbac.assignRole("bob", Role.EDITOR);
-        rbac.assignRole("charlie", Role.VIEWER);
-        System.out.println("Roles assigned");
-
-        // Test 2: Check permissions
-        System.out.println("\n--- Test 2: Permission Checks ---");
-        System.out.println("Alice (ADMIN) can DELETE: " +
-            rbac.hasPermission("alice", Permission.DELETE));
-        System.out.println("Bob (EDITOR) can WRITE: " +
-            rbac.hasPermission("bob", Permission.WRITE));
-        System.out.println("Charlie (VIEWER) can DELETE: " +
-            rbac.hasPermission("charlie", Permission.DELETE));
-
-        // Test 3: Get all permissions
-        System.out.println("\n--- Test 3: All Permissions ---");
-        System.out.println("Alice permissions: " + rbac.getUserPermissions("alice"));
-        System.out.println("Bob permissions: " + rbac.getUserPermissions("bob"));
-        System.out.println("Charlie permissions: " + rbac.getUserPermissions("charlie"));
-    }
-}
-```
 
 !!! warning "Debugging Challenge — Authorization Bypass in deleteResource"
 
@@ -358,45 +291,6 @@ public class RBACClient {
 --8<-- "com/study/systems/security/APIKeyAuth.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class APIKeyClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== API Key Authentication ===\n");
-
-        APIKeyAuth apiKeyAuth = new APIKeyAuth();
-
-        // Test 1: Generate keys
-        System.out.println("--- Test 1: Generate API Keys ---");
-        Set<String> scopes1 = new HashSet<>(Arrays.asList("read", "write"));
-        String key1 = apiKeyAuth.generateKey("service1", scopes1);
-        System.out.println("Generated key for service1: " + key1);
-
-        Set<String> scopes2 = new HashSet<>(Arrays.asList("read"));
-        String key2 = apiKeyAuth.generateKey("service2", scopes2);
-        System.out.println("Generated key for service2: " + key2);
-
-        // Test 2: Validate keys
-        System.out.println("\n--- Test 2: Validate Keys ---");
-        String userId1 = apiKeyAuth.validateKey(key1, "write");
-        System.out.println("Key1 with 'write' scope: " + userId1);
-
-        String userId2 = apiKeyAuth.validateKey(key2, "write");
-        System.out.println("Key2 with 'write' scope: " + userId2);
-
-        // Test 3: Revoke key
-        System.out.println("\n--- Test 3: Revoke Key ---");
-        boolean revoked = apiKeyAuth.revokeKey(key1);
-        System.out.println("Key1 revoked: " + revoked);
-        String userId3 = apiKeyAuth.validateKey(key1, "read");
-        System.out.println("Key1 after revocation: " + userId3);
-    }
-}
-```
 
 ---
 
@@ -413,51 +307,6 @@ public class APIKeyClient {
 --8<-- "com/study/systems/security/SecretsManager.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import java.util.*;
-
-public class SecretsManagerClient {
-
-    public static void main(String[] args) throws Exception {
-        System.out.println("=== Secrets Management ===\n");
-
-        // Generate master key
-        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
-        keyGen.init(256);
-        SecretKey masterKey = keyGen.generateKey();
-
-        SecretsManager sm = new SecretsManager(masterKey);
-
-        // Test 1: Store secrets
-        System.out.println("--- Test 1: Store Secrets ---");
-        Set<String> users1 = new HashSet<>(Arrays.asList("admin", "service1"));
-        sm.storeSecret("db_password", "super-secret-pwd", users1);
-        System.out.println("Stored db_password");
-
-        Set<String> users2 = new HashSet<>(Arrays.asList("service2"));
-        sm.storeSecret("api_key", "sk_live_123456", users2);
-        System.out.println("Stored api_key");
-
-        // Test 2: Retrieve secrets
-        System.out.println("\n--- Test 2: Retrieve Secrets ---");
-        String pwd = sm.getSecret("db_password", "admin");
-        System.out.println("Retrieved db_password: " + pwd);
-
-        // Test 3: Unauthorized access
-        System.out.println("\n--- Test 3: Unauthorized Access ---");
-        try {
-            String key = sm.getSecret("api_key", "admin");
-            System.out.println("Retrieved api_key: " + key);
-        } catch (SecurityException e) {
-            System.out.println("Access denied: " + e.getMessage());
-        }
-    }
-}
-```
 
 !!! info "Loop back"
     Return to the Quick Quiz now and fill in your verified answers.

@@ -120,28 +120,6 @@ Verify after implementation: <span class="fill-in">[Which one, and why?]</span>
 --8<-- "com/study/dsa/prefixsums/PrefixSum.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class PrefixSumClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Range Sum Query ===\n");
-
-        int[] arr = {-2, 0, 3, -5, 2, -1};
-        PrefixSum.NumArray numArray = new PrefixSum.NumArray(arr);
-        System.out.println("Array: " + Arrays.toString(arr));
-
-        int[][] queries = {{0, 2}, {2, 5}, {0, 5}};
-        for (int[] query : queries) {
-            int sum = numArray.sumRange(query[0], query[1]);
-            System.out.printf("sumRange(%d, %d) = %d%n", query[0], query[1], sum);
-        }
-    }
-}
-```
 
 !!! warning "Debugging Challenge — Off-by-One in sumRange"
     The code below uses a prefix sum array of length `n` (not `n+1`). It compiles but throws an `ArrayIndexOutOfBoundsException` on some inputs. Identify the bug before checking the answer.
@@ -186,39 +164,6 @@ public class PrefixSumClient {
 --8<-- "com/study/dsa/prefixsums/SubarraySum.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class SubarraySumClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Prefix Sum + HashMap ===\n");
-
-        // Test 1: Subarray sum equals K
-        System.out.println("--- Test 1: Subarray Sum Equals K ---");
-        int[][] arrays = {{1,1,1}, {1,2,3}, {-1,-1,1}};
-        int[] targets = {2, 3, 0};
-
-        for (int i = 0; i < arrays.length; i++) {
-            int count = SubarraySum.subarraySum(arrays[i], targets[i]);
-            System.out.printf("Array: %s, k=%d -> %d subarrays%n",
-                Arrays.toString(arrays[i]), targets[i], count);
-        }
-
-        // Test 2: Contiguous array
-        System.out.println("\n--- Test 2: Contiguous Array ---");
-        int[][] binArrays = {{0,1}, {0,1,0}, {0,1,0,1,1,0}};
-
-        for (int[] arr : binArrays) {
-            int maxLen = SubarraySum.findMaxLength(arr);
-            System.out.printf("Array: %s -> maxLen=%d%n",
-                Arrays.toString(arr), maxLen);
-        }
-    }
-}
-```
 
 !!! warning "Debugging Challenge — Missing Initial Map Entry"
     This implementation omits the initial `{0: 1}` entry. It produces wrong answers for subarrays starting at index 0. Trace through `nums = [1, 1, 1]`, `k = 2` to see where it breaks.
@@ -261,26 +206,6 @@ public class SubarraySumClient {
 --8<-- "com/study/dsa/prefixsums/ProductExceptSelf.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class ProductExceptSelfClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Product Except Self ===\n");
-
-        int[][] tests = {{1,2,3,4}, {-1,1,0,-3,3}, {2,3}};
-
-        for (int[] test : tests) {
-            int[] result = ProductExceptSelf.productExceptSelf(test);
-            System.out.printf("Input:  %s%n", Arrays.toString(test));
-            System.out.printf("Output: %s%n%n", Arrays.toString(result));
-        }
-    }
-}
-```
 
 ---
 
@@ -294,38 +219,6 @@ public class ProductExceptSelfClient {
 --8<-- "com/study/dsa/prefixsums/NumMatrix.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class NumMatrixClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== 2D Range Sum Query ===\n");
-
-        int[][] matrix = {
-            {3, 0, 1, 4, 2},
-            {5, 6, 3, 2, 1},
-            {1, 2, 0, 1, 5},
-            {4, 1, 0, 1, 7},
-            {1, 0, 3, 0, 5}
-        };
-
-        NumMatrix nm = new NumMatrix(matrix);
-
-        System.out.println("Matrix:");
-        for (int[] row : matrix) {
-            System.out.println("  " + Arrays.toString(row));
-        }
-
-        System.out.println();
-        System.out.printf("sumRegion(2,1,4,3) = %d (expected 8)%n", nm.sumRegion(2,1,4,3));
-        System.out.printf("sumRegion(1,1,2,2) = %d (expected 11)%n", nm.sumRegion(1,1,2,2));
-        System.out.printf("sumRegion(1,2,2,4) = %d (expected 12)%n", nm.sumRegion(1,2,2,4));
-    }
-}
-```
 
 ---
 

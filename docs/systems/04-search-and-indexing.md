@@ -147,14 +147,14 @@ Search "quick" → O(1) lookup → [doc1, doc3]
   doc1: [positions: 2],
   doc3: [positions: 1]
 ]
+```
 
-Phrase search "quick brown":
+**Phrase search "quick brown":**
 
 - Find docs with both terms
 - Check if positions are adjacent
 - doc1: positions 1,2 → ✓ Match!
 - doc3: positions 0,1 → ✓ Match!
-```
 
 **Building an Inverted Index:**
 
@@ -305,14 +305,13 @@ Input: "search"
 Unigrams: ["s", "e", "a", "r", "c", "h"]
 Bigrams: ["se", "ea", "ar", "rc", "ch"]
 Trigrams: ["sea", "ear", "arc", "rch"]
-
-Use case: Fuzzy search
-Query "serch" (typo):
-
-- Trigrams: ["ser", "erc", "rch"]
-- "search" trigrams: ["sea", "ear", "arc", "rch"]
-- Overlap: ["erc", "rch"] → Possible match!
 ```
+
+**Use case: Fuzzy search** — Query "serch" (typo):
+
+- Trigrams: `["ser", "erc", "rch"]`
+- "search" trigrams: `["sea", "ear", "arc", "rch"]`
+- Overlap: `["erc", "rch"]` → Possible match!
 
 **Stemming vs Lemmatization:**
 
@@ -407,7 +406,7 @@ b = length normalization (default: 0.75)
 
 **Practical Example (Elasticsearch):**
 
-```json
+```
 Query: "machine learning tutorial"
 
 BM25 scoring:
@@ -433,7 +432,7 @@ Ranking: doc1 > doc2 > doc3
 
 **Field Boosting:**
 
-```json
+```
 {
   "query": {
     "multi_match": {
@@ -446,11 +445,11 @@ Ranking: doc1 > doc2 > doc3
     }
   }
 }
-
-Effect:
-Match in title = 3x more important than content
-Prioritizes documents with query terms in prominent fields
 ```
+
+**Effect:**
+- Match in title = 3x more important than content
+- Prioritizes documents with query terms in prominent fields
 
 ---
 
@@ -471,11 +470,14 @@ Distance = 1
 
 Query: "elasticsarch" (typo)
 Fuzzy search with distance 2:
+```
 
 - "elasticsearch" (distance 1: insert 'e')
 - "elasticcache" (too far, distance 3)
 
-Implementation:
+**Implementation:**
+
+```
 query: {
   "fuzzy": {
     "name": {
@@ -601,18 +603,18 @@ Distribution:
 Node 1: Primary 0, Replica 1
 Node 2: Primary 1, Replica 0
 Node 3: Replica 0, Replica 1
+```
 
-Availability:
+**Availability:**
 
 - Node 1 fails → Node 2 has Primary 1 and Replica 0
 - All data still accessible
 - Automatic promotion of replicas
 
-Performance:
+**Performance:**
 
 - Reads can use replicas (load balancing)
 - Writes go to primary, then replicated
-```
 
 **Query Execution Flow:**
 
@@ -651,12 +653,12 @@ Custom routing (co-locate related docs):
 PUT /users/_doc/user123?routing=tenant_A
 → All tenant_A docs in same shard
 → Faster tenant-scoped queries
+```
 
-Trade-off:
+**Trade-off:**
 
 - Better locality
 - Risk of unbalanced shards
-```
 
 ---
 
@@ -667,7 +669,7 @@ Trade-off:
 **Index-Time Optimizations:**
 
 **1. Selective Indexing:**
-```json
+```
 {
   "mappings": {
     "properties": {
@@ -686,13 +688,13 @@ Trade-off:
     }
   }
 }
+```
 
-Effect:
+**Effect:**
 
 - Smaller index size
 - Faster indexing
 - Reduced memory usage
-```
 
 **2. Doc Values (Column Store):**
 ```
@@ -714,7 +716,7 @@ Query: "Average age by city"
 **Query-Time Optimizations:**
 
 **1. Filter Context vs Query Context:**
-```json
+```
 // Query context (scored):
 {
   "query": {
@@ -737,13 +739,13 @@ Query: "Average age by city"
     }
   }
 }
-
-Filter benefits:
-
-+ Cached (reused across queries)
-+ Faster (no scoring)
-+ Use for: dates, categories, flags
 ```
+
+**Filter benefits:**
+
+- Cached (reused across queries)
+- Faster (no scoring)
+- Use for: dates, categories, flags
 
 **2. Query Caching:**
 ```
@@ -754,13 +756,13 @@ Request cache (entire query result):
 }
 → Cached for 1 minute
 → Subsequent identical queries instant
+```
 
-Shard request cache:
+**Shard request cache:**
 
 - Caches query results per shard
 - Invalidated on shard changes
 - Shared across all queries hitting shard
-```
 
 **3. Pagination:**
 ```

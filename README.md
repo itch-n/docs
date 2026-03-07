@@ -55,6 +55,17 @@ uv run mkdocs build --strict
 └── uv.lock                         # Locked dependencies
 ```
 
+## Running Java Examples
+
+Each topic's Java classes can be run individually via Gradle:
+
+```bash
+./gradlew run -PmainClass=com.study.systems.storage.BPlusTree
+./gradlew run -PmainClass=com.study.dsa.twopointers.OppositeDirectionPointers
+```
+
+The fully qualified class name follows the package structure under `src/main/java/`.
+
 ## Content Maintenance
 
 ### Markdown Formatting

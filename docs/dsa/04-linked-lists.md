@@ -127,52 +127,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 --8<-- "com/study/dsa/linkedlists/ReverseLinkedList.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-public class ReverseLinkedListClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Reverse Linked List ===\n");
-
-        // Test 1: Reverse entire list
-        System.out.println("--- Test 1: Reverse Entire List ---");
-        int[] values = {1, 2, 3, 4, 5};
-        ListNode list = ReverseLinkedList.createList(values);
-
-        System.out.print("Original: ");
-        ReverseLinkedList.printList(list);
-
-        ListNode reversed = ReverseLinkedList.reverseList(list);
-        System.out.print("Reversed: ");
-        ReverseLinkedList.printList(reversed);
-
-        // Test 2: Reverse recursively
-        System.out.println("\n--- Test 2: Reverse Recursively ---");
-        ListNode list2 = ReverseLinkedList.createList(new int[]{1, 2, 3, 4, 5});
-
-        System.out.print("Original: ");
-        ReverseLinkedList.printList(list2);
-
-        ListNode reversedRec = ReverseLinkedList.reverseListRecursive(list2);
-        System.out.print("Reversed: ");
-        ReverseLinkedList.printList(reversedRec);
-
-        // Test 3: Reverse first K
-        System.out.println("\n--- Test 3: Reverse First K Nodes ---");
-        ListNode list3 = ReverseLinkedList.createList(new int[]{1, 2, 3, 4, 5, 6, 7});
-        int k = 3;
-
-        System.out.print("Original: ");
-        ReverseLinkedList.printList(list3);
-        System.out.println("K = " + k);
-
-        ListNode reversedK = ReverseLinkedList.reverseFirstK(list3, k);
-        System.out.print("Result:   ");
-        ReverseLinkedList.printList(reversedK);
-    }
-}
-```
 
 !!! warning "Debugging Challenge — Broken Reverse Implementation"
     The code below has **2 critical bugs**. Trace through `1 -> 2 -> 3 -> null` before checking the answer.
@@ -218,48 +172,6 @@ public class ReverseLinkedListClient {
 --8<-- "com/study/dsa/linkedlists/CycleDetection.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-public class CycleDetectionClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Cycle Detection ===\n");
-
-        // Test 1: No cycle
-        System.out.println("--- Test 1: No Cycle ---");
-        ListNode list1 = CycleDetection.createList(new int[]{1, 2, 3, 4, 5});
-
-        System.out.println("List: 1 -> 2 -> 3 -> 4 -> 5");
-        System.out.println("Has cycle: " + CycleDetection.hasCycle(list1));
-
-        // Test 2: Cycle exists
-        System.out.println("\n--- Test 2: Cycle Exists ---");
-        ListNode list2 = CycleDetection.createList(new int[]{1, 2, 3, 4, 5});
-
-        // Create cycle: 5 -> 3
-        ListNode node3 = list2.next.next; // node 3
-        ListNode tail = list2.next.next.next.next; // node 5
-        tail.next = node3;
-
-        System.out.println("List: 1 -> 2 -> 3 -> 4 -> 5 -> (back to 3)");
-        System.out.println("Has cycle: " + CycleDetection.hasCycle(list2));
-
-        // Test 3: Find cycle start
-        System.out.println("\n--- Test 3: Find Cycle Start ---");
-        ListNode cycleStart = CycleDetection.detectCycle(list2);
-        if (cycleStart != null) {
-            System.out.println("Cycle starts at node with value: " + cycleStart.val);
-        }
-
-        // Test 4: Remove cycle
-        System.out.println("\n--- Test 4: Remove Cycle ---");
-        CycleDetection.removeCycle(list2);
-        System.out.println("After removing cycle:");
-        System.out.println("Has cycle: " + CycleDetection.hasCycle(list2));
-    }
-}
-```
 
 ---
 
@@ -273,62 +185,6 @@ public class CycleDetectionClient {
 --8<-- "com/study/dsa/linkedlists/MergeLists.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-public class MergeListsClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Merge Linked Lists ===\n");
-
-        // Test 1: Merge two sorted lists
-        System.out.println("--- Test 1: Merge Two Lists ---");
-        ListNode l1 = MergeLists.createList(new int[]{1, 3, 5, 7});
-        ListNode l2 = MergeLists.createList(new int[]{2, 4, 6, 8});
-
-        System.out.print("List 1: ");
-        MergeLists.printList(l1);
-        System.out.print("List 2: ");
-        MergeLists.printList(l2);
-
-        ListNode merged = MergeLists.mergeTwoLists(l1, l2);
-        System.out.print("Merged: ");
-        MergeLists.printList(merged);
-
-        // Test 2: Merge recursively
-        System.out.println("\n--- Test 2: Merge Recursively ---");
-        ListNode l3 = MergeLists.createList(new int[]{1, 2, 4});
-        ListNode l4 = MergeLists.createList(new int[]{1, 3, 4});
-
-        System.out.print("List 1: ");
-        MergeLists.printList(l3);
-        System.out.print("List 2: ");
-        MergeLists.printList(l4);
-
-        ListNode mergedRec = MergeLists.mergeTwoListsRecursive(l3, l4);
-        System.out.print("Merged: ");
-        MergeLists.printList(mergedRec);
-
-        // Test 3: Merge K lists
-        System.out.println("\n--- Test 3: Merge K Lists ---");
-        ListNode[] lists = {
-            MergeLists.createList(new int[]{1, 4, 5}),
-            MergeLists.createList(new int[]{1, 3, 4}),
-            MergeLists.createList(new int[]{2, 6})
-        };
-
-        System.out.println("Lists:");
-        for (int i = 0; i < lists.length; i++) {
-            System.out.print("  List " + (i + 1) + ": ");
-            MergeLists.printList(lists[i]);
-        }
-
-        ListNode mergedK = MergeLists.mergeKLists(lists);
-        System.out.print("Merged: ");
-        MergeLists.printList(mergedK);
-    }
-}
-```
 
 !!! warning "Debugging Challenge — Missing `curr = curr.next` in Merge"
     The merge below compiles and runs but produces a single-node result instead of a full merged list. Trace through `l1 = 1->3->5` and `l2 = 2->4->6` before checking the answer.
@@ -371,40 +227,6 @@ public class MergeListsClient {
 --8<-- "com/study/dsa/linkedlists/RemoveNode.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-public class RemoveNodeClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Remove Node Operations ===\n");
-
-        // Test 1: Remove Nth from end
-        System.out.println("--- Test 1: Remove Nth from End ---");
-        ListNode list1 = RemoveNode.createList(new int[]{1, 2, 3, 4, 5});
-        int n = 2;
-
-        System.out.print("Original: ");
-        RemoveNode.printList(list1);
-        System.out.println("Remove " + n + "th from end");
-
-        ListNode result1 = RemoveNode.removeNthFromEnd(list1, n);
-        System.out.print("Result:   ");
-        RemoveNode.printList(result1);
-
-        // Test 2: Delete duplicates
-        System.out.println("\n--- Test 2: Delete Duplicates ---");
-        ListNode list2 = RemoveNode.createList(new int[]{1, 1, 2, 3, 3, 3, 4, 5, 5});
-
-        System.out.print("Original: ");
-        RemoveNode.printList(list2);
-
-        ListNode result2 = RemoveNode.deleteDuplicates(list2);
-        System.out.print("Result:   ");
-        RemoveNode.printList(result2);
-    }
-}
-```
 
 ---
 

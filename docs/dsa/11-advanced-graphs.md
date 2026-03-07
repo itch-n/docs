@@ -672,53 +672,7 @@ Cycle detected!
 **Implementation:**
 
 ```java
-class UnionFind {
-    private int[] parent;
-    private int[] rank;
-
-    public UnionFind(int n) {
-        parent = new int[n];
-        rank = new int[n];
-        for (int i = 0; i < n; i++) {
-            parent[i] = i;  // Each element is its own parent initially
-            rank[i] = 0;
-        }
-    }
-
-    // Find with path compression
-    public int find(int x) {
-        if (parent[x] != x) {
-            parent[x] = find(parent[x]);  // Path compression
-        }
-        return parent[x];
-    }
-
-    // Union by rank
-    public boolean union(int x, int y) {
-        int rootX = find(x);
-        int rootY = find(y);
-
-        if (rootX == rootY) {
-            return false;  // Already in same set
-        }
-
-        // Union by rank: attach smaller tree under larger
-        if (rank[rootX] < rank[rootY]) {
-            parent[rootX] = rootY;
-        } else if (rank[rootX] > rank[rootY]) {
-            parent[rootY] = rootX;
-        } else {
-            parent[rootY] = rootX;
-            rank[rootX]++;
-        }
-
-        return true;
-    }
-
-    public boolean connected(int x, int y) {
-        return find(x) == find(y);
-    }
-}
+--8<-- "com/study/dsa/unionfind/UnionFind.java"
 ```
 
 **Common Problems:**

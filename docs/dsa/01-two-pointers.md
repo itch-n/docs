@@ -122,46 +122,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 --8<-- "com/study/dsa/twopointers/OppositeDirectionPointers.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-public class OppositeDirectionClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Opposite Direction Two Pointers ===\n");
-
-        // Test 1: Palindrome check
-        System.out.println("--- Test 1: Palindrome ---");
-        String[] testStrings = {"racecar", "hello", "noon", "a", ""};
-
-        for (String s : testStrings) {
-            boolean result = OppositeDirectionPointers.isPalindrome(s);
-            System.out.printf("isPalindrome(\"%s\") = %b%n", s, result);
-        }
-
-        // Test 2: Two sum in sorted array
-        System.out.println("\n--- Test 2: Two Sum ---");
-        int[] sortedArray = {1, 3, 5, 7, 9, 11};
-        int target = 12;
-
-        int[] result = OppositeDirectionPointers.twoSum(sortedArray, target);
-        System.out.printf("Array: %s%n", Arrays.toString(sortedArray));
-        System.out.printf("Target: %d%n", target);
-        System.out.printf("Pair indices: %s%n", Arrays.toString(result));
-        if (result[0] != -1) {
-            System.out.printf("Values: %d + %d = %d%n",
-                sortedArray[result[0]], sortedArray[result[1]], target);
-        }
-
-        // Test 3: Reverse array
-        System.out.println("\n--- Test 3: Reverse Array ---");
-        int[] arr = {1, 2, 3, 4, 5};
-        System.out.println("Before: " + Arrays.toString(arr));
-        OppositeDirectionPointers.reverseArray(arr);
-        System.out.println("After:  " + Arrays.toString(arr));
-    }
-}
-```
 
 !!! warning "Debugging Challenge — Broken Palindrome Checker"
     The `isPalindrome_Buggy` below has **2 bugs**. Find them before running the code.
@@ -201,44 +161,6 @@ public class OppositeDirectionClient {
 --8<-- "com/study/dsa/twopointers/SameDirectionPointers.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-public class SameDirectionClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Same Direction Two Pointers ===\n");
-
-        // Test 1: Remove duplicates
-        System.out.println("--- Test 1: Remove Duplicates ---");
-        int[] arr1 = {1, 1, 2, 2, 2, 3, 4, 4, 5};
-        System.out.println("Before: " + Arrays.toString(arr1));
-
-        int newLength = SameDirectionPointers.removeDuplicates(arr1);
-        System.out.println("After:  " + Arrays.toString(Arrays.copyOf(arr1, newLength)));
-        System.out.println("New length: " + newLength);
-
-        // Test 2: Move zeros
-        System.out.println("\n--- Test 2: Move Zeros ---");
-        int[] arr2 = {0, 1, 0, 3, 12, 0, 5};
-        System.out.println("Before: " + Arrays.toString(arr2));
-        SameDirectionPointers.moveZeroes(arr2);
-        System.out.println("After:  " + Arrays.toString(arr2));
-
-        // Test 3: Partition
-        System.out.println("\n--- Test 3: Partition ---");
-        int[] arr3 = {7, 2, 9, 1, 5, 3, 8};
-        int pivot = 5;
-        System.out.println("Before: " + Arrays.toString(arr3));
-        System.out.println("Pivot:  " + pivot);
-
-        int partitionIdx = SameDirectionPointers.partition(arr3, pivot);
-        System.out.println("After:  " + Arrays.toString(arr3));
-        System.out.println("Partition index: " + partitionIdx);
-        System.out.println("(All elements before index " + partitionIdx + " are < " + pivot + ")");
-    }
-}
-```
 
 !!! warning "Debugging Challenge — Broken Remove Duplicates"
     The `removeDuplicates_Buggy` below has **1 critical bug** and **1 return-value bug**. Trace through `[1, 1, 2, 2, 3]` manually before checking the answer.
@@ -285,61 +207,6 @@ public class SameDirectionClient {
 --8<-- "com/study/dsa/twopointers/DifferentSpeedPointers.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-public class DifferentSpeedClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Different Speed Two Pointers ===\n");
-
-        // Test 1: Cycle detection
-        System.out.println("--- Test 1: Cycle Detection ---");
-
-        // List without cycle: 1 -> 2 -> 3 -> 4 -> 5
-        ListNode list1 = DifferentSpeedPointers.createList(new int[]{1, 2, 3, 4, 5});
-        System.out.print("List: ");
-        DifferentSpeedPointers.printList(list1);
-        System.out.println("Has cycle: " + DifferentSpeedPointers.hasCycle(list1));
-
-        // List with cycle: 1 -> 2 -> 3 -> 4 -> 5 -> (back to 3)
-        ListNode list2 = DifferentSpeedPointers.createList(new int[]{1, 2, 3, 4, 5});
-        ListNode node3 = list2.next.next; // Node with value 3
-        ListNode tail = list2.next.next.next.next; // Node with value 5
-        tail.next = node3; // Create cycle
-
-        System.out.println("\nList with cycle (5 -> 3):");
-        System.out.println("Has cycle: " + DifferentSpeedPointers.hasCycle(list2));
-
-        // Test 2: Find middle
-        System.out.println("\n--- Test 2: Find Middle ---");
-        ListNode list3 = DifferentSpeedPointers.createList(new int[]{1, 2, 3, 4, 5});
-        System.out.print("List (odd length): ");
-        DifferentSpeedPointers.printList(list3);
-
-        ListNode middle = DifferentSpeedPointers.findMiddle(list3);
-        System.out.println("Middle value: " + middle.val);
-
-        ListNode list4 = DifferentSpeedPointers.createList(new int[]{1, 2, 3, 4, 5, 6});
-        System.out.print("List (even length): ");
-        DifferentSpeedPointers.printList(list4);
-
-        middle = DifferentSpeedPointers.findMiddle(list4);
-        System.out.println("Middle value: " + middle.val);
-
-        // Test 3: Kth from end
-        System.out.println("\n--- Test 3: Kth From End ---");
-        ListNode list5 = DifferentSpeedPointers.createList(new int[]{1, 2, 3, 4, 5});
-        System.out.print("List: ");
-        DifferentSpeedPointers.printList(list5);
-
-        for (int k = 1; k <= 3; k++) {
-            ListNode kthNode = DifferentSpeedPointers.findKthFromEnd(list5, k);
-            System.out.printf("%dth from end: %d%n", k, kthNode.val);
-        }
-    }
-}
-```
 
 ---
 

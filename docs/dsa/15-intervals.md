@@ -118,32 +118,6 @@ Verify after implementation: <span class="fill-in">[Which one, and why?]</span>
 --8<-- "com/study/dsa/intervals/Intervals.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class MergeClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Merge Intervals ===\n");
-
-        int[][][] tests = {
-            {{1,3}, {2,6}, {8,10}, {15,18}},
-            {{1,4}, {4,5}},
-            {{1,4}, {2,3}},    // Fully contained
-            {{1,4}, {0,4}},    // Starts before
-        };
-
-        for (int[][] test : tests) {
-            System.out.println("Input:  " + Arrays.deepToString(test));
-            int[][] result = Intervals.merge(test);
-            System.out.println("Output: " + Arrays.deepToString(result));
-            System.out.println();
-        }
-    }
-}
-```
 
 !!! warning "Debugging Challenge — Missing Math.max and Missing Final Interval"
     This implementation has 2 bugs. Trace through `[[1,4], [2,3]]` (a fully-contained interval) and `[[1,3], [2,6]]` before checking the answer.
@@ -194,35 +168,6 @@ public class MergeClient {
 --8<-- "com/study/dsa/intervals/InsertInterval.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class InsertIntervalClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Insert Interval ===\n");
-
-        Object[][] tests = {
-            new Object[]{new int[][]{{1,3},{6,9}}, new int[]{2,5}},
-            new Object[]{new int[][]{{1,2},{3,5},{6,7},{8,10},{12,16}}, new int[]{4,8}},
-            new Object[]{new int[][]{}, new int[]{5,7}},
-            new Object[]{new int[][]{{1,5}}, new int[]{2,3}},    // New inside existing
-        };
-
-        for (Object[] test : tests) {
-            int[][] intervals = (int[][]) test[0];
-            int[] newInterval = (int[]) test[1];
-            System.out.println("Intervals:   " + Arrays.deepToString(intervals));
-            System.out.println("New:         " + Arrays.toString(newInterval));
-            int[][] result = InsertInterval.insert(intervals, newInterval);
-            System.out.println("Result:      " + Arrays.deepToString(result));
-            System.out.println();
-        }
-    }
-}
-```
 
 ---
 
@@ -236,35 +181,6 @@ public class InsertIntervalClient {
 --8<-- "com/study/dsa/intervals/IntervalIntersection.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class IntersectionClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Interval Intersection ===\n");
-
-        int[][][] firstLists = {
-            {{0,2},{5,10},{13,23},{24,25}},
-            {{1,3},{5,9}},
-        };
-        int[][][] secondLists = {
-            {{1,5},{8,12},{15,24},{25,26}},
-            {},
-        };
-
-        for (int t = 0; t < firstLists.length; t++) {
-            System.out.println("First:  " + Arrays.deepToString(firstLists[t]));
-            System.out.println("Second: " + Arrays.deepToString(secondLists[t]));
-            int[][] result = IntervalIntersection.intervalIntersection(firstLists[t], secondLists[t]);
-            System.out.println("Result: " + Arrays.deepToString(result));
-            System.out.println();
-        }
-    }
-}
-```
 
 ---
 
@@ -278,32 +194,6 @@ public class IntersectionClient {
 --8<-- "com/study/dsa/intervals/MeetingRooms.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class MeetingRoomsClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Meeting Rooms ===\n");
-
-        int[][][] tests = {
-            {{0,30},{5,10},{15,20}},
-            {{7,10},{2,4}},
-            {{9,10},{4,9},{4,17}},
-        };
-
-        for (int[][] meetings : tests) {
-            boolean canAttend = MeetingRooms.canAttendMeetings(meetings);
-            int minRooms = MeetingRooms.minMeetingRooms(meetings);
-            System.out.printf("Meetings: %s%n", Arrays.deepToString(meetings));
-            System.out.printf("One person can attend all: %b%n", canAttend);
-            System.out.printf("Minimum rooms needed: %d%n%n", minRooms);
-        }
-    }
-}
-```
 
 !!! warning "Debugging Challenge — Wrong Overlap Condition in Meeting Rooms I"
     The code below uses `<=` instead of `<` in the overlap check. It incorrectly rejects back-to-back (non-overlapping) meetings.

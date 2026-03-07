@@ -401,49 +401,6 @@ return idx >= 0 ? idx : -(idx + 1);
     int mid = left + (right - left) / 2;  // Fix Bug 2
     ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class ClassicBinarySearchClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Classic Binary Search ===\n");
-
-        // Test 1: Find target
-        System.out.println("--- Test 1: Find Target ---");
-        int[] arr = {1, 3, 5, 7, 9, 11, 13};
-        int[] targets = {5, 8, 1, 13};
-
-        System.out.println("Array: " + Arrays.toString(arr));
-        for (int target : targets) {
-            int index = ClassicBinarySearch.binarySearch(arr, target);
-            System.out.printf("Search %d: index = %d%n", target, index);
-        }
-
-        // Test 2: Search insert position
-        System.out.println("\n--- Test 2: Search Insert Position ---");
-        int[] arr2 = {1, 3, 5, 6};
-        int[] insertTargets = {5, 2, 7, 0};
-
-        System.out.println("Array: " + Arrays.toString(arr2));
-        for (int target : insertTargets) {
-            int pos = ClassicBinarySearch.searchInsert(arr2, target);
-            System.out.printf("Insert position for %d: %d%n", target, pos);
-        }
-
-        // Test 3: Find range
-        System.out.println("\n--- Test 3: Find First and Last Position ---");
-        int[] arr3 = {5, 7, 7, 8, 8, 8, 10};
-        int rangeTarget = 8;
-
-        System.out.println("Array: " + Arrays.toString(arr3));
-        int[] range = ClassicBinarySearch.searchRange(arr3, rangeTarget);
-        System.out.printf("Range for %d: [%d, %d]%n", rangeTarget, range[0], range[1]);
-    }
-}
-```
 
 ---
 
@@ -457,49 +414,6 @@ public class ClassicBinarySearchClient {
 --8<-- "com/study/dsa/binarysearch/RotatedArraySearch.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class RotatedArraySearchClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Rotated Array Search ===\n");
-
-        // Test 1: Search in rotated array
-        System.out.println("--- Test 1: Search in Rotated Array ---");
-        int[] rotated = {4, 5, 6, 7, 0, 1, 2};
-        int[] searchTargets = {0, 3, 4, 7};
-
-        System.out.println("Rotated array: " + Arrays.toString(rotated));
-        for (int target : searchTargets) {
-            int index = RotatedArraySearch.search(rotated, target);
-            System.out.printf("Search %d: index = %d%n", target, index);
-        }
-
-        // Test 2: Find minimum
-        System.out.println("\n--- Test 2: Find Minimum ---");
-        int[][] rotatedArrays = {
-            {3, 4, 5, 1, 2},
-            {4, 5, 6, 7, 0, 1, 2},
-            {11, 13, 15, 17}
-        };
-
-        for (int[] arr : rotatedArrays) {
-            int min = RotatedArraySearch.findMin(arr);
-            System.out.printf("Array: %s -> Min: %d%n", Arrays.toString(arr), min);
-        }
-
-        // Test 3: Find rotation count
-        System.out.println("\n--- Test 3: Find Rotation Count ---");
-        for (int[] arr : rotatedArrays) {
-            int count = RotatedArraySearch.findRotationCount(arr);
-            System.out.printf("Array: %s -> Rotations: %d%n", Arrays.toString(arr), count);
-        }
-    }
-}
-```
 
 ---
 
@@ -513,59 +427,6 @@ public class RotatedArraySearchClient {
 --8<-- "com/study/dsa/binarysearch/Search2DMatrix.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-public class Search2DMatrixClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Search in 2D Matrix ===\n");
-
-        // Test 1: Search in row-sorted matrix
-        System.out.println("--- Test 1: Row-Sorted Matrix ---");
-        int[][] matrix1 = {
-            {1, 3, 5, 7},
-            {10, 11, 16, 20},
-            {23, 30, 34, 60}
-        };
-
-        int[] targets1 = {3, 13, 60};
-        for (int target : targets1) {
-            boolean found = Search2DMatrix.searchMatrix1(matrix1, target);
-            System.out.printf("Search %d: %s%n", target, found ? "FOUND" : "NOT FOUND");
-        }
-
-        // Test 2: Search in fully sorted matrix
-        System.out.println("\n--- Test 2: Fully Sorted Matrix ---");
-        int[][] matrix2 = {
-            {1, 3, 5, 7},
-            {10, 11, 16, 20},
-            {23, 30, 34, 50}
-        };
-
-        int[] targets2 = {3, 13, 50};
-        for (int target : targets2) {
-            boolean found = Search2DMatrix.searchMatrix2(matrix2, target);
-            System.out.printf("Search %d: %s%n", target, found ? "FOUND" : "NOT FOUND");
-        }
-
-        // Test 3: Staircase search
-        System.out.println("\n--- Test 3: Staircase Search ---");
-        int[][] matrix3 = {
-            {1, 4, 7, 11},
-            {2, 5, 8, 12},
-            {3, 6, 9, 16},
-            {10, 13, 14, 17}
-        };
-
-        int[] targets3 = {5, 20, 14};
-        for (int target : targets3) {
-            boolean found = Search2DMatrix.searchMatrixStaircase(matrix3, target);
-            System.out.printf("Search %d: %s%n", target, found ? "FOUND" : "NOT FOUND");
-        }
-    }
-}
-```
 
 ---
 
@@ -579,47 +440,6 @@ public class Search2DMatrixClient {
 --8<-- "com/study/dsa/binarysearch/BinarySearchOnAnswer.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class BinarySearchOnAnswerClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Binary Search on Answer ===\n");
-
-        // Test 1: Square root
-        System.out.println("--- Test 1: Integer Square Root ---");
-        int[] sqrtInputs = {4, 8, 16, 27};
-
-        for (int x : sqrtInputs) {
-            int sqrt = BinarySearchOnAnswer.mySqrt(x);
-            System.out.printf("sqrt(%d) = %d%n", x, sqrt);
-        }
-
-        // Test 2: Ship within days
-        System.out.println("\n--- Test 2: Ship Within Days ---");
-        int[] weights = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        int days = 5;
-
-        System.out.println("Weights: " + Arrays.toString(weights));
-        System.out.println("Days: " + days);
-        int capacity = BinarySearchOnAnswer.shipWithinDays(weights, days);
-        System.out.println("Minimum capacity: " + capacity);
-
-        // Test 3: Kth missing positive
-        System.out.println("\n--- Test 3: Kth Missing Positive ---");
-        int[] arr = {2, 3, 4, 7, 11};
-        int k = 5;
-
-        System.out.println("Array: " + Arrays.toString(arr));
-        System.out.println("k = " + k);
-        int kthMissing = BinarySearchOnAnswer.findKthPositive(arr, k);
-        System.out.println("Kth missing: " + kthMissing);
-    }
-}
-```
 
 ---
 

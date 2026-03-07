@@ -213,56 +213,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
     }
     ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class InorderTraversalClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Inorder Traversal ===\n");
-
-        // Create tree:
-        //       4
-        //      / \
-        //     2   6
-        //    / \ / \
-        //   1  3 5  7
-        TreeNode root = new TreeNode(4);
-        root.left = new TreeNode(2);
-        root.right = new TreeNode(6);
-        root.left.left = new TreeNode(1);
-        root.left.right = new TreeNode(3);
-        root.right.left = new TreeNode(5);
-        root.right.right = new TreeNode(7);
-
-        System.out.println("Tree structure:");
-        System.out.println("       4");
-        System.out.println("      / \\");
-        System.out.println("     2   6");
-        System.out.println("    / \\ / \\");
-        System.out.println("   1  3 5  7");
-        System.out.println();
-
-        // Test 1: Recursive inorder
-        System.out.println("--- Test 1: Recursive Inorder ---");
-        List<Integer> recursive = InorderTraversal.inorderRecursive(root);
-        System.out.println("Result: " + recursive);
-        System.out.println("(Should be: [1, 2, 3, 4, 5, 6, 7])");
-
-        // Test 2: Iterative inorder
-        System.out.println("\n--- Test 2: Iterative Inorder ---");
-        List<Integer> iterative = InorderTraversal.inorderIterative(root);
-        System.out.println("Result: " + iterative);
-
-        // Test 3: Morris inorder
-        System.out.println("\n--- Test 3: Morris Inorder (O(1) space) ---");
-        List<Integer> morris = InorderTraversal.inorderMorris(root);
-        System.out.println("Result: " + morris);
-    }
-}
-```
 
 ---
 
@@ -276,51 +226,6 @@ public class InorderTraversalClient {
 --8<-- "com/study/dsa/trees/PreorderTraversal.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class PreorderTraversalClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Preorder Traversal ===\n");
-
-        // Create tree:
-        //       4
-        //      / \
-        //     2   6
-        //    / \ / \
-        //   1  3 5  7
-        TreeNode root = new TreeNode(4);
-        root.left = new TreeNode(2);
-        root.right = new TreeNode(6);
-        root.left.left = new TreeNode(1);
-        root.left.right = new TreeNode(3);
-        root.right.left = new TreeNode(5);
-        root.right.right = new TreeNode(7);
-
-        System.out.println("Tree structure:");
-        System.out.println("       4");
-        System.out.println("      / \\");
-        System.out.println("     2   6");
-        System.out.println("    / \\ / \\");
-        System.out.println("   1  3 5  7");
-        System.out.println();
-
-        // Test 1: Recursive preorder
-        System.out.println("--- Test 1: Recursive Preorder ---");
-        List<Integer> recursive = PreorderTraversal.preorderRecursive(root);
-        System.out.println("Result: " + recursive);
-        System.out.println("(Should be: [4, 2, 1, 3, 6, 5, 7])");
-
-        // Test 2: Iterative preorder
-        System.out.println("\n--- Test 2: Iterative Preorder ---");
-        List<Integer> iterative = PreorderTraversal.preorderIterative(root);
-        System.out.println("Result: " + iterative);
-    }
-}
-```
 
 ---
 
@@ -334,51 +239,6 @@ public class PreorderTraversalClient {
 --8<-- "com/study/dsa/trees/PostorderTraversal.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class PostorderTraversalClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Postorder Traversal ===\n");
-
-        // Create tree:
-        //       4
-        //      / \
-        //     2   6
-        //    / \ / \
-        //   1  3 5  7
-        TreeNode root = new TreeNode(4);
-        root.left = new TreeNode(2);
-        root.right = new TreeNode(6);
-        root.left.left = new TreeNode(1);
-        root.left.right = new TreeNode(3);
-        root.right.left = new TreeNode(5);
-        root.right.right = new TreeNode(7);
-
-        System.out.println("Tree structure:");
-        System.out.println("       4");
-        System.out.println("      / \\");
-        System.out.println("     2   6");
-        System.out.println("    / \\ / \\");
-        System.out.println("   1  3 5  7");
-        System.out.println();
-
-        // Test 1: Recursive postorder
-        System.out.println("--- Test 1: Recursive Postorder ---");
-        List<Integer> recursive = PostorderTraversal.postorderRecursive(root);
-        System.out.println("Result: " + recursive);
-        System.out.println("(Should be: [1, 3, 2, 5, 7, 6, 4])");
-
-        // Test 2: Iterative postorder
-        System.out.println("\n--- Test 2: Iterative Postorder ---");
-        List<Integer> iterative = PostorderTraversal.postorderIterative(root);
-        System.out.println("Result: " + iterative);
-    }
-}
-```
 
 ---
 
@@ -392,58 +252,6 @@ public class PostorderTraversalClient {
 --8<-- "com/study/dsa/trees/LevelOrderTraversal.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class LevelOrderTraversalClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Level-Order Traversal ===\n");
-
-        // Create tree:
-        //       4
-        //      / \
-        //     2   6
-        //    / \ / \
-        //   1  3 5  7
-        TreeNode root = new TreeNode(4);
-        root.left = new TreeNode(2);
-        root.right = new TreeNode(6);
-        root.left.left = new TreeNode(1);
-        root.left.right = new TreeNode(3);
-        root.right.left = new TreeNode(5);
-        root.right.right = new TreeNode(7);
-
-        System.out.println("Tree structure:");
-        System.out.println("       4");
-        System.out.println("      / \\");
-        System.out.println("     2   6");
-        System.out.println("    / \\ / \\");
-        System.out.println("   1  3 5  7");
-        System.out.println();
-
-        // Test 1: Level-order
-        System.out.println("--- Test 1: Level-Order Traversal ---");
-        List<List<Integer>> levels = LevelOrderTraversal.levelOrder(root);
-        System.out.println("Result: " + levels);
-        System.out.println("(Should be: [[4], [2, 6], [1, 3, 5, 7]])");
-
-        // Test 2: Zigzag level-order
-        System.out.println("\n--- Test 2: Zigzag Level-Order ---");
-        List<List<Integer>> zigzag = LevelOrderTraversal.zigzagLevelOrder(root);
-        System.out.println("Result: " + zigzag);
-        System.out.println("(Should be: [[4], [6, 2], [1, 3, 5, 7]])");
-
-        // Test 3: Right side view
-        System.out.println("\n--- Test 3: Right Side View ---");
-        List<Integer> rightView = LevelOrderTraversal.rightSideView(root);
-        System.out.println("Result: " + rightView);
-        System.out.println("(Should be: [4, 6, 7])");
-    }
-}
-```
 
 ---
 
@@ -585,50 +393,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
     }
     ```
 
-**Runnable Client Code:**
-
-```java
-public class TreeHeightDepthClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Tree Height and Depth ===\n");
-
-        // Create balanced tree:
-        //       4
-        //      / \
-        //     2   6
-        //    / \ / \
-        //   1  3 5  7
-        TreeNode balanced = new TreeNode(4);
-        balanced.left = new TreeNode(2);
-        balanced.right = new TreeNode(6);
-        balanced.left.left = new TreeNode(1);
-        balanced.left.right = new TreeNode(3);
-        balanced.right.left = new TreeNode(5);
-        balanced.right.right = new TreeNode(7);
-
-        System.out.println("--- Test 1: Balanced Tree ---");
-        System.out.println("Height: " + TreeHeightDepth.height(balanced));
-        System.out.println("Is balanced: " + TreeHeightDepth.isBalanced(balanced));
-        System.out.println("Min depth: " + TreeHeightDepth.minDepth(balanced));
-
-        // Create unbalanced tree:
-        //       1
-        //      /
-        //     2
-        //    /
-        //   3
-        TreeNode unbalanced = new TreeNode(1);
-        unbalanced.left = new TreeNode(2);
-        unbalanced.left.left = new TreeNode(3);
-
-        System.out.println("\n--- Test 2: Unbalanced Tree ---");
-        System.out.println("Height: " + TreeHeightDepth.height(unbalanced));
-        System.out.println("Is balanced: " + TreeHeightDepth.isBalanced(unbalanced));
-        System.out.println("Min depth: " + TreeHeightDepth.minDepth(unbalanced));
-    }
-}
-```
 
 ---
 
@@ -685,47 +449,6 @@ public class TreeHeightDepthClient {
            hasPathSum(root.right, remaining);
     ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class TreeDiameterPathsClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Tree Diameter and Paths ===\n");
-
-        // Create tree:
-        //       5
-        //      / \
-        //     4   8
-        //    /   / \
-        //   11  13  4
-        //  / \      / \
-        // 7   2    5   1
-        TreeNode root = new TreeNode(5);
-        root.left = new TreeNode(4);
-        root.right = new TreeNode(8);
-        root.left.left = new TreeNode(11);
-        root.left.left.left = new TreeNode(7);
-        root.left.left.right = new TreeNode(2);
-        root.right.left = new TreeNode(13);
-        root.right.right = new TreeNode(4);
-        root.right.right.left = new TreeNode(5);
-        root.right.right.right = new TreeNode(1);
-
-        System.out.println("--- Test 1: Diameter ---");
-        System.out.println("Diameter: " + TreeDiameterPaths.diameter(root));
-
-        System.out.println("\n--- Test 2: Has Path Sum (22) ---");
-        System.out.println("Has path: " + TreeDiameterPaths.hasPathSum(root, 22));
-
-        System.out.println("\n--- Test 3: All Paths with Sum 22 ---");
-        List<List<Integer>> paths = TreeDiameterPaths.pathSum(root, 22);
-        System.out.println("Paths: " + paths);
-    }
-}
-```
 
 ---
 
@@ -739,52 +462,6 @@ public class TreeDiameterPathsClient {
 --8<-- "com/study/dsa/trees/LowestCommonAncestor.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-public class LowestCommonAncestorClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Lowest Common Ancestor ===\n");
-
-        // Create BST:
-        //       6
-        //      / \
-        //     2   8
-        //    / \ / \
-        //   0  4 7  9
-        //     / \
-        //    3   5
-        TreeNode root = new TreeNode(6);
-        root.left = new TreeNode(2);
-        root.right = new TreeNode(8);
-        root.left.left = new TreeNode(0);
-        root.left.right = new TreeNode(4);
-        root.left.right.left = new TreeNode(3);
-        root.left.right.right = new TreeNode(5);
-        root.right.left = new TreeNode(7);
-        root.right.right = new TreeNode(9);
-
-        TreeNode p = root.left; // Node 2
-        TreeNode q = root.right; // Node 8
-
-        System.out.println("--- Test 1: LCA of 2 and 8 ---");
-        TreeNode lca = LowestCommonAncestor.lowestCommonAncestor(root, p, q);
-        System.out.println("LCA: " + (lca != null ? lca.val : "null"));
-
-        p = root.left; // Node 2
-        q = root.left.right; // Node 4
-
-        System.out.println("\n--- Test 2: LCA of 2 and 4 ---");
-        lca = LowestCommonAncestor.lowestCommonAncestor(root, p, q);
-        System.out.println("LCA: " + (lca != null ? lca.val : "null"));
-
-        System.out.println("\n--- Test 3: LCA in BST (optimized) ---");
-        lca = LowestCommonAncestor.lowestCommonAncestorBST(root, p, q);
-        System.out.println("LCA: " + (lca != null ? lca.val : "null"));
-    }
-}
-```
 
 ---
 
@@ -798,44 +475,6 @@ public class LowestCommonAncestorClient {
 --8<-- "com/study/dsa/trees/TreeConstruction.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class TreeConstructionClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Tree Construction ===\n");
-
-        // Test 1: Build from preorder and inorder
-        System.out.println("--- Test 1: Build from Preorder and Inorder ---");
-        int[] preorder = {3, 9, 20, 15, 7};
-        int[] inorder = {9, 3, 15, 20, 7};
-
-        System.out.println("Preorder: " + Arrays.toString(preorder));
-        System.out.println("Inorder:  " + Arrays.toString(inorder));
-
-        TreeNode root1 = TreeConstruction.buildTreePreIn(preorder, inorder);
-        System.out.print("Built tree (inorder): ");
-        TreeConstruction.printInorder(root1);
-        System.out.println();
-
-        // Test 2: Build from postorder and inorder
-        System.out.println("\n--- Test 2: Build from Postorder and Inorder ---");
-        int[] postorder = {9, 15, 7, 20, 3};
-        int[] inorder2 = {9, 3, 15, 20, 7};
-
-        System.out.println("Postorder: " + Arrays.toString(postorder));
-        System.out.println("Inorder:   " + Arrays.toString(inorder2));
-
-        TreeNode root2 = TreeConstruction.buildTreePostIn(postorder, inorder2);
-        System.out.print("Built tree (inorder): ");
-        TreeConstruction.printInorder(root2);
-        System.out.println();
-    }
-}
-```
 
 ---
 

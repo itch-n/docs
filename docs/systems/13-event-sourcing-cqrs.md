@@ -263,7 +263,7 @@ The saga itself is persistent state (it records which steps are complete) and it
 **Your task:** Implement the core abstractions. Focus on the semantics — the `// TODO` comments describe what each method must do.
 
 ```java
---8<-- "com/study/systems/eventsourcing/DomainEvent.java"
+--8<-- "com/study/systems/eventsourcing/EventSourcing.java"
 ```
 
 ---

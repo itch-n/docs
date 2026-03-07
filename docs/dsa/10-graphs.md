@@ -152,45 +152,6 @@ Your answer:
 --8<-- "com/study/dsa/graphs/DFS.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class DFSClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== DFS Pattern ===\n");
-
-        // Test 1: Number of islands
-        System.out.println("--- Test 1: Number of Islands ---");
-        char[][] grid1 = {
-            {'1','1','0','0','0'},
-            {'1','1','0','0','0'},
-            {'0','0','1','0','0'},
-            {'0','0','0','1','1'}
-        };
-
-        System.out.println("Grid:");
-        for (char[] row : grid1) {
-            System.out.println(Arrays.toString(row));
-        }
-        System.out.println("Islands: " + DFS.numIslands(grid1));
-
-        // Test 2: Has path
-        System.out.println("\n--- Test 2: Has Path ---");
-        Map<Integer, List<Integer>> graph = new HashMap<>();
-        graph.put(0, Arrays.asList(1, 2));
-        graph.put(1, Arrays.asList(3));
-        graph.put(2, Arrays.asList(3));
-        graph.put(3, Arrays.asList());
-
-        System.out.println("Graph: " + graph);
-        System.out.println("Path 0 -> 3? " + DFS.hasPath(graph, 0, 3));
-        System.out.println("Path 0 -> 4? " + DFS.hasPath(graph, 0, 4));
-    }
-}
-```
 
 ---
 
@@ -259,52 +220,6 @@ public class DFSClient {
 --8<-- "com/study/dsa/graphs/BFS.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class BFSClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== BFS Pattern ===\n");
-
-        // Test 1: Shortest path
-        System.out.println("--- Test 1: Shortest Path ---");
-        Map<Integer, List<Integer>> graph = new HashMap<>();
-        graph.put(0, Arrays.asList(1, 2));
-        graph.put(1, Arrays.asList(3));
-        graph.put(2, Arrays.asList(3, 4));
-        graph.put(3, Arrays.asList(4));
-        graph.put(4, Arrays.asList());
-
-        System.out.println("Graph: " + graph);
-        System.out.println("Shortest path 0 -> 4: " + BFS.shortestPath(graph, 0, 4));
-
-        // Test 2: Knight moves
-        System.out.println("\n--- Test 2: Knight Moves ---");
-        int[][] targets = {{2, 1}, {5, 5}};
-        for (int[] target : targets) {
-            int moves = BFS.minKnightMoves(target[0], target[1]);
-            System.out.printf("To (%d, %d): %d moves%n", target[0], target[1], moves);
-        }
-
-        // Test 3: Rotting oranges
-        System.out.println("\n--- Test 3: Rotting Oranges ---");
-        int[][] grid = {
-            {2, 1, 1},
-            {1, 1, 0},
-            {0, 1, 1}
-        };
-
-        System.out.println("Grid:");
-        for (int[] row : grid) {
-            System.out.println(Arrays.toString(row));
-        }
-        System.out.println("Minutes to rot all: " + BFS.orangesRotting(grid));
-    }
-}
-```
 
 ---
 
@@ -380,38 +295,6 @@ public class BFSClient {
 --8<-- "com/study/dsa/graphs/CycleDetection.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class CycleDetectionClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Cycle Detection ===\n");
-
-        // Test 1: Directed graph cycle
-        System.out.println("--- Test 1: Directed Graph ---");
-        int[][] edges1 = {{0, 1}, {1, 2}};
-        int[][] edges2 = {{0, 1}, {1, 2}, {2, 0}};
-
-        System.out.println("Edges [[0,1],[1,2]]: " +
-            CycleDetection.hasCycleDirected(3, edges1));
-        System.out.println("Edges [[0,1],[1,2],[2,0]]: " +
-            CycleDetection.hasCycleDirected(3, edges2));
-
-        // Test 2: Undirected graph cycle
-        System.out.println("\n--- Test 2: Undirected Graph ---");
-        int[][] edges3 = {{0, 1}, {1, 2}};
-        int[][] edges4 = {{0, 1}, {1, 2}, {2, 0}};
-
-        System.out.println("Edges [[0,1],[1,2]]: " +
-            CycleDetection.hasCycleUndirected(3, edges3));
-        System.out.println("Edges [[0,1],[1,2],[2,0]]: " +
-            CycleDetection.hasCycleUndirected(3, edges4));
-    }
-}
-```
 
 ---
 

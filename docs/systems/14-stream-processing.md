@@ -168,59 +168,6 @@ Events for user1: [1000ms, 2000ms, 3000ms, 7000ms, 8000ms]
 
         **Bug 2:** `window.put(event.key, 1L)` always **overwrites** the count with 1. It should use `window.merge(event.key, 1L, Long::sum)` to accumulate counts instead.
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class StreamWindowClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Stream Windowing ===\n");
-
-        // Create sample events (userId, action, timestamp)
-        List<StreamWindow.Event<String, String>> events = Arrays.asList(
-            new StreamWindow.Event<>("user1", "click", 1000L),
-            new StreamWindow.Event<>("user2", "click", 2000L),
-            new StreamWindow.Event<>("user1", "click", 3000L),
-            new StreamWindow.Event<>("user1", "click", 6000L),
-            new StreamWindow.Event<>("user2", "click", 7000L),
-            new StreamWindow.Event<>("user1", "click", 11000L),
-            new StreamWindow.Event<>("user2", "click", 12000L),
-            new StreamWindow.Event<>("user1", "click", 15000L),
-            new StreamWindow.Event<>("user2", "click", 16000L)
-        );
-
-        // Test 1: Tumbling Window (5 second windows)
-        System.out.println("--- Test 1: Tumbling Window (5s) ---");
-        Map<Long, Map<String, Long>> tumbling =
-            StreamWindow.tumblingWindow(events, 5000L);
-        StreamWindow.printWindows(tumbling);
-
-        // Test 2: Sliding Window (5s window, 2s slide)
-        System.out.println("\n--- Test 2: Sliding Window (5s window, 2s slide) ---");
-        Map<Long, Map<String, Long>> sliding =
-            StreamWindow.slidingWindow(events, 5000L, 2000L);
-        StreamWindow.printWindows(sliding);
-
-        // Test 3: Session Window (3s gap)
-        System.out.println("\n--- Test 3: Session Window (3s gap) ---");
-        List<StreamWindow.WindowResult<String>> sessions =
-            StreamWindow.sessionWindow(events, 3000L);
-        for (StreamWindow.WindowResult<String> result : sessions) {
-            System.out.println(result);
-        }
-
-        // Test 4: Different gap threshold
-        System.out.println("\n--- Test 4: Session Window (5s gap) ---");
-        List<StreamWindow.WindowResult<String>> sessions2 =
-            StreamWindow.sessionWindow(events, 5000L);
-        for (StreamWindow.WindowResult<String> result : sessions2) {
-            System.out.println(result);
-        }
-    }
-}
-```
 
 ---
 ## Before/After: Why Stream Processing Matters

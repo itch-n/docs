@@ -181,62 +181,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
     return stack.isEmpty();  // All openers must be matched
     ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class BasicStackClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Basic Stack Operations ===\n");
-
-        // Test 1: Valid parentheses
-        System.out.println("--- Test 1: Valid Parentheses ---");
-        String[] testStrings = {
-            "()",
-            "()[]{}",
-            "(]",
-            "([)]",
-            "{[]}"
-        };
-
-        for (String s : testStrings) {
-            boolean valid = BasicStack.isValid(s);
-            System.out.printf("\"%s\" -> %s%n", s, valid ? "VALID" : "INVALID");
-        }
-
-        // Test 2: Evaluate RPN
-        System.out.println("\n--- Test 2: Evaluate RPN ---");
-        String[][] rpnTests = {
-            {"2", "1", "+", "3", "*"},  // ((2 + 1) * 3) = 9
-            {"4", "13", "5", "/", "+"}  // (4 + (13 / 5)) = 6
-        };
-
-        for (String[] tokens : rpnTests) {
-            int result = BasicStack.evalRPN(tokens);
-            System.out.printf("%s = %d%n", Arrays.toString(tokens), result);
-        }
-
-        // Test 3: Min Stack
-        System.out.println("\n--- Test 3: Min Stack ---");
-        BasicStack.MinStack minStack = new BasicStack.MinStack();
-
-        System.out.println("Operations:");
-        System.out.println("push(-2)");
-        minStack.push(-2);
-        System.out.println("push(0)");
-        minStack.push(0);
-        System.out.println("push(-3)");
-        minStack.push(-3);
-        System.out.println("getMin() -> " + minStack.getMin());
-        System.out.println("pop()");
-        minStack.pop();
-        System.out.println("top() -> " + minStack.top());
-        System.out.println("getMin() -> " + minStack.getMin());
-    }
-}
-```
 
 ---
 
@@ -292,42 +236,6 @@ public class BasicStackClient {
     stack.push(i);  // Push INDEX, not value
     ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class MonotonicStackClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Monotonic Stack ===\n");
-
-        // Test 1: Next greater element
-        System.out.println("--- Test 1: Next Greater Element ---");
-        int[] nums1 = {2, 1, 2, 4, 3};
-
-        System.out.println("Array: " + Arrays.toString(nums1));
-        int[] result1 = MonotonicStack.nextGreaterElement(nums1);
-        System.out.println("Next greater: " + Arrays.toString(result1));
-
-        // Test 2: Daily temperatures
-        System.out.println("\n--- Test 2: Daily Temperatures ---");
-        int[] temps = {73, 74, 75, 71, 69, 72, 76, 73};
-
-        System.out.println("Temperatures: " + Arrays.toString(temps));
-        int[] result2 = MonotonicStack.dailyTemperatures(temps);
-        System.out.println("Days to wait: " + Arrays.toString(result2));
-
-        // Test 3: Largest rectangle
-        System.out.println("\n--- Test 3: Largest Rectangle ---");
-        int[] heights = {2, 1, 5, 6, 2, 3};
-
-        System.out.println("Heights: " + Arrays.toString(heights));
-        int maxArea = MonotonicStack.largestRectangleArea(heights);
-        System.out.println("Largest rectangle area: " + maxArea);
-    }
-}
-```
 
 ---
 
@@ -341,44 +249,6 @@ public class MonotonicStackClient {
 --8<-- "com/study/dsa/stacksqueues/BasicQueue.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-public class BasicQueueClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Basic Queue Operations ===\n");
-
-        // Test 1: Queue with stacks
-        System.out.println("--- Test 1: Queue Using Stacks ---");
-        BasicQueue.QueueWithStacks queue = new BasicQueue.QueueWithStacks();
-
-        System.out.println("Operations:");
-        System.out.println("enqueue(1)");
-        queue.enqueue(1);
-        System.out.println("enqueue(2)");
-        queue.enqueue(2);
-        System.out.println("peek() -> " + queue.peek());
-        System.out.println("dequeue() -> " + queue.dequeue());
-        System.out.println("empty() -> " + queue.empty());
-
-        // Test 2: Circular queue
-        System.out.println("\n--- Test 2: Circular Queue ---");
-        BasicQueue.CircularQueue circularQueue = new BasicQueue.CircularQueue(3);
-
-        System.out.println("Operations on queue of size 3:");
-        System.out.println("enQueue(1) -> " + circularQueue.enQueue(1));
-        System.out.println("enQueue(2) -> " + circularQueue.enQueue(2));
-        System.out.println("enQueue(3) -> " + circularQueue.enQueue(3));
-        System.out.println("enQueue(4) -> " + circularQueue.enQueue(4)); // false, full
-        System.out.println("front() -> " + circularQueue.front());
-        System.out.println("isFull() -> " + circularQueue.isFull());
-        System.out.println("deQueue() -> " + circularQueue.deQueue());
-        System.out.println("enQueue(4) -> " + circularQueue.enQueue(4)); // now succeeds
-        System.out.println("front() -> " + circularQueue.front());
-    }
-}
-```
 
 ---
 
@@ -392,38 +262,6 @@ public class BasicQueueClient {
 --8<-- "com/study/dsa/stacksqueues/DequeOperations.java"
 ```
 
-**Runnable Client Code:**
-
-```java
-import java.util.*;
-
-public class DequeOperationsClient {
-
-    public static void main(String[] args) {
-        System.out.println("=== Deque Operations ===\n");
-
-        // Test 1: Sliding window maximum
-        System.out.println("--- Test 1: Sliding Window Maximum ---");
-        int[] nums = {1, 3, -1, -3, 5, 3, 6, 7};
-        int k = 3;
-
-        System.out.println("Array: " + Arrays.toString(nums));
-        System.out.println("Window size: " + k);
-
-        int[] result = DequeOperations.maxSlidingWindow(nums, k);
-        System.out.println("Maximums: " + Arrays.toString(result));
-
-        // Test 2: Can form palindrome
-        System.out.println("\n--- Test 2: Can Form Palindrome ---");
-        String[] testStrings = {"aab", "abc", "racecar", "hello"};
-
-        for (String s : testStrings) {
-            boolean canForm = DequeOperations.canFormPalindrome(s);
-            System.out.printf("\"%s\" -> %s%n", s, canForm ? "YES" : "NO");
-        }
-    }
-}
-```
 
 ---
 
