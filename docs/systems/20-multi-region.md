@@ -17,9 +17,15 @@ By the end of this topic you will be able to:
 ---
 
 !!! warning "Operational reality"
-    Active-active multi-region is more common in press releases than in production. Many systems described as "active-active" are actually active-passive with a short failover time — one region handles writes while the other serves reads. True active-active with conflict resolution is unsolved for most data models: last-write-wins silently loses updates, vector clocks add per-record overhead, and CRDTs fit only specific data structures.
+    Multi-region is a prestige architecture. It signals scale and seriousness, but the majority of systems that adopt it did not need it.
 
-    Most companies that believe they need multi-region actually need multi-AZ. Study this for the interview scenarios where it genuinely matters — financial systems, global social platforms, data residency compliance — not as a default scaling strategy.
+    To understand why, it helps to know what cloud providers actually offer. A single region (e.g. AWS `us-east-1`) is already split into multiple physically separate data centres called Availability Zones (AZs) — `us-east-1a`, `us-east-1b`, `us-east-1c` — each with independent power, cooling, and networking, connected by ~1ms links. Running across multiple AZs within one region protects against a data centre fire, a power failure, a networking fault in one facility. This is **multi-AZ**, and it is largely automatic with managed services (RDS Multi-AZ, ECS across AZs). It achieves 99.99% availability with almost no added complexity.
+
+    **Multi-region** means deploying across geographically separate regions (`us-east-1` + `eu-west-1` + `ap-southeast-1`), hundreds to thousands of miles apart, with 80–200ms latency between them. A full AWS region going down is extremely rare — maybe once every few years, and usually partially. When teams say "we need multi-region for availability," they are usually solving for AZ failures, which multi-AZ already handles.
+
+    The three scenarios that genuinely justify multi-region are: (1) **latency** — serving users globally where a Tokyo user hitting a Virginia server adds 150ms to every request; (2) **data residency** — GDPR and similar regulations requiring that EU user data physically stays in the EU; (3) **extreme availability SLAs** — financial or infrastructure systems where a full regional outage is contractually unacceptable.
+
+    Active-active multi-region is also more common in press releases than in production. Many systems described as "active-active" are actually active-passive with a short failover time. True active-active with conflict resolution is an unsolved problem for most data models: last-write-wins silently loses updates, vector clocks add per-record overhead, and CRDTs fit only specific data structures. Study this topic for the interview scenarios where it is the right answer — not as a default scaling strategy.
 
 ## ELI5: Explain Like I'm 5
 
