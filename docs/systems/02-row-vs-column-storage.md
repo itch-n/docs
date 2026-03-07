@@ -335,16 +335,40 @@ public class ColumnStore {
 
 ### Part 3: Benchmark Comparison
 
-**Your task:** Compare row vs column storage for different workloads.
+**Your task:** Implement `RowStore` and `ColumnStore`, then run the benchmark below. The `SimulatedRowStore` and `SimulatedColumnStore` inner classes are already wired up — they extend your implementations and inject `Thread.sleep` calls proportional to real NVMe I/O latencies, so wall time directly reflects storage behaviour rather than JVM overhead.
 
 ```java
 import java.util.*;
 
+/**
+ * Benchmarks row-oriented vs column-oriented storage across four workloads.
+ *
+ * Uses SimulatedRowStore and SimulatedColumnStore (inner classes below), which
+ * inject Thread.sleep calls proportional to the I/O each operation would issue
+ * on NVMe hardware:
+ *
+ *   Sequential write/read:  1 ms per 4 KB page   (NVMe ~50 µs, scaled x20)
+ *   Random read (seek):     2 ms per operation    (NVMe ~100 µs, scaled x20)
+ *
+ * Wall time is driven entirely by the injected sleeps, so the ratios reliably
+ * reflect real I/O patterns rather than JVM overhead (HashMap costs, GC, JIT).
+ */
 public class StorageLayoutBenchmark {
 
-    public static void main(String[] args) {
-        System.out.println("=== Row vs Column Storage Benchmark ===\n");
+    static final int  PAGE_BYTES    = 4_096;
+    static final long SEQ_SLEEP_MS  = 1L;   // 1 ms/page  (NVMe ~50 µs, x20)
+    static final long RAND_SLEEP_MS = 2L;   // 2 ms/seek  (NVMe ~100 µs, x20)
+    static final int  BYTES_PER_ROW = 212;  // id(4) + name(50) + email(100) + age(4) + city(50) + salary(4)
+    static final int  BYTES_SALARY  = 4;
+    static final int  BYTES_CITY    = 50;
+    static final int  NUM_COLUMNS   = 6;
 
+    private static final String[] CITIES = {"New York", "San Francisco", "Chicago", "Austin", "Seattle"};
+
+    public static void main(String[] args) {
+        System.out.println("=== Row vs Column Storage Benchmark ===");
+        System.out.printf("I/O model: %d ms/page sequential   %d ms random (NVMe x20 scale)%n%n",
+                SEQ_SLEEP_MS, RAND_SLEEP_MS);
         benchmarkInserts();
         System.out.println();
         benchmarkPointLookups();
@@ -355,109 +379,194 @@ public class StorageLayoutBenchmark {
     }
 
     static void benchmarkInserts() {
-        System.out.println("--- Insert Performance ---");
-        int numRows = 100000;
+        System.out.println("--- Insert Performance (100 rows) ---");
+        int numRows = 100;
 
-        // TODO: Benchmark row store inserts
-        RowStore rowStore = new RowStore();
+        SimulatedRowStore rowStore = new SimulatedRowStore();
         long start = System.nanoTime();
-        // TODO: Insert numRows rows into rowStore
-        long rowTime = System.nanoTime() - start;
+        for (int i = 0; i < numRows; i++) rowStore.insert(rowStoreRow(i));
+        long rowMs = msElapsed(start);
 
-        // TODO: Benchmark column store inserts
-        ColumnStore colStore = new ColumnStore();
+        SimulatedColumnStore colStore = new SimulatedColumnStore();
         start = System.nanoTime();
-        // TODO: Insert numRows rows into colStore
-        long colTime = System.nanoTime() - start;
+        for (int i = 0; i < numRows; i++) colStore.insert(colStoreRow(i));
+        long colMs = msElapsed(start);
 
-        System.out.printf("Row Store: %.2f ms (%.0f inserts/sec)%n",
-            rowTime / 1e6, numRows / (rowTime / 1e9));
-        System.out.printf("Column Store: %.2f ms (%.0f inserts/sec)%n",
-            colTime / 1e6, numRows / (colTime / 1e9));
-        System.out.printf("Row store is %.2fx faster for inserts%n",
-            (double) colTime / rowTime);
+        printRow("Row Store",    rowMs, numRows,               "writes");
+        printRow("Column Store", colMs, numRows * NUM_COLUMNS, "writes");
+        System.out.printf("  Column Store does %dx more writes (write amplification)%n", NUM_COLUMNS);
     }
 
     static void benchmarkPointLookups() {
-        System.out.println("--- Point Lookup Performance ---");
-        int numRows = 100000;
-        int numLookups = 1000;
+        System.out.println("--- Point Lookup Performance (10 lookups, 100 rows) ---");
+        int numRows = 100, numLookups = 10;
 
-        // TODO: Setup - populate both stores
-        RowStore rowStore = new RowStore();
-        ColumnStore colStore = new ColumnStore();
-        // TODO: Insert numRows into both stores
+        SimulatedRowStore rowStore = new SimulatedRowStore();
+        SimulatedColumnStore colStore = new SimulatedColumnStore();
+        for (int i = 0; i < numRows; i++) {
+            rowStore.preload(rowStoreRow(i));
+            colStore.preload(colStoreRow(i));
+        }
 
-        // TODO: Benchmark row store lookups
         Random rand = new Random(42);
         long start = System.nanoTime();
-        // TODO: Perform numLookups random getById calls on rowStore
-        long rowTime = System.nanoTime() - start;
+        for (int i = 0; i < numLookups; i++) rowStore.getById(rand.nextInt(numRows));
+        long rowMs = msElapsed(start);
 
-        // TODO: Benchmark column store lookups
         rand = new Random(42);
         start = System.nanoTime();
-        // TODO: Perform numLookups random getById calls on colStore
-        long colTime = System.nanoTime() - start;
+        for (int i = 0; i < numLookups; i++) colStore.getById(rand.nextInt(numRows));
+        long colMs = msElapsed(start);
 
-        System.out.printf("Row Store: %.2f ms (%.0f lookups/sec)%n",
-            rowTime / 1e6, numLookups / (rowTime / 1e9));
-        System.out.printf("Column Store: %.2f ms (%.0f lookups/sec)%n",
-            colTime / 1e6, numLookups / (colTime / 1e9));
-        System.out.printf("Row store is %.2fx faster for point lookups%n",
-            (double) colTime / rowTime);
+        printRow("Row Store",    rowMs, numLookups,               "reads");
+        printRow("Column Store", colMs, numLookups * NUM_COLUMNS, "reads");
+        System.out.printf("  Column Store does %dx more seeks (one per column file)%n", NUM_COLUMNS);
     }
 
     static void benchmarkColumnScans() {
-        System.out.println("--- Column Scan Performance (avg salary) ---");
-        int numRows = 100000;
+        System.out.println("--- Column Scan: avgSalary (100 rows) ---");
+        int numRows = 100;
 
-        // TODO: Setup - populate both stores
-        RowStore rowStore = new RowStore();
-        ColumnStore colStore = new ColumnStore();
-        // TODO: Insert numRows into both stores
+        SimulatedRowStore rowStore = new SimulatedRowStore();
+        SimulatedColumnStore colStore = new SimulatedColumnStore();
+        for (int i = 0; i < numRows; i++) {
+            rowStore.preload(rowStoreRow(i));
+            colStore.preload(colStoreRow(i));
+        }
 
-        // TODO: Benchmark row store column scan
         long start = System.nanoTime();
-        double rowAvg = 0.0; // TODO: Call rowStore.avgSalary()
-        long rowTime = System.nanoTime() - start;
+        double rowAvg = rowStore.avgSalary();
+        long rowMs = msElapsed(start);
 
-        // TODO: Benchmark column store column scan
         start = System.nanoTime();
-        double colAvg = 0.0; // TODO: Call colStore.avgSalary()
-        long colTime = System.nanoTime() - start;
+        double colAvg = colStore.avgSalary();
+        long colMs = msElapsed(start);
 
-        System.out.printf("Row Store: %.2f ms (result: %.2f)%n",
-            rowTime / 1e6, rowAvg);
-        System.out.printf("Column Store: %.2f ms (result: %.2f)%n",
-            colTime / 1e6, colAvg);
-        System.out.printf("Column store is %.2fx faster for column scans%n",
-            (double) rowTime / colTime);
+        int rowPages = rowStore.pageCount(BYTES_PER_ROW);
+        int colPages = colStore.pageCount(BYTES_SALARY);
+        printRow("Row Store",    rowMs, rowPages, "page reads");
+        printRow("Column Store", colMs, colPages, "page reads");
+        System.out.printf("  Column Store reads %.0fx fewer pages (salary only)%n",
+                (double) rowPages / colPages);
+        System.out.printf("  Result check: row=%.2f col=%.2f (should match)%n", rowAvg, colAvg);
     }
 
     static void benchmarkAggregations() {
-        System.out.println("--- Aggregation Performance (avg salary by city) ---");
-        int numRows = 100000;
+        System.out.println("--- Aggregation: avgSalaryByCity (100 rows) ---");
+        int numRows = 100;
 
-        // TODO: Setup - populate both stores
-        RowStore rowStore = new RowStore();
-        ColumnStore colStore = new ColumnStore();
-        // TODO: Insert numRows into both stores
+        SimulatedRowStore rowStore = new SimulatedRowStore();
+        SimulatedColumnStore colStore = new SimulatedColumnStore();
+        for (int i = 0; i < numRows; i++) {
+            rowStore.preload(rowStoreRow(i));
+            colStore.preload(colStoreRow(i));
+        }
 
-        // TODO: Benchmark row store aggregation
         long start = System.nanoTime();
-        Map<String, Double> rowResult = null; // TODO: Call rowStore.avgSalaryByCity()
-        long rowTime = System.nanoTime() - start;
+        rowStore.avgSalaryByCity();
+        long rowMs = msElapsed(start);
 
-        // TODO: Benchmark column store aggregation
         start = System.nanoTime();
-        Map<String, Double> colResult = null; // TODO: Call colStore.avgSalaryByCity()
-        long colTime = System.nanoTime() - start;
+        colStore.avgSalaryByCity();
+        long colMs = msElapsed(start);
 
-        System.out.printf("Row Store: %.2f ms%n", rowTime / 1e6);
-        System.out.printf("Column Store: %.2f ms%n", colTime / 1e6);
-        System.out.printf("Column store is %.2fx faster for aggregations%n",
-            (double) rowTime / colTime);
+        int rowPages = rowStore.pageCount(BYTES_PER_ROW);
+        int colPages = colStore.pageCount(BYTES_CITY + BYTES_SALARY);
+        printRow("Row Store",    rowMs, rowPages, "page reads");
+        printRow("Column Store", colMs, colPages, "page reads");
+        System.out.printf("  Column Store reads %.1fx fewer pages (city + salary only)%n",
+                (double) rowPages / colPages);
+    }
+
+    // -------------------------------------------------------------------------
+    // Simulated stores (inner classes)
+    // -------------------------------------------------------------------------
+
+    /**
+     * Row store instrumented with NVMe latencies via Thread.sleep.
+     * 1 write per insert, 1 seek per lookup, full-row page scan for queries.
+     */
+    static class SimulatedRowStore extends RowStore {
+        private int rowCount = 0;
+
+        /** Inserts without sleeping. Use this to populate before benchmarking. */
+        public void preload(Row row) { rowCount++; super.insert(row); }
+
+        @Override public void insert(Row row) {
+            sleep(SEQ_SLEEP_MS); rowCount++; super.insert(row);
+        }
+        @Override public Row getById(int id) {
+            sleep(RAND_SLEEP_MS); return super.getById(id);
+        }
+        @Override public double avgSalary() {
+            scanPages(BYTES_PER_ROW); return super.avgSalary();
+        }
+        @Override public Map<String, Double> avgSalaryByCity() {
+            scanPages(BYTES_PER_ROW); return super.avgSalaryByCity();
+        }
+
+        public int pageCount(int bytesPerRow) {
+            return Math.max(1, (int) Math.ceil((double) rowCount * bytesPerRow / PAGE_BYTES));
+        }
+        private void scanPages(int bytesPerRow) {
+            for (int p = 0; p < pageCount(bytesPerRow); p++) sleep(SEQ_SLEEP_MS);
+        }
+    }
+
+    /**
+     * Column store instrumented with NVMe latencies via Thread.sleep.
+     * NUM_COLUMNS writes per insert (write amplification), NUM_COLUMNS seeks per
+     * lookup, but column pruning means far fewer page reads for analytics.
+     */
+    static class SimulatedColumnStore extends ColumnStore {
+        private int rowCount = 0;
+
+        /** Inserts without sleeping. Use this to populate before benchmarking. */
+        public void preload(Row row) { rowCount++; super.insert(row); }
+
+        @Override public void insert(Row row) {
+            for (int c = 0; c < NUM_COLUMNS; c++) sleep(SEQ_SLEEP_MS);
+            rowCount++; super.insert(row);
+        }
+        @Override public Row getById(int id) {
+            for (int c = 0; c < NUM_COLUMNS; c++) sleep(RAND_SLEEP_MS);
+            return super.getById(id);
+        }
+        @Override public double avgSalary() {
+            scanPages(BYTES_SALARY); return super.avgSalary();
+        }
+        @Override public Map<String, Double> avgSalaryByCity() {
+            scanPages(BYTES_CITY + BYTES_SALARY); return super.avgSalaryByCity();
+        }
+
+        public int pageCount(int bytesPerValue) {
+            return Math.max(1, (int) Math.ceil((double) rowCount * bytesPerValue / PAGE_BYTES));
+        }
+        private void scanPages(int bytesPerValue) {
+            for (int p = 0; p < pageCount(bytesPerValue); p++) sleep(SEQ_SLEEP_MS);
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Helpers
+    // -------------------------------------------------------------------------
+
+    private static void sleep(long ms) {
+        try { Thread.sleep(ms); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+    }
+    private static void printRow(String label, long wallMs, int ops, String opLabel) {
+        System.out.printf("  %-14s  %4d ms   %3d %s%n", label + ":", wallMs, ops, opLabel);
+    }
+    private static long msElapsed(long startNs) {
+        return (System.nanoTime() - startNs) / 1_000_000L;
+    }
+    private static RowStore.Row rowStoreRow(int i) {
+        return new RowStore.Row(i, "User" + i, "user" + i + "@example.com",
+                25 + (i % 40), CITIES[i % CITIES.length], 50_000 + (i * 7) % 100_000);
+    }
+    private static ColumnStore.Row colStoreRow(int i) {
+        return new ColumnStore.Row(i, "User" + i, "user" + i + "@example.com",
+                25 + (i % 40), CITIES[i % CITIES.length], 50_000 + (i * 7) % 100_000);
     }
 }
 ```
@@ -466,7 +575,7 @@ public class StorageLayoutBenchmark {
 
 - [ ] Implement RowStore insert, getById, avgSalary, avgSalaryByCity
 - [ ] Implement ColumnStore insert, getById, avgSalary, avgSalaryByCity
-- [ ] Run benchmarks and record results
+- [ ] Run `StorageLayoutBenchmark` and record results below
 - [ ] Understand WHY each performs better for different workloads
 
 **Your benchmark results:**
@@ -482,13 +591,13 @@ public class StorageLayoutBenchmark {
 </thead>
 <tbody>
   <tr>
-    <td>Inserts (100k rows)</td>
+    <td>Inserts (100 rows)</td>
     <td class="blank">___ ms</td>
     <td class="blank">___ ms</td>
     <td class="blank">___</td>
   </tr>
   <tr>
-    <td>Point Lookups (1k)</td>
+    <td>Point Lookups (10)</td>
     <td class="blank">___ ms</td>
     <td class="blank">___ ms</td>
     <td class="blank">___</td>
