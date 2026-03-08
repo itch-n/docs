@@ -10,7 +10,7 @@ Context for Claude Code sessions working in this repository.
 
 - Site name: "Software Engineering Study Guide"
 - Author: Richard
-- Deployed to GitHub Pages via GitHub Actions on push to `main`
+- Deployed to GitHub Pages via GitHub Actions on push to your personal branch (branch name configured in `.github/workflows/deploy.yml`)
 
 ---
 
@@ -50,10 +50,11 @@ Topics live in two sections:
 - `docs/systems/` — 20 topics: storage engines, row vs column, networking, search & indexing, caching, API design, security, rate limiting, load balancing, concurrency, database scaling, message queues, event sourcing/CQRS, stream processing, observability, resilience, distributed transactions, consensus, microservices, multi-region
 - `docs/dsa/` — 15 topics: two pointers, sliding window, hash tables, linked lists, stacks & queues, trees, binary search, heaps, union-find, graphs, advanced graphs, backtracking, dynamic programming, prefix sums, intervals
 
-Quick reference pages live directly in `docs/`:
+Quick reference pages live in `docs/reference/`:
 
-- `docs/when-it-breaks.md` — compiled scale thresholds and failure conditions from all 35 topic files
-- `docs/back-of-envelope.md` — hardware primitives, worked derivations, QPS/storage/write scale context
+- `docs/reference/when-it-breaks.md` — compiled scale thresholds and failure conditions from all 35 topic files
+- `docs/reference/back-of-envelope.md` — hardware primitives, worked derivations, QPS/storage/write scale context
+- `docs/reference/symptom-pattern.md` — symptom → pattern lookup for debugging
 
 ---
 
@@ -76,6 +77,7 @@ Learner-fillable content uses specific CSS classes defined in `docs/css/custom.c
 | `.learner-section` | Wraps entire fill-in sections | Yellow/orange background |
 | `.fill-in` | Inline blank prompts | Bold orange text |
 | `.benchmark-table` | Tables for recording results | Yellow-bordered |
+| `.benchmark-table .blank` | Individual blank cells in benchmark tables | Bold orange text, light bg |
 | `.learner-prompt` | Individual list item prompts | Yellow background |
 | `.code-reference` | Reference/example code | Gray background |
 
@@ -85,22 +87,7 @@ Reference material (code stubs, algorithm explanations, complexity tables) is le
 
 ## Common Commands
 
-```bash
-# Install dependencies
-uv sync
-
-# Local dev server (live reload)
-uv run mkdocs serve
-
-# Build static site
-uv run mkdocs build
-
-# Build with strict mode (fails on warnings)
-uv run mkdocs build --strict
-
-# Deploy to GitHub Pages manually
-uv run mkdocs gh-deploy
-```
+See **README.md → Getting Started** for the full command reference (includes Java test commands, benchmark runners, and the `--dirtyreload` flag for fast local dev).
 
 ---
 
