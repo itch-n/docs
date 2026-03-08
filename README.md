@@ -84,10 +84,12 @@ These two classes produce timing output and are intentionally runnable; they hav
 |---|---|
 | `com.study.systems.storage.StorageBenchmark` | B+Tree vs LSM Tree read/write throughput |
 | `com.study.systems.columnstorage.StorageLayoutBenchmark` | Row vs column store scan performance |
+| `com.study.systems.searchindexing.SearchIndexBenchmark` | Linear scan vs inverted index query latency |
 
 ```bash
 ./gradlew run -PmainClass=com.study.systems.storage.StorageBenchmark
 ./gradlew run -PmainClass=com.study.systems.columnstorage.StorageLayoutBenchmark
+./gradlew run -PmainClass=com.study.systems.searchindexing.SearchIndexBenchmark
 ```
 
 ## Content Maintenance

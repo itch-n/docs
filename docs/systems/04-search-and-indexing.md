@@ -794,6 +794,124 @@ GET /products?scroll=1m
 
 ---
 
+## Benchmark: Linear Scan vs Inverted Index
+
+**Your task:** Run the benchmark, record your numbers, and verify your Quick Quiz predictions.
+
+```java
+--8<-- "com/study/systems/searchindexing/SearchIndexBenchmark.java"
+```
+
+```bash
+./gradlew run -PmainClass=com.study.systems.searchindexing.SearchIndexBenchmark
+```
+
+**Index build cost:**
+
+<table class="benchmark-table">
+<thead>
+  <tr>
+    <th>Approach</th>
+    <th>Build time</th>
+    <th>Notes</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Linear Scan</td>
+    <td class="blank">___ ms</td>
+    <td>No upfront cost</td>
+  </tr>
+  <tr>
+    <td>Inverted Index (10,000 docs)</td>
+    <td class="blank">___ ms</td>
+    <td>Paid once at startup</td>
+  </tr>
+</tbody>
+</table>
+
+**Single-term query (500 queries):**
+
+<table class="benchmark-table">
+<thead>
+  <tr>
+    <th>Corpus size</th>
+    <th>Linear scan</th>
+    <th>Inverted index</th>
+    <th>Speedup</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>100 docs</td>
+    <td class="blank">___ ms</td>
+    <td class="blank">___ ms</td>
+    <td class="blank">___x</td>
+  </tr>
+  <tr>
+    <td>1,000 docs</td>
+    <td class="blank">___ ms</td>
+    <td class="blank">___ ms</td>
+    <td class="blank">___x</td>
+  </tr>
+  <tr>
+    <td>10,000 docs</td>
+    <td class="blank">___ ms</td>
+    <td class="blank">___ ms</td>
+    <td class="blank">___x</td>
+  </tr>
+</tbody>
+</table>
+
+**AND query: term1 AND term2 (500 queries):**
+
+<table class="benchmark-table">
+<thead>
+  <tr>
+    <th>Corpus size</th>
+    <th>Linear scan</th>
+    <th>Inverted index</th>
+    <th>Speedup</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>100 docs</td>
+    <td class="blank">___ ms</td>
+    <td class="blank">___ ms</td>
+    <td class="blank">___x</td>
+  </tr>
+  <tr>
+    <td>1,000 docs</td>
+    <td class="blank">___ ms</td>
+    <td class="blank">___ ms</td>
+    <td class="blank">___x</td>
+  </tr>
+  <tr>
+    <td>10,000 docs</td>
+    <td class="blank">___ ms</td>
+    <td class="blank">___ ms</td>
+    <td class="blank">___x</td>
+  </tr>
+</tbody>
+</table>
+
+<div class="learner-section" markdown>
+
+**What do you observe as corpus size grows?**
+
+- Linear scan time: <span class="fill-in">[grows ___-fold when corpus 100x larger — O(___)]</span>
+- Inverted index query time: <span class="fill-in">[stays ___, regardless of corpus size — O(___)]</span>
+- AND query index time (vs single-term): <span class="fill-in">[slower because ___, but still O(___)]</span>
+- The one-time build cost of ___ ms is offset after ___ queries.
+
+</div>
+
+!!! info "Loop back"
+    Return to the Quick Quiz now and fill in your verified answers for the Scenario Predictions.
+
+---
+
 ## Before/After: Why Search Indexing Matters
 
 **Your task:** Compare naive search vs indexed search to understand the impact.
