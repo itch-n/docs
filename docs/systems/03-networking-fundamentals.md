@@ -49,6 +49,50 @@ By the end of this topic you will be able to:
 
 ## Core Concepts
 
+### Networking Layers — The Full Stack
+
+Every piece of data you send travels through a stack of layers, each wrapping the one above it like nested envelopes:
+
+```mermaid
+flowchart TD
+    subgraph EF["Link layer — Ethernet Frame"]
+        subgraph IP["Network layer — IP Packet"]
+            subgraph TCP["Transport layer — TCP Segment"]
+                subgraph H2["Application layer — HTTP/2 Frames"]
+                    REQ["HTTP Request\n(method · path · headers · body)"]
+                end
+            end
+        end
+    end
+```
+
+How a single HTTP/2 request travels down the stack:
+
+```
+HTTP request
+  → split into HEADERS frame + DATA frame(s)  [HTTP/2 layer]
+  → each frame becomes bytes in a TCP stream   [TCP layer]
+  → TCP chops into segments with seq numbers   [TCP layer]
+  → each segment wrapped in an IP packet       [IP layer]
+  → each IP packet wrapped in an Ethernet frame [link layer]
+  → transmitted as bits on the wire            [physical]
+```
+
+| Layer | Unit | Key concept |
+|-------|------|-------------|
+| Application (HTTP/2) | **Frame** | HEADERS + DATA frames tagged with a stream ID; frames from many streams interleaved on one connection |
+| Application (HTTP) | **Request / Response** | Logical exchange — method, path, headers, body; invisible to TCP |
+| Transport (TCP) | **Segment** | Sequence-numbered chunk; TCP retransmits lost segments to guarantee order |
+| Transport (UDP) | **Datagram** | Same layer as TCP but no sequencing, no retransmit — fire and forget |
+| Network | **Packet** | IP source + destination address; "packet loss" happens here |
+| Link | **Ethernet frame** | MAC addresses; hops between physical devices on the local network |
+| Physical | **Bit / signal** | Electrical or optical signal on the wire |
+
+!!! note "Why 'packet' is used loosely"
+    In conversation, "packet" almost always means IP packet — but engineers often use it to mean any of the above units. "Packet loss" = IP packet dropped. "HTTP/2 frame" and "Ethernet frame" both use the word frame but are completely unrelated.
+
+---
+
 ### Topic 1: Transport Layer - TCP vs UDP
 
 **Concept:** Two fundamental protocols for sending data over networks, with different guarantees and trade-offs.
