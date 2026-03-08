@@ -36,13 +36,13 @@ public class JWTAuthenticator {
      * 5. Return header.payload.signature
      */
     public String generateToken(String userId) {
-        // TODO: Create header
+        // TODO: Build the header JSON string: {"alg":"HS256","typ":"JWT"} and base64UrlEncode it
 
-        // TODO: Create payload with expiration
+        // TODO: Build the payload JSON string with "sub", "iat" (System.currentTimeMillis()), and "exp" (iat + expirationMs), then base64UrlEncode it
 
-        // TODO: Create signature
+        // TODO: Compute the signature: hmacSha256(encodedHeader + "." + encodedPayload, secret)
 
-        // TODO: Return JWT
+        // TODO: Return encodedHeader + "." + encodedPayload + "." + signature
 
         return null; // Replace
     }
@@ -58,13 +58,13 @@ public class JWTAuthenticator {
      * 4. Extract and return user ID
      */
     public String validateToken(String token) {
-        // TODO: Split token
+        // TODO: Split token on "." — expect exactly 3 parts (header, payload, signature); return null if malformed
 
-        // TODO: Verify signature
+        // TODO: Recompute expectedSig = hmacSha256(parts[0] + "." + parts[1], secret); return null if it doesn't match parts[2]
 
-        // TODO: Decode and check expiration
+        // TODO: Base64-decode parts[1], parse the JSON to extract "exp"; return null if System.currentTimeMillis() > exp
 
-        // TODO: Return userId from payload
+        // TODO: Parse the decoded payload JSON to extract "sub" (the userId) and return it
         return null; // Replace
     }
 
@@ -74,7 +74,8 @@ public class JWTAuthenticator {
      * TODO: Implement base64 URL encoding
      */
     private String base64UrlEncode(String input) {
-        // TODO: Encode and make URL-safe
+        // TODO: Use Base64.getEncoder().encodeToString(input.getBytes(StandardCharsets.UTF_8)),
+        //       then replace '+' with '-', '/' with '_', and strip trailing '=' padding
         return null; // Replace
     }
 
@@ -84,7 +85,8 @@ public class JWTAuthenticator {
      * TODO: Implement HMAC signing
      */
     private String hmacSha256(String data, String key) {
-        // TODO: Use Mac with HmacSHA256
+        // TODO: Get a Mac instance for "HmacSHA256", init it with new SecretKeySpec(key.getBytes(), "HmacSHA256"),
+        //       call mac.doFinal(data.getBytes()), then base64UrlEncode the resulting byte array
         return null; // Replace
     }
 }

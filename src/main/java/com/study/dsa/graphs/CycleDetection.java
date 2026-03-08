@@ -24,15 +24,15 @@ public class CycleDetection {
     }
 
     private static boolean dfsCycleDirected(List<List<Integer>> graph, int node, int[] state) {
-        // TODO: Implement iteration/conditional logic
+        // TODO: If state[node] == 1, we're revisiting a node in the current DFS path — cycle found, return true
 
-        // TODO: Implement iteration/conditional logic
+        // TODO: If state[node] == 2, this node is fully processed — no cycle here, return false
 
-        // TODO: Mark as visiting
+        // TODO: Mark state[node] = 1 (currently visiting / on the recursion stack)
 
-        // TODO: Visit all neighbors
+        // TODO: Recurse on each neighbor; return true immediately if any neighbor reports a cycle
 
-        // TODO: Mark as visited
+        // TODO: Mark state[node] = 2 (fully visited) before returning false
 
         return false; // Replace
     }
@@ -56,9 +56,10 @@ public class CycleDetection {
 
     private static boolean dfsCycleUndirected(List<List<Integer>> graph, int node,
                                              int parent, boolean[] visited) {
-        // TODO: Mark as visited
+        // TODO: Mark visited[node] = true
 
-        // TODO: Visit all neighbors
+        // TODO: For each neighbor: skip the parent (edge we came from); if neighbor is already visited, a cycle exists
+        // TODO: Otherwise recurse; propagate true up if a cycle is detected deeper
 
         return false; // Replace
     }

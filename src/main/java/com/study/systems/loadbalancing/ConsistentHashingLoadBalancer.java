@@ -27,11 +27,11 @@ public class ConsistentHashingLoadBalancer {
      * - Add each server with virtual nodes
      */
     public ConsistentHashingLoadBalancer(List<RoundRobinLoadBalancer.Server> servers, int virtualNodesPerServer) {
-        // TODO: Initialize TreeMap
+        // TODO: Initialize a new TreeMap<Integer, Server>() and assign to this.ring
 
-        // TODO: Store virtualNodesPerServer
+        // TODO: Assign the virtualNodesPerServer parameter to the field
 
-        // TODO: Add all servers to ring
+        // TODO: For each server in the list, call addServer(server)
 
         this.ring = null; // Replace
         this.virtualNodesPerServer = 0;
@@ -49,13 +49,13 @@ public class ConsistentHashingLoadBalancer {
      * 3. If no server found, wrap to first server
      */
     public RoundRobinLoadBalancer.Server getServer(String key) {
-        // TODO: Check if ring is empty
+        // TODO: Return null (or throw) if ring.isEmpty()
 
-        // TODO: Hash key to integer position
+        // TODO: Compute hash(key) to get an integer position on the ring
 
-        // TODO: Find next entry on ring (ceilingEntry)
+        // TODO: Use ring.ceilingEntry(position) to find the next clockwise node; if null, wrap with ring.firstEntry()
 
-        // TODO: Return server
+        // TODO: Return the server from the found map entry
 
         return null; // Replace
     }
@@ -69,7 +69,7 @@ public class ConsistentHashingLoadBalancer {
      *   - Place on ring
      */
     public void addServer(RoundRobinLoadBalancer.Server server) {
-        // TODO: Add virtualNodesPerServer copies of this server
+        // TODO: Loop i from 0 to virtualNodesPerServer; hash the string (server.id + "-" + i); put into ring
     }
 
     /**
@@ -78,7 +78,7 @@ public class ConsistentHashingLoadBalancer {
      * TODO: Remove all virtual nodes for this server
      */
     public void removeServer(RoundRobinLoadBalancer.Server server) {
-        // TODO: Remove all virtual nodes
+        // TODO: Loop i from 0 to virtualNodesPerServer; compute hash(server.id + "-" + i); remove that key from ring
     }
 
     /**
@@ -90,7 +90,7 @@ public class ConsistentHashingLoadBalancer {
      */
     private int hash(String key) {
         // TODO: Hash key to integer
-        // Hint: key.hashCode() & 0x7FFFFFFF (remove sign bit)
+        // Hint: key.hashCode() & 0x7FFFFFFF strips the sign bit to guarantee a non-negative ring position
         return 0; // Replace
     }
 

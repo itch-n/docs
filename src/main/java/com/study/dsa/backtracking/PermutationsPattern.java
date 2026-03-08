@@ -19,9 +19,10 @@ public class PermutationsPattern {
 
     private static void backtrack(int[] nums, List<Integer> current,
                                   boolean[] used, List<List<Integer>> result) {
-        // TODO: Handle base case
+        // TODO: Base case: if current.size() == nums.length, add a copy of current to result and return
 
-        // TODO: Implement iteration/conditional logic
+        // TODO: Iterate over nums; skip indices where used[i] is true; otherwise mark used[i]=true,
+        //       add nums[i] to current, recurse, then undo both (backtrack)
     }
 
     /**
@@ -45,7 +46,8 @@ public class PermutationsPattern {
      * TODO: Implement next permutation in-place
      */
     public static void nextPermutation(int[] nums) {
-        // TODO: Implement logic
+        // TODO: Implement next permutation in-place
+        // TODO: Scan right-to-left to find the first index i where nums[i] < nums[i+1] (the "dip")
         // TODO: Find smallest element greater than nums[i] to the right
         // TODO: Swap them
         // TODO: Reverse suffix after i

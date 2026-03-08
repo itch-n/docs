@@ -15,17 +15,17 @@ public class DFS {
 
         int count = 0;
 
-        // TODO: Implement iteration/conditional logic
+        // TODO: Iterate every cell; when you find a '1', increment count and call dfs() to sink the island
 
         return 0; // Replace with implementation
     }
 
     private static void dfs(char[][] grid, int i, int j) {
-        // TODO: Base cases
+        // TODO: Base case: return if i/j are out of bounds or grid[i][j] != '1'
 
-        // TODO: Implement logic
+        // TODO: Mark the current cell as visited by overwriting it with '0'
 
-        // TODO: Recursively visit 4 neighbors
+        // TODO: Recursively call dfs() on all 4 neighbors (up, down, left, right)
     }
 
     /**
@@ -37,19 +37,19 @@ public class DFS {
     public static boolean hasPath(Map<Integer, List<Integer>> graph, int start, int end) {
         Set<Integer> visited = new HashSet<>();
 
-        // TODO: Call recursive DFS helper
+        // TODO: Call dfsPath with start, end, and the visited set; return its result
         return false; // Replace
     }
 
     private static boolean dfsPath(Map<Integer, List<Integer>> graph,
                                    int current, int target, Set<Integer> visited) {
-        // TODO: Implement iteration/conditional logic
+        // TODO: If current == target, return true (base case: found the path)
 
-        // TODO: Implement iteration/conditional logic
+        // TODO: If current is already in visited, return false (avoid revisiting)
 
-        // TODO: Mark current as visited
+        // TODO: Add current to visited
 
-        // TODO: Implement iteration/conditional logic
+        // TODO: Recurse on each neighbor; if any recursive call returns true, return true immediately
 
         // TODO: Return false if no path found
 

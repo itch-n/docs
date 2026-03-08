@@ -30,7 +30,8 @@ public class LRUCache<K, V> {
         Node<K, V> head, tail;
 
         DoublyLinkedList() {
-            // TODO: Initialize sentinel nodes for cleaner edge case handling
+            // TODO: Create dummy head and tail sentinel nodes; link head.next = tail and tail.prev = head
+            //       so that addToFront/remove never need null checks for boundary nodes
         }
 
         /**
@@ -39,7 +40,8 @@ public class LRUCache<K, V> {
          * TODO: Implement addToFront
          */
         void addToFront(Node<K, V> node) {
-            // TODO: Insert node right after head
+            // TODO: Wire node between head and head.next: set node.prev=head, node.next=head.next,
+            //       then update head.next.prev and head.next to point to node
         }
 
         /**
@@ -48,7 +50,7 @@ public class LRUCache<K, V> {
          * TODO: Implement remove
          */
         void remove(Node<K, V> node) {
-            // TODO: Update prev/next pointers to bypass this node
+            // TODO: Bridge the gap: set node.prev.next = node.next and node.next.prev = node.prev
         }
 
         /**
@@ -57,8 +59,8 @@ public class LRUCache<K, V> {
          * TODO: Implement removeLast
          */
         Node<K, V> removeLast() {
-            // TODO: Remove the node closest to tail
-            // Handle empty list case
+            // TODO: The LRU node is tail.prev; return null if it's the head sentinel (list is empty)
+            // TODO: Call remove() on that node and return it
 
             return null; // Replace
         }
@@ -69,7 +71,7 @@ public class LRUCache<K, V> {
          * TODO: Implement moveToFront
          */
         void moveToFront(Node<K, V> node) {
-            // TODO: Reposition node to mark it as most recently used
+            // TODO: Call remove(node) to unlink it, then call addToFront(node) to re-insert at the MRU position
         }
     }
 
@@ -86,7 +88,8 @@ public class LRUCache<K, V> {
      * TODO: Implement get
      */
     public V get(K key) {
-        // TODO: Lookup and update recency
+        // TODO: Look up key in cache map; if absent return null
+        // TODO: Move the found node to the front of the list (marks it as recently used), then return its value
 
         return null; // Replace
     }
@@ -98,9 +101,9 @@ public class LRUCache<K, V> {
      * TODO: Implement put
      */
     public void put(K key, V value) {
-        // TODO: Handle updates to existing keys
-        // Handle eviction when at capacity
-        // Add new entries appropriately
+        // TODO: If key already exists in cache, update its value and call moveToFront — no eviction needed
+        // TODO: If at capacity, call removeLast() to get the LRU node, then remove its key from the cache map
+        // TODO: Create a new Node, add it to the cache map, and call addToFront to mark it as most recently used
     }
 
     public int size() {

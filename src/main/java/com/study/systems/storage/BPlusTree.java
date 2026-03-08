@@ -71,9 +71,9 @@ public class BPlusTree<K extends Comparable<K>, V> {
      * TODO: Implement insertion logic
      */
     public void insert(K key, V value) {
-        // TODO: Navigate to the appropriate leaf node
-        // Handle node splits when capacity is exceeded
-        // Consider how splits propagate up the tree
+        // TODO: Call findLeaf(key) to locate the correct leaf node
+        // TODO: Insert key/value into the leaf in sorted order; if leaf.keys.size() exceeds order, call splitLeaf()
+        // TODO: When splitLeaf() creates a new root, update this.root accordingly
     }
 
     /**
@@ -83,8 +83,8 @@ public class BPlusTree<K extends Comparable<K>, V> {
      * TODO: Implement search logic
      */
     public V search(K key) {
-        // TODO: Navigate from root to the appropriate leaf
-        // Search for the key in the leaf node
+        // TODO: Call findLeaf(key) to descend to the correct leaf
+        // TODO: Linear-scan (or binary-search) the leaf's keys list for key; return the corresponding value, or null if not found
 
         return null; // Replace with actual implementation
     }
@@ -98,8 +98,8 @@ public class BPlusTree<K extends Comparable<K>, V> {
     public List<V> rangeQuery(K startKey, K endKey) {
         List<V> results = new ArrayList<>();
 
-        // TODO: Find starting point and traverse leaf chain
-        // Use the linked structure of leaves for efficiency
+        // TODO: Call findLeaf(startKey) to reach the first candidate leaf
+        // TODO: Walk the leaf chain via leaf.next: for each key in the leaf, add the value if key <= endKey; stop when key > endKey or leaf is null
 
         return results;
     }
@@ -116,7 +116,7 @@ public class BPlusTree<K extends Comparable<K>, V> {
         while (!current.isLeaf()) {
             InternalNode internal = (InternalNode) current;
 
-            // TODO: Find correct child based on key comparisons
+            // TODO: Find the child index using key.compareTo(internal.keys.get(i)): move right while key >= keys[i]
         }
 
         return (LeafNode) current;
@@ -126,14 +126,18 @@ public class BPlusTree<K extends Comparable<K>, V> {
      * Helper: Split a full leaf node
      */
     private void splitLeaf(LeafNode leaf) {
-        // TODO: Distribute keys/values to a new leaf node
+        // TODO: Create a newLeaf; move the upper half of leaf's keys/values into it
+        // TODO: Link newLeaf into the chain: newLeaf.next = leaf.next; leaf.next = newLeaf
+        // TODO: Push the first key of newLeaf up to the parent internal node (create a new root if needed)
     }
 
     /**
      * Helper: Split a full internal node
      */
     private void splitInternal(InternalNode node) {
-        // TODO: Distribute keys/children to a new internal node
+        // TODO: Create a newInternal; move the upper half of node's keys and children into it
+        // TODO: The middle key is promoted (not copied) into the parent — remove it from node before moving
+        // TODO: If node was the root, create a new root InternalNode holding only the promoted key
     }
 
     /**
