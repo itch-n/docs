@@ -49,77 +49,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Complete your predictions now, before reading further. You will revisit and verify each answer after running the benchmark (or completing the implementation).
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your security intuition without looking at code. Answer these, then verify after implementation.
-
-### Security Concept Predictions
-
-1. **Authentication vs Authorization:**
-    - Authentication is: <span class="fill-in">[Your definition]</span>
-    - Authorization is: <span class="fill-in">[Your definition]</span>
-    - Example scenario: <span class="fill-in">[Think of real-world example]</span>
-
-2. **JWT token structure:**
-    - Three parts: <span class="fill-in">[What are they?]</span>
-    - Why is signature needed?: <span class="fill-in">[Your guess]</span>
-    - Can client modify payload?: <span class="fill-in">[Yes/No - Why?]</span>
-
-3. **RBAC complexity:**
-    - Checking permission for user with 3 roles: O(?)
-    - Better than checking each permission individually?: <span class="fill-in">[Yes/No - Why?]</span>
-
-### Scenario Predictions
-
-**Scenario 1:** A user tries to access a protected resource with JWT token
-
-- **What gets validated first?** <span class="fill-in">[Signature? Expiration? Claims?]</span>
-- **If signature invalid, what does it mean?** <span class="fill-in">[Token tampered? Expired? Wrong secret?]</span>
-- **What happens if token expired but signature valid?** <span class="fill-in">[Allow? Deny? Refresh?]</span>
-
-**Scenario 2:** Implementing RBAC for a blog platform
-
-- **Roles needed:** <span class="fill-in">[List them]</span>
-- **VIEWER can:** <span class="fill-in">[What permissions?]</span>
-- **EDITOR can:** <span class="fill-in">[What permissions beyond VIEWER?]</span>
-- **ADMIN can:** <span class="fill-in">[Everything or specific permissions?]</span>
-
-**Scenario 3:** API key gets leaked on GitHub
-
-- **Immediate action:** <span class="fill-in">[What to do first?]</span>
-- **Why rotation matters:** <span class="fill-in">[Explain]</span>
-- **How to prevent:** <span class="fill-in">[Fill in]</span>
-
-### Security Trade-off Quiz
-
-**Question:** When would Session-based auth be BETTER than JWT?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after learning]</span>
-
-**Question:** What's the MAIN advantage of JWT over sessions?
-
-- [ ] More secure
-- [ ] Stateless (no server-side storage)
-- [ ] Easier to implement
-- [ ] Better performance
-
-Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
-
-**Question:** Why use HMAC for JWT signature instead of just Base64 encoding?
-
-- Your answer: <span class="fill-in">[Fill in]</span>
-- Verified: <span class="fill-in">[Fill in after implementation]</span>
-
-</div>
-
----
-
 ## Case Studies: Security Patterns in the Wild
 
 ### Google & Facebook Login: OAuth 2.0 and OpenID Connect
@@ -307,9 +236,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 --8<-- "com/study/systems/security/SecretsManager.java"
 ```
 
-
-!!! info "Loop back"
-    Return to the Quick Quiz now and fill in your verified answers.
 
 ---
 

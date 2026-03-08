@@ -55,77 +55,6 @@ By the end of this section you should be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Fill in your best guesses **before** reading any code. After implementing each pattern, return here and check your predictions. Pay special attention to the cardinality scenario — it reveals a cost that surprises many engineers.
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
-
-### Complexity Predictions
-
-1. **Storing all request details in memory:**
-    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
-
-2. **Recording a metric counter increment:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-3. **Cost calculation:**
-    - If you log every request at 10K req/sec = <span class="fill-in">_____</span> logs/day
-    - If you sample traces at 1% = <span class="fill-in">_____</span> traces/day
-    - Storage reduction factor: <span class="fill-in">_____</span> times less
-
-### Scenario Predictions
-
-**Scenario 1:** Your API has 99.5% success rate with a 99.9% SLO
-
-- **Is this within SLO?** <span class="fill-in">[Yes/No - Why?]</span>
-- **Error budget remaining:** <span class="fill-in">[Calculate]</span>
-- **Should you alert?** <span class="fill-in">[Yes/No - Why?]</span>
-- **How many more failures can you have?** <span class="fill-in">[Fill in]</span>
-
-**Scenario 2:** Users report "slow checkout" but avg latency looks fine
-
-- **Which observability tool helps most?** <span class="fill-in">[Metrics/Logs/Traces - Why?]</span>
-- **What metric might you be missing?** <span class="fill-in">[Fill in]</span>
-- **What percentile should you check?** <span class="fill-in">[P50/P95/P99 - Why?]</span>
-
-**Scenario 3:** Metric label has user_id with 1M unique values
-
-- **Is this a good metric label?** <span class="fill-in">[Yes/No - Why?]</span>
-- **What problem does this cause?** <span class="fill-in">[Fill in]</span>
-- **What should you do instead?** <span class="fill-in">[Fill in]</span>
-
-### Trade-off Quiz
-
-**Question:** When would structured logs be BETTER than traces for debugging?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after learning]</span>
-
-**Question:** What's the MAIN difference between metrics and logs?
-
-- [ ] Metrics are numbers, logs are text
-- [ ] Metrics are aggregated, logs are individual events
-- [ ] Metrics are faster, logs are slower
-- [ ] Metrics are free, logs cost money
-
-Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
-
-**Question:** Why sample traces instead of capturing 100%?
-
-- Your answer: <span class="fill-in">[Fill in reasoning]</span>
-- Verified: <span class="fill-in">[Fill in after learning about performance impact]</span>
-
-</div>
-
----
-
 ## Case Studies: Observability in the Wild
 
 ### Datadog: The Three Pillars in One Platform
@@ -256,9 +185,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 --8<-- "com/study/systems/observability/SLOManager.java"
 ```
 
-
-!!! info "Loop back"
-    Now that you have implemented all four patterns, return to the **Quick Quiz** at the top of this page. Fill in the "Verified after learning" fields. Did your estimate of P99 latency's importance match what you saw in the SLO section? Return to the **ELI5** section and complete your one-sentence explanations.
 
 ---
 

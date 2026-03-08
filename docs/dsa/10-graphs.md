@@ -54,92 +54,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Complete your predictions now, before reading further. You will revisit and verify each answer after running the benchmark (or completing the implementation).
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
-
-### Complexity Predictions
-
-1. **BFS to find shortest path in unweighted graph:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
-
-2. **DFS to explore all paths in graph:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity (recursion stack): <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-
-### Scenario Predictions
-
-**Scenario 1:** Find shortest path from A to E in graph: A→B→E, A→C→D→E
-
-- **Which algorithm?** <span class="fill-in">[BFS/DFS - Why?]</span>
-- **BFS will find path in how many steps?** <span class="fill-in">[Fill in]</span>
-- **DFS might find which path first?** <span class="fill-in">[Fill in]</span>
-- **Why does BFS guarantee shortest?** <span class="fill-in">[Explain]</span>
-
-**Scenario 2:** Detect if there's a cycle in a graph
-
-- **Which algorithm?** <span class="fill-in">[DFS/BFS - Why?]</span>
-- **What data structure represents this?** <span class="fill-in">[Directed/Undirected graph]</span>
-- **How do you detect the cycle?** <span class="fill-in">[Fill in your approach]</span>
-
-**Scenario 3:** Count number of islands in 2D grid
-
-```
-[['1','1','0'],
- ['1','0','0'],
- ['0','0','1']]
-```
-
-- **How many islands?** <span class="fill-in">[Your guess]</span>
-- **Which algorithm?** <span class="fill-in">[DFS/BFS - Why?]</span>
-- **What marks a cell as visited?** <span class="fill-in">[Fill in]</span>
-
-### Trade-off Quiz
-
-**Question 1:** When would DFS be BETTER than BFS?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after learning]</span>
-
-**Question 2:** Adjacency Matrix vs Adjacency List - which is better for sparse graphs?
-
-- Your answer: <span class="fill-in">[Matrix/List - Why?]</span>
-- Space complexity comparison: <span class="fill-in">[Fill in after learning]</span>
-
-### Graph Representation Quiz
-
-Given graph: 0→1, 0→2, 1→3, 2→3
-
-**Adjacency List representation:**
-
-```
-Your answer:
-<span class="fill-in">[Draw/write the adjacency list structure]</span>
-```
-
-**Adjacency Matrix representation:**
-
-```
-Your answer:
-<span class="fill-in">[Draw the 4x4 matrix]</span>
-```
-
-**Which uses less space?** <span class="fill-in">[Fill in and explain why]</span>
-
-
-</div>
-
----
-
 ## Core Implementation
 
 ### Pattern 1: DFS (Depth-First Search)
@@ -525,11 +439,6 @@ public class GraphList {
 - What operations are faster with each representation? <span class="fill-in">[Your answer]</span>
 
 </div>
-
----
-
-!!! info "Loop back"
-    Return to the Quick Quiz now and fill in your verified answers.
 
 ---
 

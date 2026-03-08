@@ -47,50 +47,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE learning)
-    Complete your predictions now, before reading further. You will revisit and verify each answer after working through the core concepts.
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition about networking without looking at details. Answer these, then verify after learning.
-
-### Protocol Predictions
-
-1. **When would you choose UDP over TCP?**
-    - Your guess: <span class="fill-in">[What scenarios?]</span>
-    - Verified: <span class="fill-in">[Actual use cases]</span>
-
-2. **What's the main benefit of HTTP/2 over HTTP/1.1?**
-    - Your guess: <span class="fill-in">[Speed? Efficiency? Something else?]</span>
-    - Verified: <span class="fill-in">[Actual benefit]</span>
-
-3. **WebSockets vs HTTP polling - which is better for real-time chat?**
-    - Your guess: <span class="fill-in">[Which one and why?]</span>
-    - Verified: <span class="fill-in">[Actual answer with trade-offs]</span>
-
-### Scenario Predictions
-
-**Scenario 1:** Video streaming application with 1M concurrent users
-
-- **Protocol choice:** <span class="fill-in">[TCP/UDP - Why?]</span>
-- **DNS strategy:** <span class="fill-in">[How to handle this scale?]</span>
-
-**Scenario 2:** Real-time multiplayer game with low latency requirement
-
-- **Protocol choice:** <span class="fill-in">[TCP/UDP - Why?]</span>
-- **Packet loss handling:** <span class="fill-in">[What happens?]</span>
-- **Expected latency:** <span class="fill-in">[Milliseconds? Seconds?]</span>
-
-**Scenario 3:** Financial trading platform requiring guaranteed message delivery
-
-- **Protocol choice:** <span class="fill-in">[TCP/UDP - Why?]</span>
-- **TLS overhead:** <span class="fill-in">[Worth it?]</span>
-- **Connection pooling:** <span class="fill-in">[Helpful?]</span>
-
-</div>
-
----
-
 ## Core Concepts
 
 ### Topic 1: Transport Layer - TCP vs UDP
@@ -673,9 +629,6 @@ Additional benefits:
 - HTTP/1.1 time: <span class="fill-in">_____</span> ms
 - HTTP/2 time: <span class="fill-in">_____</span> ms
 - Speedup factor: <span class="fill-in">_____</span>x
-
-!!! info "Loop back"
-    Return to the Quick Quiz now and fill in your verified answers.
 
 ---
 

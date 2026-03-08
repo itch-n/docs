@@ -40,56 +40,6 @@ By the end of this section you should be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Fill in your best guesses **before** reading any code. After implementing each pattern, return here and check your predictions. The goal is to build intuition, not to get everything right on the first pass.
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition about stream processing. Answer these, then verify after implementation.
-
-### Complexity Predictions
-
-1. **Tumbling window processing:**
-    - Time complexity per event: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity for K keys over W windows: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified after learning: <span class="fill-in">[Actual]</span>
-
-2. **Sliding window vs tumbling window:**
-    - If sliding window size = 10s, slide = 2s, how many windows per event? <span class="fill-in">[Guess]</span>
-    - Space overhead compared to tumbling: <span class="fill-in">[Guess: X times larger]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-### Scenario Predictions
-
-**Scenario 1:** Events arriving: timestamps [100, 200, 150, 300] (out of order)
-
-- **Tumbling window (size=100ms):** Which windows do they belong to?
-    - Event@100ms → Window <span class="fill-in">[0-100? 100-200?]</span>
-    - Event@200ms → Window <span class="fill-in">[Fill in]</span>
-    - Event@150ms → Window <span class="fill-in">[Fill in]</span>
-    - Event@300ms → Window <span class="fill-in">[Fill in]</span>
-
-**Scenario 2:** Session window with 3-second gap
-
-Events for user1: [1000ms, 2000ms, 3000ms, 7000ms, 8000ms]
-
-- **How many sessions?** <span class="fill-in">[Guess]</span>
-- **Session boundaries:** <span class="fill-in">[Fill in]</span>
-- **If event@4500ms arrives late, what happens?** <span class="fill-in">[New session or merge?]</span>
-
-### Trade-off Quiz
-
-**Question:** When would batch processing be BETTER than stream processing?
-
-- Your answer: <span class="fill-in">[Fill in]</span>
-- Verified: <span class="fill-in">[Fill in after implementation]</span>
-
-</div>
-
----
-
 ## Case Studies: Stream Processing in the Wild
 
 ### Netflix: Real-time Streaming Analytics with Flink

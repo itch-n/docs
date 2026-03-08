@@ -53,73 +53,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Complete your predictions now, before reading further. You will revisit and verify each answer after running the
-    benchmark (or completing the implementation).
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
-
-### Complexity Predictions
-
-1. **Brute force generating all permutations of n elements:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
-
-2. **Backtracking to find N-Queens solutions:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity (excluding output): <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-3. **Speedup calculation:**
-    - For generating subsets, brute force with checking = <span class="fill-in">[Fill in]</span>
-    - Backtracking with early pruning = <span class="fill-in">[Fill in]</span>
-    - Pruning benefit: <span class="fill-in">[Fill in why it helps]</span>
-
-### Scenario Predictions
-
-**Scenario 1:** Generate all permutations of `[1, 2, 3]`
-
-- **How many permutations exist?** <span class="fill-in">[Your guess: ___]</span>
-- **First permutation:** <span class="fill-in">[Fill in]</span>
-- **When do you backtrack?** <span class="fill-in">[Fill in]</span>
-- **What state do you restore?** <span class="fill-in">[Fill in]</span>
-
-**Scenario 2:** Generate all subsets of `[1, 2, 3]`
-
-- **How many subsets exist?** <span class="fill-in">[Your guess: ___]</span>
-- **Formula for n elements:** <span class="fill-in">[Fill in]</span>
-- **How is this different from permutations?** <span class="fill-in">[Fill in]</span>
-
-**Scenario 3:** Place 4 queens on a 4x4 board
-
-- **Can you place 2 queens in same column?** <span class="fill-in">[Yes/No - Why?]</span>
-- **How do you track which columns are under attack?** <span class="fill-in">[Fill in your idea]</span>
-- **What about diagonals?** <span class="fill-in">[Fill in]</span>
-
-### Trade-off Quiz
-
-**Question:** When would iterative enumeration be BETTER than backtracking?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after learning]</span>
-
-**Question:** What's the MAIN difference between permutations and combinations?
-
-- [ ] Permutations care about order, combinations don't
-- [ ] Permutations are always larger than combinations
-- [ ] Permutations use recursion, combinations use iteration
-- [ ] Permutations allow duplicates, combinations don't
-
-Verify after implementation: <span class="fill-in">[Which one?]</span>
-
-</div>
-
----
-
 ## Core Implementation
 
 ### Pattern 1: Permutations
@@ -377,9 +310,6 @@ Row 1: Try 4 positions
 - What problems are NOT improved by backtracking? <span class="fill-in">[Your answer]</span>
 
 </div>
-
-!!! info "Loop back"
-    Return to the Quick Quiz now and fill in your verified answers.
 
 ---
 

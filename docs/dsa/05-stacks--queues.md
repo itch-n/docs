@@ -56,75 +56,6 @@ By the end of this section you should be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Write your best guess in each fill-in span **before** reading any implementation code. Your predictions do not need to be correct — the act of committing to an answer first makes the correct answer stick much better when you verify it later.
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
-
-### Complexity Predictions
-
-1. **Stack operations (push, pop, peek):**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
-
-2. **Queue operations (enqueue, dequeue):**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
-
-3. **Monotonic stack for next greater element:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?) - seems like nested loops?]</span>
-    - Verified: <span class="fill-in">[Actual: O(?)]</span>
-    - Why not O(n²): <span class="fill-in">[Fill in after learning]</span>
-
-### Scenario Predictions
-
-**Scenario 1:** Check if brackets are balanced: `"([{}])"`
-
-- **Can you use a stack?** <span class="fill-in">[Yes/No - Why?]</span>
-- **What do you push?** <span class="fill-in">[Opening brackets? Closing brackets?]</span>
-- **When you see `)`**, what do you do? <span class="fill-in">[Push or Pop?]</span>
-- **How do you know it's valid?** <span class="fill-in">[Fill in]</span>
-
-**Scenario 2:** Find next greater element in `[2, 1, 2, 4, 3]`
-
-- **Can you use a regular stack?** <span class="fill-in">[Yes/No]</span>
-- **What kind of stack?** <span class="fill-in">[Monotonic increasing or decreasing?]</span>
-- **What do you store in the stack?** <span class="fill-in">[Values or indices?]</span>
-- **When do you pop?** <span class="fill-in">[Fill in your reasoning]</span>
-
-**Scenario 3:** Implement a queue using two stacks
-
-- **Which stack handles enqueue?** <span class="fill-in">[Stack 1 or Stack 2?]</span>
-- **Which stack handles dequeue?** <span class="fill-in">[Stack 1 or Stack 2?]</span>
-- **When do you transfer elements?** <span class="fill-in">[Fill in]</span>
-- **What's the amortized time complexity?** <span class="fill-in">[Your guess]</span>
-
-### Trade-off Quiz
-
-**Question:** When would you use a stack vs a queue?
-
-- Stack (LIFO): <span class="fill-in">[Fill in - what problems need last-in-first-out?]</span>
-- Queue (FIFO): <span class="fill-in">[Fill in - what problems need first-in-first-out?]</span>
-- Your observation: <span class="fill-in">[Fill in after testing]</span>
-
-**Question:** What's the MAIN requirement for monotonic stack to work?
-
-- [ ] Array must be sorted
-- [ ] Array must have unique elements
-- [ ] You need to find next greater/smaller element
-- [ ] Array must be positive integers
-
-Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
-
-
-</div>
-
----
-
 ## Core Implementation
 
 ### Pattern 1: Basic Stack Operations
@@ -262,11 +193,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 --8<-- "com/study/dsa/stacksqueues/DequeOperations.java"
 ```
 
-
----
-
-!!! info "Loop back"
-    Now that you have implemented all four patterns, return to the **ELI5** section and fill in the scaffolded prompts — especially prompts 6–8 on the monotonic stack. Then revisit the **Quick Quiz** and verify your complexity predictions. Pay particular attention to the monotonic stack O(n) proof: confirm that each element is pushed exactly once and popped at most once, so the total work is O(2n) = O(n) regardless of the inner `while` loop.
 
 ---
 

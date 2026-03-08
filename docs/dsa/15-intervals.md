@@ -45,67 +45,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Write your best guess in each fill-in span **before** reading any implementation code. After you finish coding and running the tests, come back and fill in the "Verified" answers.
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
-
-### Complexity Predictions
-
-1. **Brute-force merge (compare all pairs repeatedly):**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Why that complexity? <span class="fill-in">[Fill in your reasoning]</span>
-
-2. **Sort-and-merge:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - What dominates the complexity? <span class="fill-in">[Sort? The merge pass?]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-3. **Meeting Rooms II (minimum rooms):**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - What data structure helps? <span class="fill-in">[Fill in]</span>
-
-### Scenario Predictions
-
-**Scenario 1:** Merge `[[1,3], [2,6], [8,10], [15,18]]`
-
-- **Must you sort first?** <span class="fill-in">[Yes/No — Why?]</span>
-- **How do you detect overlap between two sorted intervals?** <span class="fill-in">[Fill in the condition using start/end values]</span>
-- **Expected result:** <span class="fill-in">[Your prediction: ___]</span>
-
-**Scenario 2:** Intervals `[[1,4], [2,3]]` — the second is fully inside the first.
-
-- **After merging, what is the result?** <span class="fill-in">[Your prediction]</span>
-- **Which line of code handles this correctly?** <span class="fill-in">[The plain assignment or Math.max?]</span>
-
-**Scenario 3:** Meetings `[[0,30], [5,10], [15,20]]`. How many rooms are needed?
-
-- **Your prediction:** <span class="fill-in">[1 room / 2 rooms / 3 rooms]</span>
-- **Key question:** <span class="fill-in">[At what point do two meetings overlap simultaneously?]</span>
-
-### Trade-off Quiz
-
-**Question:** For Meeting Rooms II, is it better to sort starts and ends separately, or use a min-heap?
-
-- Your prediction: <span class="fill-in">[Fill in]</span>
-- Verified: <span class="fill-in">[Fill in after implementation]</span>
-
-**Question:** For non-overlapping intervals (minimum removals), which sort key gives the greedy optimum?
-
-- [ ] Sort by start ascending
-- [ ] Sort by end ascending
-- [ ] Sort by length ascending
-
-Verify after implementation: <span class="fill-in">[Which one, and why?]</span>
-
-</div>
-
----
-
 ## Core Implementation
 
 ### Pattern 1: Merge Intervals
@@ -217,11 +156,6 @@ Verify after implementation: <span class="fill-in">[Which one, and why?]</span>
         **Bug:** Two meetings `[0,5]` and `[5,10]` are back-to-back (not overlapping). The first ends exactly when the second begins. The condition `intervals[i][0] <= intervals[i-1][1]` evaluates `5 <= 5 = true` and incorrectly returns `false`.
 
         The correct condition is `intervals[i][0] < intervals[i-1][1]` (strict less-than). A meeting starting at the exact end time of the previous one does not overlap.
-
----
-
-!!! info "Loop back"
-    Before moving on, return to the ELI5 section and Quick Quiz at the top. Fill in any answers you left blank. Pay particular attention to the `Math.max` requirement and the final-interval bug in merge — those two points catch most interval merge mistakes.
 
 ---
 

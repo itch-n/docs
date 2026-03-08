@@ -53,85 +53,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Complete your predictions now, before reading further. You will revisit and verify each answer after running the
-    benchmark (or completing the implementation).
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
-
-### Complexity Predictions
-
-1. **Pure recursive Fibonacci (no memoization):**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
-
-2. **Fibonacci with memoization (top-down DP):**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-3. **Fibonacci with bottom-up DP:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity with array: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity optimized: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-4. **Speedup calculation for Fibonacci(40):**
-    - Recursive (no memo) = 2^40 = <span class="fill-in">_____</span> operations
-    - With memoization = 40 = <span class="fill-in">_____</span> operations
-    - Speedup factor: <span class="fill-in">_____</span> times faster
-
-### Scenario Predictions
-
-**Scenario 1:** Climbing stairs — 1 or 2 steps at a time to reach step 5
-
-- **How many ways without computing?** <span class="fill-in">[Your guess: ___]</span>
-- **Can you see the Fibonacci pattern?** <span class="fill-in">[Yes/No - Why?]</span>
-- **Recurrence relation:** ways(n) = <span class="fill-in">[Fill in formula]</span>
-- **Why does memoization help here?** <span class="fill-in">[Fill in]</span>
-
-**Scenario 2:** Coin change — coins [1, 2, 5], amount = 11
-
-- **Minimum coins needed:** <span class="fill-in">[Your guess: ___]</span>
-- **What makes this a DP problem?** <span class="fill-in">[Fill in]</span>
-- **What are the overlapping subproblems?** <span class="fill-in">[Fill in]</span>
-
-**Scenario 3:** House robber — houses [2, 7, 9, 3, 1]
-
-- **Maximum money without adjacents:** <span class="fill-in">[Your guess: ___]</span>
-- **Which pattern applies?** <span class="fill-in">[Fibonacci-style/Decision/String/Stock]</span>
-- **Recurrence relation:** rob(i) = <span class="fill-in">[Fill in formula]</span>
-
-### Trade-off Quiz
-
-**Question:** When would recursive with memoization be BETTER than bottom-up DP?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after learning]</span>
-
-**Question:** What's the MAIN requirement for dynamic programming to work?
-
-- [ ] Problem must involve arrays
-- [ ] Must have optimal substructure
-- [ ] Must have overlapping subproblems
-- [ ] Both optimal substructure AND overlapping subproblems
-- [ ] Must be solvable recursively
-
-Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
-
-**Question:** Space optimization — when can you reduce O(n) to O(1)?
-
-- Your answer: <span class="fill-in">[Fill in — what's the pattern?]</span>
-- Verified: <span class="fill-in">[Fill in after learning Fibonacci-style problems]</span>
-
-</div>
-
----
-
 ## Core Implementation
 
 ### Pattern 1: Fibonacci-Style Problems
@@ -460,9 +381,6 @@ public static int coinChange_DP(int[] coins, int amount) {
 - When would you choose one approach over the other? <span class="fill-in">[Your answer]</span>
 
 </div>
-
-!!! info "Loop back"
-    Return to the Quick Quiz now and fill in your verified answers.
 
 ---
 

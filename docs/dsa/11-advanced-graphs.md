@@ -58,68 +58,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE learning)
-
-!!! tip "How to use this section"
-    Complete your predictions now, before reading further. You will revisit and verify each answer after running the
-    benchmark (or completing the implementation).
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition about these algorithms before diving deep.
-
-### Complexity Predictions
-
-1. **Topological Sort (DFS-based):**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - When does it fail: <span class="fill-in">[Your guess]</span>
-    - Verified: <span class="fill-in">[Actual: O(V+E)]</span>
-
-2. **Dijkstra's algorithm for shortest path:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified: <span class="fill-in">[Actual: O((V+E)logV)]</span>
-
-3. **Minimum Spanning Tree (Kruskal's):**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - What data structure: <span class="fill-in">[Union-Find]</span>
-    - Verified: <span class="fill-in">[Actual: O(ElogE)]</span>
-
-4. **Union-Find operations:**
-    - Find/Union complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - With optimizations: <span class="fill-in">[Path compression + union by rank]</span>
-    - Verified: <span class="fill-in">[Actual: O(α(n)) ≈ O(1)]</span>
-
-### Scenario Predictions
-
-**Scenario 1:** GPS navigation finding fastest route
-
-- **Algorithm:** <span class="fill-in">[Dijkstra? A*? Bellman-Ford?]</span>
-- **Edge weight:** <span class="fill-in">[Distance? Time? Both?]</span>
-- **Challenge:** <span class="fill-in">[Traffic changes? One-way streets?]</span>
-
-**Scenario 2:** Package dependency resolution (npm, pip)
-
-- **Algorithm:** <span class="fill-in">[Topological sort? DFS? BFS?]</span>
-- **Failure case:** <span class="fill-in">[Circular dependency?]</span>
-- **Output:** <span class="fill-in">[Install order?]</span>
-
-**Scenario 3:** Network cable installation (connect all offices)
-
-- **Algorithm:** <span class="fill-in">[MST? Shortest path?]</span>
-- **Goal:** <span class="fill-in">[Minimize what?]</span>
-- **Constraint:** <span class="fill-in">[All connected? No cycles?]</span>
-
-**Scenario 4:** Dynamic friend groups (social network)
-
-- **Algorithm:** <span class="fill-in">[Union-Find? DFS?]</span>
-- **Operations:** <span class="fill-in">[Add friendship, check if connected]</span>
-- **Why not DFS:** <span class="fill-in">[Union-Find is faster for dynamic updates]</span>
-
-</div>
-
----
-
 ## Core Concepts
 
 **Recommended study order:**
@@ -851,9 +789,6 @@ Time: O((V + E) log V) with binary heap
 - BFS time: <span class="fill-in">_____</span> (V + E)
 - Dijkstra time: <span class="fill-in">_____</span> (E log V)
 - Trade-off: <span class="fill-in">[Worth it?]</span>
-
-!!! info "Loop back"
-    Return to the Quick Quiz now and fill in your verified answers.
 
 ---
 

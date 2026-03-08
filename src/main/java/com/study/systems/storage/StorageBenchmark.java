@@ -87,11 +87,41 @@ public class StorageBenchmark {
 
     static void benchmarkMixed() {
         System.out.println("--- Mixed Workload (50% reads, 50% writes) ---");
+        int numInitial = 5000;
+        int numOps = 10000;
 
-        // TODO: Implement mixed workload benchmark
-        // Interleave reads and writes
-        // Compare performance
+        // Pre-load both trees with initial data (not timed)
+        BPlusTree<Integer, String> btree = new BPlusTree<>(128);
+        LSMTree<Integer, String> lsm = new LSMTree<>(100);
+        for (int i = 0; i < numInitial; i++) {
+            btree.insert(i, "Value" + i);
+            lsm.put(i, "Value" + i);
+        }
 
-        System.out.println("TODO: Implement this benchmark");
+        Random rand = new Random(42);
+
+        long start = System.nanoTime();
+        for (int i = 0; i < numOps; i++) {
+            if (i % 2 == 0) btree.search(rand.nextInt(numInitial));
+            else             btree.insert(numInitial + i, "Value" + (numInitial + i));
+        }
+        long btreeTime = System.nanoTime() - start;
+
+        rand = new Random(42);
+
+        start = System.nanoTime();
+        for (int i = 0; i < numOps; i++) {
+            if (i % 2 == 0) lsm.get(rand.nextInt(numInitial));
+            else             lsm.put(numInitial + i, "Value" + (numInitial + i));
+        }
+        long lsmTime = System.nanoTime() - start;
+
+        System.out.printf("B+Tree:   %.2f ms (%.0f ops/sec)%n",
+            btreeTime/1e6, numOps/(btreeTime/1e9));
+        System.out.printf("LSM Tree: %.2f ms (%.0f ops/sec)%n",
+            lsmTime/1e6, numOps/(lsmTime/1e9));
+        System.out.printf("%s is %.2fx faster for mixed workload%n",
+            btreeTime < lsmTime ? "B+Tree" : "LSM Tree",
+            btreeTime < lsmTime ? (double)lsmTime/btreeTime : (double)btreeTime/lsmTime);
     }
 }

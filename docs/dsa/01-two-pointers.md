@@ -45,71 +45,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Write your best guess in each fill-in span **before** reading any implementation code. After you finish coding and running the tests, come back and fill in the "Verified" answers. The gap between your prediction and the actual answer is where the real learning happens.
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
-
-### Complexity Predictions
-
-1. **Two nested loops searching for a pair:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
-
-2. **Two pointers searching for a pair in sorted array:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-3. **Speedup calculation:**
-    - If n = 1,000, nested loops = n² = <span class="fill-in">_____</span> operations
-    - Two pointers = n = <span class="fill-in">_____</span> operations
-    - Speedup factor: <span class="fill-in">_____</span> times faster
-
-### Scenario Predictions
-
-**Scenario 1:** Find pair that sums to 10 in `[1, 3, 5, 7, 9]`
-
-- **Can you use two pointers?** <span class="fill-in">[Yes/No - Why?]</span>
-- **Starting positions:** left = <span class="fill-in">___</span>, right = <span class="fill-in">___</span>
-- **If sum = 8 (too small), which pointer moves?** <span class="fill-in">[Left/Right - Why?]</span>
-- **If sum = 12 (too big), which pointer moves?** <span class="fill-in">[Left/Right - Why?]</span>
-
-**Scenario 2:** Find pair that sums to 10 in `[9, 3, 1, 7, 5]` (unsorted)
-
-- **Can you use two pointers directly?** <span class="fill-in">[Yes/No - Why?]</span>
-- **What must you do first?** <span class="fill-in">[Fill in]</span>
-
-**Scenario 3:** Remove duplicates from `[1, 1, 2, 2, 3]`
-
-- **Which pattern applies?** <span class="fill-in">[Opposite/Same/Different speed]</span>
-- **Why that pattern?** <span class="fill-in">[Fill in your reasoning]</span>
-
-### Trade-off Quiz
-
-**Question:** When would HashSet be BETTER than two pointers for finding pairs?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after learning]</span>
-
-**Question:** What's the MAIN requirement for opposite-direction two pointers?
-
-- [ ] Array must be sorted
-- [ ] Array must have even length
-- [ ] Array must contain unique elements
-- [ ] Array must be positive integers
-
-Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
-
-
-</div>
-
----
-
 ## Core Implementation
 
 ### Pattern 1: Opposite Direction Pointers
@@ -207,11 +142,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 --8<-- "com/study/dsa/twopointers/DifferentSpeedPointers.java"
 ```
 
-
----
-
-!!! info "Loop back"
-    Before moving on, return to the ELI5 section and Quick Quiz at the top. Fill in any answers you left blank. If your complexity predictions were off, write a one-sentence explanation of why — that note is more valuable than the correct answer alone.
 
 ---
 

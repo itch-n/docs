@@ -46,68 +46,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Write your best guess in each fill-in span **before** reading any implementation code. After you finish coding and running the tests, come back and fill in the "Verified" answers.
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
-
-### Complexity Predictions
-
-1. **Brute-force range sum query (loop over subarray each time):**
-    - Time per query: <span class="fill-in">[Your guess: O(?)]</span>
-    - Time for Q queries on array of n: <span class="fill-in">[Your guess: O(?)]</span>
-
-2. **Prefix sum range query:**
-    - Preprocessing time: <span class="fill-in">[Your guess: O(?)]</span>
-    - Time per query after preprocessing: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-3. **Subarray sum equals K using prefix sum + HashMap:**
-    - Time: <span class="fill-in">[Your guess: O(?)]</span>
-    - Why not O(n²)? <span class="fill-in">[Fill in after learning]</span>
-
-### Scenario Predictions
-
-**Scenario 1:** Array `[-2, 0, 3, -5, 2, -1]`. Find sum of indices 2 to 5.
-
-- **Brute force:** sum elements at indices 2, 3, 4, 5 = <span class="fill-in">[Your calculation: ___]</span>
-- **With prefix sums:** `prefixSum[6] - prefixSum[2]` = <span class="fill-in">[What would these values be?]</span>
-
-**Scenario 2:** Array `[1, 1, 1]`, find number of subarrays summing to 2.
-
-- **Must you try all pairs?** <span class="fill-in">[Yes/No — is there a shortcut?]</span>
-- **Your prediction:** <span class="fill-in">[How many subarrays?]</span>
-- **What HashMap key would you use?** <span class="fill-in">[Fill in after thinking]</span>
-
-**Scenario 3:** Array `[0, 1, 0, 1, 1, 0]`. Find longest subarray with equal 0s and 1s.
-
-- **Can you use a sliding window?** <span class="fill-in">[Yes/No — Why?]</span>
-- **What transformation makes this a prefix sum problem?** <span class="fill-in">[Fill in]</span>
-
-### Trade-off Quiz
-
-**Question:** When should you use sliding window instead of prefix sum?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after learning]</span>
-
-**Question:** The prefix sum array for `[3, 1, 4]` has length:
-
-- [ ] 3 (same as input)
-- [ ] 4 (n+1)
-- [ ] 6 (2n)
-
-Verify after implementation: <span class="fill-in">[Which one, and why?]</span>
-
-</div>
-
----
-
 ## Core Implementation
 
 ### Pattern 1: 1D Range Sum Query
@@ -219,11 +157,6 @@ Verify after implementation: <span class="fill-in">[Which one, and why?]</span>
 --8<-- "com/study/dsa/prefixsums/NumMatrix.java"
 ```
 
-
----
-
-!!! info "Loop back"
-    Before moving on, return to the ELI5 section and Quick Quiz at the top. Fill in any answers you left blank. Pay particular attention to the `{0: 1}` initialization — that single line causes the most bugs in prefix sum + HashMap problems.
 
 ---
 

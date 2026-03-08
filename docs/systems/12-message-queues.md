@@ -64,85 +64,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Complete your predictions now, before reading further. You will revisit and verify each answer after running the benchmark (or completing the implementation).
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
-
-### Complexity Predictions
-
-1. **Synchronous API call to process 100 tasks:**
-    - Time if each task takes 1 second: <span class="fill-in">[Your guess: ?]</span>
-    - Verified after learning: <span class="fill-in">[Actual: ?]</span>
-
-2. **Message queue with 3 workers processing 100 tasks:**
-    - Time if each task takes 1 second: <span class="fill-in">[Your guess: ?]</span>
-    - Speedup factor: <span class="fill-in">[Your guess: ?x faster]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-3. **Memory usage prediction:**
-    - Simple queue with 1000 messages: <span class="fill-in">[Your guess: O(?)]</span>
-    - Pub-sub with 5 subscribers and 100 messages: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-### Scenario Predictions
-
-**Scenario 1:** Image upload service - users upload photos that need resizing
-
-- **Should you use message queue?** <span class="fill-in">[Yes/No - Why?]</span>
-- **Pattern to use:** <span class="fill-in">[Simple queue/Producer-consumer/Pub-sub/Priority]</span>
-- **Why that pattern?** <span class="fill-in">[Fill in your reasoning]</span>
-- **What happens without queue?** <span class="fill-in">[Fill in]</span>
-
-**Scenario 2:** Notification system - send email AND SMS AND push notification
-
-- **Should you use message queue?** <span class="fill-in">[Yes/No - Why?]</span>
-- **Pattern to use:** <span class="fill-in">[Simple queue/Producer-consumer/Pub-sub/Priority]</span>
-- **Why that pattern?** <span class="fill-in">[Fill in your reasoning]</span>
-- **How many times is each message delivered?** <span class="fill-in">[Fill in]</span>
-
-**Scenario 3:** Payment processing - some customers are VIP, need faster processing
-
-- **Should you use message queue?** <span class="fill-in">[Yes/No - Why?]</span>
-- **Pattern to use:** <span class="fill-in">[Simple queue/Producer-consumer/Pub-sub/Priority]</span>
-- **Why that pattern?** <span class="fill-in">[Fill in your reasoning]</span>
-- **How do you prevent low-priority starvation?** <span class="fill-in">[Fill in]</span>
-
-### Trade-off Quiz
-
-**Question:** When is a message queue WORSE than direct synchronous calls?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after learning]</span>
-
-**Question:** What's the MAIN difference between a queue and pub-sub?
-
-- [ ] Queue is faster
-- [ ] Queue stores messages longer
-- [ ] Queue delivers to one consumer, pub-sub to many
-- [ ] Queue supports priorities
-
-Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
-
-**Question:** What does "at-least-once delivery" mean?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- What problem does it cause? <span class="fill-in">[Fill in]</span>
-- Verified: <span class="fill-in">[Actual answer after learning]</span>
-
-**Question:** When should you use a dead letter queue?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified: <span class="fill-in">[Fill in after implementation]</span>
-
-</div>
-
----
-
 ## Core Implementation
 
 ### Part 1: Simple Message Queue
@@ -245,11 +166,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 ```java
 --8<-- "com/study/systems/messagequeues/DeadLetterQueue.java"
 ```
-
----
-
-!!! info "Loop back"
-    Return to the Quick Quiz now and fill in your verified answers.
 
 ---
 

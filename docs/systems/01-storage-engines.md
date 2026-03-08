@@ -50,74 +50,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Complete your predictions now, before reading further. You will revisit and verify each answer after running the benchmark in Part 3.
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
-
-### Complexity Predictions
-
-1. **B+Tree insert operation:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified after implementation: <span class="fill-in">[Actual: O(?)]</span>
-
-2. **LSM Tree write operation (to MemTable):**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-3. **Performance calculation:**
-    - For 100,000 writes, B+Tree = <span class="fill-in">_____</span> operations (if log base is 10)
-    - For 100,000 writes, LSM Tree = <span class="fill-in">_____</span> operations (before flush)
-    - Speedup factor for writes: LSM is approximately <span class="fill-in">_____</span> times faster
-
-### Scenario Predictions
-
-**Scenario 1:** Time-series metrics database (1M writes/second, rare reads)
-
-- **Best storage engine?** <span class="fill-in">[B+Tree/LSM Tree - Why?]</span>
-- **Key consideration:** <span class="fill-in">[Write amplification/Read speed/Range queries?]</span>
-- **Why this choice?** <span class="fill-in">[Fill in your reasoning]</span>
-
-**Scenario 2:** E-commerce inventory system (100k reads/sec, 5k writes/sec)
-
-- **Best storage engine?** <span class="fill-in">[B+Tree/LSM Tree - Why?]</span>
-- **What pattern benefits most?** <span class="fill-in">[Point lookups/Range scans/Random writes?]</span>
-
-**Scenario 3:** Social media analytics (read historical posts by date range)
-
-- **Which handles range queries better?** <span class="fill-in">[B+Tree/LSM Tree - Why?]</span>
-- **Key data structure feature:** <span class="fill-in">[Linked leaves/Sorted SSTables?]</span>
-
-### Trade-off Quiz
-
-**Question:** When would B+Tree be BETTER than LSM Tree despite slower writes?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after benchmarking]</span>
-
-**Question:** What's the MAIN advantage of LSM Trees for writes?
-
-- [ ] No tree balancing required on each write
-- [ ] Better space efficiency
-- [ ] Faster range queries
-- [ ] Lower read amplification
-
-Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
-
-**Question:** What happens if you never compact an LSM Tree?
-
-- Your prediction: <span class="fill-in">[What problem occurs?]</span>
-- Verified: <span class="fill-in">[Fill in after testing]</span>
-
-</div>
-
----
-
 ## Core Implementation
 
 ### Part 1: B+Tree
@@ -287,9 +219,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 **Key insight from your results:** <span class="fill-in">[Fill in why this difference exists]</span>
 
 </div>
-
-!!! info "Loop back"
-    Return to the Quick Quiz now and fill in your verified answers.
 
 ---
 

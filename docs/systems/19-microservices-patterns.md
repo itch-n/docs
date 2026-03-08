@@ -50,56 +50,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE reading further)
-
-!!! tip "How to use this section"
-    Write down your predictions now. Return after reading each pattern section to verify.
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition before studying the patterns.
-
-### Architecture Predictions
-
-1. **API Gateway vs direct client-to-service calls:**
-    - What does the gateway add? <span class="fill-in">[Your guess]</span>
-    - What does the gateway cost? <span class="fill-in">[Your guess]</span>
-    - Verified after reading: <span class="fill-in">[Actual trade-offs]</span>
-
-2. **Client-side vs server-side discovery:**
-    - Which puts more logic in the client? <span class="fill-in">[Client-side / Server-side]</span>
-    - Which is easier to change later? <span class="fill-in">[Your reasoning]</span>
-    - Verified: <span class="fill-in">[Fill in]</span>
-
-3. **REST vs gRPC for internal service calls:**
-    - When is gRPC preferred? <span class="fill-in">[Your guess]</span>
-    - What does gRPC require that REST does not? <span class="fill-in">[Your guess]</span>
-    - Verified: <span class="fill-in">[Fill in]</span>
-
-### Scenario Predictions
-
-**Scenario 1:** You are migrating a 300 KLOC monolith to microservices. The payments module is tightly coupled to users, orders, and notifications.
-
-- Where do you start? <span class="fill-in">[Your approach]</span>
-- What is the biggest risk? <span class="fill-in">[Your guess]</span>
-- Verified after reading Decomposition Strategies: <span class="fill-in">[Fill in]</span>
-
-**Scenario 2:** Service A writes to its own database and then publishes an event to a queue. The write succeeds but the publish fails.
-
-- What state is the system in? <span class="fill-in">[Your guess]</span>
-- How do you prevent this? <span class="fill-in">[Your guess]</span>
-- Verified after reading Sync vs Async: <span class="fill-in">[Fill in]</span>
-
-**Scenario 3:** A service mesh adds ~1 ms of latency to every service call. Your checkout flow makes 12 sequential service calls.
-
-- Total added latency: <span class="fill-in">[Calculate]</span>
-- Is this acceptable? <span class="fill-in">[Your reasoning]</span>
-- Verified after reading Sidecar / Service Mesh: <span class="fill-in">[Fill in]</span>
-
-</div>
-
----
-
 ## Pattern 1: API Gateway
 
 An API gateway is a reverse proxy that sits at the entry point of a microservices system. All external client traffic passes through it before reaching any backend service.

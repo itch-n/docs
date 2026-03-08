@@ -54,78 +54,6 @@ By the end of this section you should be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Fill in your best guesses **before** reading any code. After implementing each pattern, return here and check your predictions. The quorum math question has a precise answer — work it out and verify against the R + W > N formula.
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition about distributed consensus without looking at code. Answer these, then verify after
-implementation.
-
-### Complexity Predictions
-
-1. **Leader election with N nodes (Bully algorithm):**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Message complexity: <span class="fill-in">[How many messages?]</span>
-    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
-
-2. **Raft log replication to majority of N nodes:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - When is an entry committed: <span class="fill-in">[Your guess]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-3. **Quorum read with R nodes, N total nodes:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity per node: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-### Scenario Predictions
-
-**Scenario 1:** 5-node cluster, leader fails during log replication
-
-- **What happens to uncommitted entries?** <span class="fill-in">[Lost/Preserved - Why?]</span>
-- **How long until new leader elected?** <span class="fill-in">[Depends on what?]</span>
-- **Can clients write during election?** <span class="fill-in">[Yes/No - Why?]</span>
-
-**Scenario 2:** Network partition splits 5 nodes into {3 nodes, 2 nodes}
-
-- **Which partition can elect a leader?** <span class="fill-in">[3-node/2-node/Both - Why?]</span>
-- **What happens to writes in minority partition?** <span class="fill-in">[Fill in]</span>
-- **Is this a split-brain scenario?** <span class="fill-in">[Yes/No - Why?]</span>
-
-**Scenario 3:** Distributed lock with 30-second TTL, holder crashes after 10 seconds
-
-- **When can another process acquire the lock?** <span class="fill-in">[Immediately/After 20s/Never]</span>
-- **Why that timing?** <span class="fill-in">[Fill in your reasoning]</span>
-- **What could go wrong?** <span class="fill-in">[Fill in]</span>
-
-### Trade-off Quiz
-
-**Question:** When would leaderless (quorum) be BETTER than Raft for consensus?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after learning]</span>
-
-**Question:** What's the MAIN requirement for achieving strong consistency with quorums?
-
--   [ ] R + W > N (where N is replication factor)
--   [ ] R + W = N
--   [ ] R = W = majority
--   [ ] R = N, W = 1
-
-Verify after implementation: <span class="fill-in">[Which one(s)? Why?]</span>
-
-**Question:** Why use fencing tokens with distributed locks?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after implementing Pattern 3]</span>
-
-</div>
-
----
-
 ## Core Concepts
 
 ### Pattern 1: Leader Election
@@ -866,9 +794,6 @@ Features:
 - Per-node storage: O(K / N) where K = total keys, N = replication factor
 - Version metadata: O(K) per node (small overhead)
 - Hint storage: O(H) where H = pending hints (temporary)
-
-!!! info "Loop back"
-    Now that you have worked through all four patterns, return to the **Quick Quiz** at the top of this page. Fill in the "Verified after learning" fields. Were you correct about which partition could elect a leader in a {3,2} split? Return to the **ELI5** section and complete all six fill-in sentences.
 
 ---
 

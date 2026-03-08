@@ -45,78 +45,6 @@ By the end of this section you should be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Write your best guess in each fill-in span **before** reading any implementation code. Your predictions do not need to be correct — the act of committing to an answer first makes the correct answer stick much better when you verify it later.
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
-
-### Complexity Predictions
-
-1. **Linear search through entire array:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
-
-2. **Binary search in sorted array:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-3. **Speedup calculation:**
-    - If n = 1,024, linear search = n = <span class="fill-in">_____</span> operations
-    - Binary search = log₂(n) = <span class="fill-in">_____</span> operations
-    - Speedup factor: <span class="fill-in">_____</span> times faster
-
-### Scenario Predictions
-
-**Scenario 1:** Find 7 in `[1, 3, 5, 7, 9, 11, 13]`
-
-- **Can you use binary search?** <span class="fill-in">[Yes/No - Why?]</span>
-- **Starting positions:** left = <span class="fill-in">___</span>, right = <span class="fill-in">___</span>
-- **First mid calculation:** mid = <span class="fill-in">___</span>
-- **If nums[mid] = 5 (too small), which pointer moves?** <span class="fill-in">[Left/Right - Why?]</span>
-- **If nums[mid] = 9 (too big), which pointer moves?** <span class="fill-in">[Left/Right - Why?]</span>
-
-**Scenario 2:** Find 6 in `[1, 3, 5, 7, 9, 11, 13]` (not present)
-
-- **What will binary search return?** <span class="fill-in">[Fill in]</span>
-- **What's the value of left when search ends?** <span class="fill-in">[Fill in]</span>
-- **Could you use that for insert position?** <span class="fill-in">[Yes/No - Why?]</span>
-
-**Scenario 3:** Find 8 in rotated array `[6, 7, 8, 1, 2, 3, 4, 5]`
-
-- **Can you use classic binary search directly?** <span class="fill-in">[Yes/No - Why?]</span>
-- **Which half is sorted after first mid?** <span class="fill-in">[Fill in your reasoning]</span>
-- **How do you determine which half to search?** <span class="fill-in">[Fill in]</span>
-
-### Trade-off Quiz
-
-**Question:** When would linear search be BETTER than binary search?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after learning]</span>
-
-**Question:** What's the MAIN requirement for binary search to work?
-
-- [ ] Array must have even length
-- [ ] Array must be sorted or have monotonic property
-- [ ] Array must contain unique elements
-- [ ] Array must be positive integers
-
-Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
-
-**Question:** What happens if you calculate mid as `(left + right) / 2` with large numbers?
-
-- Your answer: <span class="fill-in">[Fill in - consider integer overflow]</span>
-- Verified answer: <span class="fill-in">[Fill in after learning]</span>
-
-</div>
-
----
-
 ## Before/After: Why This Pattern Matters
 
 **Your task:** Compare naive vs optimized approaches to understand the impact.
@@ -440,11 +368,6 @@ return idx >= 0 ? idx : -(idx + 1);
 --8<-- "com/study/dsa/binarysearch/BinarySearchOnAnswer.java"
 ```
 
-
----
-
-!!! info "Loop back"
-    Now that you have implemented all four patterns, return to the **ELI5** section and fill in prompts 1, 2, and 4. Prompt 4 (monotonic property) is the most important: binary search on the answer space (Pattern 4) does not sort an array — it searches a range of candidate answers using a monotonic predicate like "can I ship all packages in D days with capacity C?". Make sure you can articulate why that predicate is monotonic and how you set the search bounds.
 
 ---
 

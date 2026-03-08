@@ -45,77 +45,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Write your best guess in each fill-in span **before** reading any implementation code. After you finish coding and running the tests, come back and fill in the "Verified" answers. The gap between your prediction and the actual answer is where the real learning happens.
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
-
-### Complexity Predictions
-
-1. **Two nested loops finding max sum of k elements:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
-
-2. **Sliding window finding max sum of k elements:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-3. **Speedup calculation:**
-    - If n = 1,000 and k = 100, nested loops = n × k = <span class="fill-in">_____</span> operations
-    - Sliding window = n = <span class="fill-in">_____</span> operations
-    - Speedup factor: <span class="fill-in">_____</span> times faster
-
-### Scenario Predictions
-
-**Scenario 1:** Find maximum sum of 3 consecutive elements in `[1, 4, 2, 10, 2, 3, 1, 0, 20]`
-
-- **Can you use sliding window?** <span class="fill-in">[Yes/No - Why?]</span>
-- **Window type:** <span class="fill-in">[Fixed/Dynamic - Why?]</span>
-- **What do you track in the window?** <span class="fill-in">[Sum? Elements? Other?]</span>
-- **When you slide from index 0-2 to 1-3, what changes?** <span class="fill-in">[Fill in]</span>
-
-**Scenario 2:** Find longest substring without repeating characters in `"abcabcbb"`
-
-- **Can you use sliding window?** <span class="fill-in">[Yes/No - Why?]</span>
-- **Window type:** <span class="fill-in">[Fixed/Dynamic - Why?]</span>
-- **What happens when you encounter a duplicate?** <span class="fill-in">[Expand/Shrink window?]</span>
-- **What data structure tracks window state?** <span class="fill-in">[Fill in]</span>
-
-**Scenario 3:** Find subarray with sum = 10 in `[1, 2, 3, 7, 5]` (can be non-contiguous)
-
-- **Can you use sliding window?** <span class="fill-in">[Yes/No - Why?]</span>
-- **What's the key requirement that breaks sliding window?** <span class="fill-in">[Fill in]</span>
-
-### Trade-off Quiz
-
-**Question:** When would brute force be SIMPLER than sliding window for max sum of k elements?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after learning]</span>
-
-**Question:** What's the MAIN requirement for sliding window to work?
-
-- [ ] Array must be sorted
-- [ ] Problem involves contiguous subarray/substring
-- [ ] Window size must be constant
-- [ ] Array must contain positive integers
-
-Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
-
-**Question:** Fixed vs Dynamic window - which applies when?
-
-- **Fixed window when:** <span class="fill-in">[Fill in]</span>
-- **Dynamic window when:** <span class="fill-in">[Fill in]</span>
-
-</div>
-
----
-
 ## Core Implementation
 
 ### Pattern 1: Fixed Window Size
@@ -232,11 +161,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 --8<-- "com/study/dsa/slidingwindow/HybridWindow.java"
 ```
 
-
----
-
-!!! info "Loop back"
-    Before moving on, return to the ELI5 section and Quick Quiz at the top. Fill in any answers you left blank. Pay particular attention to the fixed-vs-dynamic distinction and the `if`-vs-`while` shrink question — those two points catch most sliding window bugs.
 
 ---
 

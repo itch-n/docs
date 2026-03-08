@@ -50,79 +50,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Complete your predictions now, before reading further. You will revisit and verify each answer after running the
-    benchmark (or completing the implementation).
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
-
-### Complexity Predictions
-
-1. **Naive connectivity check using DFS/BFS:**
-    - Time complexity per query: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
-
-2. **Union-Find with optimizations (path compression + union by rank):**
-    - Time complexity per operation: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-3. **Speedup calculation:**
-    - If n = 10,000 nodes with 1,000 connectivity queries
-    - DFS approach: <span class="fill-in">_____</span> operations
-    - Union-Find: <span class="fill-in">_____</span> operations
-    - Speedup factor: <span class="fill-in">_____</span> times faster
-
-### Scenario Predictions
-
-**Scenario 1:** You have nodes {0, 1, 2, 3, 4}. Perform: union(0,1), union(2,3), union(1,2)
-
-- **After these operations, which nodes are connected?** <span class="fill-in">[Fill in]</span>
-- **How many disjoint components remain?** <span class="fill-in">[Your guess]</span>
-- **Are nodes 0 and 3 connected?** <span class="fill-in">[Yes/No - Why?]</span>
-- **What happens if we call union(0,3) now?** <span class="fill-in">[Fill in]</span>
-
-**Scenario 2:** Graph edges: [(0,1), (1,2), (2,3), (3,0)]
-
-- **Can you detect a cycle using union-find?** <span class="fill-in">[Yes/No - How?]</span>
-- **Which edge creates the cycle?** <span class="fill-in">[Fill in your reasoning]</span>
-- **What does find(x) return after path compression?** <span class="fill-in">[Fill in]</span>
-
-**Scenario 3:** Why path compression?
-
-- **Without path compression:** Finding root of deeply nested node costs <span class="fill-in">[O(?)]</span>
-- **With path compression:** Amortized cost becomes <span class="fill-in">[O(?)]</span>
-- **Draw a tree before and after path compression:** <span class="fill-in">[Sketch after implementation]</span>
-
-### Trade-off Quiz
-
-**Question:** When would DFS/BFS be BETTER than union-find for connectivity?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after learning]</span>
-
-**Question:** What's the MAIN benefit of union by rank?
-
-- [ ] Saves memory
-- [ ] Reduces number of nodes
-- [ ] Keeps tree height balanced
-- [ ] Makes find operation faster initially
-
-Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
-
-**Question:** Can union-find split a component into smaller components?
-
-- Your answer: <span class="fill-in">[Yes/No - Why or why not?]</span>
-- Implication: <span class="fill-in">[When does this limitation matter?]</span>
-
-</div>
-
----
-
 ## Core Implementation
 
 ### Pattern 1: Basic Union-Find with Optimizations
@@ -416,9 +343,6 @@ After find(3):  3 → 0      (directly points to root)
 - What's the inverse Ackermann function and why does it matter? <span class="fill-in">[Your answer]</span>
 
 </div>
-
-!!! info "Loop back"
-    Return to the Quick Quiz now and fill in your verified answers.
 
 ---
 

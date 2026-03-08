@@ -56,59 +56,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE reading further)
-
-!!! tip "How to use this section"
-    Record your predictions now. Return and verify each answer after completing the Core Concepts and Implementation sections.
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition about multi-region trade-offs before reading the detail.
-
-### Architecture Predictions
-
-1. **Active-active with two regions, no conflict resolution:**
-    - If both regions accept a write to `user:42.email` simultaneously, what does the database hold after sync? <span class="fill-in">[Your guess]</span>
-    - Verified after reading: <span class="fill-in">[Actual]</span>
-
-2. **Asynchronous replication, 200 ms lag, primary crashes:**
-    - How much data can you lose? <span class="fill-in">[Your guess in time or operations]</span>
-    - What term describes this loss tolerance? <span class="fill-in">[Your guess]</span>
-    - Verified: <span class="fill-in">[Fill in]</span>
-
-3. **Latency-based routing for a US user when the US region is degraded:**
-    - Where does the request go? <span class="fill-in">[Your guess]</span>
-    - What latency penalty do they pay? <span class="fill-in">[Your guess]</span>
-    - Verified: <span class="fill-in">[Fill in]</span>
-
-### Trade-off Predictions
-
-**Scenario:** Global e-commerce platform with shopping carts. Users are in the US and EU.
-
-- Should the cart service be active-active or active-passive? <span class="fill-in">[Your prediction]</span>
-- Why? <span class="fill-in">[Your reasoning]</span>
-- Verified after studying: <span class="fill-in">[Fill in]</span>
-
-**Scenario:** Financial transaction ledger requiring zero data loss.
-
-- Sync or async replication? <span class="fill-in">[Your prediction]</span>
-- What latency cost do you accept? <span class="fill-in">[Your prediction]</span>
-- Verified: <span class="fill-in">[Fill in]</span>
-
-### RPO and RTO Quiz
-
-Match the business requirement to the correct metric:
-
-- "We can tolerate losing at most the last 5 seconds of writes" → <span class="fill-in">[RPO or RTO?]</span>
-- "The service must be back online within 30 seconds of a regional failure" → <span class="fill-in">[RPO or RTO?]</span>
-- "We cannot afford any data loss whatsoever" → <span class="fill-in">[RPO = ? and how does it constrain replication?]</span>
-
-Verified after reading Replication Strategies: <span class="fill-in">[Fill in]</span>
-
-</div>
-
----
-
 ## Core Concepts
 
 ### Active-Active vs Active-Passive

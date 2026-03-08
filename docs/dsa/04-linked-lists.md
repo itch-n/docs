@@ -45,76 +45,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Write your best guess in each fill-in span **before** reading any implementation code. After you finish coding and running the tests, come back and fill in the "Verified" answers. The gap between your prediction and the actual answer is where the real learning happens.
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
-
-### Complexity Predictions
-
-1. **Reversing a linked list iteratively:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified after learning: <span class="fill-in">[Actual]</span>
-
-2. **Reversing a linked list recursively:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified: <span class="fill-in">[Actual - why different from iterative?]</span>
-
-3. **Finding middle of linked list:**
-    - If you traverse once to count, then again to middle: <span class="fill-in">[O(?)]</span>
-    - Using slow/fast pointers: <span class="fill-in">[O(?)]</span>
-    - Speedup: <span class="fill-in">[How much better?]</span>
-
-### Scenario Predictions
-
-**Scenario 1:** Reverse list `1 -> 2 -> 3 -> 4 -> 5`
-
-- **How many pointers needed?** <span class="fill-in">[Fill in: prev, curr, next - why each?]</span>
-- **Initial state:** prev = <span class="fill-in">___</span>, curr = <span class="fill-in">___</span>,
-  next = <span class="fill-in">___</span>
-- **After first iteration:** List becomes <span class="fill-in">[Draw it: ? -> ? -> ? -> ?]</span>
-- **What's the new head?** <span class="fill-in">[Which pointer points to it?]</span>
-
-**Scenario 2:** Detect cycle in `1 -> 2 -> 3 -> 4 -> 2` (cycle back to 2)
-
-- **Can you use fast/slow pointers?** <span class="fill-in">[Yes/No - Why?]</span>
-- **Starting positions:** slow = <span class="fill-in">___</span>, fast = <span class="fill-in">___</span>
-- **Will they ever meet?** <span class="fill-in">[Yes/No - Why/Why not?]</span>
-- **Where will they meet?** <span class="fill-in">[At which node?]</span>
-
-**Scenario 3:** Remove 2nd node from end in `1 -> 2 -> 3 -> 4 -> 5`
-
-- **Which pattern applies?** <span class="fill-in">[Two pointers with gap - why?]</span>
-- **Gap size needed:** <span class="fill-in">[How far apart should pointers be?]</span>
-- **Result should be:** <span class="fill-in">[Which nodes remain?]</span>
-
-### Trade-off Quiz
-
-**Question:** When would recursion be WORSE than iteration for reversing?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after learning - consider stack space]</span>
-
-**Question:** What's the MAIN advantage of linked lists over arrays?
-
-- [ ] Faster random access
-- [ ] Less memory usage
-- [ ] O(1) insertion/deletion at known position
-- [ ] Better cache locality
-
-Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
-
-
-</div>
-
----
-
 ## Core Implementation
 
 ### Pattern 1: Reverse Linked List
@@ -227,11 +157,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 --8<-- "com/study/dsa/linkedlists/RemoveNode.java"
 ```
 
-
----
-
-!!! info "Loop back"
-    Before moving on, return to the ELI5 section and Quick Quiz at the top. Fill in any answers you left blank. Pay special attention to the recursion space-complexity question — many learners expect O(1) for recursive reversal and are surprised it is O(n).
 
 ---
 

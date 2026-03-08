@@ -60,84 +60,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Complete your predictions now, before reading further. You will revisit and verify each answer after running the benchmark (or completing the implementation).
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition about database scaling without looking at code. Answer these, then verify after
-implementation.
-
-### Complexity Predictions
-
-1. **Single database serving reads and writes:**
-    - Bottleneck: <span class="fill-in">[Your guess: CPU/Memory/Disk/Network?]</span>
-    - Verified after learning: <span class="fill-in">[Actual bottleneck]</span>
-
-2. **Master-slave replication with 3 read replicas:**
-    - Read capacity increase: <span class="fill-in">[Your guess: 2x/3x/4x?]</span>
-    - Write capacity increase: <span class="fill-in">[Your guess: No change/2x/3x?]</span>
-    - Verified: <span class="fill-in">[Actual capacity changes]</span>
-
-3. **Sharding 1TB database across 10 shards:**
-    - Data per shard: <span class="fill-in">[Calculate: <span class="fill-in">_____</span> GB]</span>
-    - If one shard fails, data lost: <span class="fill-in">[Yes/No/Depends?]</span>
-    - Speedup for single-key lookups: <span class="fill-in">[10x/No change/Slower?]</span>
-
-### Scenario Predictions
-
-**Scenario 1:** Social media app with 100M users, 90% reads, 10% writes
-
-- **Best scaling strategy:** <span class="fill-in">[Sharding/Replication/Both - Why?]</span>
-- **If using replication, how many read replicas?** <span class="fill-in">[2/5/10 - Reasoning?]</span>
-- **Main challenge:** <span class="fill-in">[Fill in your prediction]</span>
-
-**Scenario 2:** E-commerce site storing user profiles, each 5KB
-
-- **You need to shard by user_id. What happens to:**
-    - Single user lookups? <span class="fill-in">[Faster/Same/Slower - Why?]</span>
-    - Cross-user analytics queries? <span class="fill-in">[Faster/Same/Slower - Why?]</span>
-    - Adding new shards? <span class="fill-in">[Easy/Hard - Why?]</span>
-
-**Scenario 3:** Time-series IoT data, queries by timestamp ranges
-
-- **Best sharding strategy:** <span class="fill-in">[Hash/Range/Consistent - Why?]</span>
-- **Shard key should be:** <span class="fill-in">[user_id/timestamp/device_id - Why?]</span>
-- **What's the risk?** <span class="fill-in">[Fill in your prediction]</span>
-
-### Trade-off Quiz
-
-**Question:** When would vertical partitioning be BETTER than adding more RAM?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after learning]</span>
-
-**Question:** What's the MAIN downside of sharding vs replication?
-
-- [ ] Higher cost
-- [ ] Complex queries across shards
-- [ ] Slower single-key lookups
-- [ ] Requires more DBAs
-
-Verify after implementation: <span class="fill-in">[Which one(s) and why?]</span>
-
-**Question:** Replication lag is 2 seconds. A user updates their profile, then immediately views it. What do they see?
-
-- [ ] Always new data (master read)
-- [ ] Always old data (slave lag)
-- [ ] Old data if load balancer picks slave
-- [ ] Random
-
-Your answer: <span class="fill-in">[Fill in]</span>
-Verified: <span class="fill-in">[Fill in after understanding replication]</span>
-
-
-</div>
-
----
-
 ## Case Studies: Database Scaling in the Wild
 
 ### Facebook's Social Graph: Sharding at Massive Scale
@@ -262,11 +184,6 @@ Verified: <span class="fill-in">[Fill in after understanding replication]</span>
 ```java
 --8<-- "com/study/systems/databasescaling/ConsistentHashSharding.java"
 ```
-
----
-
-!!! info "Loop back"
-    Return to the Quick Quiz now and fill in your verified answers.
 
 ---
 

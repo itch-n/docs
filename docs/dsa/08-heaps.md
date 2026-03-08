@@ -45,83 +45,6 @@ By the end of this section you should be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Write your best guess in each fill-in span **before** reading any implementation code. Your predictions do not need to be correct — the act of committing to an answer first makes the correct answer stick much better when you verify it later.
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
-
-### Complexity Predictions
-
-1. **Finding Kth largest using sorting:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
-
-2. **Finding Kth largest using min-heap of size K:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-3. **Efficiency calculation:**
-    - If n = 100,000 and k = 10, sorting = n log n = <span class="fill-in">_____</span> operations
-    - Heap approach = n log k = <span class="fill-in">_____</span> operations
-    - Speedup factor: approximately _____ times faster
-
-### Scenario Predictions
-
-**Scenario 1:** Find 3rd largest in `[3, 2, 1, 5, 6, 4]`
-
-- **Using min-heap of size 3:**
-    - Which elements end up in the heap? <span class="fill-in">[Fill in]</span>
-    - What is at the top of the heap? <span class="fill-in">[Fill in - is this the answer?]</span>
-    - Why min-heap instead of max-heap? <span class="fill-in">[Fill in your reasoning]</span>
-
-**Scenario 2:** Find median of stream `[5, 15, 1, 3]`
-
-- **Using two heaps:**
-    - After adding 5: maxHeap = <span class="fill-in">___</span>, minHeap = <span class="fill-in">___</span>,
-      median = <span class="fill-in">___</span>
-    - After adding 15: maxHeap = <span class="fill-in">___</span>, minHeap = <span class="fill-in">___</span>,
-      median = <span class="fill-in">___</span>
-    - After adding 1: maxHeap = <span class="fill-in">___</span>, minHeap = <span class="fill-in">___</span>,
-      median = <span class="fill-in">___</span>
-    - After adding 3: maxHeap = <span class="fill-in">___</span>, minHeap = <span class="fill-in">___</span>,
-      median = <span class="fill-in">___</span>
-
-**Scenario 3:** Merge 3 sorted lists: `[1,4,5]`, `[1,3,4]`, `[2,6]`
-
-- **Heap pattern applies?** <span class="fill-in">[Yes/No - Why?]</span>
-- **Initial heap state:** <span class="fill-in">[Which elements start in heap?]</span>
-- **After first extraction:** <span class="fill-in">[What gets removed? What gets added?]</span>
-
-### Trade-off Quiz
-
-**Question:** When would sorting be BETTER than heap for finding Kth largest?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after learning]</span>
-
-**Question:** What's the MAIN advantage of heap over Quick Select for Kth largest?
-
-- [ ] Heap is always faster
-- [ ] Heap works with data streams
-- [ ] Heap uses less space
-- [ ] Heap is easier to implement
-
-Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
-
-**Question:** For finding top K elements, why use heap of size K instead of size N?
-
-- Your answer: <span class="fill-in">[Fill in reasoning]</span>
-- Verified: <span class="fill-in">[Fill in after implementation]</span>
-
-</div>
-
----
-
 ## Core Implementation
 
 ### Pattern 1: Basic Heap Operations
@@ -220,11 +143,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 --8<-- "com/study/dsa/heaps/TwoHeaps.java"
 ```
 
-
----
-
-!!! info "Loop back"
-    Now that you have implemented all four patterns, return to the **ELI5** section and fill in prompts 1, 2, and 5. Focus especially on prompt 5: confirm you can articulate the min-heap vs max-heap rule in both directions (K largest → min-heap; K smallest → max-heap) and explain from first principles why each is correct. Then return to the **Quick Quiz** and verify your complexity predictions for the O(n log k) heap approach vs the O(n log n) sort approach.
 
 ---
 

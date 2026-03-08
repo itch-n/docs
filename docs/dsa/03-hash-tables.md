@@ -45,85 +45,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Write your best guess in each fill-in span **before** reading any implementation code. After you finish coding and running the tests, come back and fill in the "Verified" answers. The gap between your prediction and the actual answer is where the real learning happens.
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
-
-### Complexity Predictions
-
-1. **Linear search through array to find if element exists:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified after learning: <span class="fill-in">[Actual: O(?)]</span>
-
-2. **Hash table lookup to find if element exists:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-3. **Speedup calculation:**
-    - If n = 1,000, linear search = n = <span class="fill-in">_____</span> operations
-    - Hash table lookup = <span class="fill-in">_____</span> operations (average case)
-    - Speedup factor: <span class="fill-in">_____</span> times faster
-
-### Scenario Predictions
-
-**Scenario 1:** Count frequency of each word in `["cat", "dog", "cat", "bird", "dog", "cat"]`
-
-- **Can you use a hash map?** <span class="fill-in">[Yes/No - Why?]</span>
-- **What would be the key?** <span class="fill-in">[Fill in]</span>
-- **What would be the value?** <span class="fill-in">[Fill in]</span>
-- **What's the final map for "cat"?** <span class="fill-in">[Key: "cat", Value: ?]</span>
-
-**Scenario 2:** Find two numbers that sum to 10 in `[2, 7, 11, 15]`
-
-- **Can you use a hash map?** <span class="fill-in">[Yes/No - Why?]</span>
-- **What would you store in the map?** <span class="fill-in">[Fill in]</span>
-- **How does hash map help vs nested loops?** <span class="fill-in">[Fill in]</span>
-
-**Scenario 3:** Group anagrams: `["eat", "tea", "tan", "ate", "nat", "bat"]`
-
-- **What makes two strings anagrams?** <span class="fill-in">[Fill in]</span>
-- **What should be the map key?** <span class="fill-in">[Fill in your idea]</span>
-- **How to create the key from "eat"?** <span class="fill-in">[Fill in]</span>
-
-### Hash Collision Quiz
-
-**Question:** What happens when two different keys hash to the same location?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after learning]</span>
-
-**Question:** Why is HashMap lookup O(1) average but O(n) worst case?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after learning]</span>
-
-### Trade-off Quiz
-
-**Question:** When would sorting + binary search be BETTER than using a HashMap?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after learning]</span>
-
-**Question:** What's the MAIN advantage of HashMap over arrays?
-
-- [ ] Always uses less memory
-- [ ] Can use non-integer keys
-- [ ] Maintains sorted order
-- [ ] Always faster for all operations
-
-Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
-
-
-</div>
-
----
-
 ## Core Implementation
 
 ### Pattern 1: Basic Hash Map Operations
@@ -242,11 +163,6 @@ Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
 --8<-- "com/study/dsa/hashtables/HashMapWindow.java"
 ```
 
-
----
-
-!!! info "Loop back"
-    Before moving on, return to the ELI5 section and Quick Quiz at the top. Fill in any answers you left blank. If your understanding of hash collisions is still fuzzy, re-read the HashCollisionAwareness challenge answer — O(n) worst case is one of the most commonly misunderstood aspects of HashMap.
 
 ---
 

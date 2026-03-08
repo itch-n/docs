@@ -51,54 +51,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Complete your predictions now, before reading further. You will revisit and verify each answer after running the benchmark.
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
-
-### Performance Predictions
-
-1. **Row storage: Fetch one complete user record**
-    - Expected I/O operations: <span class="fill-in">[How many disk reads?]</span>
-    - Verified after implementation: <span class="fill-in">[Actual]</span>
-
-2. **Column storage: Fetch one complete user record**
-    - Expected I/O operations: <span class="fill-in">[How many disk reads?]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-3. **Row storage: Calculate average of one column across 1M rows**
-    - Expected I/O: <span class="fill-in">[How much data read?]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-4. **Column storage: Calculate average of one column across 1M rows**
-    - Expected I/O: <span class="fill-in">[How much data read?]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-### Scenario Predictions
-
-**Scenario 1:** E-commerce order processing (insert orders, fetch by order_id)
-
-- **Best storage layout?** <span class="fill-in">[Row/Column?]</span>
-- **Why?** <span class="fill-in">[Explain]</span>
-
-**Scenario 2:** Business intelligence dashboard (revenue by month, top products)
-
-- **Best storage layout?** <span class="fill-in">[Row/Column?]</span>
-- **Why?** <span class="fill-in">[Explain]</span>
-
-**Scenario 3:** Social media user profiles (lookup by user_id, update profile)
-
-- **Best storage layout?** <span class="fill-in">[Row/Column?]</span>
-- **Why?** <span class="fill-in">[Explain]</span>
-
-</div>
-
----
-
 ## Core Implementation
 
 ### Part 1: Row-Oriented Storage
@@ -210,9 +162,6 @@ By the end of this topic you will be able to:
 **Key insight:** <span class="fill-in">[Why does column storage win for analytics?]</span>
 
 </div>
-
-!!! info "Loop back"
-    Return to the Quick Quiz now and fill in your verified answers.
 
 ---
 

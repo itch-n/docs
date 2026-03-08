@@ -55,88 +55,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Complete your predictions now, before reading further. You will revisit and verify each answer after running the benchmark (or completing the implementation).
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition about rate limiting algorithms. Answer these, then verify after implementation.
-
-### Algorithm Understanding Predictions
-
-1. **Token bucket with 10 tokens, 2 tokens/sec refill:**
-    - How many requests can burst immediately? <span class="fill-in">[Your guess]</span>
-    - After waiting 5 seconds, how many tokens? <span class="fill-in">[Your guess]</span>
-    - Verified after implementation: <span class="fill-in">[Actual]</span>
-
-2. **Leaky bucket vs token bucket for 100 req/sec:**
-    - Which allows bursts? <span class="fill-in">[Token/Leaky]</span>
-    - Which smooths traffic? <span class="fill-in">[Token/Leaky]</span>
-    - Verified: <span class="fill-in">[Fill in]</span>
-
-3. **Fixed window: 10 req/min starting at 12:00:00:**
-    - 9 requests at 12:00:58
-    - 9 requests at 12:01:01
-    - Total allowed in 3 seconds: <span class="fill-in">[Your guess: 9? 10? 18?]</span>
-    - Why is this a problem? <span class="fill-in">[Fill in]</span>
-    - Verified: <span class="fill-in">[Actual behavior]</span>
-
-### Scenario Predictions
-
-**Scenario 1:** API needs to handle traffic spikes but prevent abuse
-
-- **Best algorithm?** <span class="fill-in">[Token bucket/Leaky bucket/Fixed window/Sliding window]</span>
-- **Why?** <span class="fill-in">[Your reasoning]</span>
-- **Verified after implementation:** <span class="fill-in">[Fill in]</span>
-
-**Scenario 2:** Login system needs steady rate limiting (no bursts)
-
-- **Best algorithm?** <span class="fill-in">[Token bucket/Leaky bucket/Fixed window/Sliding window]</span>
-- **Why?** <span class="fill-in">[Your reasoning]</span>
-- **Verified after implementation:** <span class="fill-in">[Fill in]</span>
-
-**Scenario 3:** Rate limit 100 requests per minute with 1 million users
-
-- **Fixed window memory:** <span class="fill-in">[Estimate: bytes per user]</span>
-- **Sliding window log memory:** <span class="fill-in">[Estimate: bytes per user]</span>
-- **Which is more memory efficient?** <span class="fill-in">[Your guess]</span>
-- **Verified:** <span class="fill-in">[Fill in calculations]</span>
-
-### Refill Logic Quiz
-
-**Token bucket refills 5 tokens/second, last refill at T=0:**
-
-1. **At T=2 seconds, how many tokens added?** <span class="fill-in">[Your calculation]</span>
-2. **At T=2.5 seconds, how many tokens added?** <span class="fill-in">[Your calculation]</span>
-3. **If capacity is 10 and current tokens = 8:**
-    - After 1 second: <span class="fill-in">[tokens available?]</span>
-    - After 5 seconds: <span class="fill-in">[tokens available? can exceed capacity?]</span>
-
-**Verify these calculations after implementation!**
-
-### Trade-off Quiz
-
-**Question:** Why would you choose fixed window over sliding window?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after learning]</span>
-
-**Question:** Token bucket allows 100 burst requests. Is this ALWAYS good?
-
-- [ ] Yes, bursts are always beneficial
-- [ ] No, depends on backend capacity
-- [ ] No, depends on abuse prevention needs
-- [ ] It depends on the use case
-
-**Verify after implementation:** <span class="fill-in">[Which one(s) and why?]</span>
-
-
-</div>
-
----
-
 ## Case Studies: Rate Limiting in the Wild
 
 ### Stripe API: The Leaky Bucket for Smooth Traffic
@@ -371,9 +289,6 @@ After finding and fixing all bugs:
 - How would you test time-based calculations? <span class="fill-in">[Your answer]</span>
 
 </div>
-
-!!! info "Loop back"
-    Return to the Quick Quiz now and fill in your verified answers.
 
 ---
 

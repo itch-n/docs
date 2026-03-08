@@ -53,56 +53,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE reading further)
-
-!!! tip "How to use this section"
-    Fill in your predictions now. You will return and verify each answer after working through the Core Concepts section.
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition. Answer these, then verify after reading.
-
-### Concept Predictions
-
-1. **An order goes through states: Placed, Paid, Shipped, Delivered. With event sourcing:**
-    - How many records are written to the event store? <span class="fill-in">[Your guess]</span>
-    - If you delete the "Paid" event, what happens when you replay? <span class="fill-in">[Your guess]</span>
-    - Verified after reading: <span class="fill-in">[Actual]</span>
-
-2. **CQRS read model update lag:**
-    - If an order is placed and a user immediately queries "show my orders", could they not see it? <span class="fill-in">[Yes / No / Depends]</span>
-    - Why? <span class="fill-in">[Your reasoning]</span>
-    - Verified: <span class="fill-in">[Fill in]</span>
-
-3. **Event replay performance:**
-    - An aggregate has 10,000 historical events. Without snapshots, loading it requires: <span class="fill-in">[Your guess: how many event reads?]</span>
-    - With a snapshot every 100 events, worst case reads drop to: <span class="fill-in">[Your guess]</span>
-    - Verified: <span class="fill-in">[Fill in]</span>
-
-### Scenario Predictions
-
-**Scenario 1:** You need a full audit log of every price change on a product.
-
-- Is event sourcing a good fit? <span class="fill-in">[Yes / No / Depends]</span>
-- Why? <span class="fill-in">[Your reasoning]</span>
-- Verified: <span class="fill-in">[Fill in]</span>
-
-**Scenario 2:** A simple blog CRUD app with no regulatory requirements.
-
-- Is event sourcing a good fit? <span class="fill-in">[Yes / No / Depends]</span>
-- Why? <span class="fill-in">[Your reasoning]</span>
-- Verified: <span class="fill-in">[Fill in]</span>
-
-**Scenario 3:** A bank account ledger that must support balance-at-date queries.
-
-- How does event sourcing make this query trivial? <span class="fill-in">[Your reasoning]</span>
-- How would you implement it without event sourcing? <span class="fill-in">[Your reasoning]</span>
-- Verified: <span class="fill-in">[Fill in]</span>
-
-</div>
-
----
-
 ## Core Concepts
 
 ### Event Sourcing

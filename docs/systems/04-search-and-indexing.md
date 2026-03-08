@@ -56,56 +56,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE learning)
-
-!!! tip "How to use this section"
-    Complete your predictions now, before reading further. You will revisit and verify each answer after working through the core concepts.
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition about search without looking at details. Answer these, then verify after learning.
-
-### Complexity Predictions
-
-1. **Linear search through 1M documents:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Estimated time: <span class="fill-in">[Milliseconds? Seconds?]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-2. **Inverted index lookup:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space overhead: <span class="fill-in">[How much extra storage?]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-3. **Autocomplete suggestions with trie:**
-    - Time complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Space complexity: <span class="fill-in">[Your guess: O(?)]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-### Scenario Predictions
-
-**Scenario 1:** Search query "machine learning" in 10M documents
-
-- **Without index:** <span class="fill-in">[How long?]</span>
-- **With inverted index:** <span class="fill-in">[How long?]</span>
-- **Speedup factor:** <span class="fill-in">[____x faster?]</span>
-
-**Scenario 2:** E-commerce product search with typos
-
-- **Exact match only:** <span class="fill-in">[User experience?]</span>
-- **Fuzzy search:** <span class="fill-in">[How to implement?]</span>
-- **Trade-off:** <span class="fill-in">[Performance vs accuracy?]</span>
-
-**Scenario 3:** Ranking search results by relevance
-
-- **Algorithm:** <span class="fill-in">[TF-IDF? BM25? Something else?]</span>
-- **Factors to consider:** <span class="fill-in">[What matters?]</span>
-- **Personalization:** <span class="fill-in">[How to incorporate?]</span>
-
-</div>
-
----
-
 ## Core Concepts
 
 ### Topic 1: Inverted Index
@@ -796,7 +746,7 @@ GET /products?scroll=1m
 
 ## Benchmark: Linear Scan vs Inverted Index
 
-**Your task:** Run the benchmark, record your numbers, and verify your Quick Quiz predictions.
+**Your task:** Run the benchmark and record your numbers.
 
 ```java
 --8<-- "com/study/systems/searchindexing/SearchIndexBenchmark.java"
@@ -907,9 +857,6 @@ GET /products?scroll=1m
 
 </div>
 
-!!! info "Loop back"
-    Return to the Quick Quiz now and fill in your verified answers for the Scenario Predictions.
-
 ---
 
 ## Before/After: Why Search Indexing Matters
@@ -1005,9 +952,6 @@ User experience: Instant results ✓
 - Linear search time: <span class="fill-in">_____</span> seconds
 - Indexed search time: <span class="fill-in">_____</span> ms
 - Users served per second: Linear <span class="fill-in">_____</span> vs Indexed <span class="fill-in">_____</span>
-
-!!! info "Loop back"
-    Return to the Quick Quiz now and fill in your verified answers.
 
 ---
 

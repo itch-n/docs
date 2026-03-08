@@ -57,80 +57,6 @@ By the end of this topic you will be able to:
 
 ---
 
-## Quick Quiz (Do BEFORE implementing)
-
-!!! tip "How to use this section"
-    Complete your predictions now, before reading further. You will revisit and verify each answer after working through the implementations.
-
-<div class="learner-section" markdown>
-
-**Your task:** Test your intuition without looking at code. Answer these, then verify after implementation.
-
-### Complexity Predictions
-
-1. **REST API endpoint for listing resources:**
-    - What HTTP method should be used? <span class="fill-in">[Your guess: GET/POST/PUT/DELETE]</span>
-    - What status code for success? <span class="fill-in">[Your guess: 200/201/204]</span>
-    - Verified after learning: <span class="fill-in">[Actual: ?]</span>
-
-2. **GraphQL query that fetches nested data:**
-    - How many HTTP requests needed? <span class="fill-in">[Your guess: 1/multiple]</span>
-    - Compared to REST for same data: <span class="fill-in">[More/Less/Same requests?]</span>
-    - Verified: <span class="fill-in">[Actual]</span>
-
-3. **API pagination parameters:**
-    - Common parameter names: <span class="fill-in">[Your guesses]</span>
-    - Default limit should be: <span class="fill-in">[Your guess: 10/50/100/unlimited?]</span>
-    - Verified: <span class="fill-in">[Actual best practices]</span>
-
-### Scenario Predictions
-
-**Scenario 1:** Design endpoint to get user with their posts and comments
-
-- **REST approach:** How many endpoints? <span class="fill-in">[Your guess]</span>
-- **GraphQL approach:** How many endpoints? <span class="fill-in">[Your guess]</span>
-- **Which has over-fetching risk?** <span class="fill-in">[REST/GraphQL - Why?]</span>
-- **Which has N+1 query risk?** <span class="fill-in">[REST/GraphQL - Why?]</span>
-
-**Scenario 2:** Client needs to update user's email address
-
-- **Which HTTP method?** <span class="fill-in">[GET/POST/PUT/PATCH/DELETE]</span>
-- **PUT vs PATCH - what's the difference?** <span class="fill-in">[Fill in]</span>
-- **Success status code:** <span class="fill-in">[200/201/204/304]</span>
-- **If email already taken, status code:** <span class="fill-in">[400/404/409/500]</span>
-
-**Scenario 3:** API versioning strategy
-
-- **Version in URL (/v1/users) or header?** <span class="fill-in">[Which is better? Why?]</span>
-- **When to create new version?** <span class="fill-in">[Fill in your reasoning]</span>
-- **How to deprecate old version?** <span class="fill-in">[Your approach]</span>
-
-### Trade-off Quiz
-
-**Question:** When would REST be BETTER than GraphQL?
-
-- Your answer: <span class="fill-in">[Fill in before implementation]</span>
-- Verified answer: <span class="fill-in">[Fill in after learning]</span>
-
-**Question:** What's the MAIN benefit of API pagination?
-
-- [ ] Makes API look professional
-- [ ] Prevents database from crashing
-- [ ] Reduces response size and improves performance
-- [ ] Required by HTTP specification
-
-Verify after implementation: <span class="fill-in">[Which one(s)?]</span>
-
-**Question:** What makes an API idempotent?
-
-- Your answer: <span class="fill-in">[Fill in]</span>
-- Example of idempotent operation: <span class="fill-in">[Fill in]</span>
-- Example of non-idempotent operation: <span class="fill-in">[Fill in]</span>
-
-</div>
-
----
-
 ## Core Implementation
 
 ### Part 1: REST API Design
@@ -603,9 +529,6 @@ Old clients hit `/v1/` and continue working. New clients opt into `/v2/`. A depr
 - How long should you support old versions? <span class="fill-in">[Your answer]</span>
 
 </div>
-
-!!! info "Loop back"
-    Return to the Quick Quiz now and fill in your verified answers.
 
 ---
 
