@@ -295,9 +295,6 @@ At any point in this process, the system is functional: the facade routes to the
 
 ---
 
-!!! warning "When it breaks"
-    Service meshes (Istio, Linkerd) break under large service counts: control plane overhead for managing certificates, routing rules, and telemetry grows super-linearly with service count. Teams with more than ~50 services start seeing control plane latency and memory issues that require dedicated platform engineering. Service discovery breaks when registration/deregistration is too frequent — health check churn from rapidly scaling services can overwhelm the registry. The API gateway breaks when it becomes a shared single point of failure: every team's services route through one gateway, and a misconfigured route or gateway bug takes down everything simultaneously.
-
 ---
 
 ## Common Misconceptions
@@ -316,92 +313,35 @@ At any point in this process, the system is functional: the facade routes to the
 
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Service Communication Pattern
 
 <div class="learner-section" markdown>
 
-**Your task:** After working through the patterns, fill in your reasoning for each decision point.
+**Your task:** Fill in the matrix based on the material above.
 
-### 1. Monolith vs Microservices
+### Trade-off Analysis Matrix
 
-**When does a monolith outperform microservices?**
+| Pattern | Coupling | Observability built-in | Failure isolation | Operational overhead | Key failure mode |
+|---|---|---|---|---|---|
+| **Direct HTTP / gRPC (point-to-point)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **API gateway** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Service mesh (Istio / Linkerd)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Async message bus (Kafka / SQS)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- Team size consideration: <span class="fill-in">A monolith is preferable when ___ because distributed coordination costs ___</span>
-- Data consistency consideration: <span class="fill-in">Keeping data in one database avoids ___, which microservices must solve via ___</span>
-- Operational complexity: <span class="fill-in">A monolith removes the need for ___, which microservices require for each service</span>
+??? success "Answers"
 
-**Signals that microservices are warranted:**
-
-- Deployment independence signal: <span class="fill-in">You need microservices when different teams need to deploy ___ because ___</span>
-- Scale signal: <span class="fill-in">You need microservices when ___ components need to scale independently of ___</span>
-- Team autonomy signal: <span class="fill-in">You need microservices when ___ teams are blocked by ___</span>
-
-### 2. Service Boundary Heuristics
-
-For each heuristic, fill in why it matters and what goes wrong when it is violated:
-
-- **Single team ownership:** <span class="fill-in">A service boundary is correct when ___; it is wrong when ___</span>
-- **Own your data:** <span class="fill-in">A service should own its database because ___; sharing a database between services causes ___</span>
-- **Independent deployability:** <span class="fill-in">A correct boundary means you can deploy Service A without ___; a bad boundary forces ___</span>
-
-### 3. Sync vs Async Decision
-
-**Choose synchronous (REST/gRPC) when:**
-
-- <span class="fill-in">[Scenario where the caller needs ___]</span>
-- <span class="fill-in">[Scenario where consistency requires ___]</span>
-
-**Choose asynchronous (events/queues) when:**
-
-- <span class="fill-in">[Scenario where the caller does not need ___]</span>
-- <span class="fill-in">[Scenario where downstream availability should not ___]</span>
-
-**Sync communication creates tight coupling when:**
-
-- <span class="fill-in">A chain of N synchronous calls means ___ because ___</span>
-- <span class="fill-in">A 1% error rate in each of 5 services produces ___ end-to-end error rate</span>
-
-### 4. Service Mesh Overhead Justification
-
-Fill in your threshold for when a service mesh is worth the operational cost:
-
-- Justified when: <span class="fill-in">The overhead (~0.5–5 ms per hop, extra CPU/memory per pod) is worth it when ___</span>
-- Not justified when: <span class="fill-in">A service mesh adds more cost than value when ___ and a simpler alternative is ___</span>
-
-### 5. Your Decision Tree
-
-Build your decision tree after working through the patterns:
-
-```mermaid
-flowchart TD
-    Start["New service architecture decision"]
-
-    Q1["Team > 2 pizza rule\nand independent deployments needed?"]
-    Start --> Q1
-
-    N1["Stay monolith:\nsimpler ops, one transaction boundary"]
-    Q1 -->|"No"| N1
-
-    Q2["Does the caller need\nthe result immediately?"]
-    Q1 -->|"Yes"| Q2
-
-    N2["Async communication:\nevents / message queue"]
-    Q2 -->|"No"| N2
-
-    N3["Sync communication:\nREST or gRPC"]
-    Q2 -->|"Yes"| N3
-
-    Q3["High-traffic, strict\npolicy enforcement needed?"]
-    N3 --> Q3
-
-    N4["?"]
-    Q3 -->|"Yes"| N4
-
-    N5["?"]
-    Q3 -->|"No"| N5
-```
+    | Pattern | Coupling | Observability built-in | Failure isolation | Operational overhead | Key failure mode |
+    |---|---|---|---|---|---|
+    | **Direct HTTP / gRPC (point-to-point)** | Tight — caller knows callee address; service discovery required | None — manual instrumentation | None — callee failure propagates directly to caller | None | No circuit breaking or retry by default; cascading failure when a shared dependency degrades |
+    | **API gateway** | Loose (external clients) / tight (internal routing) | Partial — request/response logging at the edge | Edge only — gateway absorbs external failures; internal failures still propagate | Low–medium — single shared gateway | Gateway is a shared single point of failure; a misconfigured route or gateway bug affects all services simultaneously |
+    | **Service mesh (Istio / Linkerd)** | Loose — mesh handles routing, retries, mTLS transparently | Full — automatic distributed tracing, per-service-pair metrics | Yes — mesh provides circuit breaking per service | High — control plane CPU and memory grow super-linearly above ~50 services | Control plane instability affects all services; certificate rotation failure breaks all mTLS connections simultaneously |
+    | **Async message bus (Kafka / SQS)** | Very loose — producers unaware of consumers | Partial — requires correlation IDs for message-level tracing | High — producer continues if consumer is down | Medium — message broker is a new operational dependency | At-least-once delivery without idempotent consumers causes duplicate side effects; no backpressure means a fast producer can overwhelm a slow consumer |
 
 </div>
+
+!!! warning "When it breaks"
+    Service meshes (Istio, Linkerd) break under large service counts: control plane overhead for managing certificates, routing rules, and telemetry grows super-linearly with service count. Teams with more than ~50 services start seeing control plane latency and memory issues that require dedicated platform engineering. Service discovery breaks when registration/deregistration is too frequent — health check churn from rapidly scaling services can overwhelm the registry. The API gateway breaks when it becomes a shared single point of failure: every team's services route through one gateway, and a misconfigured route or gateway bug takes down everything simultaneously.
+
 
 ---
 

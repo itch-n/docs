@@ -960,58 +960,37 @@ User experience: Instant results ✓
 !!! danger "TF-IDF and BM25 measure semantic meaning"
     Both algorithms are purely statistical — they measure how often terms appear and how rare they are across documents. They have no understanding of meaning. "Bank" (financial institution) and "bank" (river bank) receive identical scores. Semantic search (using dense vector embeddings) is a separate technique that explicitly models meaning, and it complements rather than replaces inverted index search.
 
-!!! warning "When it breaks"
-    Elasticsearch breaks when the heap is undersized for the field data cache — loading a high-cardinality keyword field into memory for aggregations can exhaust the JVM heap and trigger circuit breakers. The practical rule: field data and on-heap caches should not exceed 50% of JVM heap. At index write rates above ~10,000 docs/second, the default 1-second refresh interval becomes a bottleneck; teams commonly raise it to 30s or disable it during bulk ingestion. Elasticsearch also breaks for exact-match transactional queries: it is eventually consistent by design — a document written may not be visible in search for up to 1 second.
-
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Search Technology
 
 <div class="learner-section" markdown>
 
-### Question 1: When to build inverted index?
+**Your task:** Fill in the matrix based on the material above.
 
-**Build inverted index when:**
+### Trade-off Analysis Matrix
 
-- Full-text search required: <span class="fill-in">[Search within documents]</span>
-- Fast lookups critical: <span class="fill-in">[< 100ms query time]</span>
-- Dataset size > 10K docs: <span class="fill-in">[Linear search too slow]</span>
+| Technology | Query complexity | Write throughput | Consistency | Operational overhead | Key failure mode |
+|---|---|---|---|---|---|
+| **Relational full-text search (PostgreSQL)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Distributed search engine (Elasticsearch)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Lightweight search server (Typesense / Meilisearch)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Vector / semantic search (pgvector / Qdrant)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-**Skip inverted index when:**
+??? success "Answers"
 
-- Exact key lookups only: <span class="fill-in">[Use hash table]</span>
-- Tiny dataset (< 1K docs): <span class="fill-in">[Linear scan acceptable]</span>
-- Write-heavy, rare reads: <span class="fill-in">[Index overhead not worth it]</span>
-
-### Question 2: TF-IDF vs BM25?
-
-**Use TF-IDF when:**
-
-- Simple implementation needed
-- Legacy system compatibility
-- Small datasets
-
-**Use BM25 when:**
-
-- Production search system
-- Varied document lengths
-- Better ranking required (modern default)
-
-### Question 3: Sharding strategy?
-
-**Use hash-based sharding when:**
-
-- Uniform distribution desired
-- No co-location requirements
-- Simple setup
-
-**Use custom routing when:**
-
-- Multi-tenancy (tenant per shard)
-- Co-locate related documents
-- Optimize specific query patterns
+    | Technology | Query complexity | Write throughput | Consistency | Operational overhead | Key failure mode |
+    |---|---|---|---|---|---|
+    | **Relational full-text search (PostgreSQL)** | Moderate — tsvector/tsquery, limited ranking and fuzzy | High — same write path as OLTP | Strong — ACID | None — already in your database | Adequate for millions of rows; at billion-document scale, index maintenance becomes a bottleneck |
+    | **Distributed search engine (Elasticsearch)** | High — full DSL, aggregations, fuzzy, geo, nested | Moderate — 1-second refresh interval introduces visibility lag | Eventual — a just-written document may not appear in search for ~1s | High — JVM heap tuning, shard count, field mapping management | Heap exhaustion from field data cache; high-cardinality keyword fields loaded for aggregations exhaust JVM heap and trigger circuit breakers |
+    | **Lightweight search server (Typesense / Meilisearch)** | Moderate — full-text with typo tolerance; limited complex aggregations | High — real-time indexing | Strong | Low — single binary, no JVM | Missing features at scale (complex aggregations, large corpora); optimal under ~1M–10M documents |
+    | **Vector / semantic search (pgvector / Qdrant)** | Semantic similarity via ANN — not keyword matching | Moderate — embedding generation is CPU/GPU-bound | Strong (pgvector) / Eventual (Qdrant) | Low–medium | ANN recall degrades with very high dimensionality; index build time and memory grow with corpus size |
 
 </div>
+
+!!! warning "When it breaks"
+    Elasticsearch breaks when the heap is undersized for the field data cache — loading a high-cardinality keyword field into memory for aggregations can exhaust the JVM heap and trigger circuit breakers. The practical rule: field data and on-heap caches should not exceed 50% of JVM heap. At index write rates above ~10,000 docs/second, the default 1-second refresh interval becomes a bottleneck; teams commonly raise it to 30s or disable it during bulk ingestion. Elasticsearch also breaks for exact-match transactional queries: it is eventually consistent by design — a document written may not be visible in search for up to 1 second.
+
 
 ---
 

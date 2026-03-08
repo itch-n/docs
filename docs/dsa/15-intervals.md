@@ -281,73 +281,37 @@ Final: [[1,6], [8,10], [15,18]]
 !!! danger "Misconception: the insert interval problem requires re-sorting"
     The input is guaranteed to be sorted and non-overlapping. You exploit that structure directly with a three-phase O(n) scan — no sort needed. Re-sorting after insertion wastes the O(n log n) budget unnecessarily.
 
+---
+
+## Decision Framework: Choosing an Interval Algorithm
+
+<div class="learner-section" markdown>
+
+**Your task:** Fill in the matrix after working through the implementations above.
+
+### Trade-off Analysis Matrix
+
+| Algorithm | Problem type | Time | Space | Handles updates? | Key failure |
+|---|---|---|---|---|---|
+| **Sort + greedy merge** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Event sweep line** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Min-heap (meeting rooms II)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Interval tree** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+
+??? success "Answers"
+
+    | Algorithm | Problem type | Time | Space | Handles updates? | Key failure |
+    |---|---|---|---|---|---|
+    | **Sort + greedy merge** | Merge overlapping intervals, insert interval | O(n log n) | O(n) | No — offline algorithm | 2D rectangles require a sweep line; sort+merge only works for 1D intervals |
+    | **Event sweep line** | Count maximum overlap, calendar conflict detection | O(n log n) | O(n) | No — offline algorithm | Tie-breaking at the same timestamp — a start and end at the same value may or may not overlap depending on problem semantics (check constraints) |
+    | **Min-heap (meeting rooms II)** | Minimum resources for non-overlapping intervals | O(n log n) | O(k) — k = answer | No — offline algorithm | Returns the count, not the assignment — to know which interval gets which resource, track assignments separately |
+    | **Interval tree** | Point stabbing query, overlap query | O(n log n) build, O(log n + k) query | O(n) | Yes | Overkill for offline problems — only reach for it when queries arrive online (dynamic insertions with overlap queries) |
+
+</div>
+
 !!! warning "When it breaks"
     Interval merge breaks for 2D rectangles — merging overlapping rectangles requires a sweep line algorithm, not sort-and-scan. The standard merge algorithm also breaks when intervals need to be merged on different sort keys for different queries. Meeting Rooms II (minimum rooms count) breaks when you need to identify which events conflict, not just the count — the greedy heap approach gives the count but not the assignment. Dynamic interval problems (frequent insertions and deletions with overlap queries) require an interval tree, which supports O(log n) insert, delete, and overlap query.
 
----
-
-## Decision Framework
-
-### Question 1: What operation is needed?
-
-Answer after solving problems:
-
-**Merge/combine overlapping intervals:**
-
-- Sort by: <span class="fill-in">[Start ascending]</span>
-- Algorithm: <span class="fill-in">[Single pass, extend current.end with Math.max]</span>
-- Example: <span class="fill-in">[Merge Intervals LC 56]</span>
-
-**Insert one interval into a sorted list:**
-
-- Sort by: <span class="fill-in">[Already sorted — three-phase linear scan]</span>
-- Algorithm: <span class="fill-in">[Add before, merge overlapping, add after]</span>
-- Example: <span class="fill-in">[Insert Interval LC 57]</span>
-
-**Minimum removals to make non-overlapping:**
-
-- Sort by: <span class="fill-in">[End ascending — greedy]</span>
-- Algorithm: <span class="fill-in">[Keep intervals that end earliest]</span>
-- Example: <span class="fill-in">[Non-overlapping Intervals LC 435]</span>
-
-**Minimum rooms for concurrent meetings:**
-
-- Sort by: <span class="fill-in">[Start ascending]</span>
-- Data structure: <span class="fill-in">[Min-heap of end times, or two sorted arrays]</span>
-- Example: <span class="fill-in">[Meeting Rooms II]</span>
-
-### Question 2: What is the overlap condition?
-
-Fill in after implementing:
-
-- Two intervals [s1,e1] and [s2,e2] overlap when: <span class="fill-in">[s2 < e1 (assuming sorted, s1 <= s2)]</span>
-- Back-to-back [1,5] and [5,10]: <span class="fill-in">[Do NOT overlap — 5 < 5 is false]</span>
-- Fully contained [2,3] inside [1,4]: <span class="fill-in">[Overlap — merge to [1,4], requires Math.max on end]</span>
-
-### Your Decision Tree
-
-Build this after solving practice problems:
-
-```mermaid
-flowchart TD
-    Start["Interval problem"]
-    Q1{"What operation?"}
-    Start --> Q1
-    A1["Sort by start asc\nSingle-pass merge ✓"]
-    Q1 -->|"Merge overlapping"| A1
-    A2["Three-phase O(n)\nNo re-sort needed ✓"]
-    Q1 -->|"Insert one interval"| A2
-    A3["Sort by end asc\nGreedy keep-earliest ✓"]
-    Q1 -->|"Min removals"| A3
-    Q2{"Min rooms or\ncan one attend?"}
-    Q1 -->|"Meeting rooms"| Q2
-    A4["Sort by start\nCheck consecutive pairs ✓"]
-    Q2 -->|"Can one attend all?"| A4
-    A5["Sort by start\nMin-heap of end times ✓"]
-    Q2 -->|"Min rooms needed"| A5
-```
-
-</div>
 
 ---
 

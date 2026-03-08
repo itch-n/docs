@@ -239,98 +239,37 @@ The five algorithms above answer *how* requests are distributed. A separate ques
 !!! danger "IP hash provides reliable session persistence at scale"
     IP hash breaks when clients are behind a NAT gateway (many users share one IP) or when users are behind a proxy (IP changes between requests). It also breaks session persistence whenever the server list changes, since all hashes shift. For robust session persistence, prefer consistent hashing with the session ID as the key, or externalise session state to a shared store (Redis) so any server can serve the session.
 
-!!! warning "When it breaks"
-    Round robin breaks for stateful services when sessions are pinned to a server — a rolling deployment that removes a node drops all sessions on that node. Sticky sessions (cookie or IP hash) fix this but prevent even load distribution when a small number of clients generate disproportionate load. L7 load balancing breaks at very high connection rates: TLS termination is CPU-intensive, and a single L7 load balancer typically saturates around 100,000 TLS connections/second. Connection draining — waiting for in-flight requests to complete before removing a node — is correct but adds deployment latency; a 30-second drain across 50 nodes serialised is 25 minutes of rolling restart.
-
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Load Balancing Algorithm
 
 <div class="learner-section" markdown>
 
-**Questions to answer after implementation:**
+**Your task:** Fill in the matrix based on the material above.
 
-### 1. Algorithm Selection
+### Trade-off Analysis Matrix
 
-**When to use Round Robin?**
+| Algorithm | Session affinity | Distribution under uneven load | Rebalances on node change? | Best for | Key failure mode |
+|---|---|---|---|---|---|
+| **Round robin** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Least connections** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **IP hash** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Consistent hashing** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
+??? success "Answers"
 
-**When to use Least Connections?**
-
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
-
-**When to use Weighted Round Robin?**
-
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
-
-**When to use Consistent Hashing?**
-
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
-
-**When to use IP Hash?**
-
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
-
-### 2. Trade-offs
-
-**Round Robin:**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-**Least Connections:**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-**Consistent Hashing:**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-**IP Hash:**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-### 3. Your Decision Tree
-
-Build your decision tree after practicing:
-```mermaid
-flowchart TD
-    Start["What is your priority?"]
-
-    N1["?"]
-    Start -->|"Simple and fair distribution"| N1
-    N2["?"]
-    Start -->|"Consider server load"| N2
-    N3["?"]
-    Start -->|"Heterogeneous servers"| N3
-    N4["?"]
-    Start -->|"Session persistence"| N4
-    N5["?"]
-    Start -->|"Minimal redistribution on changes"| N5
-```
-
-### 4. Layer selection
-
-**Use L4 when:**
-
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key signals: <span class="fill-in">[Fill in]</span>
-
-**Use L7 when:**
-
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key signals: <span class="fill-in">[Fill in]</span>
+    | Algorithm | Session affinity | Distribution under uneven load | Rebalances on node change? | Best for | Key failure mode |
+    |---|---|---|---|---|---|
+    | **Round robin** | No — sessions scattered across all nodes | Poor — ignores request cost; long requests and short requests go to the same next node | Yes — next request goes to next node | Stateless services with uniform-cost requests | Stateful services lose sessions when a node is removed |
+    | **Least connections** | No | Good — routes to the least-loaded server | Yes | Variable-cost requests (DB queries, file uploads) | Requires per-connection tracking overhead; breaks if latency (not count) is the right load signal |
+    | **IP hash** | Yes — same IP maps to same server | Poor — single heavy client monopolises its backend because all its requests go to one node | No — all hashes shift on pool change | Stateful services with IP-stable clients | NAT gateways: millions of users share one IP and overload one backend; consistent hashing mitigates rehash cost |
+    | **Consistent hashing** | Yes — same key maps to same node | Even — only K/N keys reassign when a node is added or removed | Graceful — minimal disruption | Distributed caches, stateful sharding, session stores | Too few virtual nodes per server causes uneven distribution; 150–300 virtual nodes per server is the typical tuning target |
 
 </div>
+
+!!! warning "When it breaks"
+    Round robin breaks for stateful services when sessions are pinned to a server — a rolling deployment that removes a node drops all sessions on that node. Sticky sessions (cookie or IP hash) fix this but create uneven load when a small number of clients generate disproportionate traffic: IP hash distributes by client address, not by request weight, so one heavy client maps to one backend indefinitely. L7 load balancing breaks at very high connection rates: TLS termination is CPU-intensive because each new connection requires a full handshake including asymmetric-key operations; a single L7 load balancer typically saturates around 100,000 TLS connections/second. Connection draining — waiting for in-flight requests to complete before removing a node — is correct but adds deployment latency; a 30-second drain across 50 nodes serialised is 25 minutes of rolling restart.
+
 
 ---
 

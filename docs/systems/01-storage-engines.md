@@ -436,62 +436,35 @@ long duration = System.nanoTime() - start;
 !!! danger "WAL is part of the storage engine"
     WAL (Write-Ahead Log) is a separate durability layer, not a feature of either engine. Both B+Trees and LSM Trees use WAL for crash recovery — it is orthogonal to how data is structured on disk. Losing your MemTable on a crash and replaying a WAL is an LSM concern; B+Trees have their own WAL-based recovery path.
 
-!!! warning "When it breaks"
-    B+Tree write performance degrades under write-heavy workloads when page splits cascade — a single row insert can rebalance multiple levels. At sustained write rates above roughly 10,000 writes/second on spinning disk, write amplification causes measurable latency spikes. LSM trees introduce a different cliff: when write throughput exceeds compaction throughput, compaction debt accumulates, SSTable count grows, and read amplification climbs until reads must check dozens of files. RocksDB exposes a `level0_slowdown_writes_trigger` (default: 20 files) and `level0_stop_writes_trigger` (default: 36 files) specifically for this condition — these are the numbers to know.
-
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Storage Engine
 
 <div class="learner-section" markdown>
 
-**Your task:** Build decision trees for when to use each storage engine.
+**Your task:** Your team is evaluating storage engines for a new service. Fill in the matrix based on your benchmark results and the material above.
 
-### Question 1: Write-heavy or Read-heavy?
+### Trade-off Analysis Matrix
 
-Answer after implementing and benchmarking:
+| Technology | Write throughput | Read latency (point lookup) | Range query support | Operational complexity | Key failure mode |
+|---|---|---|---|---|---|
+| **B+Tree (MySQL / PostgreSQL)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **LSM Tree (Cassandra / RocksDB)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **In-Memory (Redis)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- **My answer:** <span class="fill-in">[Fill in]</span>
-- **Why does this matter?** <span class="fill-in">[Fill in]</span>
-- **Performance difference I observed:** <span class="fill-in">[Fill in]</span>
+??? success "Answers"
 
-### Question 2: Need range queries?
-
-Answer:
-
-- **Do B+Trees support range queries?** <span class="fill-in">[Yes/No - explain how]</span>
-- **Do LSM Trees support range queries?** <span class="fill-in">[Yes/No - explain complexity]</span>
-- **Which is faster for range queries?** <span class="fill-in">[Fill in after testing]</span>
-
-### Question 3: Sequential or random writes?
-
-Answer:
-
-- **B+Tree with random writes:** <span class="fill-in">[What happens? Why is it slow?]</span>
-- **LSM Tree with random writes:** <span class="fill-in">[What happens? Why is it fast?]</span>
-- **Your observation from implementation:** <span class="fill-in">[Fill in]</span>
-
-### Your Decision Tree
-
-Build this after understanding trade-offs:
-
-```mermaid
-flowchart TD
-    Start["Storage Engine Selection"]
-
-    Start --> Q1{"Write-heavy workload<br/>(>70% writes)?"}
-    Q1 -->|"YES"| Q2{"Need strong<br/>consistency?"}
-    Q1 -->|"NO"| Q3{"Read-heavy<br/>workload?"}
-
-    Q2 -->|"YES"| A1["Consider B+Tree<br/>(but optimize for writes)"]
-    Q2 -->|"NO"| A2(["Use LSM Tree ✓"])
-
-    Q3 -->|"YES, mostly<br/>point lookups"| A3(["Use B+Tree ✓"])
-    Q3 -->|"YES, many<br/>range scans"| A4(["Use B+Tree ✓"])
-    Q3 -->|"Mixed<br/>workload"| A5["Your decision here<br/>based on testing"]
-```
+    | Technology | Write throughput | Read latency (point lookup) | Range query support | Operational complexity | Key failure mode |
+    |---|---|---|---|---|---|
+    | **B+Tree (MySQL / PostgreSQL)** | ~10K–50K ops/sec | 1–5 ms | Excellent — linked leaf scan | Low | Write amplification under sustained random writes; page splits cascade |
+    | **LSM Tree (Cassandra / RocksDB)** | ~100K–500K ops/sec | 5–20 ms (grows with SSTable count) | Good — scan + merge overhead | Medium — compaction tuning required | Compaction debt accumulates; reads degrade when SSTable count exceeds trigger |
+    | **In-Memory (Redis)** | ~1M+ ops/sec | <1 ms | Poor — sorted sets only | Low | Dataset exceeds RAM; data loss on crash without AOF/RDB |
 
 </div>
+
+!!! warning "When it breaks"
+    B+Tree write performance degrades under write-heavy workloads when page splits cascade — a single row insert can rebalance multiple levels. At sustained write rates above roughly 10,000 writes/second on spinning disk, write amplification causes measurable latency spikes. LSM trees introduce a different cliff: when write throughput exceeds compaction throughput, compaction debt accumulates, SSTable count grows, and read amplification climbs until reads must check dozens of files. RocksDB exposes a `level0_slowdown_writes_trigger` (default: 20 files) and `level0_stop_writes_trigger` (default: 36 files) specifically for this condition — these are the numbers to know.
+
 
 ---
 

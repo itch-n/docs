@@ -530,9 +530,6 @@ Old clients hit `/v1/` and continue working. New clients opt into `/v2/`. A depr
 
 </div>
 
-!!! warning "When it breaks"
-    Offset pagination breaks at deep pages — `OFFSET 1,000,000` in SQL scans and discards a million rows before returning results, causing query time to grow linearly with page depth. Cursor-based pagination fixes this but prevents jumping to an arbitrary page. GraphQL breaks when query depth is unrestricted: a client can craft a query that fans out exponentially across nested relationships, executing thousands of database queries behind one HTTP request — without depth limiting and query cost analysis, a GraphQL endpoint is a DoS vector. REST versioning breaks when more than two or three major versions are simultaneously maintained; the operational cost of running v1/v2/v3 in parallel (separate deployments, separate bug backlogs) typically forces deprecation timelines that the business then fails to enforce.
-
 ---
 
 ## Case Studies: API Design in the Wild
@@ -584,64 +581,35 @@ Old clients hit `/v1/` and continue working. New clients opt into `/v2/`. A depr
 
 ---
 
-## Decision Framework
+## Decision Framework: Choosing an API Style
 
 <div class="learner-section" markdown>
 
-**Questions to answer after implementation:**
+**Your task:** Fill in the matrix based on the material above.
 
-### 1. REST vs GraphQL vs RPC
+### Trade-off Analysis Matrix
 
-**When to use REST?**
+| Style | Communication model | Type safety / contract | Browser support | Caching | Key failure mode |
+|---|---|---|---|---|---|
+| **REST** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **GraphQL** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **gRPC** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **WebSocket** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
+??? success "Answers"
 
-**When to use GraphQL?**
-
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
-
-**When to use RPC?**
-
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
-
-### 2. Trade-offs
-
-**REST:**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-**GraphQL:**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-**RPC:**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-### 3. Your Decision Tree
-
-Build your decision tree after practicing:
-```mermaid
-flowchart TD
-    Start["What kind of API are you building?"]
-
-    N1["?"]
-    Start -->|"Public web API for third parties"| N1
-    N2["?"]
-    Start -->|"Mobile app backend"| N2
-    N3["?"]
-    Start -->|"Service-to-service communication"| N3
-    N4["?"]
-    Start -->|"Complex data fetching with relationships"| N4
-```
+    | Style | Communication model | Type safety / contract | Browser support | Caching | Key failure mode |
+    |---|---|---|---|---|---|
+    | **REST** | Request-response, resource-oriented | None by default; OpenAPI optional | Universal | HTTP cache headers, CDN-friendly | Over/under-fetching; offset pagination scans O(n) rows at depth |
+    | **GraphQL** | Request-response, query-shaped response | Schema-defined SDL | Universal | Hard — responses are non-deterministic by query; persisted queries enable per-query caching | Unbounded query depth executes N+1 database queries per nested relationship unless DataLoader batching is explicit |
+    | **gRPC** | Request-response or streaming, contract-first | Strong — generated stubs from .proto | Limited — requires gRPC-Web proxy | Not HTTP-cache-friendly; L7 proxy required | Breaking proto changes: reusing a field number or changing its type breaks all clients silently |
+    | **WebSocket** | Bidirectional persistent full-duplex | None | Universal | Not cacheable — stateful connection | Server must manage reconnect, heartbeat, and per-connection state; OS file descriptor limits cap connection count |
 
 </div>
+
+!!! warning "When it breaks"
+    Offset pagination breaks at deep pages — `OFFSET 1,000,000` in SQL scans and discards a million rows before returning results, causing query time to grow linearly with page depth. Cursor-based pagination fixes this but prevents jumping to an arbitrary page. GraphQL breaks when query depth is unrestricted: a client can craft a query that fans out exponentially across nested relationships, executing thousands of database queries behind one HTTP request — without depth limiting and query cost analysis, a GraphQL endpoint is a DoS vector. REST versioning breaks when more than two or three major versions are simultaneously maintained; the operational cost of running v1/v2/v3 in parallel (separate deployments, separate bug backlogs) typically forces deprecation timelines that the business then fails to enforce.
+
 
 ---
 

@@ -263,69 +263,37 @@ sumRange(2, 5) = prefixSum[6] - prefixSum[2]
 !!! danger "Misconception: sliding window can always replace prefix sum for subarray problems"
     Sliding window requires a **monotonic** property: adding an element either increases or decreases the window metric predictably. With negative numbers, adding an element can both increase and decrease the sum depending on context, so the shrink condition breaks down. The prefix sum + HashMap approach handles negative numbers correctly because it doesn't rely on monotonicity.
 
+---
+
+## Decision Framework: Choosing a Range Query Structure
+
+<div class="learner-section" markdown>
+
+**Your task:** Fill in the matrix after working through the implementations above.
+
+### Trade-off Analysis Matrix
+
+| Structure | Build time | Range query | Point update | Space | When to use |
+|---|---|---|---|---|---|
+| **Prefix sum array** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Fenwick tree (BIT)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Segment tree** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Sparse table** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+
+??? success "Answers"
+
+    | Structure | Build time | Range query | Point update | Space | When to use |
+    |---|---|---|---|---|---|
+    | **Prefix sum array** | O(n) | O(1) | O(n) — rebuild required | O(n) | Static array with frequent range sum queries; 2D prefix sums for submatrix sums |
+    | **Fenwick tree (BIT)** | O(n log n) | O(log n) prefix sum | O(log n) | O(n) | Frequent both range sum queries and point updates; simpler to implement than segment tree |
+    | **Segment tree** | O(n) | O(log n) for any associative operation | O(log n) | O(n) | Range queries beyond prefix sums (range min/max/product/gcd) with frequent point or range updates |
+    | **Sparse table** | O(n log n) | O(1) for idempotent operations (min, max, gcd) | O(n log n) rebuild | O(n log n) | Static array, O(1) range minimum or maximum queries (RMQ); build once, query many times |
+
+</div>
+
 !!! warning "When it breaks"
     Prefix sums break when the array is modified after preprocessing — the prefix array becomes stale and all subsequent range queries are incorrect. If the array updates frequently, use a Binary Indexed Tree (Fenwick tree) or segment tree, which handle both updates and queries in O(log n). The prefix sum + HashMap pattern (subarray sum equals K) breaks for maximum/minimum subarray sum problems — those require Kadane's algorithm or a deque. 2D prefix sums have four off-by-one failure points in the inclusion-exclusion formula; missing any one produces silently wrong results.
 
----
-
-## Decision Framework
-
-### Question 1: Do you have multiple range queries on a static array?
-
-Answer after solving problems:
-
-- **If yes:** <span class="fill-in">[Use prefix sum — O(n) preprocessing pays off across Q queries]</span>
-- **If only one query:** <span class="fill-in">[Brute force O(n) is fine — don't build the array]</span>
-- **Your observation:** <span class="fill-in">[Fill in based on practice problems]</span>
-
-### Question 2: Subarray count/length problem — sliding window or prefix sum?
-
-**Use sliding window when:**
-
-- Array values: <span class="fill-in">[All non-negative — monotonic shrink condition works]</span>
-- Query type: <span class="fill-in">[Contiguous window with expandable/contractable bounds]</span>
-- Example: <span class="fill-in">[Min subarray length >= target, longest substring]</span>
-
-**Use prefix sum + HashMap when:**
-
-- Array values: <span class="fill-in">[Can be negative — monotonicity breaks sliding window]</span>
-- Query type: <span class="fill-in">[Count subarrays with exact sum = k]</span>
-- Example: <span class="fill-in">[Subarray sum = k, contiguous array equal 0s/1s]</span>
-
-### Question 3: What to initialize the HashMap with?
-
-Fill in after implementing subarraySum:
-
-- Initial entry: <span class="fill-in">[{0: 1} — represents the empty prefix]</span>
-- Why needed: <span class="fill-in">[Counts subarrays starting from index 0]</span>
-- For findMaxLength: <span class="fill-in">[{0: -1} — index -1 before the array starts]</span>
-
-### Your Decision Tree
-
-Build this after solving practice problems:
-
-```mermaid
-flowchart TD
-    Start["Array query problem"]
-    Q1{"Multiple range\nsum queries?"}
-    Start --> Q1
-    A1(["Build prefix sum array O(n)\nAnswer each in O(1) ✓"])
-    Q1 -->|"YES"| A1
-    Q2{"Find subarray\nwith exact sum?"}
-    Q1 -->|"NO"| Q2
-    Q3{"Array has\nnegative numbers?"}
-    Q2 -->|"YES"| Q3
-    A2(["Prefix sum + HashMap O(n) ✓"])
-    Q3 -->|"YES"| A2
-    A3(["Sliding window O(n) ✓"])
-    Q3 -->|"NO (all ≥ 0)"| A3
-    Q4{"2D submatrix\nquery?"}
-    Q2 -->|"NO"| Q4
-    A4(["2D prefix sum O(mn) build\nO(1) query ✓"])
-    Q4 -->|"YES"| A4
-```
-
-</div>
 
 ---
 

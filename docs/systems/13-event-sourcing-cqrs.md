@@ -236,9 +236,6 @@ The saga itself is persistent state (it records which steps are complete) and it
 
 ---
 
-!!! warning "When it breaks"
-    Event sourcing breaks when the event log grows large enough that replaying from the beginning is impractical — a system processing 10,000 events/second generates 864M events per day. Snapshots reduce replay time but add a consistency problem: the snapshot format must remain deserializable as the schema evolves. Schema evolution breaks when old events can't be deserialized after a field is renamed or a type changes — the event log is permanent, so you cannot migrate historical events in place. CQRS breaks when the read model diverges too far from the write model: synchronising two separate data stores under failures creates consistency windows that most teams underestimate.
-
 ## Common Misconceptions
 
 !!! danger "Misconception 1: Event sourcing is just an audit log"
@@ -255,80 +252,33 @@ The saga itself is persistent state (it records which steps are complete) and it
 
 ---
 
-## Decision Framework
+## Decision Framework: Choosing an Event-Driven Architecture Pattern
 
 <div class="learner-section" markdown>
 
-**Your task:** Fill in this framework after working through the core concepts. These are the questions you will face in a staff-level system design interview.
+**Your task:** Fill in the matrix based on the material above.
 
-### 1. When does event sourcing add value?
+### Trade-off Analysis Matrix
 
-**Use event sourcing when:**
+| Pattern | Query flexibility | Write complexity | Audit / replay | Schema evolution | Key failure mode |
+|---|---|---|---|---|---|
+| **CRUD + audit log** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **CQRS (separate read / write models)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Event sourcing + CQRS** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- Your answer: <span class="fill-in">The domain requires a complete, immutable audit trail because ___</span>
-- Your answer: <span class="fill-in">You need to support temporal queries such as ___, which without event sourcing would require ___</span>
-- Your answer: <span class="fill-in">The business domain is complex enough that ___, making event replay useful for debugging ___</span>
-- Your answer: <span class="fill-in">Multiple downstream systems need to react to state changes; the event log gives them ___ without ___</span>
+??? success "Answers"
 
-**Avoid event sourcing when:**
-
-- Your answer: <span class="fill-in">The domain is simple CRUD with no audit requirement because the overhead of ___ is not justified by ___</span>
-- Your answer: <span class="fill-in">The team has no prior exposure to the pattern, because the operational complexity of ___ will slow ___</span>
-- Your answer: <span class="fill-in">Events are high-frequency and aggregates are long-lived; without careful snapshot strategy, ___ will degrade ___</span>
-
-### 2. CQRS read model tradeoffs
-
-**Read model consistency options:**
-
-| Option | Mechanism | Acceptable lag | Use when |
-|---|---|---|---|
-| Eventual consistency | Async event propagation | Seconds to minutes | <span class="fill-in">[Fill in]</span> |
-| Read-your-writes | Route reads to the write store immediately post-command | Zero lag for issuing user | <span class="fill-in">[Fill in]</span> |
-| Synchronous projection | Update read model in same transaction as event append | Zero lag | <span class="fill-in">[Fill in]</span> |
-
-**When is CQRS read lag acceptable?**
-
-- Your answer: <span class="fill-in">Read lag is acceptable when queries are for ___ purposes (dashboards, reports) where users do not expect to see the result of their own action ___</span>
-
-**When is CQRS read lag a problem?**
-
-- Your answer: <span class="fill-in">Read lag becomes a problem when users perform a write and then immediately navigate to a page that queries the read model, because they see ___ and conclude ___</span>
-
-### 3. Schema evolution strategy
-
-**Given a stored event type that needs a new required field:**
-
-- Option A (upcasting): <span class="fill-in">Describe the approach and when you would choose it ___</span>
-- Option B (versioned types): <span class="fill-in">Describe the approach and when you would choose it ___</span>
-- The invariant you must never violate: <span class="fill-in">___</span>
-
-### 4. Snapshot strategy
-
-**How often should you snapshot?**
-
-- Your answer: <span class="fill-in">Snapshot every N events where N is chosen so that worst-case replay time is ___, typically evaluated by ___</span>
-
-**When should you NOT snapshot?**
-
-- Your answer: <span class="fill-in">Avoid snapshotting in the critical command path because ___, instead prefer ___</span>
-
-### 5. Your decision tree
-
-Fill in this after you can answer the above questions from memory:
-
-```mermaid
-flowchart TD
-    A["Does the domain require an immutable audit trail?"]
-    A -->|Yes| B["Is there also a complex query model?"]
-    A -->|No| C["Simple CRUD — skip event sourcing"]
-    B -->|Yes| D["Event Sourcing + CQRS"]
-    B -->|No| E["Event Sourcing alone may suffice"]
-    D --> F["Are aggregates long-lived with many events?"]
-    F -->|Yes| G["Add snapshots"]
-    F -->|No| H["Plain event replay is fine"]
-```
+    | Pattern | Query flexibility | Write complexity | Audit / replay | Schema evolution | Key failure mode |
+    |---|---|---|---|---|---|
+    | **CRUD + audit log** | High — standard SQL on current state | Low — direct table mutations | Limited — log shows changes but replay requires re-running mutations in order | Easy — ALTER TABLE, standard migrations | Audit log and state can diverge if mutations bypass the log; no reproducibility guarantee |
+    | **CQRS (separate read / write models)** | High — read model optimised per query pattern, can be denormalised | Medium — write model is simple; synchronising read model adds async coordination | None without event sourcing | Medium — read model must be rebuilt when its schema changes | Read model lag — write succeeds but read model update is async; users may not immediately see their own writes |
+    | **Event sourcing + CQRS** | High — any projection can be rebuilt from the event log | High — events must be immutable; schema design requires care upfront | Full — replay from any point in history, build new projections retroactively | Hard — historical events cannot be migrated in place; use upcasters or schema versioning | Event store grows unbounded; snapshots reduce replay time but add consistency complexity between snapshot and subsequent events |
 
 </div>
+
+!!! warning "When it breaks"
+    Event sourcing breaks when the event log grows large enough that replaying from the beginning is impractical — a system processing 10,000 events/second generates 864M events per day. Snapshots reduce replay time but add a consistency problem: the snapshot format must remain deserializable as the schema evolves. Schema evolution breaks when old events can't be deserialized after a field is renamed or a type changes — the event log is permanent, so you cannot migrate historical events in place. CQRS breaks when the read model diverges too far from the write model: synchronising two separate data stores under failures creates consistency windows that most teams underestimate.
+
 
 ---
 

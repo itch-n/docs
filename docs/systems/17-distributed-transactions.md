@@ -370,9 +370,6 @@ Saga: Reserve → Charge → Ship (if any fails, undo previous)
 
 </div>
 
-!!! warning "When it breaks"
-    2PC breaks under network partition: if the coordinator fails after sending "prepare" but before sending "commit", all participants block indefinitely waiting for a decision. The blocked participants hold locks, and the lock duration is bounded only by the coordinator's recovery time, which can be minutes. Sagas break when compensation is not possible: you cannot unsend an email, uncharge a card in certain payment systems, or un-publish a notification. When compensation fails halfway through, you have a partially compensated system with no automated recovery path. The outbox pattern breaks when the outbox table becomes a write hotspot — at very high event rates, the outbox needs its own partitioning strategy.
-
 ---
 
 ## Case Studies: Distributed Transactions in the Wild
@@ -434,76 +431,35 @@ Saga: Reserve → Charge → Ship (if any fails, undo previous)
 
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Distributed Transaction Strategy
 
 <div class="learner-section" markdown>
 
-**Questions to answer after implementation:**
+**Your task:** Fill in the matrix based on the material above.
 
-### 1. Pattern Selection
+### Trade-off Analysis Matrix
 
-**When to use Two-Phase Commit?**
+| Strategy | Consistency guarantee | Availability under partition | Compensation / rollback | Throughput | Key failure mode |
+|---|---|---|---|---|---|
+| **2PC (two-phase commit)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Saga — choreography** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Saga — orchestration** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Outbox pattern** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
+??? success "Answers"
 
-**When to use Saga (Orchestration)?**
-
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
-
-**When to use Saga (Choreography)?**
-
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
-
-**When to use Event Sourcing?**
-
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
-
-### 2. Trade-offs
-
-**Two-Phase Commit:**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-**Saga (Orchestration):**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-**Saga (Choreography):**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-**Event Sourcing:**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-### 3. Your Decision Tree
-
-Build your decision tree after practicing:
-```mermaid
-flowchart TD
-    Start["What consistency do you need?"]
-
-    N1["?"]
-    Start -->|"Strong consistency (ACID)"| N1
-    N2["?"]
-    Start -->|"Eventual consistency acceptable"| N2
-    N3["?"]
-    Start -->|"Long-running transactions"| N3
-    N4["?"]
-    Start -->|"Need audit trail"| N4
-    N5["?"]
-    Start -->|"Highly distributed services"| N5
-```
+    | Strategy | Consistency guarantee | Availability under partition | Compensation / rollback | Throughput | Key failure mode |
+    |---|---|---|---|---|---|
+    | **2PC (two-phase commit)** | Strong — atomically commits or aborts across all participants | Low — blocks if coordinator fails after sending prepare | N/A — all-or-nothing, no partial rollback | Low — synchronous coordination; all participants must respond before commit | Coordinator failure after prepare leaves all participants blocked indefinitely holding locks |
+    | **Saga — choreography** | Eventual — each step commits independently | High — no central coordinator to fail | Yes — each step publishes a compensating event | High — no coordinator; steps run concurrently | No central oversight — missing compensation events go undetected; multi-step failure modes are hard to reason about |
+    | **Saga — orchestration** | Eventual — orchestrator drives step sequence | High — orchestrator is stateless or idempotent | Yes — orchestrator tracks state and triggers compensation explicitly | High | Orchestrator is a new failure point; must be idempotent so re-driving steps after a restart does not double-execute |
+    | **Outbox pattern** | Strong-ish — event and state change committed atomically in the same DB transaction | High | N/A — used alongside saga steps for reliable event publishing | Moderate — adds an outbox table write to each transaction | Write contention on the outbox table at very high event rates; CDC-based relay is faster than polling-based relay |
 
 </div>
+
+!!! warning "When it breaks"
+    2PC breaks under network partition: if the coordinator fails after sending "prepare" but before sending "commit", all participants block indefinitely waiting for a decision. The blocked participants hold locks, and the lock duration is bounded only by the coordinator's recovery time, which can be minutes. Sagas break when compensation is not possible: you cannot unsend an email, uncharge a card in certain payment systems, or un-publish a notification. When compensation fails halfway through, you have a partially compensated system with no automated recovery path. The outbox pattern breaks when the outbox table becomes a write hotspot — at very high event rates, the outbox needs its own partitioning strategy.
+
 
 ---
 

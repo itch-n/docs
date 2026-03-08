@@ -965,83 +965,51 @@ public void updateUserProfile_WriteBack(String userId, String newName) {
 !!! danger "Write-Back is dangerous and should be avoided"
     Write-Back carries data loss risk only during the window between a write and the next flush. With a durable write-ahead log (WAL) or periodic snapshots, the risk can be bounded to seconds of data. Many high-performance databases (including MySQL InnoDB's buffer pool) use write-back internally. The choice is about acceptable durability guarantees, not a blanket safety rule.
 
-!!! warning "When it breaks"
-    Per-instance caching works on a single server and breaks the moment you add a second — each instance caches independently, invalidation doesn't propagate, and users see inconsistent responses depending on which server handles their request. A shared cache (Redis) solves this but adds ~0.5ms per operation and a new failure domain. A single Redis node handles roughly 100,000 operations/second; above that, you need clustering. The thundering herd breaks caches at any scale: when a popular entry expires and thousands of concurrent requests miss simultaneously, the resulting database burst can be larger than the original traffic that justified caching.
-
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Caching Strategy
 
 <div class="learner-section" markdown>
 
-**Questions to answer after implementation:**
+**Your task:** Fill in both matrices based on your implementation and the material above.
 
-### 1. When to use LRU vs LFU?
+### Trade-off Analysis Matrix: Technology
 
-**LRU Cache:**
+| Technology | p99 latency | Supported data structures | Persistence options | Scalability model | Key failure mode |
+|---|---|---|---|---|---|
+| **Distributed data structure store (Redis)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Distributed string cache (Memcached)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **In-process heap cache (Guava / Caffeine)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- When to use: <span class="fill-in">[Fill in]</span>
-- Pros: <span class="fill-in">[Fill in]</span>
-- Cons: <span class="fill-in">[Fill in]</span>
-- Example scenarios: <span class="fill-in">[Fill in]</span>
+??? success "Answers"
 
-**LFU Cache:**
+    | Technology | p99 latency | Supported data structures | Persistence options | Scalability model | Key failure mode |
+    |---|---|---|---|---|---|
+    | **Distributed data structure store (Redis)** | Sub-ms | Rich — Hashes, Lists, Sets, Sorted Sets, Streams | AOF (append-only) or RDB (snapshot) | Single-threaded event loop; Redis Cluster for horizontal scale | maxmemory limit triggers eviction storm; cold-start miss spike after restart |
+    | **Distributed string cache (Memcached)** | Sub-ms; lower p99 variance than Redis | String values only | None | Multi-threaded; consistent hashing across nodes | Pure LRU eviction; no persistence means full cold start on restart |
+    | **In-process (Guava / Caffeine)** | Nanoseconds — no serialisation, no network | JVM objects | None | JVM heap only; not shared across instances | GC pressure at large sizes; each instance has its own cache — no coordination |
 
-- When to use: <span class="fill-in">[Fill in]</span>
-- Pros: <span class="fill-in">[Fill in]</span>
-- Cons: <span class="fill-in">[Fill in]</span>
-- Example scenarios: <span class="fill-in">[Fill in]</span>
+### Trade-off Analysis Matrix: Write Strategy
 
-### 2. When to use Write-Through vs Write-Back?
+| Strategy | Consistency guarantee | Write latency impact | Cache miss penalty | When to use |
+|---|---|---|---|---|
+| **Write-through** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Write-back** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Write-around** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-**Write-Through:**
+??? success "Answers"
 
-- When to use: <span class="fill-in">[Fill in]</span>
-- Pros: <span class="fill-in">[Fill in]</span>
-- Cons: <span class="fill-in">[Fill in]</span>
-- Example scenarios: <span class="fill-in">[Fill in]</span>
-
-**Write-Back:**
-
-- When to use: <span class="fill-in">[Fill in]</span>
-- Pros: <span class="fill-in">[Fill in]</span>
-- Cons: <span class="fill-in">[Fill in]</span>
-- Example scenarios: <span class="fill-in">[Fill in]</span>
-
-### 3. Your Decision Tree
-
-Build this after solving practice scenarios:
-```mermaid
-flowchart TD
-    Start["Should I use caching?"]
-
-    Q1{"What's the access pattern?"}
-    Start --> Q1
-    N2["?"]
-    Q1 -->|"Recent items accessed again"| N2
-    N3["?"]
-    Q1 -->|"Popular items accessed frequently"| N3
-    N4["?"]
-    Q1 -->|"Mixed/unknown"| N4
-    Q5{"What's the write pattern?"}
-    Start --> Q5
-    N6["?"]
-    Q5 -->|"Consistency critical"| N6
-    N7["?"]
-    Q5 -->|"Performance critical"| N7
-    N8["?"]
-    Q5 -->|"Mixed"| N8
-    Q9{"Other considerations?"}
-    Start --> Q9
-    N10["?"]
-    Q9 -->|"Memory constraints"| N10
-    N11["?"]
-    Q9 -->|"Data freshness requirements"| N11
-    N12["?"]
-    Q9 -->|"Failure tolerance"| N12
-```
+    | Strategy | Consistency guarantee | Write latency impact | Cache miss penalty | When to use |
+    |---|---|---|---|---|
+    | **Write-through** | Strong — cache and DB always in sync | Higher — every write hits DB synchronously | Low — cache is always warm | Financial data, inventory counts; stale reads are unacceptable |
+    | **Write-back** | Eventual — DB updated asynchronously | Lower — write returns after cache update | Medium — cache warm but DB may lag | Write-heavy workloads where brief data loss is tolerable (counters, analytics) |
+    | **Write-around** | Strong — only DB written; cache bypassed on write | Same as direct DB write | High — first read always misses; warms lazily on read | Write-once, read-rarely data; avoids polluting cache with items unlikely to be re-read |
 
 </div>
+
+!!! warning "When it breaks"
+    Per-instance caching works on a single server and breaks the moment you add a second — each instance caches independently, invalidation doesn't propagate, and users see inconsistent responses depending on which server handles their request. A shared cache (Redis) solves this but adds ~0.5ms per operation and a new failure domain. A single Redis node handles roughly 100,000 operations/second; above that, you need clustering. The thundering herd breaks caches at any scale: when a popular entry expires and thousands of concurrent requests miss simultaneously, the resulting database burst can be larger than the original traffic that justified caching.
+
 
 ---
 

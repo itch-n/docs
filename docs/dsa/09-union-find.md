@@ -369,9 +369,6 @@ cost and greedily adds the cheapest edge that doesn't create a cycle — which u
 When multiple users edit the same document offline and reconnect, the system must merge their edit graphs. Union-Find
 groups edits into connected revision chains before merging, enabling efficient conflict detection.
 
-!!! warning "When it breaks"
-    Union-find breaks for three cases: directed graphs (edge direction is ignored, producing wrong connectivity), problems requiring deletion (elements cannot be removed from a set once merged — union is one-way), and persistent snapshots (path compression mutates parent arrays on read, making rollback impossible). The weighted union variant also breaks when the problem requires minimum spanning tree with arbitrary weights — you need a separate priority queue (Kruskal's) on top of union-find, not a replacement.
-
 ---
 
 ## Common Misconceptions
@@ -393,66 +390,35 @@ groups edits into connected revision chains before merging, enabling efficient c
 
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Union-Find Implementation
 
 <div class="learner-section" markdown>
 
-**Your task:** Build decision trees for union-find problems.
+**Your task:** Fill in the matrix after working through the implementations above.
 
-### Question 1: What do you need to track?
+### Trade-off Analysis Matrix
 
-Answer after solving problems:
+| Implementation | find() time | union() time | Space | Key trade-off | Practical use |
+|---|---|---|---|---|---|
+| **Quick find** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Quick union** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Weighted union** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Weighted + path compression** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- **Connected components?** <span class="fill-in">[Basic union-find]</span>
-- **Cycles in graph?** <span class="fill-in">[Union-find with cycle detection]</span>
-- **Dynamic connectivity?** <span class="fill-in">[Union-find with online queries]</span>
-- **Weighted relationships?** <span class="fill-in">[Weighted union-find]</span>
+??? success "Answers"
 
-### Question 2: What optimizations do you need?
-
-**Always use:**
-
-- Path compression: <span class="fill-in">[Makes find nearly O(1)]</span>
-- Union by rank/size: <span class="fill-in">[Keeps tree balanced]</span>
-
-**Additional data:**
-
-- Component size: <span class="fill-in">[Track in size array]</span>
-- Component count: <span class="fill-in">[Decrement on union]</span>
-- Weights/ratios: <span class="fill-in">[For transitive relationships]</span>
-
-### Your Decision Tree
-```mermaid
-flowchart TD
-    Start["Union-Find Pattern Selection"]
-
-    Q1{"Basic connectivity?"}
-    Start --> Q1
-    Q2{"Cycle detection?"}
-    Start --> Q2
-    N3(["Union-find ✓"])
-    Q2 -->|"Undirected"| N3
-    N4["DFS<br/>(not union-find)"]
-    Q2 -->|"Directed"| N4
-    Q5{"Dynamic components?"}
-    Start --> Q5
-    N6(["Union-find ✓"])
-    Q5 -->|"Number of islands"| N6
-    N7(["Union-find ✓"])
-    Q5 -->|"Provinces/groups"| N7
-    N8(["Union-find ✓"])
-    Q5 -->|"Merging accounts"| N8
-    Q9{"Weighted relationships?"}
-    Start --> Q9
-    N10(["Weighted UF ✓"])
-    Q9 -->|"Division equations"| N10
-    N11(["Weighted UF ✓"])
-    Q9 -->|"Distance/ratio"| N11
-    N12(["Basic UF ✓"])
-    Q9 -->|"Equality constraints"| N12
-```
+    | Implementation | find() time | union() time | Space | Key trade-off | Practical use |
+    |---|---|---|---|---|---|
+    | **Quick find** | O(1) | O(n) — must update all elements in the set | O(n) | Trivial find, expensive union — every union rewrites the whole set's id array | Toy examples; not used in practice |
+    | **Quick union** | O(n) worst — tree can degenerate to linked list | O(n) worst | O(n) | Avoids the O(n) union rewrite but trades it for O(n) find in worst case | Also toy; establishes the baseline to understand why weighting matters |
+    | **Weighted union** | O(log n) — tree height bounded by log n because smaller tree merges under larger | O(log n) | O(n) | Height bounded by O(log n) — never degenerates | Good when path compression unavailable (e.g., persistent/rollback variants) |
+    | **Weighted + path compression** | O(α(n)) ≈ O(1) — path compression flattens the tree on every find | O(α(n)) ≈ O(1) | O(n) | α is inverse Ackermann — effectively constant for any n that could exist | Production default: number of islands, redundant connection, accounts merge |
 
 </div>
+
+!!! warning "When it breaks"
+    Union-find breaks for three cases: directed graphs (edge direction is ignored, producing wrong connectivity), problems requiring deletion (elements cannot be removed from a set once merged — find() performs path compression, physically rewriting parent pointers, so there is no record of previous parent relationships to reverse), and persistent snapshots (path compression mutates parent arrays on read, making rollback to a prior state impossible without copying the entire structure). The weighted union variant also breaks when the problem requires minimum spanning tree with arbitrary weights — you need a separate priority queue (Kruskal's) on top of union-find, not a replacement.
+
 
 ---
 

@@ -867,121 +867,37 @@ After finding and fixing all bugs:
 !!! danger "ReentrantLock is always faster than synchronized"
     On modern JVMs, the JIT compiler applies biased locking, lock elision, and lock coarsening to `synchronized` blocks, making them competitive with or faster than `ReentrantLock` in low-contention cases. `ReentrantLock` wins when you need features `synchronized` lacks: try-lock, timed lock, interruptible lock, or fair ordering. Default to `synchronized` for simplicity; switch to `ReentrantLock` when you need those features or when profiling shows benefit.
 
-!!! warning "When it breaks"
-    `synchronized` breaks under high contention: when many threads compete for the same lock, threads queue and CPU time is spent on context switching rather than work — throughput declines as you add threads, the opposite of expected scaling. Lock-free algorithms (compare-and-swap) break under the ABA problem: a value changes from A to B and back to A between your read and CAS, making the CAS succeed when it should fail. Thread pools break when tasks block on I/O — all threads are stuck waiting and new tasks queue indefinitely. The fix is either async I/O, separate thread pools for I/O and CPU work, or virtual threads, which block without consuming a carrier thread.
-
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Concurrency Mechanism
 
 <div class="learner-section" markdown>
 
-**Your task:** Build decision trees for when to use each concurrency pattern.
+**Your task:** Fill in the matrix based on your implementation and the material above.
 
-### Question 1: When to use locks vs lock-free algorithms?
+### Trade-off Analysis Matrix
 
-Answer after implementation:
+| Mechanism | Contention behavior | Throughput under parallelism | Deadlock risk | Best for | Key failure mode |
+|---|---|---|---|---|---|
+| **synchronized / ReentrantLock** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Compare-and-Swap (AtomicInteger / LongAdder)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Thread pool (ExecutorService)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Virtual threads (Java 21+)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-**Use Locks when:**
+??? success "Answers"
 
-- Complex operations: <span class="fill-in">[Multiple steps that must be atomic]</span>
-- Simple reasoning: <span class="fill-in">[Lock-based code is easier to understand]</span>
-- Fairness needed: <span class="fill-in">[Locks can guarantee FIFO ordering]</span>
-- Most use cases: <span class="fill-in">[Locks are sufficient for 90% of scenarios]</span>
-
-**Use Lock-Free when:**
-
-- High contention: <span class="fill-in">[Many threads competing for same resource]</span>
-- Low-latency critical: <span class="fill-in">[Cannot afford lock overhead]</span>
-- Progress guarantees: <span class="fill-in">[At least one thread makes progress]</span>
-- Simple operations: <span class="fill-in">[Increment, swap, stack push/pop]</span>
-
-### Question 2: Which thread pool to use?
-
-**FixedThreadPool when:**
-
-- Known workload: <span class="fill-in">[Consistent number of tasks]</span>
-- Resource limiting: <span class="fill-in">[Don't want unbounded thread creation]</span>
-- CPU-bound tasks: <span class="fill-in">[Pool size = CPU cores]</span>
-
-**CachedThreadPool when:**
-
-- Unpredictable load: <span class="fill-in">[Varying number of tasks]</span>
-- I/O-bound tasks: <span class="fill-in">[Threads spend time waiting]</span>
-- Short-lived tasks: <span class="fill-in">[Quick execution, many tasks]</span>
-
-**ScheduledThreadPool when:**
-
-- Delayed execution: <span class="fill-in">[Run after delay]</span>
-- Periodic tasks: <span class="fill-in">[Cron-like scheduling]</span>
-- Background jobs: <span class="fill-in">[Cleanup, monitoring, etc.]</span>
-
-**ForkJoinPool when:**
-
-- Recursive tasks: <span class="fill-in">[Divide-and-conquer algorithms]</span>
-- Parallel algorithms: <span class="fill-in">[Parallel sort, sum, map-reduce]</span>
-- Work stealing: <span class="fill-in">[Balance load across threads]</span>
-
-### Question 3: Synchronized vs ReentrantLock?
-
-**Synchronized when:**
-
-- Simple use case: <span class="fill-in">[Just need mutual exclusion]</span>
-- Less code: <span class="fill-in">[synchronized(this) { ... }]</span>
-- No advanced features needed: <span class="fill-in">[Try-lock, interruptible, timeouts not needed]</span>
-
-**ReentrantLock when:**
-
-- Try-lock needed: <span class="fill-in">[Attempt lock without blocking]</span>
-- Timeouts: <span class="fill-in">[Give up after waiting]</span>
-- Interruptible: <span class="fill-in">[Can interrupt waiting thread]</span>
-- Fairness: <span class="fill-in">[FIFO lock acquisition]</span>
-- Condition variables: <span class="fill-in">[Complex waiting conditions]</span>
-
-### Your Decision Tree
-
-Build this after solving practice scenarios:
-```mermaid
-flowchart TD
-    Start["Concurrency Pattern Selection"]
-
-    Q1{"What's the workload?"}
-    Start --> Q1
-    N2["Use thread pool"]
-    Q1 -->|"Many independent tasks"| N2
-    N3["Need synchronization"]
-    Q1 -->|"Shared mutable state"| N3
-    N4["Use BlockingQueue"]
-    Q1 -->|"Message passing"| N4
-    Q5{"Need synchronization?"}
-    Start --> Q5
-    N6["synchronized"]
-    Q5 -->|"Simple critical section"| N6
-    N7["ReentrantLock"]
-    Q5 -->|"Advanced features"| N7
-    N8["ReadWriteLock"]
-    Q5 -->|"Read-heavy"| N8
-    N9["Lock-free<br/>(Atomic)"]
-    Q5 -->|"High contention"| N9
-    Q10{"Thread pool sizing?"}
-    Start --> Q10
-    N11["cores + 1"]
-    Q10 -->|"CPU-bound"| N11
-    N12["cores * 2 or more"]
-    Q10 -->|"I/O-bound"| N12
-    N13["Test and measure"]
-    Q10 -->|"Mixed"| N13
-    Q14{"Queue sizing?"}
-    Start --> Q14
-    N15["Prevent memory exhaustion"]
-    Q14 -->|"Bounded"| N15
-    N16["Risk OOM, but never blocks producers"]
-    Q14 -->|"Unbounded"| N16
-    N17["Direct handoff, no buffering"]
-    Q14 -->|"SynchronousQueue"| N17
-```
+    | Mechanism | Contention behavior | Throughput under parallelism | Deadlock risk | Best for | Key failure mode |
+    |---|---|---|---|---|---|
+    | **synchronized / ReentrantLock** | Threads queue on lock; context-switch cost dominates at high contention | Limited by lock granularity — throughput declines as you add threads | Yes — multiple locks acquired in inconsistent order | Low-contention critical sections; correctness-first code | High contention wastes CPU on context switches rather than work |
+    | **Compare-and-Swap (AtomicInteger / LongAdder)** | Spin-retry under contention — no blocking, but CPU burns on failed CAS | High for low contention; LongAdder reduces CAS contention via per-CPU cell striping | No — no locks | Single-variable counters (hit counts, sequence numbers) | ABA problem: value changes A→B→A between read and CAS; CAS succeeds incorrectly — use AtomicStampedReference for pointer-like values |
+    | **Thread pool (ExecutorService)** | Bounded — pool size caps parallelism; overflow queues or rejects | Scales to pool size; CPU-bound work shows diminishing returns beyond core count | Possible if tasks share locks | CPU-bound work, bounded I/O parallelism with known concurrency | Pool exhaustion when all threads block on I/O — new tasks queue indefinitely; fix with bounded queue + rejection policy |
+    | **Virtual threads (Java 21+)** | Non-blocking — park on I/O, carrier thread freed | Near-unlimited for I/O-bound work; CPU-bound still limited by core count | Reduced — no carrier thread held during I/O | I/O-bound services (database calls, HTTP clients) | Pinning: a synchronized block containing an I/O call holds the carrier thread, defeating the purpose |
 
 </div>
+
+!!! warning "When it breaks"
+    `synchronized` breaks under high contention: when many threads compete for the same lock, threads queue and CPU time is spent on context switching rather than work — throughput declines as you add threads, the opposite of expected scaling. Lock-free algorithms (compare-and-swap) break under the ABA problem: a value changes from A to B and back to A between your read and CAS, making the CAS succeed when it should fail. Thread pools break when tasks block on I/O — all threads are stuck waiting and new tasks queue indefinitely. The fix is either async I/O, separate thread pools for I/O and CPU work, or virtual threads, which block without consuming a carrier thread.
+
 
 ---
 

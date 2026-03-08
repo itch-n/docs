@@ -403,122 +403,35 @@ With observability:
 
 ---
 
-!!! warning "When it breaks"
-    Metrics break at high cardinality: Prometheus stores one time series per unique label combination, and a label with high cardinality (user ID, request ID, full URL) can generate millions of series, exhausting memory. The rule of thumb: no label should have more than a few hundred distinct values. Distributed tracing breaks when sampling rate is too low — at 1% sampling, a bug affecting 0.5% of requests may never appear in traces. It also breaks when context propagation is missing from even one service in the call chain, making the trace appear to terminate mid-path. Log-based alerting breaks under high log volume: alert evaluation latency grows with ingestion backlog, and a critical alert during a log storm may arrive minutes late.
-
-## Decision Framework
+## Decision Framework: Choosing Observability Signals
 
 <div class="learner-section" markdown>
 
-**Your task:** Build decision trees for observability patterns.
+**Your task:** Fill in the matrix based on the material above.
 
-### Question 1: Metrics vs Logs vs Traces?
+### Trade-off Analysis Matrix
 
-Answer after implementation:
+| Signal type | Best for | Cardinality constraint | Storage cost | Retroactive analysis? | Key failure mode |
+|---|---|---|---|---|---|
+| **Metrics (Prometheus / Grafana)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Logs (ELK / Loki)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Distributed traces (Jaeger / Zipkin)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Structured events (Honeycomb)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-**Use Metrics when:**
+??? success "Answers"
 
-- Aggregated data: <span class="fill-in">[Count of requests, average latency]</span>
-- Alerting: <span class="fill-in">[Need to trigger alerts on thresholds]</span>
-- Dashboards: <span class="fill-in">[Time-series graphs and trends]</span>
-- Low overhead: <span class="fill-in">[Constant memory usage]</span>
-
-**Use Logs when:**
-
-- Debugging: <span class="fill-in">[Need full context of what happened]</span>
-- Audit trail: <span class="fill-in">[Who did what and when]</span>
-- Irregular events: <span class="fill-in">[Errors, exceptions, business events]</span>
-- Flexible queries: <span class="fill-in">[Search by any field]</span>
-
-**Use Traces when:**
-
-- Distributed systems: <span class="fill-in">[Request flows across services]</span>
-- Performance analysis: <span class="fill-in">[Find bottlenecks in request path]</span>
-- Dependencies: <span class="fill-in">[Understand service relationships]</span>
-- Latency debugging: <span class="fill-in">[Which service is slow]</span>
-
-### Question 2: When to add observability?
-
-**During development:**
-
-- Add metrics: <span class="fill-in">[Core business operations, API endpoints]</span>
-- Add logs: <span class="fill-in">[Error paths, state changes, important decisions]</span>
-- Add traces: <span class="fill-in">[Service boundaries, external calls]</span>
-
-**During incidents:**
-
-- Add metrics: <span class="fill-in">[Missing visibility into problem area]</span>
-- Add logs: <span class="fill-in">[Need more context for debugging]</span>
-- Add traces: <span class="fill-in">[Don't understand request flow]</span>
-
-### Question 3: How much is too much?
-
-**Metrics:**
-
-- Too few: <span class="fill-in">[Can't understand system health]</span>
-- Too many: <span class="fill-in">[Storage costs, query performance]</span>
-- Sweet spot: <span class="fill-in">[RED/USE for each service, key business metrics]</span>
-
-**Logs:**
-
-- Too few: <span class="fill-in">[Can't debug issues]</span>
-- Too many: <span class="fill-in">[Storage costs, signal-to-noise ratio]</span>
-- Sweet spot: <span class="fill-in">[WARN+ always, INFO for business events, DEBUG on-demand]</span>
-
-**Traces:**
-
-- Too few: <span class="fill-in">[Can't understand distributed requests]</span>
-- Too many: <span class="fill-in">[Storage costs, performance impact]</span>
-- Sweet spot: <span class="fill-in">[Sample based on traffic volume (1-10%)]</span>
-
-### Your Decision Tree
-
-Build this after solving practice scenarios:
-```mermaid
-flowchart TD
-    Start["Observability Pattern Selection"]
-
-    Q1{"What are you trying to understand?"}
-    Start --> Q1
-    N2["Metrics<br/>(RED/USE)"]
-    Q1 -->|"System health"| N2
-    N3["Logs + Traces"]
-    Q1 -->|"Why something failed"| N3
-    N4["Traces + Metrics"]
-    Q1 -->|"Performance bottleneck"| N4
-    N5["Metrics + Logs"]
-    Q1 -->|"Business analytics"| N5
-    Q6{"What's the cardinality?"}
-    Start --> Q6
-    N7["Metric labels"]
-    Q6 -->|"Low (< 100 unique values)"| N7
-    N8["Logs with indexing"]
-    Q6 -->|"Medium (100-10K)"| N8
-    N9["Sampling + traces"]
-    Q6 -->|"High (> 10K)"| N9
-    Q10{"What's the query pattern?"}
-    Start --> Q10
-    N11["Metrics"]
-    Q10 -->|"Time-series aggregation"| N11
-    N12["Logs"]
-    Q10 -->|"Full-text search"| N12
-    N13["Traces"]
-    Q10 -->|"Causality tracking"| N13
-    N14["Logs + Traces"]
-    Q10 -->|"Ad-hoc exploration"| N14
-    Q15{"What's the retention need?"}
-    Start --> Q15
-    N16["Metrics<br/>(short retention)"]
-    Q15 -->|"Real-time only"| N16
-    N17["Logs + Traces"]
-    Q15 -->|"Debugging (days)"| N17
-    N18["Logs<br/>(archive)"]
-    Q15 -->|"Compliance (years)"| N18
-    N19["Metrics<br/>(downsampled)"]
-    Q15 -->|"Trending (months)"| N19
-```
+    | Signal type | Best for | Cardinality constraint | Storage cost | Retroactive analysis? | Key failure mode |
+    |---|---|---|---|---|---|
+    | **Metrics (Prometheus / Grafana)** | Aggregates, rates, SLO tracking, alerting | Low — each unique label combination creates a separate time series | Low — pre-aggregated, tiny footprint | No — counters and gauges discard event-level detail | High-cardinality labels (user_id, trace_id) create millions of time series and exhaust memory |
+    | **Logs (ELK / Loki)** | Event details, error messages, unstructured debugging | High — raw text, no label explosion | High — every event stored verbatim | Yes — full text retained; unindexed fields require full scan | Ingestion backlog at high log volume delays alert evaluation; critical alerts may arrive minutes late during a log storm |
+    | **Distributed traces (Jaeger / Zipkin)** | Request path across services, latency attribution, dependency mapping | Medium — spans have bounded label sets | Medium — traces are sampled | Partial — only sampled traces retained | Low sampling rate misses rare bugs; a single missing context propagation in one service breaks the entire trace chain |
+    | **Structured events (Honeycomb)** | High-cardinality arbitrary queries, unknown-unknown debugging | None — column store designed for it | High | Yes — full event retained | High cost at scale; requires discipline to emit rich event fields consistently |
 
 </div>
+
+!!! warning "When it breaks"
+    Metrics break at high cardinality: Prometheus stores one time series per unique label combination, and a label with high cardinality (user ID, request ID, full URL) can generate millions of series, exhausting memory. The rule of thumb: no label should have more than a few hundred distinct values. Distributed tracing breaks when sampling rate is too low — at 1% sampling, a bug affecting 0.5% of requests may never appear in traces. It also breaks when context propagation is missing from even one service in the call chain, making the trace appear to terminate mid-path. Log-based alerting breaks under high log volume: alert evaluation latency grows with ingestion backlog, and a critical alert during a log storm may arrive minutes late.
+
 
 ---
 

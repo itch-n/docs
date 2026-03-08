@@ -398,65 +398,37 @@ return idx >= 0 ? idx : -(idx + 1);
     the monotonic predicate. The real requirement is: "can I determine which half contains the answer without examining
     every element?"
 
-!!! warning "When it breaks"
-    Binary search breaks when the predicate is not monotonic: if `check(mid)` doesn't cleanly divide the space into "too small" and "too large" halves, the algorithm may skip the answer or loop. Floating-point binary search breaks with precision: comparing floats for convergence can loop indefinitely due to representation error — use a fixed iteration count (50–100) rather than a convergence condition. The answer-space variant breaks when the validation function is expensive to compute — binary search on answer space multiplies the validation cost by O(log(range)), so a slow `canAchieve` function can make the approach impractical.
-
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Binary Search Variant
 
 <div class="learner-section" markdown>
 
-**Your task:** Build decision trees for binary search problems.
+**Your task:** Fill in the matrix after working through the implementations above. The goal is to be able to reach for the right variant immediately in an interview.
 
-### Question 1: Is the data sorted?
+### Trade-off Analysis Matrix
 
-Answer after solving problems:
+| Variant | Precondition | What it returns | Mid-update rule | Off-by-one risk | Example problems |
+|---|---|---|---|---|---|
+| **Classic (exact match)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Left bound (lower_bound)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Right bound (upper_bound)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Answer-space search** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- **Already sorted?** <span class="fill-in">[Classic binary search]</span>
-- **Rotated?** <span class="fill-in">[Find sorted half, adjust search]</span>
-- **Partially sorted?** <span class="fill-in">[Modified binary search]</span>
-- **Not sorted?** <span class="fill-in">[Can't use binary search]</span>
+??? success "Answers"
 
-### Question 2: What are you searching for?
-
-**Search for value:**
-
-- Direct search: <span class="fill-in">[Classic binary search]</span>
-- First/last occurrence: <span class="fill-in">[Modified binary search]</span>
-
-**Search for position:**
-
-- Insert position: <span class="fill-in">[Binary search with left pointer]</span>
-- Peak element: <span class="fill-in">[Binary search on local property]</span>
-
-**Search on answer space:**
-
-- Square root, capacity: <span class="fill-in">[Binary search on range]</span>
-- Minimize/maximize: <span class="fill-in">[Binary search with validation]</span>
-
-### Your Decision Tree
-```mermaid
-flowchart TD
-    Start["Binary Search Pattern Selection"]
-
-    Q1{"Standard sorted array?"}
-    Start --> Q1
-    Q2{"Rotated sorted array?"}
-    Start --> Q2
-    Q3{"2D matrix?"}
-    Start --> Q3
-    N4(["Treat as 1D ✓"])
-    Q3 -->|"Fully sorted"| N4
-    N5(["Search each row ✓"])
-    Q3 -->|"Row-sorted"| N5
-    N6(["Staircase search ✓"])
-    Q3 -->|"Row & col sorted"| N6
-    Q7{"Not searching in array?"}
-    Start --> Q7
-```
+    | Variant | Precondition | What it returns | Mid-update rule | Off-by-one risk | Example problems |
+    |---|---|---|---|---|---|
+    | **Classic (exact match)** | Sorted array, target may or may not exist | Exact index, or -1 | `left = mid + 1` or `right = mid - 1` | Low — direct equality check terminates cleanly | Search sorted array, search rotated array |
+    | **Left bound (lower_bound)** | Sorted array; condition transitions false→true | First index where `condition(mid)` is true | `left = mid + 1` on false; `right = mid` on true | High — `right = mid` (not `mid - 1`) keeps candidate in range; loop ends at `left == right` | First occurrence, insert position, first bad version |
+    | **Right bound (upper_bound)** | Sorted array; condition transitions true→false | Last index where `condition(mid)` is true | `left = mid` on true; `right = mid - 1` on false | High — `left = mid` risks infinite loop if `mid` never advances; requires `mid = (left + right + 1) / 2` | Last occurrence, count of target, rightmost valid position |
+    | **Answer-space search** | Answer range is bounded; feasibility is monotonic (all valid answers on one side) | Minimum or maximum value satisfying the constraint | Same as left/right bound depending on direction | Medium — range boundaries (`lo`, `hi`) must include the answer; off-by-one on `hi` causes missed answer | Minimum max subarray sum, capacity to ship packages, sqrt(x) |
 
 </div>
+
+!!! warning "When it breaks"
+    Binary search breaks when the predicate is not monotonic: if `check(mid)` doesn't cleanly divide the space into "too small" and "too large" halves, the algorithm may skip the answer or loop. Floating-point binary search breaks with precision: comparing floats for convergence can loop indefinitely due to representation error — use a fixed iteration count (50–100) rather than a convergence condition. The answer-space variant breaks when the validation function is expensive to compute — binary search on answer space multiplies the validation cost by O(log(range)), so a slow `canAchieve` function can make the approach impractical.
+
 
 ---
 

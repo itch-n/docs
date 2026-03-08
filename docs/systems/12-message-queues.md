@@ -427,79 +427,29 @@ User → [Upload] → Response        (instant)
 
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Message Queue System
 
 <div class="learner-section" markdown>
 
-**Questions to answer after implementation:**
+**Your task:** Fill in the matrix based on the material above.
 
-### 1. Pattern Selection
+### Trade-off Analysis Matrix
 
-**When to use Simple Queue?**
+| System | Delivery semantics | Ordering guarantee | Replay / retention | Throughput | Key failure mode |
+|---|---|---|---|---|---|
+| **Log-based stream (Apache Kafka)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Message broker (RabbitMQ)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Managed queue — standard (AWS SQS)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Managed queue — ordered (AWS SQS FIFO)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
+??? success "Answers"
 
-**When to use Producer-Consumer?**
-
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
-
-**When to use Pub-Sub?**
-
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
-
-**When to use Priority Queue?**
-
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
-
-**When to use Dead Letter Queue?**
-
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
-
-### 2. Trade-offs
-
-**Simple Queue:**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-**Producer-Consumer:**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-**Pub-Sub:**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-**Priority Queue:**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-### 3. Your Decision Tree
-
-Build your decision tree after practicing:
-```mermaid
-flowchart LR
-    Start["What is your communication pattern?"]
-
-    N1["?"]
-    Start -->|"One-to-one async processing"| N1
-    N2["?"]
-    Start -->|"Multiple workers needed"| N2
-    N3["?"]
-    Start -->|"Broadcast to multiple consumers"| N3
-    N4["?"]
-    Start -->|"Urgent messages need priority"| N4
-    N5["?"]
-    Start -->|"Need retry and failure handling"| N5
-```
+    | System | Delivery semantics | Ordering guarantee | Replay / retention | Throughput | Key failure mode |
+    |---|---|---|---|---|---|
+    | **Log-based stream (Apache Kafka)** | At-least-once; exactly-once with transactional producers | Strict within a partition — all messages with same key go to same partition | Yes — configurable retention (days to weeks) | Very high — 1M+ msgs/sec per broker | Consumer lag accumulates silently; topic compaction deletes non-latest values, which surprises slow consumers |
+    | **Message broker (RabbitMQ)** | At-least-once with acks; at-most-once without | Per-queue FIFO | No — consumed messages are deleted | Moderate — ~100K msgs/sec | Unacked messages accumulate in memory; a large unacked backlog exhausts RAM and crashes the broker |
+    | **Managed queue — standard (AWS SQS)** | At-least-once — duplicate delivery is guaranteed-possible | Best-effort | 4-day default, up to 14 days | High (managed, elastic) | Visibility timeout too short causes double-processing; consumers must be idempotent |
+    | **Managed queue — ordered (AWS SQS FIFO)** | Exactly-once within a message group (deduplication ID) | Strict FIFO per message group ID | Same as SQS standard | Limited — 300 msgs/sec (3000 with batching) | Low throughput ceiling; message group ID contention serialises processing for all messages sharing the same group |
 
 </div>
 

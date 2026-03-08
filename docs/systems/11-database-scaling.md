@@ -905,79 +905,29 @@ After finding and fixing all bugs:
 
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Database Scaling Strategy
 
 <div class="learner-section" markdown>
 
-**Questions to answer after implementation:**
+**Your task:** Fill in the matrix based on your benchmark results and the material above.
 
-### 1. Scaling Strategy Selection
+### Trade-off Analysis Matrix
 
-**When to use Hash-Based Sharding?**
+| Strategy | Addresses write bottleneck? | Addresses read bottleneck? | Operational complexity | Consistency risk | Key failure mode |
+|---|---|---|---|---|---|
+| **Read replicas** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Connection pooling (PgBouncer)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Vertical scaling** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Horizontal sharding** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
+??? success "Answers"
 
-**When to use Range-Based Sharding?**
-
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
-
-**When to use Master-Slave Replication?**
-
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
-
-**When to use Vertical Partitioning?**
-
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
-
-**When to use Consistent Hash Sharding?**
-
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
-
-### 2. Trade-offs
-
-**Hash-Based Sharding:**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-**Range-Based Sharding:**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-**Master-Slave Replication:**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-**Vertical Partitioning:**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-### 3. Your Decision Tree
-
-Build your decision tree after practicing:
-```mermaid
-flowchart TD
-    Start["What is your bottleneck?"]
-
-    N1["?"]
-    Start -->|"Read traffic"| N1
-    N2["?"]
-    Start -->|"Write traffic"| N2
-    N3["?"]
-    Start -->|"Data size"| N3
-    N4["?"]
-    Start -->|"Query patterns"| N4
-    N5["?"]
-    Start -->|"Operational complexity"| N5
-```
+    | Strategy | Addresses write bottleneck? | Addresses read bottleneck? | Operational complexity | Consistency risk | Key failure mode |
+    |---|---|---|---|---|---|
+    | **Read replicas** | No | Yes — N replicas multiply read throughput | Low — standard streaming replication | Yes — reads may be stale due to replication lag | Routing reads to a lagging replica after a write causes read-your-own-writes failures; lag grows under heavy write load |
+    | **Connection pooling (PgBouncer)** | Partially — reduces per-connection overhead | Yes — more efficient connection reuse | Low | None | Pool size exceeding database max_connections (default 100 in PostgreSQL) crashes the database; each connection uses ~5–10MB on the server |
+    | **Vertical scaling** | Temporarily — larger machine handles more writes until the ceiling | Yes | None — no architecture change | None | Hard ceiling — the largest available instance is finite; upgrades require downtime; buys time, not a long-term strategy |
+    | **Horizontal sharding** | Yes — writes distributed across shards | Yes | High — routing layer, cross-shard queries, rebalancing | Yes — cross-shard transactions require 2PC or saga | Cross-shard JOINs require scatter-gather; hotspot shards from a poor shard key require redistribution |
 
 </div>
 

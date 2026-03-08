@@ -409,9 +409,6 @@ Smartphone keyboards use word break DP to determine valid word segmentation in s
 stores whether the prefix up to position `i` forms valid words, enabling O(n²) segmentation instead of exponential
 backtracking.
 
-!!! warning "When it breaks"
-    DP breaks when the state space is too large to cache: a 3D DP table over inputs of size 1000 requires 10⁹ cells, exceeding available memory. Space optimisation (rolling array) helps for linear DPs but not for problems with complex state dependencies. DP also breaks when subproblems don't actually overlap — if no subproblem is ever recomputed, adding a memo table adds overhead with no benefit. The `Integer.MAX_VALUE + 1` overflow bug (common in coin change and knapsack) causes incorrect comparisons silently — use `Integer.MAX_VALUE / 2` or a sentinel that won't overflow on addition.
-
 ---
 
 ## Common Misconceptions
@@ -435,62 +432,33 @@ backtracking.
 
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a DP Approach
 
 <div class="learner-section" markdown>
 
-**Your task:** Build decision trees for 1D DP problems.
+**Your task:** Fill in the matrix after working through the implementations above.
 
-### Question 1: What defines a state?
+### Trade-off Analysis Matrix
 
-Answer after solving problems:
+| Approach | Code style | Space | Debug ease | Transition direction | Key pitfall |
+|---|---|---|---|---|---|
+| **Top-down (memoization)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Bottom-up (tabulation)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Bottom-up + space optimization** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- **Single index?** <span class="fill-in">[1D DP array]</span>
-- **Two indices?** <span class="fill-in">[2D DP — next topic]</span>
-- **Additional state (holding/not)?** <span class="fill-in">[Multiple DP arrays or states]</span>
-- **Your observation:** <span class="fill-in">[Fill in]</span>
+??? success "Answers"
 
-### Question 2: Top-down or bottom-up?
-
-**Top-down (Memoization):**
-
-- Pros: <span class="fill-in">[Natural recursion, only compute needed states]</span>
-- Cons: <span class="fill-in">[Stack space, slightly slower]</span>
-- Use when: <span class="fill-in">[Complex recurrence, not all states needed]</span>
-
-**Bottom-up (Tabulation):**
-
-- Pros: <span class="fill-in">[No stack, often faster, space optimization]</span>
-- Cons: <span class="fill-in">[Must compute all states]</span>
-- Use when: <span class="fill-in">[Simple iteration order, need all states]</span>
-
-### Your Decision Tree
-
-```mermaid
-flowchart TD
-    Start["1D DP Pattern Selection"]
-
-    Q1{"Depends on previous 1-2 states?"}
-    Start --> Q1
-    N1a(["Fibonacci-style ✓"])
-    Q1 -->|"Yes (Stairs, Robber)"| N1a
-    Q2{"Take/skip decision at each element?"}
-    Start --> Q2
-    N2a(["Decision DP ✓"])
-    Q2 -->|"Yes (Coin change, Subset sum)"| N2a
-    Q3{"String problem?"}
-    Start --> Q3
-    N3a(["String DP ✓"])
-    Q3 -->|"Build char by char"| N3a
-    N3b["2D DP<br/>(next topic)"]
-    Q3 -->|"Subsequence (two strings)"| N3b
-    Q4{"State machine (multiple modes)?"}
-    Start --> Q4
-    N4a(["Stock DP ✓"])
-    Q4 -->|"Hold/not hold"| N4a
-```
+    | Approach | Code style | Space | Debug ease | Transition direction | Key pitfall |
+    |---|---|---|---|---|---|
+    | **Top-down (memoization)** | Recursive + cache (HashMap or array) | O(states) + O(depth) call stack | High — follows natural problem decomposition | Any order — recursion handles dependencies automatically | Stack overflow for n > ~10,000; Python default recursion limit is 1,000 |
+    | **Bottom-up (tabulation)** | Iterative, fill table in dependency order | O(states) | Medium — must trace table fill order | Must process base cases before dependents | Filling in wrong order — a cell that reads `dp[i-1]` must be computed after row i-1, not before |
+    | **Bottom-up + space optimization** | Iterative, rolling array (keep only recent rows) | O(n) or O(1) instead of O(n²) | Low — harder to see which cells are live | Same as tabulation | Rolling array only valid when only adjacent rows are needed; breaks for problems referencing non-adjacent cells (e.g., edit distance with skip) |
 
 </div>
+
+!!! warning "When it breaks"
+    DP breaks when the state space is too large to cache: a 3D DP table over inputs of size 1000 requires 10⁹ cells, exceeding available memory. Space optimisation (rolling array) helps for linear DPs but not for problems with complex state dependencies. DP also breaks when subproblems don't actually overlap — if no subproblem is ever recomputed, adding a memo table adds overhead with no benefit. The `Integer.MAX_VALUE + 1` overflow bug (common in coin change and knapsack) causes incorrect comparisons silently — use `Integer.MAX_VALUE / 2` or a sentinel that won't overflow on addition.
+
 
 ---
 

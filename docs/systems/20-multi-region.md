@@ -253,9 +253,6 @@ Partition-by-region introduces several engineering challenges:
 
 ---
 
-!!! warning "When it breaks"
-    Active-active breaks when conflict resolution is non-trivial: concurrent writes to the same record in two regions produce a conflict, and "last write wins" loses data. CRDTs (conflict-free replicated data types) solve this for specific data structures (counters, sets) but not for arbitrary business logic. Active-passive breaks with failover time: DNS TTL-based failover typically takes 30–120 seconds, which is an outage, not transparent failover. Cross-region replication breaks at very low latency requirements: the speed of light between US East and US West is ~70ms round trip, making synchronous replication physically incompatible with sub-100ms write SLOs.
-
 ---
 
 ## Common Misconceptions
@@ -274,84 +271,33 @@ Partition-by-region introduces several engineering challenges:
 
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Multi-Region Topology
 
 <div class="learner-section" markdown>
 
-**Your task:** After studying the core concepts, complete these decision guidelines in your own words.
+**Your task:** Fill in the matrix based on the material above.
 
-### 1. Active-Active vs Active-Passive
+### Trade-off Analysis Matrix
 
-**Choose active-active when:**
+| Topology | Write availability under region failure | Read latency | Conflict handling | RPO (data loss on failure) | Key failure mode |
+|---|---|---|---|---|---|
+| **Active-passive** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Active-active (multi-write)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Multi-region read replicas** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- Write volume: <span class="fill-in">[Fill in — what write pattern makes active-active worthwhile?]</span>
-- Conflict tolerance: <span class="fill-in">[Fill in — what property of the data model makes conflicts manageable?]</span>
-- Cost posture: <span class="fill-in">[Fill in — active-active typically costs more; under what constraint is it justified?]</span>
+??? success "Answers"
 
-**Choose active-passive when:**
-
-- Data model: <span class="fill-in">[Fill in — what kinds of records make conflicts unacceptable?]</span>
-- RPO requirement: <span class="fill-in">[Fill in — how does a strict RPO favour active-passive?]</span>
-- Team constraint: <span class="fill-in">[Fill in — what operational simplification does active-passive offer?]</span>
-
-**Your decision tree:**
-
-```mermaid
-flowchart TD
-    A["Can your data model tolerate write conflicts?"]
-    A -->|"Yes — keys are user-scoped or CRDTs apply"| B["Is write latency a global user-facing requirement?"]
-    A -->|"No — financial, inventory, ledger"| C["Active-Passive\n(route writes to single primary)"]
-    B -->|"Yes"| D["Active-Active\n(with conflict resolution)"]
-    B -->|"No — writes are infrequent"| C
-```
-
-After completing the practice scenarios, fill in what you would change about this tree: <span class="fill-in">[Fill in]</span>
-
-### 2. Sync vs Async Replication
-
-Complete the trade-off table after studying Replication Strategies:
-
-| Dimension | Synchronous | Asynchronous |
-|-----------|-------------|--------------|
-| RPO | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
-| Write latency | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
-| Throughput ceiling | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
-| Failure blast radius | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
-
-**When RPO = 0 is a hard requirement:** <span class="fill-in">[Fill in — what replication mode is forced, and what latency cost must you accept?]</span>
-
-**When throughput is the constraint:** <span class="fill-in">[Fill in — why does synchronous replication create a throughput ceiling and how does async remove it?]</span>
-
-### 3. Conflict Resolution Strategy Selection
-
-**Use LWW when:**
-
-- <span class="fill-in">[Fill in — what data properties make silent discard acceptable?]</span>
-
-**Use vector clocks when:**
-
-- <span class="fill-in">[Fill in — when do you need to detect conflicts rather than silently resolve them?]</span>
-
-**Use CRDTs when:**
-
-- <span class="fill-in">[Fill in — what operation semantics admit a CRDT formulation?]</span>
-
-**Use application-level merge when:**
-
-- <span class="fill-in">[Fill in — when do business rules govern which concurrent write wins?]</span>
-
-### 4. When Data Sovereignty Forces Partition-by-Region
-
-**You must partition by region when:**
-
-- <span class="fill-in">[Fill in — what regulatory trigger forces physical data separation?]</span>
-
-**The cross-region query trade-off:**
-
-- <span class="fill-in">[Fill in — what analytics or reporting capabilities do you lose with partition-by-region?]</span>
-- <span class="fill-in">[Fill in — what is a common mitigation that preserves global analytics without moving personal data?]</span>
+    | Topology | Write availability under region failure | Read latency | Conflict handling | RPO (data loss on failure) | Key failure mode |
+    |---|---|---|---|---|---|
+    | **Active-passive** | None — writes fail in passive regions | Low for local reads in primary; high cross-region reads | None needed — single writer | Replication lag (seconds to minutes) | DNS failover takes 30–120 seconds — this is an outage, not transparent; requires health check + automated DNS update |
+    | **Active-active (multi-write)** | Full — any region accepts writes | Low — writes are local | Required — concurrent writes to same record create conflicts | Near-zero with synchronous replication; higher with async | Last-write-wins loses data silently; CRDTs solve specific structures (counters, sets) but not arbitrary business logic |
+    | **Multi-region read replicas** | None — writes route to primary region only | Low for reads from replica regions | None needed — reads only | Same as active-passive — replication lag | Primary region failure takes down all writes globally; stale reads from lagging replicas cause read-your-own-writes failures |
 
 </div>
+
+!!! warning "When it breaks"
+    Active-active breaks when conflict resolution is non-trivial: concurrent writes to the same record in two regions produce a conflict, and "last write wins" loses data. CRDTs (conflict-free replicated data types) solve this for specific data structures (counters, sets) but not for arbitrary business logic. Active-passive breaks with failover time: DNS TTL-based failover typically takes 30–120 seconds, which is an outage, not transparent failover. Cross-region replication breaks at very low latency requirements: the speed of light between US East and US West is ~70ms round trip, making synchronous replication physically incompatible with sub-100ms write SLOs.
+
 
 ---
 

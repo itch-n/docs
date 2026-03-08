@@ -816,9 +816,6 @@ When a telecom company plans a new fiber network connecting data centers, Kruska
 length to connect all sites without redundant loops. For subsequent reliability planning, Dijkstra finds the shortest
 failover route between any two sites if a cable is cut.
 
-!!! warning "When it breaks"
-    Dijkstra breaks with negative edge weights: a negative edge can create a shorter path to a previously settled node, violating the greedy invariant. Bellman-Ford handles negative weights but runs in O(VE) instead of O((V+E) log V). Topological sort breaks when the graph has cycles — it is only defined for DAGs, and cycle detection is required before sorting. Kruskal's MST breaks for directed graphs: minimum spanning tree is defined only for undirected graphs; the directed equivalent (minimum spanning arborescence) requires Edmonds' algorithm.
-
 ---
 
 ## Common Misconceptions
@@ -840,73 +837,37 @@ failover route between any two sites if a cable is cut.
 
 ---
 
-## Decision Framework
+## Decision Framework: Choosing an Advanced Graph Algorithm
 
 <div class="learner-section" markdown>
 
-### Question 1: Which shortest path algorithm?
+**Your task:** Fill in the matrix after working through the implementations above.
 
-**Use Dijkstra when:**
+### Trade-off Analysis Matrix
 
-- Non-negative weights: <span class="fill-in">[Road networks, costs]</span>
-- Single source: <span class="fill-in">[From one node to all others]</span>
-- Dense graphs: <span class="fill-in">[Many edges]</span>
+| Algorithm | Weight constraint | Finds | Time | Space | Key failure |
+|---|---|---|---|---|---|
+| **Dijkstra** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Bellman-Ford** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Floyd-Warshall** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Kruskal's MST** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Prim's MST** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-**Use Bellman-Ford when:**
+??? success "Answers"
 
-- Negative weights allowed: <span class="fill-in">[Financial arbitrage]</span>
-- Need cycle detection: <span class="fill-in">[Negative cycles]</span>
-- Simple implementation: <span class="fill-in">[No priority queue]</span>
-
-**Use A* when:**
-
-- Point-to-point search: <span class="fill-in">[GPS navigation]</span>
-- Heuristic available: <span class="fill-in">[Euclidean distance]</span>
-- Want faster search: <span class="fill-in">[Guided by heuristic]</span>
-
-### Question 2: MST Algorithm Choice?
-
-**Use Kruskal when:**
-
-- Sparse graph: <span class="fill-in">[E << V²]</span>
-- Need simple implementation: <span class="fill-in">[Sort + Union-Find]</span>
-- Edge list representation: <span class="fill-in">[Not adjacency list]</span>
-
-**Use Prim when:**
-
-- Dense graph: <span class="fill-in">[E ≈ V²]</span>
-- Adjacency list: <span class="fill-in">[Efficient neighbor access]</span>
-- Want incremental MST: <span class="fill-in">[Grow from one vertex]</span>
-
-### Question 3: Topological Sort?
-
-**Use DFS-based when:**
-
-- Simple implementation needed
-- Want to detect cycles during sort
-- Graph fits in memory
-
-**Use Kahn's (BFS) when:**
-
-- Need explicit cycle detection
-- Want lexicographically smallest ordering
-- Parallel processing possible
-
-### Question 4: When to use Union-Find?
-
-**Use Union-Find when:**
-
-- Dynamic connectivity: <span class="fill-in">[Edges added over time]</span>
-- Detect cycles in undirected graphs: <span class="fill-in">[Kruskal's MST]</span>
-- Group by equivalence: <span class="fill-in">[Accounts merge, friend groups]</span>
-
-**Don't use Union-Find when:**
-
-- Need to remove edges: <span class="fill-in">[UF doesn't support deletion]</span>
-- Directed graph cycles: <span class="fill-in">[Use DFS with states instead]</span>
-- Need shortest paths: <span class="fill-in">[Use BFS/Dijkstra]</span>
+    | Algorithm | Weight constraint | Finds | Time | Space | Key failure |
+    |---|---|---|---|---|---|
+    | **Dijkstra** | Non-negative only | Single-source shortest path | O((V+E) log V) | O(V+E) | Negative edges — greedy settlement assumes the shortest path to a settled node cannot be improved, which breaks with negative weights |
+    | **Bellman-Ford** | Any, including negative (detects negative cycles) | Single-source shortest path + negative cycle detection | O(VE) | O(V) | Slow for large graphs — only use when negative weights are present |
+    | **Floyd-Warshall** | Any, no negative cycles | All-pairs shortest path | O(V³) | O(V²) | Only practical for small dense graphs (V ≤ ~500); O(V³) is prohibitive at scale |
+    | **Kruskal's MST** | Undirected only | Minimum spanning tree (sort edges, add if no cycle via union-find) | O(E log E) | O(V) | Directed graphs — MST is defined only for undirected; process edges globally by weight |
+    | **Prim's MST** | Undirected only | Minimum spanning tree (grow from a seed node via min-heap) | O((V+E) log V) | O(V+E) | Same directed restriction as Kruskal's; prefer Prim's for dense graphs where E ≈ V² |
 
 </div>
+
+!!! warning "When it breaks"
+    Dijkstra breaks with negative edge weights: a negative edge can create a shorter path to a previously settled node, violating the greedy invariant. Bellman-Ford handles negative weights but runs in O(VE) instead of O((V+E) log V). Topological sort breaks when the graph has cycles — it is only defined for DAGs, and cycle detection is required before sorting. Kruskal's MST breaks for directed graphs: minimum spanning tree is defined only for undirected graphs; the directed equivalent (minimum spanning arborescence) requires Edmonds' algorithm.
+
 
 ---
 

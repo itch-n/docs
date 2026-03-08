@@ -472,79 +472,39 @@ Attack pattern:
 !!! danger "Rate limiting only needs to run once per user per minute"
     Rate limiting must run on every incoming request, not periodically. Checking "did this user exceed their limit in the last minute?" is different from "does this specific request arrive within quota?" The check must happen synchronously at request time, before work is done, and it must be atomic to avoid race conditions in distributed deployments.
 
-!!! warning "When it breaks"
-    Per-node rate limiting breaks at two nodes: a 1,000 req/s limit across a 10-node cluster actually permits 10,000 req/s. Distributed rate limiting with Redis fixes this but adds a round-trip (~0.5ms) to every request; at 50,000 req/s, Redis itself becomes the bottleneck. Fixed window rate limiting breaks at window boundaries: a client sending 1,000 requests in the last second of window N and 1,000 in the first second of window N+1 passes two consecutive limits while actually delivering 2,000 req/s. Sliding window eliminates this but requires storing per-request timestamps, which costs significantly more memory at high request rates.
-
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Rate Limiting Algorithm
 
 <div class="learner-section" markdown>
 
-**Questions to answer after implementation:**
+**Your task:** Fill in the matrix based on the material above.
 
-### 1. Algorithm Selection
+### Trade-off Analysis Matrix
 
-**When to use Token Bucket?**
+| Algorithm | Memory per user | Burst handling | Window-boundary attack | Complexity | Key failure mode |
+|---|---|---|---|---|---|
+| **Fixed window** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Sliding window log** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Sliding window counter** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Token bucket** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Leaky bucket** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
+??? success "Answers"
 
-**When to use Leaky Bucket?**
-
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
-
-**When to use Fixed Window?**
-
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
-
-**When to use Sliding Window?**
-
-- Your scenario: <span class="fill-in">[Fill in]</span>
-- Key factors: <span class="fill-in">[Fill in]</span>
-
-### 2. Trade-offs
-
-**Token Bucket:**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-**Leaky Bucket:**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-**Fixed Window:**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-**Sliding Window:**
-
-- Pros: <span class="fill-in">[Fill in after understanding]</span>
-- Cons: <span class="fill-in">[Fill in after understanding]</span>
-
-### 3. Your Decision Tree
-
-Build your decision tree after practicing:
-```mermaid
-flowchart TD
-    Start["What is your priority?"]
-
-    N1["?"]
-    Start -->|"Allow burst traffic"| N1
-    N2["?"]
-    Start -->|"Smooth traffic flow"| N2
-    N3["?"]
-    Start -->|"Simple and memory efficient"| N3
-    N4["?"]
-    Start -->|"Accurate rate limiting"| N4
-```
+    | Algorithm | Memory per user | Burst handling | Window-boundary attack | Complexity | Key failure mode |
+    |---|---|---|---|---|---|
+    | **Fixed window** | O(1) — one counter | Allows full quota at start of each window | Yes — 2× quota possible across a window boundary | Trivial | Boundary burst: 1000 req at 11:59:59 + 1000 req at 12:00:01 = 2000 req in 2 seconds |
+    | **Sliding window log** | O(requests per window) — stores each timestamp | No — precise count over any sliding interval | No | Moderate — prune timestamps on each request | Memory grows linearly with allowed rate; 1000 req/s × 60s = 60,000 timestamps per user |
+    | **Sliding window counter** | O(1) — two counters (current + previous window) | No — approximate sliding window | Negligible | Simple | Approximation error up to ~0.003% for 1% window overlap — acceptable in practice |
+    | **Token bucket** | O(1) — token count + last-refill timestamp | Yes — burst up to bucket size, then throttled at refill rate | No | Moderate | Idle clients accumulate tokens and can dump a large burst; bucket size must be chosen deliberately |
+    | **Leaky bucket** | O(queue depth) per user | No — strictly constant output rate | No | Moderate | Queue overflow under burst causes drops, not delay; upstream retries amplify the problem |
 
 </div>
+
+!!! warning "When it breaks"
+    Per-node rate limiting breaks at two nodes: a 1,000 req/s limit across a 10-node cluster actually permits 10,000 req/s. Distributed rate limiting with Redis fixes this but adds a round-trip (~0.5ms) to every request; at 50,000 req/s, Redis itself becomes the bottleneck. Fixed window rate limiting breaks at window boundaries: a client sending 1,000 requests in the last second of window N and 1,000 in the first second of window N+1 passes two consecutive limits while actually delivering 2,000 req/s. Sliding window eliminates this but requires storing per-request timestamps, which costs significantly more memory at high request rates.
+
 
 ---
 

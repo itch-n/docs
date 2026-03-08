@@ -405,37 +405,29 @@ Results:     ↑            ↑
 
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Stream Processing Approach
 
 <div class="learner-section" markdown>
 
-**Your task:** Build decision trees for when to use each stream processing pattern.
+**Your task:** Fill in the matrix based on the material above.
 
-### Question 1: What type of windowing do you need?
+### Trade-off Analysis Matrix
 
-Answer after implementation:
+| Approach | Latency | Exactly-once support | Stateful processing | Operational complexity | Key failure mode |
+|---|---|---|---|---|---|
+| **Simple Kafka consumer (polling)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Kafka Streams** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Apache Flink** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Spark Structured Streaming** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-**Use Tumbling Window when:**
+??? success "Answers"
 
-- Fixed time boundaries: <span class="fill-in">[Every hour, every day]</span>
-- Non-overlapping: <span class="fill-in">[Each event in exactly one window]</span>
-- Simple aggregation: <span class="fill-in">[Count, sum per time period]</span>
-- Example: <span class="fill-in">[Hourly sales reports, daily active users]</span>
-
-**Use Sliding Window when:**
-
-- Moving average: <span class="fill-in">[Last N minutes]</span>
-- Overlapping periods: <span class="fill-in">[Need smooth transitions]</span>
-- Real-time dashboards: <span class="fill-in">[Updated frequently]</span>
-- Example: <span class="fill-in">[5-minute average updated every 30 seconds]</span>
-
-**Use Session Window when:**
-
-- User activity: <span class="fill-in">[Group by engagement sessions]</span>
-- Variable length: <span class="fill-in">[Based on inactivity]</span>
-- Burst detection: <span class="fill-in">[Cluster related events]</span>
-- Example: <span class="fill-in">[User browsing sessions, click streams]</span>
-
+    | Approach | Latency | Exactly-once support | Stateful processing | Operational complexity | Key failure mode |
+    |---|---|---|---|---|---|
+    | **Simple Kafka consumer (polling)** | Near-real-time (~100ms per poll cycle) | At-least-once with manual offset commit | Manual — manage state in an external store (Redis, DB) | Low — just a library | Offset committed after processing replays on restart; offset committed before processing loses events — exactly-once requires transactional producers |
+    | **Kafka Streams** | Low — milliseconds | Exactly-once via Kafka transactions | Built-in — RocksDB-backed state stores, changelogs | Low — runs inside your application, no separate cluster | State store exceeding available memory spills to disk, reducing throughput by ~10×; repartitioning required for joins across different topics |
+    | **Apache Flink** | Very low — sub-millisecond possible | Exactly-once via distributed checkpoints and barrier protocol | Full — managed keyed state, timers, event-time watermarks | High — separate cluster, JVM tuning, checkpoint configuration | Checkpoint interval is the effective latency floor for recovery; large state multiplied by checkpoint overhead can exceed disk capacity |
+    | **Spark Structured Streaming** | Moderate — micro-batch (default 100ms–1s trigger interval) | Exactly-once via WAL and idempotent sinks | Full — maintains state across micro-batches | Medium — Spark cluster, familiar for teams already on Spark | Micro-batch model imposes a minimum latency floor; unsuitable for true sub-100ms event-time processing |
 
 </div>
 

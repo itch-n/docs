@@ -459,9 +459,6 @@ When `npm install` or `pip install` resolves a dependency tree, it performs a DF
 
 When a transit app calculates the route with the fewest transfers (not the fastest in time), it uses an unweighted BFS on a station graph. Each station is a node, edges connect adjacent stations, and BFS guarantees the minimum number of edges (transfers) in the result path.
 
-!!! warning "When it breaks"
-    BFS breaks in memory-constrained environments for graphs with high branching factor: the frontier queue can grow to O(V) nodes at its widest level. Bidirectional BFS reduces memory by meeting in the middle. DFS breaks for shortest paths in weighted graphs — it finds a path, not the shortest path. Adjacency matrix breaks for sparse graphs: a graph with 1M nodes and 2M edges stored as a matrix requires 1TB of memory; the same graph as an adjacency list requires roughly 16MB. The matrix is only appropriate when the graph is dense (edges ≈ V²).
-
 ---
 
 ## Common Misconceptions
@@ -477,73 +474,37 @@ When a transit app calculates the route with the fewest transfers (not the faste
 
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Graph Algorithm
 
 <div class="learner-section" markdown>
 
-**Your task:** Build decision trees for when to use each graph algorithm.
+**Your task:** Fill in the matrix after working through the implementations above.
 
-### Question 1: DFS vs BFS - Which to use?
+### Trade-off Analysis Matrix
 
-Answer after solving problems:
+| Algorithm | Graph type | Finds | Time | Space | Key failure |
+|---|---|---|---|---|---|
+| **BFS** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **DFS** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Dijkstra** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Bellman-Ford** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Topological sort** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-**Use DFS when:**
+??? success "Answers"
 
-- Need to explore all paths: <span class="fill-in">[Backtracking, cycle detection]</span>
-- Memory is limited: <span class="fill-in">[DFS uses less space]</span>
-- Finding any path (not shortest): <span class="fill-in">[Fill in]</span>
-
-**Use BFS when:**
-
-- Need shortest path: <span class="fill-in">[Unweighted graphs]</span>
-- Level-order traversal: <span class="fill-in">[Process by distance from source]</span>
-- Multi-source problems: <span class="fill-in">[Fill in examples]</span>
-
-### Question 2: Graph representation?
-
-**Adjacency List:**
-
-- Use when: <span class="fill-in">[Sparse graphs, need to iterate neighbors]</span>
-- Space: <span class="fill-in">[O(V + E)]</span>
-
-**Adjacency Matrix:**
-
-- Use when: <span class="fill-in">[Dense graphs, need to check edge existence]</span>
-- Space: <span class="fill-in">[O(V²)]</span>
-
-### Your Decision Tree
-
-Build this after solving practice problems:
-```mermaid
-flowchart TD
-    Start["Graph Traversal Problem"]
-
-    Q1{"Need shortest path<br/>(unweighted)?"}
-    Start --> Q1
-    BFS(["BFS ✓"])
-    Q1 -->|"Yes"| BFS
-
-    Q2{"Explore all paths<br/>or backtrack?"}
-    Q1 -->|"No"| Q2
-    DFS1(["DFS ✓"])
-    Q2 -->|"Yes"| DFS1
-
-    Q3{"Detect cycle?"}
-    Q2 -->|"No"| Q3
-    DFS2(["DFS with states ✓"])
-    Q3 -->|"Directed"| DFS2
-    DFS3(["DFS with parent ✓"])
-    Q3 -->|"Undirected"| DFS3
-
-    Q4{"Count components?"}
-    Q3 -->|"No"| Q4
-    DFSBFS(["DFS or BFS ✓"])
-    Q4 -->|"Yes"| DFSBFS
-```
-
-**Note:** For weighted graphs, topological sort, and MST problems, see "Advanced Graph Algorithms"
+    | Algorithm | Graph type | Finds | Time | Space | Key failure |
+    |---|---|---|---|---|---|
+    | **BFS** | Unweighted (directed or undirected) | Shortest path by edge count, connected components | O(V+E) | O(V) — queue holds frontier | High branching factor exhausts memory at the widest level; not for weighted shortest paths |
+    | **DFS** | Any | Connected components, cycle detection, all paths, SCCs | O(V+E) | O(V) — recursion stack | Stack overflow on degenerate/deep graphs; finds a path, not the shortest path |
+    | **Dijkstra** | Weighted, non-negative edges only | Single-source shortest path | O((V+E) log V) with min-heap | O(V+E) | Negative edges — a negative edge can create a shorter path to an already-settled node, violating the greedy invariant |
+    | **Bellman-Ford** | Weighted, negative edges allowed (no negative cycles for shortest path) | Single-source shortest path + negative cycle detection | O(VE) | O(V) | Much slower than Dijkstra; only reach for it when negative edge weights are present |
+    | **Topological sort** | DAG (directed acyclic graph) only | Linear ordering where all edges point forward | O(V+E) | O(V) | Breaks on graphs with cycles — Kahn's algorithm (BFS via in-degree) detects cycles automatically |
 
 </div>
+
+!!! warning "When it breaks"
+    BFS breaks in memory-constrained environments for graphs with high branching factor: the frontier queue can grow to O(V) nodes at its widest level. Bidirectional BFS reduces memory by meeting in the middle. DFS breaks for shortest paths in weighted graphs — it finds a path, not the shortest path. Adjacency matrix breaks for sparse graphs: a graph with 1M nodes and 2M edges stored as a matrix requires 1TB of memory; the same graph as an adjacency list requires roughly 16MB. The matrix is only appropriate when the graph is dense (edges ≈ V²).
+
 
 ---
 

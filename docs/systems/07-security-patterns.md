@@ -250,105 +250,35 @@ By the end of this topic you will be able to:
 !!! danger "Rotating API keys or secrets is disruptive and should be avoided"
     Modern secrets management supports versioned rotation with a grace period, so old and new credentials are both valid briefly. Zero-downtime rotation is a standard pattern. Not rotating credentials after a suspected leak is far more costly than the short-term operational effort of rotation. Treat infrequent rotation as a risk, not a best practice.
 
-!!! warning "When it breaks"
-    JWTs break for revocation: a token is valid until its `exp` claim and there is no standard mechanism to invalidate an issued token. Logout, password change, or account suspension all require either a token denylist (a distributed cache lookup on every request, which negates the stateless benefit) or very short expiry windows. RBAC breaks when roles proliferate — systems typically start with 5 roles and accumulate 50 as individual exceptions are added. The inflection point where RBAC becomes unmanageable is usually when roles are no longer comprehensible to a non-engineer, which happens around 20–30 roles. At that point, attribute-based access control (ABAC) or policy engines like OPA are the alternative.
-
 ---
 
-## Decision Framework
+## Decision Framework: Choosing an Authentication Mechanism
 
 <div class="learner-section" markdown>
 
-**Your task:** Build decision trees for when to use each security pattern.
+**Your task:** Fill in the matrix based on the material above.
 
-### Question 1: JWT vs Session-Based Auth?
+### Trade-off Analysis Matrix
 
-Answer after implementation:
+| Mechanism | State location | Revocation | Cross-domain support | Scalability | Key failure mode |
+|---|---|---|---|---|---|
+| **Session token (server-side state)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **JWT (stateless token)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **OAuth2 / OIDC (delegated auth)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-**Use JWT when:**
+??? success "Answers"
 
-- Stateless architecture: <span class="fill-in">[No session storage needed]</span>
-- Microservices: <span class="fill-in">[Token contains all necessary data]</span>
-- Mobile/SPA apps: <span class="fill-in">[Easy to store and send]</span>
-- Cross-domain: <span class="fill-in">[Can share across services]</span>
-
-**Use Session-based when:**
-
-- Traditional web apps: <span class="fill-in">[Server-side sessions]</span>
-- Need to revoke immediately: <span class="fill-in">[Can invalidate server-side]</span>
-- Large user data: <span class="fill-in">[Don't want to send in every request]</span>
-- Simpler security model: <span class="fill-in">[Server controls everything]</span>
-
-### Question 2: When to use API Keys vs JWT?
-
-**API Keys when:**
-
-- Service-to-service: <span class="fill-in">[Long-lived credentials]</span>
-- Simple auth: <span class="fill-in">[Just need to identify caller]</span>
-- Third-party integrations: <span class="fill-in">[Easy to rotate]</span>
-
-**JWT when:**
-
-- User authentication: <span class="fill-in">[Short-lived, contains user claims]</span>
-- Need user context: <span class="fill-in">[Embedded in token]</span>
-- Stateless: <span class="fill-in">[No lookup needed]</span>
-
-### Question 3: RBAC vs ABAC (Attribute-Based)?
-
-**RBAC when:**
-
-- Clear role hierarchy: <span class="fill-in">[Admin, Editor, Viewer]</span>
-- Simple permissions: <span class="fill-in">[Read, Write, Delete]</span>
-- Most users: <span class="fill-in">[70% of access control needs]</span>
-
-**ABAC when:**
-
-- Complex rules: <span class="fill-in">[Based on time, location, resource attributes]</span>
-- Fine-grained control: <span class="fill-in">[User can edit own posts only]</span>
-- Dynamic policies: <span class="fill-in">[Rules change frequently]</span>
-
-### Your Decision Tree
-
-Build this after solving practice scenarios:
-```mermaid
-flowchart TD
-    Start["Security Pattern Selection"]
-
-    Q1{"What are you securing?"}
-    Start --> Q1
-    N2["JWT or Session-based"]
-    Q1 -->|"User sessions"| N2
-    N3["API Keys or JWT"]
-    Q1 -->|"API endpoints"| N3
-    N4["RBAC or ABAC"]
-    Q1 -->|"Resources"| N4
-    Q5{"What's the architecture?"}
-    Start --> Q5
-    N6["Session-based + RBAC"]
-    Q5 -->|"Monolith"| N6
-    N7["JWT + RBAC"]
-    Q5 -->|"Microservices"| N7
-    N8["JWT + API Keys"]
-    Q5 -->|"Serverless"| N8
-    Q9{"What's the threat model?"}
-    Start --> Q9
-    N10["Strong encryption, rotation"]
-    Q9 -->|"External attackers"| N10
-    N11["Audit logging, least privilege"]
-    Q9 -->|"Internal threats"| N11
-    N12["Secrets management, encryption at rest"]
-    Q9 -->|"Compliance (PCI/HIPAA)"| N12
-    Q13{"Performance requirements?"}
-    Start --> Q13
-    N14["Stateless<br/>(JWT, API keys)"]
-    Q13 -->|"High throughput"| N14
-    N15["Stateful<br/>(Sessions, central auth)"]
-    Q13 -->|"Strong consistency"| N15
-    N16["JWT with refresh tokens"]
-    Q13 -->|"Offline support"| N16
-```
+    | Mechanism | State location | Revocation | Cross-domain support | Scalability | Key failure mode |
+    |---|---|---|---|---|---|
+    | **Session token (server-side state)** | Server — DB or Redis session store | Immediate — delete session record | Requires shared session store across nodes (sticky sessions or Redis) | Bounded by session store throughput (~100K ops/sec for a single Redis node) | Session store is a single point of failure; sticky sessions prevent even load distribution |
+    | **JWT (stateless token)** | Client — cookie or localStorage | Difficult — requires denylist (reintroduces server state) or short expiry (<5 min) | Trivially cross-domain — pass token in Authorization header | Unlimited — no server state per token | Token cannot be invalidated before expiry; logout, password change, account suspension all require a denylist |
+    | **OAuth2 / OIDC (delegated auth)** | Authorization server + short-lived tokens | Access token: short-expiry; refresh token: revocable | Designed for cross-domain delegated access | Scales if authorization server scales; token introspection adds ~1–2ms per request | Implicit flow deprecated (XSS risk); refresh token leakage grants long-lived access; PKCE required for public clients |
 
 </div>
+
+!!! warning "When it breaks"
+    JWTs break for revocation: a token is valid until its `exp` claim and there is no standard mechanism to invalidate an issued token. Logout, password change, or account suspension all require either a token denylist (a distributed cache lookup on every request, which negates the stateless benefit) or very short expiry windows. RBAC breaks when roles proliferate — systems typically start with 5 roles and accumulate 50 as individual exceptions are added. The inflection point where RBAC becomes unmanageable is usually when roles are no longer comprehensible to a non-engineer, which happens around 20–30 roles. At that point, attribute-based access control (ABAC) or policy engines like OPA are the alternative.
+
 
 ---
 

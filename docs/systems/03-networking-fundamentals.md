@@ -719,72 +719,37 @@ Additional benefits:
 !!! danger "DNS round-robin is sufficient for load balancing"
     DNS round-robin cycles IP addresses but has no health checks — it will happily return the IP of a crashed server. It also cannot respond to actual server load; an overloaded server receives the same share as an idle one. And client-side DNS caching means the "rotation" is unpredictable in practice. DNS round-robin is a last resort, not a real load balancing strategy.
 
-!!! warning "When it breaks"
-    TCP breaks for latency-sensitive applications when a single lost packet stalls all streams — the retransmission timeout (RTO) floor is typically 200ms, meaning a 0.1% loss rate can spike p99 latency by 200ms. HTTP/1.1 breaks at more than 6 concurrent requests per domain (the browser connection limit), which is why HTTP/2 multiplexing matters for page load time. DNS breaks during deployments when TTL is too low (amplified query volume) or too high (stale records persist for hours after failover). TLS 1.3 reduced the handshake to 1 round trip, but the full handshake still costs ~100ms on intercontinental connections — session resumption is not optional at scale.
-
 ---
 
-## Decision Framework
+## Decision Framework: Choosing an API Communication Protocol
 
 <div class="learner-section" markdown>
 
-**Your task:** Build decision trees for when to use each networking approach.
+**Your task:** Fill in the matrix based on the material above.
 
-### Question 1: Which Protocol?
+### Trade-off Analysis Matrix
 
-**Use TCP when:**
+| Protocol | Communication model | Latency | Browser support | Streaming | Key failure mode |
+|---|---|---|---|---|---|
+| **REST / HTTP** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **gRPC** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **WebSocket** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Server-Sent Events (SSE)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- Reliability is critical: <span class="fill-in">[Financial transactions, file transfers]</span>
-- Ordering matters: <span class="fill-in">[Database replication, messaging]</span>
-- Data integrity required: <span class="fill-in">[API calls, downloads]</span>
+??? success "Answers"
 
-**Use UDP when:**
-
-- Low latency critical: <span class="fill-in">[Gaming, VoIP]</span>
-- Packet loss acceptable: <span class="fill-in">[Video streaming, DNS]</span>
-- Real-time more important than reliability: <span class="fill-in">[Live broadcasts]</span>
-
-### Question 2: HTTP Version?
-
-**Use HTTP/1.1 when:**
-
-- Legacy client support required
-- Simple deployment (no special infrastructure)
-- Low concurrency use case
-
-**Use HTTP/2 when:**
-
-- Modern browsers/clients
-- High concurrency (many resources)
-- API with many endpoints
-
-**Use HTTP/3 when:**
-
-- Mobile-first application
-- Global user base (varying network quality)
-- WebRTC or real-time features
-
-### Question 3: Real-Time Communication?
-
-**Use HTTP polling when:**
-
-- Infrequent updates (> 30 seconds)
-- Simple implementation required
-- Client controls update frequency
-
-**Use Server-Sent Events (SSE) when:**
-
-- Server → Client updates only
-- Text-based data (JSON)
-- Browser compatibility important
-
-**Use WebSockets when:**
-
-- Bidirectional communication required
-- Low latency critical (< 100ms)
-- High message frequency (> 1/sec)
+    | Protocol | Communication model | Latency | Browser support | Streaming | Key failure mode |
+    |---|---|---|---|---|---|
+    | **REST / HTTP** | Request-response, client-initiated | ~1ms overhead per request | Universal | No native — polling required | Deep cursor/offset pagination; no built-in server push |
+    | **gRPC** | Request-response or bidirectional streaming over HTTP/2 | Low — binary Protobuf, HTTP/2 multiplexing eliminates head-of-line blocking | Limited — requires gRPC-Web proxy for browsers | Yes — unary, server, client, and bidirectional streaming | Proto schema evolution: renaming a field or reusing a field number breaks deserialization; .proto files are the shared contract |
+    | **WebSocket** | Bidirectional full-duplex over persistent TCP connection | Near-zero once connected | Universal (RFC 6455) | Yes — both directions | Server must manage reconnect, heartbeat, and state per connection; connection count bounded by OS file descriptors |
+    | **Server-Sent Events (SSE)** | Server-push, one-directional over persistent HTTP | Low — persistent HTTP connection | Universal (native browser EventSource) | Yes — server to client only | No client-to-server streaming; automatic reconnection may miss events without event ID tracking |
 
 </div>
+
+!!! warning "When it breaks"
+    TCP breaks for latency-sensitive applications when a single lost packet stalls all streams — the retransmission timeout (RTO) floor is typically 200ms, meaning a 0.1% loss rate can spike p99 latency by 200ms. HTTP/1.1 breaks at more than 6 concurrent requests per domain (the browser connection limit), which is why HTTP/2 multiplexing matters for page load time. DNS breaks during deployments when TTL is too low (amplified query volume) or too high (stale records persist for hours after failover). TLS 1.3 reduced the handshake to 1 round trip, but the full handshake still costs ~100ms on intercontinental connections — session resumption is not optional at scale.
+
 
 ---
 

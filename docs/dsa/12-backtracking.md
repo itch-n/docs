@@ -339,9 +339,6 @@ where at each character you either keep, replace, or delete — a backtracking s
 condition (stop exploring when the edit budget is exhausted) is exactly the same as pruning in combination sum when the
 running total exceeds the target.
 
-!!! warning "When it breaks"
-    Backtracking breaks when the search space is too large even with pruning: the exponential nature (O(n!) or O(k^n)) means adding a few elements can turn a millisecond solution into a minute-long computation. It also breaks when the problem has overlapping subproblems — pure backtracking recomputes the same subproblems repeatedly, and memoization converts it to dynamic programming. The tell: if the same `(start, currentState)` tuple appears in multiple branches of the recursion tree, backtracking is doing redundant work and DP is the right approach.
-
 ---
 
 ## Common Misconceptions
@@ -364,68 +361,35 @@ running total exceeds the target.
 
 ---
 
-## Decision Framework
+## Decision Framework: Choosing an Exploration Strategy
 
 <div class="learner-section" markdown>
 
-**Your task:** Build decision trees for backtracking problems.
+**Your task:** Fill in the matrix after working through the implementations above.
 
-### Question 1: What are you generating?
+### Trade-off Analysis Matrix
 
-Answer after solving problems:
+| Approach | Finds optimal? | Time (worst) | Overlapping subproblems? | When applicable | Key pitfall |
+|---|---|---|---|---|---|
+| **Pure backtracking** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Backtracking + pruning** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Memoized backtracking (→ DP)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Greedy** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- **All permutations?** <span class="fill-in">[Use permutation backtracking]</span>
-- **All combinations/subsets?** <span class="fill-in">[Use combination backtracking]</span>
-- **Single valid solution?** <span class="fill-in">[Return early when found]</span>
-- **Count solutions?** <span class="fill-in">[Track count, don't store paths]</span>
+??? success "Answers"
 
-### Question 2: What are the constraints?
-
-**No duplicates in input:**
-
-- Approach: <span class="fill-in">[Simple backtracking]</span>
-
-**Duplicates in input:**
-
-- Approach: <span class="fill-in">[Sort first, skip duplicates at same level]</span>
-
-**Size constraint (k elements):**
-
-- Approach: <span class="fill-in">[Add base case for size]</span>
-
-**Sum/product constraint:**
-
-- Approach: <span class="fill-in">[Track running sum/product, prune early]</span>
-
-**Grid constraints:**
-
-- Approach: <span class="fill-in">[Mark visited, unmark on backtrack]</span>
-
-### Your Decision Tree
-
-```mermaid
-flowchart TD
-    Start["Backtracking Pattern Selection"]
-
-    Q1{"Generating sequences?"}
-    Start --> Q1
-    N2(["Permutations ✓"])
-    Q1 -->|"All orderings"| N2
-    N3(["Combinations/Subsets ✓"])
-    Q1 -->|"All selections"| N3
-    N4(["Combinations with constraint ✓"])
-    Q1 -->|"With size K"| N4
-    Q5{"Constraint satisfaction?"}
-    Start --> Q5
-    N6(["N-Queens pattern ✓"])
-    Q5 -->|"Board placement"| N6
-    N7(["Try digits with validation ✓"])
-    Q5 -->|"Sudoku-like"| N7
-    N8(["DFS with visited tracking ✓"])
-    Q5 -->|"Grid search"| N8
-```
+    | Approach | Finds optimal? | Time (worst) | Overlapping subproblems? | When applicable | Key pitfall |
+    |---|---|---|---|---|---|
+    | **Pure backtracking** | Yes — exhaustive | O(k^n) or O(n\!) | No | Small search space; all valid solutions needed | No pruning means every branch explored — 15\! exceeds 1 trillion; always add pruning |
+    | **Backtracking + pruning** | Yes | Reduced exponential (problem-dependent) | No | Constraint-heavy problems (N-Queens, Sudoku, word search) | Wrong prune condition silently cuts valid branches and produces wrong answers |
+    | **Memoized backtracking (→ DP)** | Yes (if state is fully defined) | O(states × transitions) | Yes — cache the result | Same (index, remaining state) appears in multiple branches | Omitting a required dimension from the cache key causes incorrect results |
+    | **Greedy** | Not always | O(n log n) typically | No | Provable greedy choice property + optimal substructure (e.g., interval scheduling, Huffman) | Applying greedy when subproblems interact — locally optimal choice is not always globally optimal |
 
 </div>
+
+!!! warning "When it breaks"
+    Backtracking breaks when the search space is too large even with pruning: the exponential nature (O(n!) or O(k^n)) means adding a few elements can turn a millisecond solution into a minute-long computation. It also breaks when the problem has overlapping subproblems — pure backtracking recomputes the same subproblems repeatedly, and memoization converts it to dynamic programming. The tell: if the same `(start, currentState)` tuple appears in multiple branches of the recursion tree, backtracking is doing redundant work and DP is the right approach.
+
 
 ---
 

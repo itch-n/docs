@@ -257,69 +257,35 @@ Step 2: left=1 (val=3), right=4 (val=9), sum=12 → FOUND!
 !!! danger "Misconception 3: Same-direction slow/fast pointers need different starting positions"
     It is tempting to start `slow = 0, fast = 1` always, but the correct starting position depends on the problem. For `removeDuplicates` both start at 0 (or 0 and 1); for Floyd's cycle detection both start at `head`. Internalise the **invariant** each pattern maintains rather than memorising the starting positions.
 
-!!! warning "When it breaks"
-    The opposite-direction variant requires a sorted array or a monotonic invariant — applying it to an unsorted array produces incorrect results with no error signal. Same-direction (slow/fast) has no such precondition. The pattern also breaks when you need all pairs with a given property and duplicates exist: moving the pointer past a duplicate without skipping all matching values produces duplicate result pairs, requiring explicit deduplication logic that is easy to omit.
-
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Two Pointers Variant
 
 <div class="learner-section" markdown>
 
-**Your task:** Build decision trees for when to use two pointers.
+**Your task:** Fill in the matrix after solving the problems above.
 
-### Question 1: Is the data sorted?
+### Trade-off Analysis Matrix
 
-Answer after solving problems:
+| Variant | Precondition | Solves | Time | Space | Key pitfall |
+|---|---|---|---|---|---|
+| **Opposite direction** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Same direction (slow/fast)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Partition (three-way)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- **Why does sorting matter?** <span class="fill-in">[Fill in]</span>
-- **Can two pointers work on unsorted arrays?** <span class="fill-in">[Yes/No - when?]</span>
-- **Your observation:** <span class="fill-in">[Fill in based on testing]</span>
+??? success "Answers"
 
-### Question 2: What are you looking for?
-
-Answer for each pattern:
-
-**Opposite direction when:**
-
-- Looking for: <span class="fill-in">[Pairs? Palindromes? What else?]</span>
-- Movement rule: <span class="fill-in">[How do pointers move?]</span>
-- Example problems: <span class="fill-in">[List problems you solved]</span>
-
-**Same direction when:**
-
-- Looking for: <span class="fill-in">[Duplicates? Partitioning? What else?]</span>
-- Movement rule: <span class="fill-in">[How do slow/fast pointers move?]</span>
-- Example problems: <span class="fill-in">[List problems you solved]</span>
-
-**Different speed when:**
-
-- Looking for: <span class="fill-in">[Cycles? Middle? What else?]</span>
-- Movement rule: <span class="fill-in">[How do pointers move at different speeds?]</span>
-- Example problems: <span class="fill-in">[List problems you solved]</span>
-
-### Your Decision Tree
-
-Build this after solving practice problems:
-```mermaid
-flowchart TD
-    Start["Two Pointers Pattern Selection"]
-
-    Q1{"Is data sorted?"}
-    Start --> Q1
-    N2["Continue"]
-    Q1 -->|"YES"| N2
-    N3["Can you sort? Or use same-direction for partitioning"]
-    Q1 -->|"NO"| N3
-    Q4{"What are you searching for?"}
-    Start --> Q4
-    Q5{"Pair with property<br/>(sum, product)?"}
-    Q6{"Modify array in-place?"}
-    Q7{"Linked list property<br/>(cycle, middle, kth)?"}
-    Q8{"Check palindrome?"}
-```
+    | Variant | Precondition | Solves | Time | Space | Key pitfall |
+    |---|---|---|---|---|---|
+    | **Opposite direction** | Sorted array — pointer movement relies on the invariant that advancing left eliminates all candidates with a smaller left value, which only holds when the array is sorted | Pairs summing to target, palindrome check, container with most water | O(n) | O(1) | Applying to unsorted input — the invariant breaks silently with no error |
+    | **Same direction (slow/fast)** | None — works on any linked structure or array | Cycle detection, finding middle, removing nth from end | O(n) | O(1) | Starting positions vary by problem; internalise the invariant each pattern maintains, not the offsets |
+    | **Partition (three-way)** | Array, pivot known | In-place partition (Dutch National Flag), sort colors | O(n) | O(1) | Off-by-one on loop bounds; invariant is `[0..lo-1] < pivot`, `[lo..mid-1] = pivot`, `[hi+1..n-1] > pivot` — track each boundary explicitly |
 
 </div>
+
+!!! warning "When it breaks"
+    The opposite-direction variant requires a sorted array because the pointer movement relies on a monotonic invariant: moving the left pointer right means "all solutions with a smaller left value have been considered and eliminated." Without sort order, this invariant doesn't hold — a pointer advance might skip the actual answer with no error signal. Same-direction (slow/fast) has no such precondition. The pattern also breaks when you need all pairs with a given property and duplicates exist: moving the pointer past a duplicate without skipping all matching values produces duplicate result pairs, requiring explicit deduplication logic that is easy to omit.
+
 
 ---
 

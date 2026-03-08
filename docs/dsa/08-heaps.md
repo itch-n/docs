@@ -374,74 +374,37 @@ Add 3:  maxHeap=[5,3,1], minHeap=[15] → rebalance → maxHeap=[5,3], minHeap=[
     `PriorityQueue` handles indexing internally so you rarely write these formulas directly — but if you implement a heap
     manually, decide on the indexing scheme first and use it consistently throughout.
 
-!!! warning "When it breaks"
-    Heaps break for arbitrary deletion: removing an element that isn't the root requires finding it first, which is O(n). When your algorithm requires frequent priority updates, lazy deletion (re-insert with new priority, skip stale entries on pop) is the standard workaround, but it allows the heap to grow without bound if deletions dominate. The two-heap median finder breaks when elements are deleted from the stream — maintaining the balance invariant during deletion requires O(n) find-and-remove. For dynamic median with deletions, an order-statistics tree is the correct structure.
-
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Heap Configuration
 
 <div class="learner-section" markdown>
 
-**Your task:** Build decision trees for when to use heaps.
+**Your task:** Fill in the matrix after working through the implementations above.
 
-### Question 1: What do you need to track?
+### Trade-off Analysis Matrix
 
-Answer after solving problems:
+| Configuration | Gives | Push/pop time | Non-root access | Deletion support | Example problems |
+|---|---|---|---|---|---|
+| **Min-heap** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Max-heap** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Two-heap split** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Lazy deletion heap** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- **Need min/max element repeatedly?** <span class="fill-in">[Use heap]</span>
-- **Need Kth largest/smallest?** <span class="fill-in">[Use heap of size K]</span>
-- **Need median?** <span class="fill-in">[Use two heaps]</span>
-- **Your observation:** <span class="fill-in">[Fill in based on testing]</span>
+??? success "Answers"
 
-### Question 2: What are the time/space trade-offs?
-
-Answer for each pattern:
-
-**Basic heap operations:**
-
-- Time complexity: <span class="fill-in">[Insert? Extract? Peek?]</span>
-- Space complexity: <span class="fill-in">[How much space?]</span>
-- Best use cases: <span class="fill-in">[List problems you solved]</span>
-
-**Merge K sorted:**
-
-- Time complexity: <span class="fill-in">[Compare to merge two at a time]</span>
-- Space complexity: <span class="fill-in">[Just heap or output too?]</span>
-- Best use cases: <span class="fill-in">[List problems you solved]</span>
-
-**Top K frequent:**
-
-- Time complexity: <span class="fill-in">[Why log k not log n?]</span>
-- Space complexity: <span class="fill-in">[Frequency map + heap]</span>
-- Best use cases: <span class="fill-in">[List problems you solved]</span>
-
-**Two heaps:**
-
-- Time complexity: <span class="fill-in">[Insert? Find median?]</span>
-- Space complexity: <span class="fill-in">[Both heaps needed?]</span>
-- Best use cases: <span class="fill-in">[List problems you solved]</span>
-
-### Your Decision Tree
-
-Build this after solving practice problems:
-```mermaid
-flowchart TD
-    Start["Heap Pattern Selection"]
-
-    Q1{"Need Kth largest/smallest?"}
-    Start --> Q1
-    Q2{"Merge K sorted sequences?"}
-    Start --> Q2
-    Q3{"Need top K frequent?"}
-    Start --> Q3
-    Q4{"Need running median?"}
-    Start --> Q4
-    Q5{"Need all elements sorted?"}
-    Start --> Q5
-```
+    | Configuration | Gives | Push/pop time | Non-root access | Deletion support | Example problems |
+    |---|---|---|---|---|---|
+    | **Min-heap** | Minimum element in O(1) | O(log n) | No — O(n) find | Root only | Kth largest (push all; if size > k pop min), merge k sorted lists, Dijkstra |
+    | **Max-heap** | Maximum element in O(1) | O(log n) | No — O(n) find | Root only | Kth largest (max-heap of size n, pop k times), sliding window max (use deque — faster) |
+    | **Two-heap split** | Median in O(1) via max-heap of lower half + min-heap of upper half | O(log n) — push then rebalance | No | No | Find median from data stream; balance invariant: size difference ≤ 1 |
+    | **Lazy deletion heap** | Top element ignoring logically deleted entries | O(log n) amortised — skip stale entries on pop | No | Yes — mark deleted, skip on pop | Priority updates (Dijkstra with re-inserted nodes); heap grows without bound if deletions dominate pushes |
 
 </div>
+
+!!! warning "When it breaks"
+    Heaps break for arbitrary deletion: removing an element that isn't the root requires finding it first, which is O(n). When your algorithm requires frequent priority updates, lazy deletion (re-insert with new priority, skip stale entries on pop) is the standard workaround, but it allows the heap to grow without bound if deletions dominate. The two-heap median finder breaks when elements are deleted from the stream — maintaining the balance invariant during deletion requires O(n) find-and-remove. For dynamic median with deletions, an order-statistics tree is the correct structure.
+
 
 ---
 

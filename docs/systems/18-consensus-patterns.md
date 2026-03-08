@@ -1047,109 +1047,37 @@ Term 3: When partition heals, Node 5 sees Node 3 has higher term → steps down
 !!! danger "Misconception 3: Raft is slower than Paxos"
     Raft and Paxos have the same asymptotic complexity for log replication. The common belief that Raft is slower stems from early comparisons of specific implementations, not the algorithms themselves. Raft's main advantage is understandability: the algorithm is designed to be easier to reason about and implement correctly, which in practice means fewer subtle bugs. Production Raft implementations (etcd, Consul) handle tens of thousands of writes per second.
 
-!!! warning "When it breaks"
-    Consensus breaks when a quorum is unavailable: with 3 nodes, losing 2 means the cluster cannot make progress — it stops accepting writes rather than risk divergence. This is the correct behaviour (availability sacrificed for consistency) but surprises teams who expect the remaining node to continue serving writes. Leader election breaks under clock skew: Raft uses randomised election timeouts (typically 150–300ms) and a cluster with clock skew exceeding the timeout range can enter repeated election cycles. etcd, ZooKeeper, and Consul all have documented "thundering herd on leader loss" scenarios that require careful tuning of heartbeat and election timeout parameters.
-
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Consensus System
 
 <div class="learner-section" markdown>
 
-**Your task:** Build decision trees for when to use each consensus pattern.
+**Your task:** Fill in the matrix based on the material above.
 
-### Question 1: Leader Election vs Leaderless?
+### Trade-off Analysis Matrix
 
-Answer after implementation:
+| System | Algorithm | Quorum size | Leader failover time | Best for | Key failure mode |
+|---|---|---|---|---|---|
+| **etcd** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Apache ZooKeeper** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Consul** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **No consensus (rolling deploy)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-**Use Leader Election when:**
+??? success "Answers"
 
-- Single coordinator needed: <span class="fill-in">[One node must make decisions]</span>
-- Simplify operations: <span class="fill-in">[Leader handles all writes]</span>
-- Strong consistency: <span class="fill-in">[Leader ensures ordering]</span>
-- Examples: <span class="fill-in">[Master-worker, coordinator services]</span>
-
-**Use Leaderless (Quorum) when:**
-
-- High availability: <span class="fill-in">[No single point of failure]</span>
-- Multi-datacenter: <span class="fill-in">[Local writes in each DC]</span>
-- Read/write balance: <span class="fill-in">[Tune R/W for workload]</span>
-- Examples: <span class="fill-in">[Cassandra, DynamoDB]</span>
-
-### Question 2: When to use Raft vs Paxos?
-
-**Raft when:**
-
-- Understandability: <span class="fill-in">[Easier to implement and reason about]</span>
-- Log replication: <span class="fill-in">[Need ordered log of operations]</span>
-- Modern systems: <span class="fill-in">[etcd, Consul use Raft]</span>
-
-**Paxos when:**
-
-- Proven formal correctness: <span class="fill-in">[Mathematically proven]</span>
-- Legacy systems: <span class="fill-in">[Google Chubby uses Paxos]</span>
-- Academic interest: <span class="fill-in">[Understanding distributed consensus theory]</span>
-
-### Question 3: When to use distributed locks?
-
-**Use distributed locks when:**
-
-- Mutual exclusion: <span class="fill-in">[Only one process should access resource]</span>
-- Job scheduling: <span class="fill-in">[Prevent duplicate job execution]</span>
-- Leader election: <span class="fill-in">[Simple leader election mechanism]</span>
-
-**Avoid distributed locks when:**
-
-- Performance critical: <span class="fill-in">[Locks add latency]</span>
-- Can use optimistic locking: <span class="fill-in">[Version-based concurrency control]</span>
-- Idempotent operations: <span class="fill-in">[Can safely retry without lock]</span>
-
-### Your Decision Tree
-
-Build this after solving practice scenarios:
-```mermaid
-flowchart TD
-    Start["Consensus Pattern Selection"]
-
-    Q1{"Need single coordinator?"}
-    Start --> Q1
-    N2["Leader Election"]
-    Q1 -->|"YES"| N2
-    N3["Bully algorithm"]
-    Q1 -->|"Simple cluster?"| N3
-    N4["Raft"]
-    Q1 -->|"Production system?"| N4
-    N5["Continue to Q2"]
-    Q1 -->|"NO"| N5
-    Q6{"What's the consistency requirement?"}
-    Start --> Q6
-    N7["Raft or Paxos"]
-    Q6 -->|"Strong consistency"| N7
-    N8["Quorum with R=1, W=1"]
-    Q6 -->|"Eventual consistency"| N8
-    N9["Quorum with configurable R/W"]
-    Q6 -->|"Tunable consistency"| N9
-    Q10{"What's the failure scenario?"}
-    Start --> Q10
-    N11["Raft<br/>(CP in CAP)"]
-    Q10 -->|"Network partitions"| N11
-    N12["Quorum with hints"]
-    Q10 -->|"Node failures"| N12
-    N13["Leader election with fencing"]
-    Q10 -->|"Split-brain"| N13
-    Q14{"What's the use case?"}
-    Start --> Q14
-    N15["Raft<br/>(etcd, ZooKeeper)"]
-    Q14 -->|"Configuration management"| N15
-    N16["Quorum consensus"]
-    Q14 -->|"Distributed database"| N16
-    N17["Distributed locks"]
-    Q14 -->|"Job coordination"| N17
-    N18["No consensus needed<br/>(best-effort)"]
-    Q14 -->|"Cache invalidation"| N18
-```
+    | System | Algorithm | Quorum size | Leader failover time | Best for | Key failure mode |
+    |---|---|---|---|---|---|
+    | **etcd** | Raft — leader-based log replication | (N+1)/2 — 3-node cluster tolerates 1 failure | ~150–300ms (randomised election timeout) | Kubernetes control plane, distributed locks, service configuration | Clock skew exceeding election timeout triggers repeated leader elections; requires monotonic clocks |
+    | **Apache ZooKeeper** | ZAB — similar to Raft, predates it | (N+1)/2 | ~200ms–1s — JVM GC pauses can delay election | Legacy Hadoop / Kafka coordination (Kafka 3.x removed ZooKeeper dependency) | JVM GC pauses cause spurious leader loss; ZooKeeper client sessions expire on GC pause, triggering watches |
+    | **Consul** | Raft (same as etcd) | (N+1)/2 | ~150–300ms | Service mesh, service discovery, health checking | Agent flapping under rapid scaling floods the gossip protocol; health check interval must be tuned to avoid false positives |
+    | **No consensus (rolling deploy)** | N/A | N/A | N/A | Stateless service updates where strong consistency is not required | Multiple instances may run different code versions simultaneously — acceptable for stateless services, catastrophic for stateful leaders |
 
 </div>
+
+!!! warning "When it breaks"
+    Consensus breaks when a quorum is unavailable: with 3 nodes, losing 2 means the cluster cannot make progress — it stops accepting writes rather than risk divergence. This is the correct behaviour (availability sacrificed for consistency) but surprises teams who expect the remaining node to continue serving writes. Leader election breaks under clock skew: Raft uses randomised election timeouts (typically 150–300ms) and a cluster with clock skew exceeding the timeout range can enter repeated election cycles. etcd, ZooKeeper, and Consul all have documented "thundering herd on leader loss" scenarios that require careful tuning of heartbeat and election timeout parameters.
+
 
 ---
 

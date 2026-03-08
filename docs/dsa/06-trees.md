@@ -787,96 +787,37 @@ public static boolean hasPathSum_Optimized(TreeNode root, int targetSum) {
     paths. The key base case that is frequently forgotten is `if (root == null || root == p || root == q) return root` —
     omitting `root == p || root == q` causes the algorithm to continue searching past the target nodes.
 
-!!! warning "When it breaks"
-    Recursive tree algorithms break at depth: most JVM and Python runtimes have a default stack depth of ~500–1000 frames, so a degenerate tree (effectively a linked list) of 10,000 nodes causes a stack overflow. Iterative implementations with an explicit stack eliminate this risk. BST operations break when the tree is unbalanced: a sorted-input insertion order degenerates to O(n) search, which is why production BST usage always involves self-balancing variants (AVL, red-black). Diameter and path-sum algorithms that call height as a sub-function break at O(n²) for unbalanced trees — the single-pass combination trick is required.
-
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Tree Traversal
 
 <div class="learner-section" markdown>
 
-**Your task:** Build decision trees for tree traversal and recursion selection.
+**Your task:** Fill in the matrix after working through the traversal implementations above.
 
-### Question 1: Which traversal order do you need?
+### Trade-off Analysis Matrix
 
-Answer after solving problems:
+| Traversal | Visit order | Typical use | Iterative structure | Space | Key gotcha |
+|---|---|---|---|---|---|
+| **In-order DFS** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Pre-order DFS** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Post-order DFS** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **BFS (level-order)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- **Need sorted order from BST?** <span class="fill-in">[Use inorder]</span>
-- **Need to copy tree structure?** <span class="fill-in">[Use preorder]</span>
-- **Need to delete tree safely?** <span class="fill-in">[Use postorder]</span>
-- **Need level-by-level processing?** <span class="fill-in">[Use level-order]</span>
+??? success "Answers"
 
-### Question 2: Recursive vs Iterative?
-
-**Recursive approach:**
-
-- Pros: <span class="fill-in">[Simpler code, cleaner logic]</span>
-- Cons: <span class="fill-in">[O(h) stack space, risk of stack overflow]</span>
-- Use when: <span class="fill-in">[Tree depth is reasonable]</span>
-
-**Iterative approach:**
-
-- Pros: <span class="fill-in">[Explicit control, no stack overflow]</span>
-- Cons: <span class="fill-in">[More complex code, need explicit stack/queue]</span>
-- Use when: <span class="fill-in">[Deep trees, production code]</span>
-
-### Question 3: What information flows up the tree?
-
-Answer after solving problems:
-
-- **Single value (height, count)?** <span class="fill-in">[Simple recursion]</span>
-- **Multiple values (balanced + height)?** <span class="fill-in">[Use array or class]</span>
-- **Path information?** <span class="fill-in">[Use backtracking]</span>
-- **Global state?** <span class="fill-in">[Use instance variable]</span>
-
-### Question 4: When to use helper functions?
-
-**Direct recursion:**
-
-- Use when: <span class="fill-in">[Single return value, no extra state]</span>
-- Example: <span class="fill-in">[Height calculation]</span>
-
-**Helper with extra parameters:**
-
-- Use when: <span class="fill-in">[Need to track state, indices, ranges]</span>
-- Example: <span class="fill-in">[Tree construction from arrays]</span>
-
-**Helper with global variables:**
-
-- Use when: <span class="fill-in">[Need to update global max/min]</span>
-- Example: <span class="fill-in">[Diameter, max path sum]</span>
-
-### Your Decision Tree
-```mermaid
-flowchart TD
-    Start["Tree Problem Selection"]
-
-    Q1{"What order do you need?"}
-    Start --> Q1
-    Q2{"Left, Root, Right<br/>(sorted in BST)?"}
-    Q3{"Root, Left, Right<br/>(copy/serialize)?"}
-    Q4{"Left, Right, Root<br/>(delete/cleanup)?"}
-    Q5{"Level by level<br/>(BFS)?"}
-    Q6{"Implementation choice?"}
-    Start --> Q6
-    N7["Simpler, but O(h) space"]
-    Q6 -->|"Recursive"| N7
-    N8["More code, but safer"]
-    Q6 -->|"Iterative"| N8
-    Q9{"What are you calculating?"}
-    Start --> Q9
-    Q10{"How to track state?"}
-    Start --> Q10
-    N11["Direct recursion"]
-    Q10 -->|"No extra state"| N11
-    N12["Helper with array/class"]
-    Q10 -->|"Track max/min"| N12
-    N13["Backtracking with list"]
-    Q10 -->|"Track path"| N13
-```
+    | Traversal | Visit order | Typical use | Iterative structure | Space | Key gotcha |
+    |---|---|---|---|---|---|
+    | **In-order DFS** | Left → root → right | BST sorted output, kth smallest, validate BST | Stack | O(h) | Only gives sorted output in a BST — not meaningful for general trees |
+    | **Pre-order DFS** | Root → left → right | Serialize/clone tree, path from root, prefix expressions | Stack (push right then left) | O(h) | Root is processed before its children — good for building a copy of the tree |
+    | **Post-order DFS** | Left → right → root | Subtree aggregation (height, diameter, sum), delete tree | Stack or reverse of pre-order | O(h) | Children must be processed before parent — use when result depends on child results (e.g., height = 1 + max(left, right)) |
+    | **BFS (level-order)** | Level by level, left to right | Level-order output, zigzag traversal, right side view, minimum depth | Queue | O(w) — up to O(n/2) for last level of complete tree | Queue holds an entire level at peak; memory spikes for wide balanced trees |
 
 </div>
+
+!!! warning "When it breaks"
+    Recursive tree algorithms break at depth: most JVM and Python runtimes have a default stack depth of ~500–1000 frames, so a degenerate tree (effectively a linked list) of 10,000 nodes causes a stack overflow. Iterative implementations with an explicit stack eliminate this risk. BST operations break when the tree is unbalanced: a sorted-input insertion order degenerates to O(n) search, which is why production BST usage always involves self-balancing variants (AVL, red-black). Diameter and path-sum algorithms that call height as a sub-function break at O(n²) for unbalanced trees — the single-pass combination trick is required.
+
 
 ---
 

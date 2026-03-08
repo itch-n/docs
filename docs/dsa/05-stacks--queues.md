@@ -467,58 +467,39 @@ public static int[] maxSlidingWindow_Deque(int[] nums, int k) {
     amortised argument holds because each element crosses from inbox to outbox at most once over its lifetime, so the total
     transfer work across all operations is O(n), not O(n) per call.
 
-!!! warning "When it breaks"
-    Monotonic stack breaks silently when indices are needed but values are stored — the implementation produces correct answers on non-duplicate inputs but wrong answers with repeated values. The two-stack queue breaks when you need O(1) peek at the front without dequeuing: peeking requires transferring all elements, making it O(n). For production queues requiring O(1) peek, use a deque or a purpose-built queue. The deque sliding window maximum breaks when the problem requires tracking both maximum and minimum simultaneously — you need two separate deques.
-
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Stack or Queue Structure
 
 <div class="learner-section" markdown>
 
-**Your task:** Build decision trees for stack/queue selection.
+**Your task:** Fill in the matrix after working through the implementations above.
 
-### Question 1: LIFO vs FIFO?
+### Trade-off Analysis Matrix
 
-Answer after solving problems:
+| Structure | Order | Top/peek time | Typical use | Key pitfall | Example problems |
+|---|---|---|---|---|---|
+| **Stack** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Queue** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Deque** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Monotonic stack** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Priority queue (min-heap)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- **Need last item first?** <span class="fill-in">[Use stack]</span>
-- **Need first item first?** <span class="fill-in">[Use queue]</span>
-- **Need both ends?** <span class="fill-in">[Use deque]</span>
-- **Your observation:** <span class="fill-in">[Fill in based on testing]</span>
+??? success "Answers"
 
-### Question 2: When to use each pattern?
-
-**Stack patterns:**
-
-- Valid parentheses: <span class="fill-in">[Why stack?]</span>
-- Expression evaluation: <span class="fill-in">[Why stack?]</span>
-- Monotonic stack: <span class="fill-in">[What problems?]</span>
-
-**Queue patterns:**
-
-- BFS: <span class="fill-in">[Why queue?]</span>
-- Level order traversal: <span class="fill-in">[Why queue?]</span>
-- Task scheduling: <span class="fill-in">[Why queue?]</span>
-
-### Your Decision Tree
-```mermaid
-flowchart TD
-    Start["Stack vs Queue Selection"]
-
-    Q1{"Need to track most recent?"}
-    Start --> Q1
-    Q2{"Need to process in order?"}
-    Start --> Q2
-    Q3{"Need to find next greater/smaller?"}
-    Start --> Q3
-    Q4{"Need to access both ends?"}
-    Start --> Q4
-    Q5{"Need min/max with updates?"}
-    Start --> Q5
-```
+    | Structure | Order | Top/peek time | Typical use | Key pitfall | Example problems |
+    |---|---|---|---|---|---|
+    | **Stack** | LIFO | O(1) | Balanced parentheses, DFS, undo/redo, call simulation | In Java use `Deque` not `Stack` class — `Stack` inherits `Vector` and is synchronized | Valid parentheses, min stack, evaluate reverse polish notation |
+    | **Queue** | FIFO | O(1) | BFS, task scheduling, producer-consumer | `LinkedList` as queue has O(n) `contains`; use `ArrayDeque` | BFS traversal, rotten oranges, number of islands |
+    | **Deque** | Both ends O(1) | O(1) | Sliding window maximum/minimum, palindrome check | Language-specific naming (`pollFirst`/`pollLast` in Java; `popleft` in Python) | Sliding window maximum, design circular deque |
+    | **Monotonic stack** | LIFO, maintained sorted | O(1) | Next/previous greater or smaller element, histogram span | Storing values not indices — most problems need the index for distance or span calculation | Daily temperatures, largest rectangle in histogram, trapping rain water |
+    | **Priority queue (min-heap)** | Heap-ordered (not FIFO) | O(1) peek, O(log n) pop/push | Kth smallest/largest, Dijkstra, merge k sorted lists | Java `PriorityQueue` is min-heap; max-heap needs `Collections.reverseOrder()` | Kth largest element, top K frequent elements, merge k sorted lists |
 
 </div>
+
+!!! warning "When it breaks"
+    Monotonic stack breaks silently when indices are needed but values are stored — the implementation produces correct answers on non-duplicate inputs but wrong answers with repeated values. The two-stack queue breaks when you need O(1) peek at the front without dequeuing: peeking requires transferring all elements, making it O(n). For production queues requiring O(1) peek, use a deque or a purpose-built queue. The deque sliding window maximum breaks when the problem requires tracking both maximum and minimum simultaneously — you need two separate deques.
+
 
 ---
 

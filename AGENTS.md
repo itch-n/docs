@@ -106,7 +106,7 @@ Four admonition types and one custom div have established placement and purpose:
 | Admonition | Type | Placement | Purpose |
 |------------|------|-----------|---------|
 | `!!! note "Operational reality"` | note | After Learning Objectives `---`, before `## ELI5` | Theory-vs-production gap; named tools and systems |
-| `!!! warning "When it breaks"` | warning | Before `## Decision Framework` (or after Case Studies if present) | Scale thresholds and failure conditions |
+| `!!! warning "When it breaks"` | warning | After `## Decision Framework` closing `</div>`, before `## Practice` | Mechanism + scale thresholds; explains *why* the break occurs |
 | `!!! danger "Misconception: ..."` | danger | In Common Misconceptions section | One block per misconception; use a descriptive title, not "Misconception N:" |
 | `!!! warning "Debugging Challenge — ..."` | warning | After code stubs in DSA files | Buggy code for learner to find; answer in `??? success "Answer"` block |
 
@@ -137,10 +137,11 @@ For reference pages (`back-of-envelope.md` style), use `??? note "Derivation"` t
 
 ### When it breaks — content rules
 
-- Lead with the breaking condition, then give the concrete number or threshold
-- Format: `**Concept:** description. **Concept:** description.` within the single admonition block
-- For DSA: breaking conditions are algorithmic (wrong precondition, wrong operation, state space too large)
-- For systems: breaking conditions are scale thresholds (ops/sec, node count, data volume, latency floor)
+- Explain the *mechanism* first — why the system or algorithm breaks at a structural level — then anchor with a concrete number or threshold
+- Both parts are required: mechanism without a number is vague; a number without mechanism is hard to remember
+- Format: prose sentences (not bullet lists) within the single admonition block
+- For DSA: explain the invariant that breaks (wrong precondition, violated monotonic property, state space explosion), then give the practical consequence
+- For systems: explain the chain of causation (what accumulates, what fills, what queues), then give the scale threshold (ops/sec, node count, data volume, latency floor)
 
 ### Quick Reference pages — maintenance note
 

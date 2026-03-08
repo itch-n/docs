@@ -341,71 +341,37 @@ public static boolean containsDuplicate_HashSet(int[] nums) {
 !!! danger "Misconception 3: HashMap and HashSet maintain insertion order"
     Standard `HashMap` and `HashSet` do **not** guarantee ordering. If you need insertion order, use `LinkedHashMap` or `LinkedHashSet`. If you need sorted order, use `TreeMap` or `TreeSet`. Confusing these leads to non-deterministic iteration bugs that are hard to reproduce.
 
-!!! warning "When it breaks"
-    Hash tables break for ordered operations: iterating in sorted order requires a separate structure (tree map or sorted array). They break under adversarial inputs without hash randomisation — crafted inputs that all collide in the same bucket degrade O(1) lookup to O(n). For very small maps (under ~10 keys), array linear scan is often faster due to cache locality. The complement lookup pattern (Two Sum) breaks when the same index cannot be reused — you must check `index != i` before returning, which the naive implementation omits.
-
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Map Implementation
 
 <div class="learner-section" markdown>
 
-**Your task:** Build decision trees for when to use hash tables.
+**Your task:** Fill in the matrix after working through the implementations above.
 
-### Question 1: What operation do you need?
+### Trade-off Analysis Matrix
 
-Answer after solving problems:
+| Implementation | Lookup time | Iteration order | Thread safe | Overhead vs HashMap | When to use |
+|---|---|---|---|---|---|
+| **HashMap (unordered)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **LinkedHashMap (insertion-ordered)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **TreeMap (key-sorted)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **ConcurrentHashMap** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- **Fast lookup by key?** <span class="fill-in">[When to use HashMap vs array?]</span>
-- **Fast membership test?** <span class="fill-in">[When to use HashSet?]</span>
-- **Frequency counting?** <span class="fill-in">[Why is HashMap ideal?]</span>
-- **Your observation:** <span class="fill-in">[Fill in based on testing]</span>
+??? success "Answers"
 
-### Question 2: What are the time/space trade-offs?
-
-Answer for each pattern:
-
-**HashMap for lookups:**
-
-- Time complexity: <span class="fill-in">[Average case? Worst case?]</span>
-- Space complexity: <span class="fill-in">[How much extra space?]</span>
-- Best use cases: <span class="fill-in">[List problems you solved]</span>
-
-**HashSet for membership:**
-
-- Time complexity: <span class="fill-in">[Compare to linear search]</span>
-- Space complexity: <span class="fill-in">[Trade-off worth it when?]</span>
-- Best use cases: <span class="fill-in">[List problems you solved]</span>
-
-**HashMap for grouping:**
-
-- Time complexity: <span class="fill-in">[Depends on what?]</span>
-- Space complexity: <span class="fill-in">[How to estimate?]</span>
-- Best use cases: <span class="fill-in">[List problems you solved]</span>
-
-### Your Decision Tree
-
-Build this after solving practice problems:
-```mermaid
-flowchart TD
-    Start["Hash Table Pattern Selection"]
-
-    Q1{"What do you need?"}
-    Start --> Q1
-    Q2{"Fast lookup by key?"}
-    Q3{"Fast membership test?"}
-    Q4{"Count frequencies?"}
-    Q5{"Group by property?"}
-    Q6{"Track window state?"}
-    Q7{"Space constraint?"}
-    Start --> Q7
-    N8["Consider alternatives"]
-    Q7 -->|"Yes"| N8
-    N9["Hash table is usually best choice"]
-    Q7 -->|"No"| N9
-```
+    | Implementation | Lookup time | Iteration order | Thread safe | Overhead vs HashMap | When to use |
+    |---|---|---|---|---|---|
+    | **HashMap (unordered)** | O(1) avg | None | No | Baseline | Default for frequency counts, complement lookup (Two Sum), grouping |
+    | **LinkedHashMap (insertion-ordered)** | O(1) avg | Insertion order | No | Small — prev/next pointers per entry | LRU cache (override `removeEldestEntry`); preserving insertion order for output |
+    | **TreeMap (key-sorted)** | O(log n) | Sorted by key | No | Moderate — red-black tree nodes | Range queries (`subMap`, `floorKey`, `ceilingKey`); ordered iteration by key |
+    | **ConcurrentHashMap** | O(1) avg | None | Yes — segment-level locking | ~2× HashMap | Multi-threaded counters; not a substitute for synchronized compound operations like check-then-act |
 
 </div>
+
+!!! warning "When it breaks"
+    Hash tables break for ordered operations: iterating in sorted order requires a separate structure (tree map or sorted array). They break under adversarial inputs without hash randomisation — crafted inputs that all collide in the same bucket degrade O(1) lookup to O(n). For very small maps (under ~10 keys), array linear scan is often faster due to cache locality. The complement lookup pattern (Two Sum) breaks when the same index cannot be reused — you must check `index != i` before returning, which the naive implementation omits.
+
 
 ---
 

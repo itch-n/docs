@@ -253,9 +253,6 @@ Graceful degradation returns a reduced but functional response when a dependency
 
 **Degradation is not free:** A service that falls back to a stale cache must invalidate that cache when the dependency recovers. A service that hides a feature must restore it. Degradation adds operational surface area. Reserve it for features where a degraded experience is genuinely better than an error — and document the recovery procedure.
 
-!!! warning "When it breaks"
-    Circuit breakers break when threshold tuning is wrong: a threshold set too low opens the circuit on transient errors, amplifying an outage instead of containing it; set too high, it never opens and provides no protection. The half-open probe — sending a single request to test recovery — breaks under high traffic because one success doesn't confirm the dependency has recovered. Retry logic breaks when operations are not idempotent: retrying a payment or an email send is worse than failing once. Exponential backoff without jitter breaks under coordinated retry storms: all callers back off to the same interval and retry simultaneously, producing a spike exactly when the dependency is recovering. Jitter spreads retries across time and is almost always worth adding.
-
 ---
 
 ## Common Misconceptions
@@ -323,110 +320,35 @@ Product page service
 
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Resilience Pattern
 
 <div class="learner-section" markdown>
 
-**Your task:** After studying the patterns, answer these questions to build your own decision logic.
+**Your task:** Fill in the matrix based on the material above.
 
-### 1. Pattern Selection
+### Trade-off Analysis Matrix
 
-**When should you add a circuit breaker first, before any other pattern?**
+| Pattern | Failure type it handles | Latency impact | Requires idempotency | Configuration complexity | Key failure mode |
+|---|---|---|---|---|---|
+| **Retry with exponential backoff + jitter** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Circuit breaker (Resilience4j)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Timeout** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Bulkhead** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- Your answer: <span class="fill-in">[Describe the scenario — what signals indicate a circuit breaker is the highest-priority addition?]</span>
+??? success "Answers"
 
-**When does a bulkhead add value, and when is it unnecessary overhead?**
-
-- Adds value: <span class="fill-in">[Fill in]</span>
-- Unnecessary: <span class="fill-in">[Fill in]</span>
-
-**You have a 1 000 ms SLA and a dependency with 200 ms p99 latency. What is the maximum number of retries you can budget if the per-attempt timeout matches the p99?**
-
-- Your calculation: <span class="fill-in">[Show the math: retries × timeout vs SLA budget]</span>
-
-**An operation is non-idempotent (creates a resource). What retry strategy is safe?**
-
-- Your answer: <span class="fill-in">[Fill in — mention idempotency keys or no-retry]</span>
-
-### 2. Circuit Breaker Tuning
-
-**What failure threshold and recovery timeout would you start with for a payment gateway with:**
-
-- p99 latency: 300 ms
-- Acceptable degradation window: 30 s
-- Expected transient failure rate: < 1%
-
-- Your starting threshold: <span class="fill-in">[Fill in with reasoning]</span>
-- Your starting recovery timeout: <span class="fill-in">[Fill in with reasoning]</span>
-
-**What symptom tells you the recovery timeout is too short?**
-
-- Your answer: <span class="fill-in">[Fill in]</span>
-
-**What symptom tells you the failure threshold is too low?**
-
-- Your answer: <span class="fill-in">[Fill in]</span>
-
-### 3. Retry Budget Calculation
-
-**Formula:** `max_attempts × per_attempt_timeout ≤ SLA_budget − processing_overhead`
-
-For each scenario, determine whether the retry configuration fits:
-
-| SLA budget | Per-attempt timeout | Max retries | Fits? |
-|------------|---------------------|-------------|-------|
-| 3 000 ms | 500 ms | 5 | <span class="fill-in">[Yes/No]</span> |
-| 1 500 ms | 300 ms | 4 | <span class="fill-in">[Yes/No]</span> |
-| 5 000 ms | 800 ms | 3 | <span class="fill-in">[Yes/No]</span> |
-
-**Which row above would you redesign, and how?**
-
-- Your answer: <span class="fill-in">[Fill in]</span>
-
-### 4. Combining Patterns
-
-**Put these patterns in the order you would apply them to a new service integration, from first to last, and explain why:**
-
-Retry with backoff / Circuit Breaker / Bulkhead / Timeout / Graceful Degradation
-
-- Your ordering: <span class="fill-in">[Fill in with rationale — e.g., timeouts first because without them retries are unbounded]</span>
-
-### 5. Your Decision Tree
-
-Build your mental model for pattern selection:
-
-```mermaid
-flowchart TD
-    Start["New remote dependency — which pattern first?"]
-    T1["Configure connect + read + total timeouts"]
-    T2["Does the dependency have multiple<br/>high-latency failure modes?"]
-    T3["Add bulkhead to isolate thread pool"]
-    T4["Is the failure rate sustained<br/>or transient?"]
-    T5["Add circuit breaker for sustained outages"]
-    T6["Add retry with backoff + jitter<br/>for transient failures"]
-    T7["Is partial functionality<br/>acceptable on failure?"]
-    T8["Define degraded-mode contract<br/>and implement fallback"]
-    T9["Return error to caller"]
-
-    Start --> T1
-    T1 --> T2
-    T2 -->|"Yes"| T3
-    T2 -->|"No"| T4
-    T3 --> T4
-    T4 -->|"Sustained outage"| T5
-    T4 -->|"Transient error"| T6
-    T5 --> T7
-    T6 --> T7
-    T7 -->|"Yes"| T8
-    T7 -->|"No"| T9
-```
-
-**After studying all patterns, annotate this tree:**
-
-- Which node would you revisit if the dependency is non-idempotent? <span class="fill-in">[Fill in]</span>
-- Where does deadline propagation fit in this tree? <span class="fill-in">[Fill in]</span>
+    | Pattern | Failure type it handles | Latency impact | Requires idempotency | Configuration complexity | Key failure mode |
+    |---|---|---|---|---|---|
+    | **Retry with exponential backoff + jitter** | Transient failures — network blips, brief overload | Adds latency per retry attempt | Yes — retrying a non-idempotent operation duplicates side effects (double payment, double email) | Low | Without jitter, all callers back off to the same interval and retry simultaneously — a thundering herd exactly when the dependency is recovering |
+    | **Circuit breaker (Resilience4j)** | Sustained downstream failure or overload | Fails fast when open — eliminates wait time on failed calls | No | Medium — failure threshold, timeout, half-open probe count | Threshold too low opens on transient errors and amplifies the outage; threshold too high never opens and provides no protection |
+    | **Timeout** | Slow responses that would otherwise hold threads indefinitely | Bounded by timeout duration | No | Low | Set lower than upstream caller's timeout to preserve the latency budget; timeout too short causes false failures; too long holds threads |
+    | **Bulkhead** | Cascading failure via thread-pool exhaustion — one slow dependency blocks all threads | None if pools are correctly sized | No | Medium — pool size per dependency | Pool too small starves legitimate traffic; pool too large allows one slow dependency to still exhaust a large pool |
 
 </div>
+
+!!! warning "When it breaks"
+    Circuit breakers break when threshold tuning is wrong: a threshold set too low opens the circuit on transient errors, amplifying an outage instead of containing it; set too high, it never opens and provides no protection. The half-open probe — sending a single request to test recovery — breaks under high traffic because one success doesn't confirm the dependency has recovered. Retry logic breaks when operations are not idempotent: retrying a payment or an email send is worse than failing once. Exponential backoff without jitter breaks under coordinated retry storms: all callers back off to the same interval and retry simultaneously, producing a spike exactly when the dependency is recovering. Jitter spreads retries across time and is almost always worth adding.
+
 
 ---
 

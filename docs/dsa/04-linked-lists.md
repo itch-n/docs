@@ -371,65 +371,37 @@ Step 3: Continue
 !!! danger "Misconception 3: The cycle-start algorithm just needs both pointers moving one step"
     In the second phase of Floyd's algorithm (finding the cycle entry), resetting `slow` to `head` and advancing **both** pointers one step at a time is correct. If you advance `fast` by two steps in the second phase you break the mathematical guarantee — the two pointers will no longer converge at the cycle entry node.
 
-!!! warning "When it breaks"
-    Linked lists break for random access: reaching the kth element is O(n), making them wrong for any workload involving index-based lookup or binary search. They also break in cache-hostile environments: nodes are scattered across the heap rather than contiguous in memory, causing cache misses on every pointer dereference. In practice, arrays with O(n) insertion are often faster in real workloads because they fit in CPU cache. Floyd's cycle detection breaks for directed graphs with multiple entry points to a cycle — the algorithm finds a cycle but requires a second phase to identify the correct entry node.
-
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Linked List Technique
 
 <div class="learner-section" markdown>
 
-**Your task:** Build decision trees for linked list operations.
+**Your task:** Fill in the matrix after working through the implementations above.
 
-### Question 1: What operation do you need?
+### Trade-off Analysis Matrix
 
-Answer after solving problems:
+| Technique | Modifies list? | Space | Achieves | Off-by-one risk | Example problems |
+|---|---|---|---|---|---|
+| **Fast/slow pointers** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **In-place reversal** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Dummy / sentinel head** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Recursion** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- **Reverse?** <span class="fill-in">[Iterative vs recursive - trade-offs?]</span>
-- **Detect cycle?** <span class="fill-in">[Why Floyd's algorithm?]</span>
-- **Merge?** <span class="fill-in">[Two lists vs K lists - approach difference?]</span>
-- **Remove node?** <span class="fill-in">[Why use dummy node?]</span>
+??? success "Answers"
 
-### Question 2: Pointer patterns
-
-**Reversal pattern:**
-
-- Three pointers: prev, curr, next
-- Use cases: <span class="fill-in">[List problems you solved]</span>
-
-**Cycle detection pattern:**
-
-- Slow/fast pointers
-- Use cases: <span class="fill-in">[List problems you solved]</span>
-
-**Two pointer with gap:**
-
-- Maintain fixed distance
-- Use cases: <span class="fill-in">[List problems you solved]</span>
-
-### Your Decision Tree
-```mermaid
-flowchart TD
-    Start["Linked List Pattern Selection"]
-
-    Q1{"Need to reverse?"}
-    Start --> Q1
-    Q2{"Detect cycle or find middle?"}
-    Start --> Q2
-    Q3{"Merge sorted lists?"}
-    Start --> Q3
-    N4(["Use: Iterative merge ✓"])
-    Q3 -->|"Two lists"| N4
-    N5(["Use: Min heap ✓"])
-    Q3 -->|"K lists"| N5
-    Q6{"Remove node from end?"}
-    Start --> Q6
-    Q7{"Remove duplicates?"}
-    Start --> Q7
-```
+    | Technique | Modifies list? | Space | Achieves | Off-by-one risk | Example problems |
+    |---|---|---|---|---|---|
+    | **Fast/slow pointers** | No | O(1) | Cycle detection, middle node, nth from end | Medium — initialization and step count vary by problem | Linked list cycle, middle of linked list, palindrome check |
+    | **In-place reversal** | Yes | O(1) | Reverse sublist or full list | High — track prev/curr/next explicitly; draw the state before coding | Reverse linked list, reverse between positions, k-group reverse |
+    | **Dummy / sentinel head** | No (adds one node) | O(1) extra node | Eliminates head-is-null edge case, simplifies head modifications | Low — dummy head makes the "no previous node" case uniform | Remove nth from end, merge sorted lists, partition list |
+    | **Recursion** | No | O(n) call stack | Any traversal or transformation expressible as: process node, then recurse | Medium — return value must carry both the modified node and auxiliary state | Reverse list recursively, deep copy with random pointers |
 
 </div>
+
+!!! warning "When it breaks"
+    Linked lists break for random access: reaching the kth element is O(n), making them wrong for any workload involving index-based lookup or binary search. They also break in cache-hostile environments: nodes are scattered across the heap rather than contiguous in memory, causing cache misses on every pointer dereference. In practice, arrays with O(n) insertion are often faster in real workloads because they fit in CPU cache. Floyd's cycle detection breaks for directed graphs with multiple entry points to a cycle — the algorithm finds a cycle but requires a second phase to identify the correct entry node.
+
 
 ---
 

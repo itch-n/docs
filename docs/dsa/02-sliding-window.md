@@ -293,94 +293,35 @@ Sliding window: Previous sum (7) - 1 + 10 = 16 (2 operations)
 !!! danger "Misconception 3: Not removing zero-frequency keys from a HashMap breaks nothing"
     If you decrement a character's count to 0 but leave it in the map, `window.size()` never decreases. The shrink condition `window.size() > k` becomes permanently true, causing the window to collapse to size 1. Always remove a key when its frequency hits 0.
 
-!!! warning "When it breaks"
-    Sliding window requires a monotonic shrink condition: shrinking the window must make it strictly less valid (or vice versa). When this doesn't hold — for example, "longest subarray where max minus min ≤ k" — shrinking can restore validity and the standard shrink loop produces incorrect results. In those cases you need a data structure (monotonic deque) to track the max/min, which changes the approach entirely. The pattern also breaks for non-contiguous problems: two-sum and k-sum over unsorted data require a hash map, not a window.
-
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Sliding Window Variant
 
 <div class="learner-section" markdown>
 
-**Your task:** Build decision trees for when to use sliding window.
+**Your task:** Fill in the matrix after solving the problems above.
 
-### Question 1: Is the subarray/substring contiguous?
+### Trade-off Analysis Matrix
 
-Answer after solving problems:
+| Variant | Window size | Shrink condition | Time | Tracks | Key pitfall |
+|---|---|---|---|---|---|
+| **Fixed window** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Variable window** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Monotonic deque window** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- **Why contiguous matters?** <span class="fill-in">[Sliding window only works on contiguous data]</span>
-- **Can sliding window work on non-contiguous?** <span class="fill-in">[No - need other techniques]</span>
-- **Your observation:** <span class="fill-in">[Fill in based on testing]</span>
+??? success "Answers"
 
-### Question 2: Fixed vs Dynamic window?
-
-Answer for each pattern:
-
-**Fixed window when:**
-
-- Window size: <span class="fill-in">[Known constant k]</span>
-- Movement rule: <span class="fill-in">[Always move both pointers together]</span>
-- Example problems: <span class="fill-in">[Max average, nearby duplicate]</span>
-
-**Dynamic window when:**
-
-- Window size: <span class="fill-in">[Varies based on constraint]</span>
-- Movement rule: <span class="fill-in">[Expand right, shrink left when needed]</span>
-- Example problems: <span class="fill-in">[Longest substring, min subarray sum]</span>
-
-### Question 3: What state to track?
-
-Answer for different scenarios:
-
-**For sum/count problems:**
-
-- Track: <span class="fill-in">[Running sum, count]</span>
-- Data structure: <span class="fill-in">[Variables, no extra space]</span>
-
-**For unique elements:**
-
-- Track: <span class="fill-in">[Set of current elements]</span>
-- Data structure: <span class="fill-in">[HashSet]</span>
-
-**For frequency:**
-
-- Track: <span class="fill-in">[Count of each element]</span>
-- Data structure: <span class="fill-in">[HashMap or frequency array]</span>
-
-### Your Decision Tree
-
-Build this after solving practice problems:
-```mermaid
-flowchart TD
-    Start["Sliding Window Pattern Selection"]
-
-    Q1{"Is subarray/substring contiguous?"}
-    Start --> Q1
-    N2["Use other technique<br/>(DP, backtracking)"]
-    Q1 -->|"NO"| N2
-    N3["Continue"]
-    Q1 -->|"YES"| N3
-    Q4{"Is window size known?"}
-    Start --> Q4
-    N5(["Use fixed window ✓"])
-    Q4 -->|"YES (fixed k)"| N5
-    N6(["Use dynamic window ✓"])
-    Q4 -->|"NO (find optimal)"| N6
-    Q7{"What to track in window?"}
-    Start --> Q7
-    N8(["Variables O(1) space ✓"])
-    Q7 -->|"Sum/Count"| N8
-    N9(["HashSet O(k) space ✓"])
-    Q7 -->|"Unique elements"| N9
-    N10(["HashMap/Array O(k) space ✓"])
-    Q7 -->|"Frequencies"| N10
-    N11(["Deque O(k) space ✓"])
-    Q7 -->|"Maximum"| N11
-    Q12{"Shrink condition?"}
-    Start --> Q12
-```
+    | Variant | Window size | Shrink condition | Time | Tracks | Key pitfall |
+    |---|---|---|---|---|---|
+    | **Fixed window** | Known constant k | N/A — both pointers advance together | O(n) | Running aggregate (sum, count) | Forgetting to remove the outgoing element before adding the incoming one |
+    | **Variable window** | Unknown — maximize or minimize | Shrink while constraint is violated | O(n) | Window validity condition | Shrink must be `while` not `if` — a single shrink step may not restore validity |
+    | **Monotonic deque window** | Variable — max/min over a sliding k range | Pop front when index is out of window; pop back when new element breaks monotonicity | O(n) | Max or min element in current window | Storing values instead of indices — you need the index to determine when the front has left the window |
 
 </div>
+
+!!! warning "When it breaks"
+    Sliding window requires a monotonic shrink condition: shrinking the window must make it strictly less valid (or vice versa). When this doesn't hold — for example, "longest subarray where max minus min ≤ k" — shrinking can restore validity and the standard shrink loop produces incorrect results. In those cases you need a data structure (monotonic deque) to track the max/min, which changes the approach entirely. The pattern also breaks for non-contiguous problems: two-sum and k-sum over unsorted data require a hash map, not a window.
+
 
 ---
 

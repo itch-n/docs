@@ -437,67 +437,35 @@ Space saved: 6 ints (24 bytes) → 1 int + 5 bytes (9 bytes) = 62% reduction
 !!! danger "You must choose one layout for the entire database"
     Modern systems like PostgreSQL (with `citus` columnar extension), TimescaleDB, and Apache Kudu support hybrid layouts. OLTP tables can be row-oriented while analytical tables in the same cluster use columnar storage. The choice is per-table (or even per-partition), not per-database.
 
-!!! warning "When it breaks"
-    Row stores break for analytics when queries have low selectivity across wide tables — a full scan of a 1TB table reading 3 of 200 columns still reads all 200. The practical cliff is roughly 10M+ rows with aggregation queries; below that, a well-indexed row store usually wins on operational simplicity. Column stores break for OLTP when rows are updated frequently — an update to one field touches every column file, making point updates expensive. Hybrid HTAP databases (TiDB, SingleStore) exist specifically to serve both workloads, at the cost of significant added complexity.
-
 ---
 
-## Decision Framework
+## Decision Framework: Choosing a Storage Orientation
 
 <div class="learner-section" markdown>
 
-**Your task:** Build decision trees for when to use each storage layout.
+**Your task:** Fill in the matrix based on your benchmark results and the material above.
 
-### Question 1: OLTP or OLAP Workload?
+### Trade-off Analysis Matrix
 
-Answer after implementing and benchmarking:
+| Storage model | Query type | Write pattern | Compression | Typical use | Key failure mode |
+|---|---|---|---|---|---|
+| **Row-oriented (PostgreSQL / MySQL)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **Column-oriented (BigQuery / Redshift / Parquet)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
+| **HTAP hybrid (TiDB / SingleStore)** | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> | <span class="fill-in">[Fill in]</span> |
 
-- **My workload type:** <span class="fill-in">[Fill in]</span>
-- **Why does this matter?** <span class="fill-in">[Fill in]</span>
-- **Performance difference I observed:** <span class="fill-in">[Fill in]</span>
+??? success "Answers"
 
-### Question 2: Query Patterns
-
-Answer:
-
-- **Do I need full rows?** <span class="fill-in">[Yes/No - when?]</span>
-- **Do I need selective columns?** <span class="fill-in">[Yes/No - how many?]</span>
-- **Which is faster for my queries?** <span class="fill-in">[Fill in after testing]</span>
-
-### Question 3: Data Volume and Compression
-
-Answer:
-
-- **Table size:** <span class="fill-in">[Small/Medium/Large - how many rows?]</span>
-- **Column cardinality:** <span class="fill-in">[High/Low - does it matter?]</span>
-- **Compression benefits observed:** <span class="fill-in">[Fill in after implementation]</span>
-
-### Your Decision Tree
-
-Build this after understanding trade-offs:
-
-```mermaid
-flowchart TD
-    Start["Storage Layout Selection"]
-
-    Start --> Q1{"What's the primary<br/>workload?"}
-    Q1 -->|"OLTP<br/>(Transactions)"| Q2{"Query pattern?"}
-    Q1 -->|"OLAP<br/>(Analytics)"| Q3{"Data volume?"}
-
-    Q2 -->|"Point lookups<br/>(by key)"| A1(["Use Row Storage ✓"])
-    Q2 -->|"Full row scans"| A2(["Use Row Storage ✓"])
-    Q2 -->|"Few columns<br/>from many rows"| Q3
-
-    Q3 -->|"< 1M rows"| A3["Either works<br/>(test both)"]
-    Q3 -->|"> 1M rows"| Q4{"How many columns<br/>accessed?"}
-
-    Q4 -->|"Most/All columns"| A4["Row Storage<br/>(less overhead)"]
-    Q4 -->|"Few columns<br/>(< 20%)"| A5(["Use Column Storage ✓"])
-
-    A3 --> A6["Benchmark with<br/>real queries"]
-```
+    | Storage model | Query type | Write pattern | Compression | Typical use | Key failure mode |
+    |---|---|---|---|---|---|
+    | **Row-oriented (PostgreSQL / MySQL)** | OLTP — point lookups, short range updates, full row access | High write throughput — in-place row updates | Low — full rows stored together, mixed types | Transactional workloads: banking, e-commerce, user management | Analytics on wide tables — scanning all 200 columns to read 3 wastes I/O proportionally |
+    | **Column-oriented (BigQuery / Redshift / Parquet)** | OLAP — aggregations, full-column scans, low-column selectivity | Write-unfriendly — an update touches every column file | High — same data type adjacent compresses 10–100× | Analytical workloads: reporting, dashboards, data warehousing | Frequent row updates are expensive; not designed for OLTP point-update patterns |
+    | **HTAP hybrid (TiDB / SingleStore)** | Both OLTP and OLAP — different storage engines per query type | Moderate — handles both but optimal for neither | Medium | Mixed workloads needing row freshness and column analytics simultaneously | Significantly more complex operationally; adds cost for workloads that are clearly one type |
 
 </div>
+
+!!! warning "When it breaks"
+    Row stores break for analytics when queries have low selectivity across wide tables — a full scan of a 1TB table reading 3 of 200 columns still reads all 200. The practical cliff is roughly 10M+ rows with aggregation queries; below that, a well-indexed row store usually wins on operational simplicity. Column stores break for OLTP when rows are updated frequently — an update to one field touches every column file, making point updates expensive. Hybrid HTAP databases (TiDB, SingleStore) exist specifically to serve both workloads, at the cost of significant added complexity.
+
 
 ---
 
