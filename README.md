@@ -14,7 +14,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 uv sync
 
 # 3. Start the site
-uv run mkdocs serve --dirtyreload
+uv run mkdocs serve --dirtyreload --livereload
 ```
 
 Open http://127.0.0.1:8000. The `--dirtyreload` flag rebuilds only changed files, so saves are reflected in the browser in under a second.
