@@ -192,13 +192,20 @@ Total time: Sequential, each waits for previous
 
 #### HTTP/2 (2015)
 
+**The core idea — binary framing and streams:**
+
+HTTP/1.1 is plain text. HTTP/2 splits every message into binary **frames**, each tagged with a **stream ID**. A stream is one logical request/response pair. Because frames carry a stream ID, frames from many streams can be interleaved on the wire and reassembled independently — that's multiplexing.
+
 **Major improvements:**
 
-- **Binary protocol:** More efficient than text-based HTTP/1.1
-- **Multiplexing:** Multiple requests/responses on single connection
-- **Server push:** Proactively send resources
-- **Header compression (HPACK):** Reduce overhead
-- **Stream prioritization:** Critical resources first
+- **Binary framing layer:** All messages split into frames tagged with stream IDs — enables everything below
+- **Multiplexing:** Multiple request/response streams interleaved on one TCP connection — no more 6-connection-per-domain hack
+- **HPACK header compression:** First request sends full headers; subsequent requests send only diffs against a shared table — common headers become 1-2 byte indices (~40% bandwidth saving)
+- **Stream prioritization:** Client can signal which streams are more critical
+- **Server push:** Server proactively sends resources before client asks — *failed in practice; Chrome removed support in 2022, widely misused*
+
+!!! warning "Interview gotcha: HTTP/2 only partially solves HOL blocking"
+    HTTP/2 eliminates **application-layer** HOL blocking — you no longer wait for response 1 before sending request 2. But TCP is still a single ordered byte stream underneath. If one TCP packet is lost, TCP buffers everything that arrived after it and delivers nothing to the app — including frames from completely unrelated streams. This **TCP-layer HOL blocking** is what HTTP/3 targets by moving to QUIC over UDP.
 
 **Multiplexing Example:**
 
@@ -259,21 +266,11 @@ Savings: 90% reduction
 - **Better mobile performance:** Connection migration (IP change resilience)
 - **Improved congestion control:** Per-stream instead of per-connection
 
-**HTTP/2 vs HTTP/3 (TCP vs QUIC):**
+**HTTP/2 vs HTTP/3 — what changes with QUIC:**
 
-```
-HTTP/2 (over TCP):
-Packet 5 lost in stream 2
-↓
-All streams blocked until packet 5 retransmitted!
-Streams 1, 3, 4 wait even though their packets arrived
+HTTP/2 multiplexes streams at the application layer but they all share one TCP byte stream. A single lost TCP packet stalls every stream — streams 1, 3, 4 wait even though their data arrived, because TCP won't hand anything out of order to the app.
 
-HTTP/3 (over QUIC):
-Packet 5 lost in stream 2
-↓
-Only stream 2 blocks, streams 1, 3, 4 continue
-Independent stream recovery
-```
+HTTP/3 implements streams at the transport layer inside QUIC. A lost packet for stream 2 only stalls stream 2. Streams 1, 3, 4 keep flowing independently.
 
 **Performance Comparison:**
 
