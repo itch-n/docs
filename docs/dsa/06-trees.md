@@ -849,7 +849,7 @@ Answer after solving problems:
 
 ### Your Decision Tree
 ```mermaid
-flowchart LR
+flowchart TD
     Start["Tree Problem Selection"]
 
     Q1{"What order do you need?"}

@@ -437,7 +437,7 @@ Answer after solving problems:
 
 ### Your Decision Tree
 ```mermaid
-flowchart LR
+flowchart TD
     Start["Binary Search Pattern Selection"]
 
     Q1{"Standard sorted array?"}

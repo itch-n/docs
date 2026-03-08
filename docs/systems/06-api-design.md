@@ -628,7 +628,7 @@ Old clients hit `/v1/` and continue working. New clients opt into `/v2/`. A depr
 
 Build your decision tree after practicing:
 ```mermaid
-flowchart LR
+flowchart TD
     Start["What kind of API are you building?"]
 
     N1["?"]

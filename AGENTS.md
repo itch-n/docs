@@ -33,17 +33,17 @@ Context for Claude Code sessions working in this repository.
 Every topic file follows this section pattern:
 
 1. **Learning Objectives** — bulleted outcomes
-2. **`!!! warning "Operational reality"`** — theory-vs-production gap, named systems approach
+2. **`!!! note "Operational reality"`** — theory-vs-production gap, named systems approach
 3. **ELI5** — simplified explanation (learner fills in)
 4. **Core Implementation / Core Concepts** — code stubs with TODOs and debugging challenges
 5. **Before/After** — motivation for the pattern (some files)
 6. **Case Studies** — real-world examples (always preserve, never cut)
-7. **Common Misconceptions** — `!!! warning` blocks, one per misconception
+7. **Common Misconceptions** — `!!! danger` blocks, one per misconception
 8. **`!!! warning "When it breaks"`** — scale thresholds and failure conditions
 9. **Decision Framework** — when/how to use the concept (learner fills in)
 10. **Practice** — scenario questions
 11. **Test Your Understanding** — `??? success "Rubric"` self-assessment
-12. **Connected Topics** — `!!! info "Where this topic connects"`
+12. **Connected Topics** — `<div class="bs-callout bs-callout-info">` (not an admonition — see Standard admonitions section)
 
 Topics live in two sections:
 
@@ -108,19 +108,34 @@ uv run mkdocs gh-deploy
 
 - New topics: create file in `docs/systems/` or `docs/dsa/`, then register in `mkdocs.yml` nav
 - `md_in_html` extension is enabled — `markdown` attribute on divs processes inner Markdown
-- See `STYLING-GUIDE.md` for full CSS class usage and conversion tips
 - See `docs/systems/01-storage-engines.md` as the canonical example of a fully-styled topic
 
 ### Standard admonitions
 
-Four admonition types have established placement and purpose:
+Cinder supports three admonition types: `note` (blue), `warning` (yellow/orange), `danger` (red). Never use `!!! info`, `!!! tip`, `!!! success`, or any other type — they render unstyled.
+
+Four admonition types and one custom div have established placement and purpose:
 
 | Admonition | Type | Placement | Purpose |
 |------------|------|-----------|---------|
-| `!!! warning "Operational reality"` | warning | After Learning Objectives `---`, before `## ELI5` | Theory-vs-production gap; named tools and systems |
+| `!!! note "Operational reality"` | note | After Learning Objectives `---`, before `## ELI5` | Theory-vs-production gap; named tools and systems |
 | `!!! warning "When it breaks"` | warning | Before `## Decision Framework` (or after Case Studies if present) | Scale thresholds and failure conditions |
-| `!!! warning "Misconception N: ..."` | warning | In Common Misconceptions section | One block per misconception |
-| `!!! info "Where this topic connects"` | info | End of file | Cross-topic links |
+| `!!! danger "Misconception: ..."` | danger | In Common Misconceptions section | One block per misconception; use a descriptive title, not "Misconception N:" |
+| `!!! warning "Debugging Challenge — ..."` | warning | After code stubs in DSA files | Buggy code for learner to find; answer in `??? success "Answer"` block |
+
+**"Where this topic connects"** uses a custom div, not an admonition — this gives distinct blue callout styling via `bs-callout-info`:
+
+```markdown
+<div class="bs-callout bs-callout-info" markdown>
+
+**Where this topic connects**
+
+- **Topic name** — explanation → [Topic name](filename.md)
+
+</div>
+```
+
+Do NOT use `!!! note`, `!!! info`, or any other admonition for this section. `!!! info` is unsupported by Cinder and must not be used anywhere in the project.
 
 Collapsible blocks (`??? success "Answer"`, `??? success "Rubric"`) are used for debugging challenge answers and self-assessment rubrics respectively.
 

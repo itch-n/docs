@@ -488,7 +488,7 @@ Saga: Reserve → Charge → Ship (if any fails, undo previous)
 
 Build your decision tree after practicing:
 ```mermaid
-flowchart LR
+flowchart TD
     Start["What consistency do you need?"]
 
     N1["?"]

@@ -387,7 +387,7 @@ Answer for each pattern:
 
 Build this after solving practice problems:
 ```mermaid
-flowchart LR
+flowchart TD
     Start["Hash Table Pattern Selection"]
 
     Q1{"What do you need?"}

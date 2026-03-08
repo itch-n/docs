@@ -472,7 +472,7 @@ Attack pattern:
 !!! danger "Rate limiting only needs to run once per user per minute"
     Rate limiting must run on every incoming request, not periodically. Checking "did this user exceed their limit in the last minute?" is different from "does this specific request arrive within quota?" The check must happen synchronously at request time, before work is done, and it must be atomic to avoid race conditions in distributed deployments.
 
-!!! danger "When it breaks"
+!!! warning "When it breaks"
     Per-node rate limiting breaks at two nodes: a 1,000 req/s limit across a 10-node cluster actually permits 10,000 req/s. Distributed rate limiting with Redis fixes this but adds a round-trip (~0.5ms) to every request; at 50,000 req/s, Redis itself becomes the bottleneck. Fixed window rate limiting breaks at window boundaries: a client sending 1,000 requests in the last second of window N and 1,000 in the first second of window N+1 passes two consecutive limits while actually delivering 2,000 req/s. Sliding window eliminates this but requires storing per-request timestamps, which costs significantly more memory at high request rates.
 
 ---
@@ -531,7 +531,7 @@ Attack pattern:
 
 Build your decision tree after practicing:
 ```mermaid
-flowchart LR
+flowchart TD
     Start["What is your priority?"]
 
     N1["?"]

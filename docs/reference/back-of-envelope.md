@@ -70,7 +70,7 @@ graph TB
 
 ## The Derivation Pattern
 
-!!! info "Three questions for any unfamiliar limit"
+!!! note "Three questions for any unfamiliar limit"
     1. **What resource is this system bounded by?** (CPU, memory, disk I/O, network I/O, or human cognition)
     2. **How much of that resource does one operation consume?** (Look up the relevant primitive above)
     3. **What is the total capacity of that resource?** (Single core, single disk, single NIC)

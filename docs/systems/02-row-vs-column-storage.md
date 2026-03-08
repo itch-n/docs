@@ -437,7 +437,7 @@ Space saved: 6 ints (24 bytes) → 1 int + 5 bytes (9 bytes) = 62% reduction
 !!! danger "You must choose one layout for the entire database"
     Modern systems like PostgreSQL (with `citus` columnar extension), TimescaleDB, and Apache Kudu support hybrid layouts. OLTP tables can be row-oriented while analytical tables in the same cluster use columnar storage. The choice is per-table (or even per-partition), not per-database.
 
-!!! danger "When it breaks"
+!!! warning "When it breaks"
     Row stores break for analytics when queries have low selectivity across wide tables — a full scan of a 1TB table reading 3 of 200 columns still reads all 200. The practical cliff is roughly 10M+ rows with aggregation queries; below that, a well-indexed row store usually wins on operational simplicity. Column stores break for OLTP when rows are updated frequently — an update to one field touches every column file, making point updates expensive. Hybrid HTAP databases (TiDB, SingleStore) exist specifically to serve both workloads, at the cost of significant added complexity.
 
 ---
@@ -477,7 +477,7 @@ Answer:
 Build this after understanding trade-offs:
 
 ```mermaid
-flowchart LR
+flowchart TD
     Start["Storage Layout Selection"]
 
     Start --> Q1{"What's the primary<br/>workload?"}

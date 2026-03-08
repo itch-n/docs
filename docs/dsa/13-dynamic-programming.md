@@ -467,7 +467,7 @@ Answer after solving problems:
 ### Your Decision Tree
 
 ```mermaid
-flowchart LR
+flowchart TD
     Start["1D DP Pattern Selection"]
 
     Q1{"Depends on previous 1-2 states?"}

@@ -503,7 +503,7 @@ Answer after solving problems:
 
 ### Your Decision Tree
 ```mermaid
-flowchart LR
+flowchart TD
     Start["Stack vs Queue Selection"]
 
     Q1{"Need to track most recent?"}

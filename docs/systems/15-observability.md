@@ -475,7 +475,7 @@ Answer after implementation:
 
 Build this after solving practice scenarios:
 ```mermaid
-flowchart LR
+flowchart TD
     Start["Observability Pattern Selection"]
 
     Q1{"What are you trying to understand?"}

@@ -410,7 +410,7 @@ Answer after solving problems:
 
 ### Your Decision Tree
 ```mermaid
-flowchart LR
+flowchart TD
     Start["Linked List Pattern Selection"]
 
     Q1{"Need to reverse?"}

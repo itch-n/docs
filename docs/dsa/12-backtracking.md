@@ -404,7 +404,7 @@ Answer after solving problems:
 ### Your Decision Tree
 
 ```mermaid
-flowchart LR
+flowchart TD
     Start["Backtracking Pattern Selection"]
 
     Q1{"Generating sequences?"}

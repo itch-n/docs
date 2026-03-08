@@ -423,7 +423,7 @@ Answer after solving problems:
 
 ### Your Decision Tree
 ```mermaid
-flowchart LR
+flowchart TD
     Start["Union-Find Pattern Selection"]
 
     Q1{"Basic connectivity?"}

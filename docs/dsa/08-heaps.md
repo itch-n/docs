@@ -426,7 +426,7 @@ Answer for each pattern:
 
 Build this after solving practice problems:
 ```mermaid
-flowchart LR
+flowchart TD
     Start["Heap Pattern Selection"]
 
     Q1{"Need Kth largest/smallest?"}

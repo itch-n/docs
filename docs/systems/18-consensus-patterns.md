@@ -1108,7 +1108,7 @@ Answer after implementation:
 
 Build this after solving practice scenarios:
 ```mermaid
-flowchart LR
+flowchart TD
     Start["Consensus Pattern Selection"]
 
     Q1{"Need single coordinator?"}

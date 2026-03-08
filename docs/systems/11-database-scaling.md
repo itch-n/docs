@@ -964,7 +964,7 @@ After finding and fixing all bugs:
 
 Build your decision tree after practicing:
 ```mermaid
-flowchart LR
+flowchart TD
     Start["What is your bottleneck?"]
 
     N1["?"]

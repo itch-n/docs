@@ -351,7 +351,7 @@ Answer for different scenarios:
 
 Build this after solving practice problems:
 ```mermaid
-flowchart LR
+flowchart TD
     Start["Sliding Window Pattern Selection"]
 
     Q1{"Is subarray/substring contiguous?"}

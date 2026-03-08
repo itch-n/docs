@@ -302,7 +302,7 @@ Answer for each pattern:
 
 Build this after solving practice problems:
 ```mermaid
-flowchart LR
+flowchart TD
     Start["Two Pointers Pattern Selection"]
 
     Q1{"Is data sorted?"}
