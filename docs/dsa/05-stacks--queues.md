@@ -17,6 +17,9 @@ By the end of this section you should be able to:
 
 ---
 
+!!! warning "Operational reality"
+    A stack overflow error is a literal stack overflow — the call stack is a stack data structure with a fixed memory ceiling, and deep recursion exhausts it. Monotonic stack logic appears in columnar storage engines when computing run-length encoding boundaries and in compilers during expression parsing (the shunting-yard algorithm is a monotonic stack). Kafka and RabbitMQ are bounded queues with backpressure: when the queue is full, producers block or drop — the same bounded semantics from these exercises. Browser history (back/forward) is a pair of stacks; undo/redo in every text editor is the same pattern.
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>

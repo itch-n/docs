@@ -17,6 +17,9 @@ By the end of this topic you will be able to:
 
 ---
 
+!!! warning "Operational reality"
+    TCP's congestion control is a sliding window over packets in flight — the window expands on success and shrinks on loss, which is exactly the variable-size shrinking logic from these exercises. Redis's built-in rate limiting primitives use the sliding window counter algorithm directly. Kafka Streams and Apache Flink both model time-based aggregations as windows over event streams; the "tumbling window" and "sliding window" in those systems are the same concept scaled to distributed infrastructure. Network monitoring tools that compute rolling metrics (p99 latency over the last 60 seconds) are sliding windows over time-series data.
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>

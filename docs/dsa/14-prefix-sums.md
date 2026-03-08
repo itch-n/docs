@@ -18,6 +18,9 @@ By the end of this topic you will be able to:
 
 ---
 
+!!! warning "Operational reality"
+    SQL window functions — `SUM() OVER (ORDER BY ...)`, `AVG() OVER (PARTITION BY ...)` — are prefix sums over sorted partitions, and every relational database implements them this way internally. Prometheus and time-series databases expose monotonically increasing counters; dashboards compute rates and averages by differencing two prefix sum snapshots over a time interval — the `rate()` function in PromQL is this operation. ClickHouse uses prefix sums in its MergeTree index structure to locate data ranges within compressed blocks. The 2D prefix sum pattern appears in image processing (summed area tables for fast box filter computation) and in spatial analytics queries.
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>

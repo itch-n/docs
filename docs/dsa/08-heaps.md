@@ -17,6 +17,9 @@ By the end of this section you should be able to:
 
 ---
 
+!!! warning "Operational reality"
+    Most standard library priority queues — Python's `heapq`, C++'s `priority_queue` — deliberately omit `decreaseKey`, so production Dijkstra implementations universally use lazy deletion: re-insert with the updated priority and skip stale entries on pop. Kubernetes' scheduler maintains a priority queue over pods waiting for placement. Elasticsearch and Splunk compute top-K results across shards using a distributed heap merge — each shard returns its local top-K and the coordinator merges them, which is exactly the merge-K-sorted-sequences pattern. Operating system process schedulers use priority queues to determine which runnable process gets the CPU next.
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>

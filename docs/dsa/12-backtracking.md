@@ -17,6 +17,9 @@ By the end of this topic you will be able to:
 
 ---
 
+!!! warning "Operational reality"
+    ReDoS (Regular Expression Denial of Service) is catastrophic backtracking: a carefully crafted input causes a backtracking regex engine to explore exponentially many paths. Cloudflare suffered a global outage in 2019 from a single poorly-written regex that triggered this. SQL query planners use backtracking-style search to find optimal join orderings — the search space is O(n!) for n tables, which is why planners set a threshold and switch to heuristics. SAT solvers, used in hardware verification tools (formal verification of chip designs) and package conflict resolution, are backtracking algorithms with aggressive pruning (CDCL). Dependency resolver conflicts in pip and npm that produce "no solution found" errors are the SAT solver giving up.
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>

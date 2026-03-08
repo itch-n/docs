@@ -17,6 +17,9 @@ By the end of this section you should be able to:
 
 ---
 
+!!! warning "Operational reality"
+    `git bisect` is binary search over commit history — you mark commits as good or bad and Git halves the search space each step, finding the introducing commit in O(log n) checks instead of O(n). Database index range scans are binary search on B+Tree leaf nodes; the "seek" operation in a PostgreSQL index scan is exactly this. Feature flag systems that roll out to a percentage of users frequently binary-search a sorted configuration to find threshold boundaries. The binary-search-on-the-answer-space pattern (not searching an array, but searching a parameter space) appears in capacity planning tools and load balancer configuration whenever the problem is "find the minimum X such that condition Y holds."
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>

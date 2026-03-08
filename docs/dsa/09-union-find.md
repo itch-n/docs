@@ -17,6 +17,9 @@ By the end of this topic you will be able to:
 
 ---
 
+!!! warning "Operational reality"
+    Kruskal's minimum spanning tree algorithm — used in network infrastructure tools for finding least-cost topologies — depends on union-find for cycle detection. Image segmentation algorithms in computer vision use connected-components union-find to group pixels. Social graph systems run union-find offline to compute friend-of-friend connected components at scale. The critical operational constraint: path compression mutates state on reads, making union-find incompatible with persistent or copy-on-write data structures — something you hit immediately in functional languages or when trying to snapshot intermediate states for backtracking solvers.
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>

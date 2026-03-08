@@ -17,6 +17,9 @@ By the end of this topic you will be able to:
 
 ---
 
+!!! warning "Operational reality"
+    `git diff` output is the result of Myers' diff algorithm, a DP algorithm that finds the shortest edit script between two sequences — every line you see marked `+` or `-` in a diff came from a DP table. Levenshtein distance (edit distance) runs inside Elasticsearch and PostgreSQL fuzzy search, spell checkers, and DNA sequence alignment tools like BLAST. DP is rarely labelled as such in production code, but any system computing "minimum cost transformation between two sequences" or "optimal allocation across constrained resources" is running DP under the hood. Compiler register allocation, the step that decides which variables live in CPU registers, is a graph colouring problem solved with DP-like approaches.
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>

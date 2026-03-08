@@ -17,6 +17,9 @@ By the end of this topic you will be able to:
 
 ---
 
+!!! warning "Operational reality"
+    HashDoS — crafting inputs that all hash to the same bucket, forcing O(n) lookup — is a real attack. Python randomised hash seeds per-process from 3.3 onward, Ruby did the same in 1.9, and most modern runtimes followed. The attack works against any system that exposes hash-derived behaviour externally, which is why you should never use raw hash values in URLs or API responses. Git uses SHA hashes to deduplicate objects in its content-addressable object store — a commit, tree, and blob are all just hash table lookups. Database query planners use hash joins as an alternative to nested-loop joins when the inner table fits in memory.
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>

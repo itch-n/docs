@@ -17,6 +17,9 @@ By the end of this topic you will be able to:
 
 ---
 
+!!! warning "Operational reality"
+    PostgreSQL's MVCC (Multi-Version Concurrency Control) is fundamentally an interval overlap problem: every transaction has a `[xmin, xmax)` visibility range and every row read checks whether the reading transaction's snapshot overlaps the row's version interval. Calendar conflict detection (Google Calendar, Outlook scheduling) is interval merge and intersection. Network firewall rule engines evaluate packet port ranges against interval sets. Code coverage tools track which line ranges have been executed — merging coverage reports from parallel test runs is interval union across files.
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>

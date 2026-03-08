@@ -17,6 +17,9 @@ By the end of this topic you will be able to:
 
 ---
 
+!!! warning "Operational reality"
+    OSPF (Open Shortest Path First), the routing protocol running inside most enterprise and ISP networks, is Dijkstra's algorithm implemented in router firmware — every router runs it to build its forwarding table from a shared link-state database. Google Maps and similar routing engines use bidirectional Dijkstra with A* heuristics to handle road networks at scale. Topological sort is the core of CI/CD pipeline ordering: GitHub Actions, Buildkite, and Jenkins all resolve stage dependencies with topological sort, and a cycle in the pipeline definition is a hard error. Kruskal's MST appears in network infrastructure design tools when minimising cable runs or inter-datacenter link costs.
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>

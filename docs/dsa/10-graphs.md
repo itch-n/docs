@@ -17,6 +17,9 @@ By the end of this topic you will be able to:
 
 ---
 
+!!! warning "Operational reality"
+    Package managers do topological sort on the dependency graph every time you install a package — npm, Maven, Cargo, and pip all solve the same problem. Cyclic dependencies cause the sort to fail, which is why package managers either reject them outright or require special cycle-breaking. Build systems (Bazel, Gradle, Make) model targets and dependencies as a DAG and use topological sort to determine build order and parallelism. The "dependency hell" you experience with npm is a graph problem: the resolver is searching for a consistent version assignment that satisfies all edge constraints simultaneously, which can be NP-hard in the general case.
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>

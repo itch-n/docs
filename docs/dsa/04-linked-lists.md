@@ -17,6 +17,9 @@ By the end of this topic you will be able to:
 
 ---
 
+!!! warning "Operational reality"
+    The Linux kernel uses an inverted linked list pattern: instead of a node containing data, the data struct embeds the list node, letting a single struct participate in multiple lists simultaneously without extra allocation. Database buffer pools — PostgreSQL's shared buffer cache, InnoDB's buffer pool — use a doubly linked list plus hash map for LRU eviction. The structure you implement in the LRU cache problem is not a toy; it is the eviction policy running inside every major relational database. Floyd's cycle detection algorithm, developed for detecting cycles in linked lists, is also used in pseudorandom number generator analysis and in certain garbage collector implementations.
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>

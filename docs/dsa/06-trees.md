@@ -23,6 +23,9 @@ By the end of this section you should be able to:
 
 ---
 
+!!! warning "Operational reality"
+    The DOM (Document Object Model) is a tree, and every browser's layout engine traverses it with the same DFS and BFS patterns from these exercises. Git's object model stores each directory snapshot as a tree object — a commit points to a tree, which points to subtrees and blobs, forming a Merkle tree where each node's hash covers its children. SQL query planners represent execution plans as trees; the optimiser rewrites the tree by applying transformation rules, which is tree traversal and mutation at the core. Trie (prefix tree) structures power autocomplete in search engines, IP routing tables (longest prefix match in BGP and OSPF), and spell checkers.
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>

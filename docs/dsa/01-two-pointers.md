@@ -17,6 +17,9 @@ By the end of this topic you will be able to:
 
 ---
 
+!!! warning "Operational reality"
+    The merge step in every merge sort implementation is two pointers advancing through sorted sequences — it is so fundamental it becomes invisible. The partition step in quicksort is the same pattern with a write pointer trailing a read pointer. Outside of sorting, this shows up in streaming decoders: Protocol Buffers and most binary codec implementations use a read/write pointer pair to parse and emit data in a single pass without allocating intermediate buffers. The fast/slow pointer pattern (Floyd's cycle detection) is used in garbage collectors to detect reference cycles and in linked list implementations inside OS kernels.
+
 ## ELI5: Explain Like I'm 5
 
 <div class="learner-section" markdown>
