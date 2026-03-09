@@ -62,6 +62,8 @@ nav:
       - "When It Breaks": reference/when-it-breaks.md
       - "Back of the Envelope": reference/back-of-envelope.md
       - "Symptom → Pattern": reference/symptom-pattern.md
+      - "Staff+ Interview Strategy": reference/staff-interview-strategy.md
+      - "Recurring Patterns": reference/recurring-patterns.md
 
 markdown_extensions:
   - admonition
