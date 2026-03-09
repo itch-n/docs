@@ -49,74 +49,157 @@ By the end of this topic you will be able to:
 
 ## Core Concepts
 
-### Networking Layers — The Full Stack
+### Topic 1: Networking Layers — The Full Stack
 
 Every piece of data you send travels through a stack of layers, each wrapping the one above it like nested envelopes:
 
+| Layer | Unit | Key concept |
+|-------|------|-------------|
+| Application (HTTP) — L7b | **Request / Response** | Logical exchange — method, path, headers, body; what the developer writes |
+| Application (HTTP/2) — L7a | **Frame** | Wire encoding: HEADERS + DATA frames tagged with a stream_id; stream_id is the multiplexing key |
+| Transport (TCP) | **Segment** | Sequence-numbered chunk; TCP retransmits lost segments to guarantee order |
+| Transport (UDP) | **Datagram** | Same layer as TCP but no sequencing, no retransmit — fire and forget |
+| Network — L3 | **IP Packet** | IP source + destination address; "packet loss" happens here |
+| Link — L2 | **Ethernet frame** | MAC addresses; hops between physical devices on the local network |
+| Physical — L1 | **Bit / signal** | Electrical or optical signal on the wire |
+
+!!! note "Why 'packet' is used loosely"
+    In conversation, "packet" almost always means IP packet — but engineers often use it to mean any of the above units. "Packet loss" = IP packet dropped. "HTTP/2 frame" and "Ethernet frame" both use the word frame but are completely unrelated.
+
+#### TCP / HTTP2
+
+**TCP (Transmission Control Protocol)**
+
+- **Reliable:** Guarantees delivery, ordering, and error checking via sequence numbers and ACKs
+- **Connection-oriented:** 3-way handshake required before data transfer begins
+- **Flow control:** Sliding window prevents the sender from overwhelming the receiver
+- **Congestion control:** Adapts send rate to network conditions
+- **Higher overhead:** ACKs, retransmissions, and seq numbers add latency cost
+- **Use cases:** HTTP, databases, email, file transfers — anything requiring ordered reliable delivery
+
+TCP sits at L4; HTTP/2 multiplexes many request/response pairs over a single TCP connection using stream IDs:
+
 ```mermaid
 flowchart TD
-    subgraph PH["Physical layer — Bits / electrical signals"]
-        subgraph EF["Link layer — Ethernet Frame"]
-            subgraph IP["Network layer — IP Packet"]
-                subgraph TCP["Transport layer — TCP Segment"]
-                    subgraph H2["Application layer — HTTP/2 Frames"]
-                        REQ["HTTP Request\n(method · path · headers · body)"]
+    subgraph PH["L1 — Physical · bits / electrical signals"]
+        subgraph EF["L2 — Link · Ethernet Frame · address: MAC · which next hop heads toward the destination?"]
+            subgraph IP["L3 — Network · IP Packet · address: IP · which machine? ✉"]
+                subgraph TCP["L4 — Transport · TCP Segment · address: port · which process?"]
+                    subgraph H2["L7a — HTTP/2 · address: stream_id · which stream within this connection?"]
+                        subgraph HTTP["L7b — HTTP · address: method + path + host · which endpoint?"]
+                            REQ["request body\n(the actual payload)"]
+                        end
                     end
                 end
             end
         end
     end
+    style IP   fill:#fff3cd,stroke:#f0ad4e,stroke-width:3px,color:#000
+    style TCP  fill:#f0e6ff,stroke:#7c3aed,stroke-width:2px,color:#000
+    style H2   fill:#ede0ff,stroke:#6d28d9,stroke-width:2px,color:#000
+    style HTTP fill:#ede0ff,stroke:#6d28d9,stroke-width:2px,color:#000
 ```
 
-How a single HTTP/2 request travels down the stack:
+!!! note "The envelope and the postal driver"
+    The **IP packet is the envelope** — it carries the addressed payload across the entire internet. Every router reads the destination address on the outside and stamps the TTL field, but the contents are never touched until the packet reaches its destination.
+
+    The **Ethernet frame is the postal driver** — it only exists for one leg of the journey. Each router strips the incoming frame, reads the IP destination, consults its routing table, and hands the envelope to a new driver (a new Ethernet frame with the next router's MAC as destination). The driver changes at every hop; the envelope does not.
+
+    NAT is the one exception: a NAT device crosses out the return address and rewrites it, maintaining a table so it knows how to forward replies back to the right internal machine.
+
+How `POST /api/users` travels down the stack:
 
 ```
-HTTP request
-  → split into HEADERS frame + DATA frame(s)  [HTTP/2 layer]
-  → each frame becomes bytes in a TCP stream   [TCP layer]
-  → TCP chops into segments with seq numbers   [TCP layer]
-  → each segment wrapped in an IP packet       [IP layer]
-  → each IP packet wrapped in an Ethernet frame [link layer]
-  → transmitted as bits on the wire            [physical]
+[Application code] — the body; what you actually want to send
+┌──────────────────────────────────────────────────────────────────────┐
+│ Body:  { "name": "alice", "role": "admin" }                           │
+└──────────────────────────────────────────────────────────────────────┘
+  ↓ HTTP client library wraps body in an HTTP envelope (L7b):
+    adds Method, Path, Host, Headers around the body
+
+┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+  ◄ L7 load balancer must unwrap everything below all the way up to here
+    L2 → L3 → L4 → decrypt TLS → L7a → only now can it route
+    on :path, Host, cookies, or any header value
+┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+
+[L7b — HTTP · which endpoint?]
+┌──────────────────────────────────────────────────────────────────────┐
+│ Method:   POST                                                        │
+│ Path:     /api/users                                                  │
+│ Host:     example.com                                                 │
+│ Headers:  Content-Type: application/json                              │
+├──────────────────────────────────────────────────────────────────────┤
+│ Body:     { "name": "alice", "role": "admin" }                        │
+└──────────────────────────────────────────────────────────────────────┘
+  ↓ HTTP/2 wire-encodes these: headers → HEADERS frame, body → DATA frame
+
+[L7a — HTTP/2 frame · which stream within this connection?]
+┌──────────────────────────────────────────────────────────────────────┐
+│ Length:   30   (3 bytes)  — HPACK payload size (body is in DATA frame) │
+│ Type:    0x1   (1 byte)   — HEADERS frame (0x0=DATA, 0x3=RST_STREAM) │
+│ Flags:   0x4   (1 byte)   — END_HEADERS: complete, no continuation   │
+│ Stream:    1   (4 bytes)  — request ID; stream_id is the mux key     │
+├──────────────────────────────────────────────────────────────────────┤
+│ HPACK payload  (~30 bytes)                                            │
+│   :method = POST         →  static table entry #3   →   1 byte       │
+│   :path = /api/users     →  indexed name, literal value  →  ~12 bytes│
+│   :authority = example.com  →  literal name + value  →  ~12 bytes    │
+│   content-type = application/json  →  literal          →  ~5 bytes   │
+└──────────────────────────────────────────────────────────────────────┘
+  followed by a DATA frame carrying the body bytes
+  ↓ handed to TCP as raw bytes — TCP does not see frame boundaries
+    TLS encrypts this in production; TCP payload is opaque until decrypted
+    1 segment may carry multiple frames or a partial frame (TCP cuts at MSS ~1460 bytes)
+
+┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+  ◄ L4 load balancer terminates here
+    routes on IP + port only; payload never opened
+    no TLS termination required — works with encrypted traffic
+┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+
+[L4 — TCP segment · which process?]
+┌──────────────────────────────────────────────────────────────────────┐
+│ Src port:   54321  (2 bytes)  — ephemeral port chosen by the OS      │
+│ Dst port:     443  (2 bytes)  — HTTPS; OS delivers to the right app  │
+│ Seq:         1001  (4 bytes)  — byte offset; receiver reassembles    │
+│ Ack:          500  (4 bytes)  — next byte expected from server        │
+│ Flags:        ACK  (2 bytes)  — acknowledging received server data    │
+│ Window:     65535  (2 bytes)  — how many bytes client can buffer      │
+├──────────────────────────────────────────────────────────────────────┤
+│ Payload: 34 bytes  ← byte stream slice (not necessarily 1 frame)     │
+└──────────────────────────────────────────────────────────────────────┘
+  20-byte header + 34-byte payload = 54 bytes
+
+[L3 — IP packet · which machine? ✉ the envelope — end-to-end unchanged]
+┌──────────────────────────────────────────────────────────────────────┐
+│ Src IP:  192.168.1.5    (4 bytes)  — your machine                    │
+│ Dst IP:  93.184.216.34  (4 bytes)  — example.com                     │
+│ Proto:   6 (TCP)        (1 byte)   — what's carried inside           │
+│ TTL:     64             (1 byte)   — decremented each hop; 0 = drop  │
+│ Length:  74             (2 bytes)  — total packet size                │
+├──────────────────────────────────────────────────────────────────────┤
+│ Payload: 54 bytes  ← TCP segment above                               │
+└──────────────────────────────────────────────────────────────────────┘
+  20-byte header + 54-byte payload = 74 bytes
+  ↓ each router: strips L2, reads dst IP, consults routing table,
+    builds new L2 frame for the next hop — L3 packet rides unchanged
+    (only TTL and checksum are rewritten per hop)
+
+[L2 — Ethernet frame · which next hop heads toward the destination?]
+┌──────────────────────────────────────────────────────────────────────┐
+│ Dst MAC:  00:11:22:aa:bb:cc   (6 bytes)  — next hop only, not final  │
+│ Src MAC:  aa:bb:cc:11:22:33   (6 bytes)  — your NIC                  │
+│ Ethertype: 0x0800             (2 bytes)  — payload is IPv4           │
+├──────────────────────────────────────────────────────────────────────┤
+│ Payload: 74 bytes  ← IP packet above                                 │
+│ FCS: 0xd3f14c2e    (4 bytes)  — checksum; frame dropped if corrupted │
+└──────────────────────────────────────────────────────────────────────┘
+  14-byte header + 74-byte payload + 4-byte FCS = 92 bytes
+
+[L1 — Physical · signal on the wire]
+  01000101 00000000 ...   (92 bytes × 8 = 736 bits transmitted)
 ```
-
-| Layer | Unit | Key concept |
-|-------|------|-------------|
-| Application (HTTP/2) | **Frame** | HEADERS + DATA frames tagged with a stream ID; frames from many streams interleaved on one connection |
-| Application (HTTP) | **Request / Response** | Logical exchange — method, path, headers, body; invisible to TCP |
-| Transport (TCP) | **Segment** | Sequence-numbered chunk; TCP retransmits lost segments to guarantee order |
-| Transport (UDP) | **Datagram** | Same layer as TCP but no sequencing, no retransmit — fire and forget |
-| Network | **Packet** | IP source + destination address; "packet loss" happens here |
-| Link | **Ethernet frame** | MAC addresses; hops between physical devices on the local network |
-| Physical | **Bit / signal** | Electrical or optical signal on the wire |
-
-!!! note "Why 'packet' is used loosely"
-    In conversation, "packet" almost always means IP packet — but engineers often use it to mean any of the above units. "Packet loss" = IP packet dropped. "HTTP/2 frame" and "Ethernet frame" both use the word frame but are completely unrelated.
-
----
-
-### Topic 1: Transport Layer - TCP vs UDP
-
-**Concept:** Two fundamental protocols for sending data over networks, with different guarantees and trade-offs.
-
-**Key Differences:**
-
-**TCP (Transmission Control Protocol)**
-
-- **Reliable:** Guarantees delivery, ordering, and error checking
-- **Connection-oriented:** Establishes connection before data transfer (3-way handshake)
-- **Flow control:** Prevents overwhelming receiver
-- **Congestion control:** Adapts to network conditions
-- **Overhead:** Higher due to acknowledgments and retransmissions
-- **Use cases:** HTTP, email, file transfers, databases
-
-**UDP (User Datagram Protocol)**
-
-- **Unreliable:** Best-effort delivery, no guarantees
-- **Connectionless:** Send packets without establishing connection
-- **No flow/congestion control:** Fast but can lose packets
-- **Low overhead:** Minimal protocol overhead
-- **Use cases:** Video streaming, gaming, DNS, VoIP
 
 **TCP 3-Way Handshake:**
 
@@ -153,6 +236,91 @@ sequenceDiagram
 !!! note "Why TCP retransmission hurts real-time applications"
     When a TCP packet is lost, the sender stops advancing the window until that specific packet is acknowledged. This is called head-of-line blocking at the transport layer. For a video stream, waiting 50–200 ms to retransmit a frame that is already stale is worse than simply skipping it — which is exactly what UDP-based protocols do.
 
+#### UDP
+
+**UDP (User Datagram Protocol)**
+
+- **Unreliable:** Best-effort delivery, no guarantees
+- **Connectionless:** Send packets without establishing connection
+- **No flow/congestion control:** Fast but can lose packets
+- **Low overhead:** Minimal protocol overhead
+- **Use cases:** Video streaming, gaming, DNS, VoIP
+
+UDP ends at L4. There is no L7 — your application bytes land directly in the datagram payload. The same payload, far fewer layers:
+
+```mermaid
+flowchart TD
+    subgraph PH["L1 — Physical · bits / electrical signals"]
+        subgraph EF["L2 — Link · Ethernet Frame · address: MAC · which next hop heads toward the destination?"]
+            subgraph IP["L3 — Network · IP Packet · address: IP · which machine? ✉"]
+                subgraph UDP["L4 — UDP Datagram · address: port · which process?"]
+                    REQ["payload\n(raw bytes — your problem)"]
+                end
+            end
+        end
+    end
+    style IP  fill:#fff3cd,stroke:#f0ad4e,stroke-width:3px,color:#000
+    style UDP fill:#f0e6ff,stroke:#7c3aed,stroke-width:2px,color:#000
+```
+
+How the same payload travels over UDP:
+
+```
+[Application code] — the body; what you actually want to send
+┌──────────────────────────────────────────────────────────────────────┐
+│ Body:  { "name": "alice", "role": "admin" }                          │
+└──────────────────────────────────────────────────────────────────────┘
+  ↓ no HTTP envelope, no framing layer — app writes bytes directly to socket
+
+[L7 — Application · what are you sending?]
+┌──────────────────────────────────────────────────────────────────────┐
+│ { "name": "alice", "role": "admin" }   (37 bytes, raw)               │
+└──────────────────────────────────────────────────────────────────────┘
+  app owns all framing, ordering, and reliability — or accepts none of it
+  ↓ handed to UDP as raw bytes
+
+[L4 — UDP datagram · which process?]
+┌──────────────────────────────────────────────────────────────────────┐
+│ Src port:  54321  (2 bytes)  — ephemeral port chosen by OS           │
+│ Dst port:   9000  (2 bytes)  — target service                        │
+│ Length:       45  (2 bytes)  — header + payload                      │
+│ Checksum:  0x1a2b (2 bytes)  — optional error detection              │
+├──────────────────────────────────────────────────────────────────────┤
+│ Payload: 37 bytes  ← raw application bytes, no framing               │
+└──────────────────────────────────────────────────────────────────────┘
+  8-byte header + 37-byte payload = 45 bytes
+  no seq/ack · no retransmit · no connection · no HOL blocking
+
+[L3 — IP packet · which machine? ✉ the envelope — end-to-end unchanged]
+┌──────────────────────────────────────────────────────────────────────┐
+│ Src IP:  192.168.1.5    (4 bytes)  — your machine                    │
+│ Dst IP:  93.184.216.34  (4 bytes)  — example.com                     │
+│ Proto:  17 (UDP)        (1 byte)   — what's carried inside           │
+│ TTL:     64             (1 byte)   — decremented each hop; 0 = drop  │
+│ Length:  65             (2 bytes)  — total packet size               │
+├──────────────────────────────────────────────────────────────────────┤
+│ Payload: 45 bytes  ← UDP datagram above                              │
+└──────────────────────────────────────────────────────────────────────┘
+  20-byte header + 45-byte payload = 65 bytes
+
+[L2 — Ethernet frame · which next hop heads toward the destination?]
+  (identical to TCP version)
+
+[L1 — Physical · signal on the wire]
+  (identical to TCP version)
+```
+
+!!! note "What runs over TCP/IP vs UDP/IP"
+    **HTTP → TCP/IP**: TCP's reliability and ordering give HTTP its request/response model for free. Every byte arrives in order, so HTTP can parse headers line by line without worrying about gaps or duplicates. The cost is the handshake, ACKs, and HOL blocking.
+
+    **DNS → UDP/IP**: Queries fit in a single datagram (~50 bytes). The DNS client adds a 2-byte query ID to its question; the server echoes it back in the response so the client can match them. No connection needed — if the response doesn't arrive, the client just retries. Fast and cheap for a pure lookup.
+
+    **RTP → UDP/IP**: Audio and video frames have a timestamp and sequence number in the payload. A missed packet is not retransmitted — stale audio from 200ms ago is useless. The receiver uses sequence numbers for jitter buffering and simply conceals the gap. Freshness beats completeness.
+
+    **QUIC → UDP/IP**: HTTP/3's transport layer. Ironically more complex than TCP — it reimplements reliability, ordering, and flow control in userspace, per stream. It runs over UDP specifically to escape the kernel's TCP HOL blocking and to allow faster iteration without OS updates.
+
+#### TCP vs UDP
+
 **Decision Matrix:**
 
 | Requirement | Protocol | Why |
@@ -170,13 +338,19 @@ sequenceDiagram
 
 <div class="learner-section" markdown>
 
-- When would packet loss be acceptable? <span class="fill-in">[Your answer]</span>
-- Why is TCP slower than UDP? <span class="fill-in">[Your answer]</span>
-- What's the trade-off with reliability? <span class="fill-in">[Your answer]</span>
+- When would packet loss be acceptable? <span class="fill-in">Use cases like live streaming or gaming where it's better to continue to fetch the latest data rather than waiting for the retransmission due to packet loss</span>
+- Why is TCP slower than UDP? <span class="fill-in">TCP requires a handshake SYN/SYN-ACK/ACK just to establish the connection and it waits for per-segment confirmation</span>
+- What's the trade-off with reliability? <span class="fill-in">UDP has no reliability, a UDP sender doesn't wait for a SYN-ACK, it just fires and forgets</span>
 
 </div>
 
+
+!!! note "TCP and HTTP as load balancing layers"
+    TCP (Layer 4) and HTTP (Layer 7) are also the two layers at which load balancers operate. A Layer 4 load balancer routes based on IP address and port without reading the payload; a Layer 7 load balancer reads HTTP headers and URLs and can make content-aware routing decisions. The choice between them and when each is appropriate is covered in [09. Load Balancing](09-load-balancing.md).
+
 ---
+
+
 
 ### Topic 2: HTTP Protocol Evolution
 
@@ -253,54 +427,34 @@ HTTP/1.1 is plain text. HTTP/2 splits every message into binary **frames**, each
 !!! warning "Interview gotcha: HTTP/2 only partially solves HOL blocking"
     HTTP/2 eliminates **application-layer** HOL blocking — you no longer wait for response 1 before sending request 2. But TCP is still a single ordered byte stream underneath. If one TCP packet is lost, TCP buffers everything that arrived after it and delivers nothing to the app — including frames from completely unrelated streams. This **TCP-layer HOL blocking** is what HTTP/3 targets by moving to QUIC over UDP.
 
-**Multiplexing Example:**
-
-```mermaid
-flowchart LR
-    Client["Browser / Client"]
-    TCP["Single TCP Connection"]
-    S1["Stream 1: index.html"]
-    S2["Stream 2: style.css"]
-    S3["Stream 3: app.js"]
-    S4["Stream 4: image.png"]
-    Merge["Interleaved responses\n(all streams in parallel)"]
-
-    Client --> TCP
-    TCP --> S1
-    TCP --> S2
-    TCP --> S3
-    TCP --> S4
-    S1 --> Merge
-    S2 --> Merge
-    S3 --> Merge
-    S4 --> Merge
-    Merge --> Client
-```
-
-**Header Compression (HPACK):**
+**Multiplexing — frames from many streams interleaved on one connection:**
 
 ```
-HTTP/1.1 (repeated headers):
-Request 1:
-  GET /api/users
-  Host: api.example.com
-  User-Agent: Mozilla/5.0...
-  Accept: application/json
-  Cookie: session=abc123...
-  (500 bytes total)
+HTTP/1.1: up to 6 separate TCP connections (browser limit)
 
-Request 2:
-  GET /api/posts
-  Host: api.example.com
-  User-Agent: Mozilla/5.0...  ← Repeated!
-  Accept: application/json     ← Repeated!
-  Cookie: session=abc123...    ← Repeated!
-  (500 bytes total)
+  conn 1 ── GET /index.html ──────────── ← response ──
+  conn 2 ── GET /style.css  ──────────── ← response ──
+  conn 3 ── GET /app.js     ──────────── ← response ──
+  conn 4 ── GET /image.png  ──────────── ← response ──
+  ... (need more resources? wait, or open a 5th connection)
 
-HTTP/2 (with HPACK):
-Request 1: 500 bytes (full headers)
-Request 2: 50 bytes (only differences!)
-Savings: 90% reduction
+HTTP/2: 1 TCP connection — stream_id tags every frame so they can be interleaved
+
+  Stream 1 (index.html): [H:1]──────[D:1]──[D:1]─────────────────────────
+  Stream 3 (style.css):       [H:3]─────────────[D:3]────────────────────
+  Stream 5 (app.js):          [H:5]──────────────────[D:5]───────────────
+  Stream 7 (image.png):            [H:7]──────────────────[D:7]──[D:7]───
+
+  On the wire — one TCP byte stream, all frames mixed together:
+
+  ┌──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┐
+  │ H:1  │ H:3  │ H:5  │ D:1  │ H:7  │ D:1  │ D:3  │ D:5  │ D:7  │ ...
+  └──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┘
+  ├──────────── TCP Segment 1 (≤1460 bytes) ───────────────────────┤├─ Seg 2
+
+  Receiver sees each frame's stream_id and routes it to the right buffer.
+  TCP cuts at byte count — one segment may span parts of multiple frames.
+  If Segment 1 is lost, every stream stalls: TCP-layer HOL blocking.
 ```
 
 #### HTTP/3 (2020)
@@ -318,6 +472,33 @@ HTTP/2 multiplexes streams at the application layer but they all share one TCP b
 
 HTTP/3 implements streams at the transport layer inside QUIC. A lost packet for stream 2 only stalls stream 2. Streams 1, 3, 4 keep flowing independently.
 
+```
+HTTP/2 + TCP — one lost segment blocks every stream
+
+  ┌──────┬──────┬──────┬──────┬──────┬──────┐
+  │ H:1  │ D:1  │ H:3  │ D:3  │ H:5  │ D:5  │ ...
+  └──────┴──────┴──────┴──────┴──────┴──────┘
+  ├────── TCP Seg 1 (received ✓) ──────────────┤✗ Seg 2 lost  ├── Seg 3 ✓
+
+  Seg 3 data sits in the kernel receive buffer, undeliverable:
+    Stream 1 ⟳   Stream 3 ⟳   Stream 5 ⟳   — all stalled waiting for Seg 2
+
+
+HTTP/3 + QUIC — loss is isolated to the stream(s) in the dropped packet
+
+  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐
+  │   H:1       D:1     │  │   H:3       D:3     │  │   H:5       D:5     │
+  │   QUIC pkt 1 ✓      │  │   QUIC pkt 2 ✗      │  │   QUIC pkt 3 ✓      │
+  └─────────────────────┘  └─────────────────────┘  └─────────────────────┘
+
+  QUIC delivers pkts 1 and 3 immediately:
+    Stream 1 ✓   Stream 3 ⟳ (only this stream waits)   Stream 5 ✓
+
+  Loss detection: receiver ACKs pkts 1 and 3 but not pkt 2; after a threshold
+  of subsequent ACKs, sender declares pkt 2 lost and retransmits stream 3's
+  data in a new QUIC packet — streams 1 and 5 were never interrupted.
+```
+
 **Performance Comparison:**
 
 | Metric | HTTP/1.1 | HTTP/2 | HTTP/3 |
@@ -329,43 +510,213 @@ HTTP/3 implements streams at the transport layer inside QUIC. A lost packet for 
 | Connection setup | 1-2 RTT | 1-2 RTT | 0-1 RTT |
 | Mobile resilience | Poor | Poor | Excellent |
 
+!!! note "The ordering constraint — one pattern, every layer of the stack"
+    TCP's in-order delivery guarantee creates **head-of-line blocking**: when a segment is lost, TCP withholds all subsequent bytes from HTTP/2 until the gap is filled by retransmit. HTTP/2's per-stream buffers never even see the bytes sitting in later segments — the block happens below them, at the TCP layer.
+
+    HTTP/3 moves to QUIC over UDP and reimplements reliability *per stream* in userspace. QUIC uses two separate numbering systems: **QUIC packet numbers** (monotonically increasing, connection-wide) for loss detection — when the receiver ACKs packets 1 and 3 but not 2, the sender declares packet 2 lost and retransmits its stream data in a new packet; and **stream offsets** (per-stream byte counters, like TCP sequence numbers but scoped to one stream) for in-order delivery within that stream. The decoupling is the key: loss detection is connection-wide, but the delivery stall is stream-local. A lost packet only blocks the streams whose data it carried; all other streams keep flowing.
+
+    This is the same architectural tension that appears across computer science wherever ordering is guaranteed over a shared channel:
+
+    - **Kafka partitions** — ordering is guaranteed within a partition; a stalled consumer blocks that partition. The fix is more partitions — more independent ordered streams. Exactly QUIC's solution, 20 years earlier at a different layer.
+    - **CPU out-of-order execution** — instructions execute out of order internally, but the reorder buffer commits results in-order. A stalled instruction at the head blocks commit of everything behind it.
+    - **Database WAL recovery** — log entries must be applied in sequence; a gap stalls replay.
+
+    The pattern: **a single ordered channel is simple to reason about but creates a bottleneck at gaps. The fix is always the same — push the ordering constraint up a level so gaps in one lane don't block others.**
+
 ---
 
-### Topic 3: WebSockets & Real-Time Communication
+### Topic 3: Real-Time Communication
 
-**Concept:** Persistent, bidirectional communication channel for real-time updates.
+Four models for getting data from server to client in real-time. Each one solves the previous model's biggest problem.
 
-**HTTP vs WebSockets:**
+#### Short polling
 
-**HTTP (Request-Response):**
+Client asks on a fixed timer. Server is fully stateless — any server can handle any request.
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as Server
+    Note over C,S: Short polling — client asks every 5s regardless of whether data exists
+    C->>S: GET /updates (t=0s)
+    S-->>C: 200 (no data)
+    C->>S: GET /updates (t=5s)
+    S-->>C: 200 (no data)
+    C->>S: GET /updates (t=10s)
+    S-->>C: 200 (data!)
+    Note over C: 3 requests · 10s latency · 2 wasted round trips
 ```
-Client                    Server
-   |                        |
-   | HTTP GET              |
-   |----------------------->|
-   |                        |
-   |         Response       |
-   |<-----------------------|
-   |                        |
-   | (Connection closed)    |
+
+**Problem it leaves unsolved:** latency is bounded by the poll interval, and most requests are wasted.
+
+!!! note "Real-world use"
+    GitHub Actions CI status page, cron-driven dashboard widgets, any admin panel that shows "last synced" data. Simple enough that many teams reach for it first and never need to change it.
+
+#### Long polling
+
+Client sends a request; server holds it open until data is available, then responds and closes. Client immediately reconnects.
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as Server
+    Note over C,S: Long polling — server holds request until data is ready
+    C->>S: GET /updates
+    Note over S: no data yet — hold the connection open
+    Note over S: data arrives at t=10s
+    S-->>C: 200 (data!)
+    Note over C: ~RTT latency once data exists
+    C->>S: GET /updates (immediately reconnects)
+    Note over C,S: pays a reconnect on every single message
 ```
 
-**WebSocket (Persistent Connection):**
+**Problem it leaves unsolved:** reconnect overhead on every message; awkward to implement correctly; still stateless but the held connection consumes a server thread/slot.
+
+!!! note "Real-world use"
+    Facebook Chat used long polling before switching to MQTT/WebSockets. Intercom's in-app messenger originally used it. Still common in legacy enterprise apps where WebSockets are blocked by corporate firewalls, and in environments where you can't upgrade the server.
+
+#### Server-Sent Events (SSE)
+
+Server pushes over a single persistent HTTP connection. The browser `EventSource` API handles reconnection automatically, sending `Last-Event-ID` so any server can resume the stream.
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as Server
+    Note over C,S: SSE — one persistent HTTP connection, server pushes
+    C->>S: GET /events (Accept: text/event-stream)
+    S-->>C: 200 (Content-Type: text/event-stream)
+    Note over C,S: connection stays open
+    S-->>C: data: {"type":"order_update","id":42}
+    S-->>C: data: {"type":"order_update","id":43}
+    Note over C,S: connection drops (network blip)
+    C->>S: GET /events (Last-Event-ID: 43)
+    Note over S: any server can resume — state is in the event log, not the connection
+    S-->>C: 200 (resumes from event 43)
 ```
-Client                    Server
-   |                        |
-   | HTTP Upgrade Request  |
-   |----------------------->|
-   |                        |
-   |    101 Switching       |
-   |<-----------------------|
-   |                        |
-   | ←------ Bidirectional --→ |
-   | Message                |
-   |----------------------->|
-   |         Message        |
-   |<-----------------------|
-   | (Connection stays open) |
+
+**Problem it leaves unsolved:** unidirectional — server→client only. If the client also needs to stream data to the server, SSE can't help.
+
+!!! note "Real-world use"
+    GitHub's live feed of repository events, Vercel/Netlify deployment log streaming, OpenAI's ChatGPT streaming responses (tokens arrive token-by-token via SSE), Cloudflare's analytics dashboard. Essentially anything that looks like a live log tail or a progress stream.
+
+**Spring SseEmitter (minimal):**
+
+```java
+// one emitter per connected client
+// default fd limit ~1024 (ulimit -n); tune to millions via /etc/security/limits.conf
+// at that scale memory is the constraint: ~174 KB kernel buffers/connection → 1M connections ≈ 200 GB
+@RestController
+public class OrderController {
+    private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
+
+    @GetMapping(value = "/events", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter subscribe() {
+        var e = new SseEmitter(Long.MAX_VALUE);
+        emitters.add(e);
+        e.onCompletion(() -> emitters.remove(e));
+        return e;
+    }
+
+    public void broadcast(Object data) { // call this to push an event to all clients
+        var it = emitters.iterator();
+        while (it.hasNext()) {
+            try { it.next().send(data); }
+            catch (IOException e) { it.remove(); } // disconnected — remove
+        }
+    }
+}
+```
+
+#### WebSockets
+
+Bidirectional, persistent. The connection is established via an HTTP upgrade and then the HTTP layer disappears — all subsequent messages are WebSocket frames.
+
+**WebSocket (persistent bidirectional channel):**
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as Server
+    Note over C,S: WebSocket — upgrade once, then persistent bidirectional channel
+    C->>S: GET /chat (Upgrade: websocket)
+    S-->>C: 101 Switching Protocols
+    Note over C,S: connection stays open
+    C->>S: Message
+    S-->>C: Message
+    S-->>C: Push (server-initiated, no request needed)
+    C->>S: Message
+```
+
+**How a WebSocket message travels down the stack:**
+
+Compare to the TCP/HTTP2 stack — L7 collapses to a single delimiting layer (no routing, no operation semantics), and the TCP segment needs no routing lookup because the connection is already established:
+
+```mermaid
+flowchart TD
+    subgraph PH["L1 — Physical · bits / electrical signals"]
+        subgraph EF["L2 — Link · Ethernet Frame · address: MAC · which next hop?"]
+            subgraph IP["L3 — Network · IP Packet · address: IP · which machine? ✉"]
+                subgraph TCP["L4 — Transport · TCP Segment · address: 4-tuple · which socket?"]
+                    subgraph WS["L7 — WebSocket Frame · length · where does this message end?"]
+                        MSG["message payload\n(application data)"]
+                    end
+                end
+            end
+        end
+    end
+    style IP  fill:#fff3cd,stroke:#f0ad4e,stroke-width:3px,color:#000
+    style TCP fill:#f0e6ff,stroke:#7c3aed,stroke-width:2px,color:#000
+    style WS  fill:#ede0ff,stroke:#6d28d9,stroke-width:2px,color:#000
+```
+
+```
+[Application code] — the message to send
+┌──────────────────────────────────────────────────────────────────────┐
+│ { "room": "general", "text": "hello" }                               │
+└──────────────────────────────────────────────────────────────────────┘
+  ↓ WebSocket library wraps in a frame (L7):
+    no Host, no path, no method — routing was settled at upgrade time
+
+[L7 — WebSocket Frame · where does this message end?]
+┌──────────────────────────────────────────────────────────────────────┐
+│ FIN:    1      (1 bit)  — complete message, no fragmentation         │
+│ Opcode: 0x1    (4 bits) — text frame (0x2=binary, 0x8=close)         │
+│ Mask:   1      (1 bit)  — client→server must mask                    │
+│ Length: 38     (7 bits) — payload size                               │
+├──────────────────────────────────────────────────────────────────────┤
+│ Masking key: 0x4a3f2e1d  (4 bytes)                                   │
+├──────────────────────────────────────────────────────────────────────┤
+│ Payload: { "room": "general", "text": "hello" }  (38 bytes, masked)  │
+└──────────────────────────────────────────────────────────────────────┘
+  ↓ handed to the existing TCP connection — no new handshake
+
+[L4 — TCP Segment · which socket?]
+┌──────────────────────────────────────────────────────────────────────┐
+│ Src port:   54321  (2 bytes)  ┐                                      │
+│ Dst port:     443  (2 bytes)  ├─ 4-tuple → socket fd47 (established  │
+│                               │  at upgrade) — OS routes immediately │
+│ Seq:         1839  (4 bytes)  — byte offset continues from handshake │
+│ Ack:          912  (4 bytes)  — acknowledging server data            │
+│ Window:     65535  (2 bytes)                                         │
+├──────────────────────────────────────────────────────────────────────┤
+│ Payload: 44 bytes  ← WebSocket frame above                           │
+└──────────────────────────────────────────────────────────────────────┘
+  same connection as the HTTP upgrade — Seq continues from where it left off
+
+[L3 — IP packet · which machine? ✉ the envelope — end-to-end unchanged]
+┌──────────────────────────────────────────────────────────────────────┐
+│ Src IP:  192.168.1.5    (4 bytes)  — your machine                    │
+│ Dst IP:  93.184.216.34  (4 bytes)  — example.com                     │
+│ Proto:   6 (TCP)        (1 byte)   — what's carried inside           │
+│ TTL:     64             (1 byte)   — decremented each hop; 0 = drop  │
+│ Length:  84             (2 bytes)  — total packet size               │
+├──────────────────────────────────────────────────────────────────────┤
+│ Payload: 64 bytes  ← TCP segment above                               │
+└──────────────────────────────────────────────────────────────────────┘
+  20-byte header + 64-byte payload = 84 bytes
+
+[L2 → L1 — identical to the TCP/HTTP2 stack]
 ```
 
 **WebSocket Handshake:**
@@ -388,197 +739,94 @@ Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
 [Connection now upgraded to WebSocket]
 ```
 
-**Use Cases:**
-
-| Scenario | HTTP Polling | Server-Sent Events | WebSockets |
-|----------|-------------|-------------------|------------|
-| Real-time chat | ✗ (wasteful) | ✗ (unidirectional) | ✓ (perfect) |
-| Stock ticker | △ (acceptable) | ✓ (efficient) | ✓ (best) |
-| Notifications | △ (wastes bandwidth) | ✓ (ideal) | △ (overkill) |
-| Multiplayer game | ✗ (too slow) | ✗ (one-way) | ✓ (required) |
-| Social feed | ✓ (simple) | ✓ (efficient) | △ (complex) |
-
-**Polling vs WebSockets (Message Frequency):**
+**What a WebSocket server holds per connection:**
 
 ```
-Polling (every 5 seconds):
-┌─5s─┐─5s─┐─5s─┐─5s─┐
-Req  Req  Req  Req  ...
-  ↓    ↓    ↓    ↓
- Res  Res  Res  Res
- (empty)(data)(empty)(data)
+OS kernel (per connection):
+  - socket file descriptor (counts against ulimit -n; default 1024, tunable to millions)
+  - TCP send buffer:    ~87 KB   (holds unacknowledged outbound bytes)
+  - TCP receive buffer: ~87 KB   (holds inbound bytes not yet read by app)
+  Total kernel overhead: ~174 KB per connection
 
-Overhead: 4 requests for 2 updates
-Latency: Up to 5s delay
+Application (your code, per connection):
+  - socket handle / fd reference
+  - auth context:       userId, roles, session token  (set at upgrade time)
+  - subscription state: which rooms/topics/channels   (updated by messages)
+  - any app state:      cursor position, game state, etc.
 
-WebSockets (event-driven):
-Connection established
-  ↓
-[Open connection]
-  ↓    ↓
- Data Data (instant push)
-
-Overhead: 0 extra requests
-Latency: ~RTT (milliseconds)
+At 10,000 connections:
+  kernel buffers alone: ~1.7 GB
+  + application state per connection
 ```
 
----
-
-### Topic 4: DNS (Domain Name System)
-
-**Concept:** Hierarchical, distributed system that translates domain names to IP addresses.
-
-**DNS Hierarchy:**
-
-```mermaid
-graph TD
-    ROOT[". (root)"]
-    COM[".com"]
-    ORG[".org"]
-    NET[".net"]
-    EXAMPLE["example.com"]
-    WWW["www.example.com"]
-    API["api.example.com"]
-
-    ROOT --> COM
-    ROOT --> ORG
-    ROOT --> NET
-    COM --> EXAMPLE
-    EXAMPLE --> WWW
-    EXAMPLE --> API
-```
-
-**DNS Resolution Process:**
-
-```mermaid
-flowchart TD
-    Start(["User types www.example.com"])
-    BrowserCache{"Browser cache\nhit?"}
-    OSCache{"OS cache\nhit?"}
-    Resolver["Recursive Resolver (ISP)"]
-    RootNS["Root Nameserver\n→ returns .com NS address"]
-    ComNS[".com Nameserver\n→ returns example.com NS address"]
-    ExampleNS["example.com Nameserver\n→ returns IP: 93.184.216.34"]
-    Cache["Resolver caches result\n(TTL: 3600s)"]
-    Browser["Browser connects to 93.184.216.34"]
-
-    Start --> BrowserCache
-    BrowserCache -->|"Hit"| Browser
-    BrowserCache -->|"Miss"| OSCache
-    OSCache -->|"Hit"| Browser
-    OSCache -->|"Miss"| Resolver
-    Resolver --> RootNS
-    RootNS --> ComNS
-    ComNS --> ExampleNS
-    ExampleNS --> Cache
-    Cache --> Browser
-```
-
-**DNS Record Types:**
-
-| Record Type | Purpose | Example |
-|------------|---------|---------|
-| A | IPv4 address | example.com → 93.184.216.34 |
-| AAAA | IPv6 address | example.com → 2606:2800:220:1:... |
-| CNAME | Alias to another domain | www.example.com → example.com |
-| MX | Mail server | example.com → mail.example.com |
-| TXT | Arbitrary text | SPF, DKIM verification |
-| NS | Name server | example.com → ns1.dns.com |
-
-**DNS Caching & TTL:**
+The deeper scaling problem: the connection is **pinned to one server process**. Unlike HTTP where any server can handle any request, a WebSocket message arriving for user Alice must reach the server that holds Alice's socket. This forces one of two designs:
 
 ```
-TTL (Time To Live) = 3600 seconds (1 hour)
+Option 1 — sticky sessions
+  Load balancer routes Alice's requests to Server 1 always.
+  Simple, but Server 1 becomes a hotspot and failover loses connections.
 
-Query at 12:00 PM:
-  example.com → 1.2.3.4 (TTL: 3600)
-  Cached until 1:00 PM
+Option 2 — pub/sub fan-out
+  Any server accepts any message. Server publishes to Redis.
+  Redis fans out to whichever server holds the target socket.
 
-Query at 12:30 PM:
-  ← Returns from cache (no network request)
-
-Query at 1:01 PM:
-  Cache expired → New DNS query
-  example.com → 1.2.3.5 (IP changed!)
+  Client ──→ Server 2 ──→ Redis pub/sub ──→ Server 1 ──→ Alice's socket
+                                         ──→ Server 3 ──→ Bob's socket
 ```
 
-!!! tip "TTL is a trade-off between freshness and latency"
-    A short TTL (e.g., 60 seconds) means DNS changes propagate quickly — useful during failovers — but every DNS query hits the resolver more often, adding latency. A long TTL (e.g., 86400 seconds) reduces resolver load but means clients may be pointing at a stale IP for up to a day after a change. Most production systems use 300–3600 seconds.
+SSE avoids this entirely — a reconnect carries `Last-Event-ID` and any server can resume from an event log.
 
-**DNS Load Balancing:**
+!!! note "Real-world use"
+    Slack (real-time messaging and presence), Figma (multiplayer collaborative editing — cursor positions and drawing ops), Google Docs (collaborative editing), Discord (voice + text channels), Binance/Coinbase (live order book updates where users also submit trades). The bidirectionality is the key signal — users are continuously sending, not just receiving.
 
-```
-Round-robin DNS:
-example.com can return multiple A records:
+**Spring WebSocketHandler (minimal):**
 
-Query 1: 1.2.3.4
-Query 2: 1.2.3.5
-Query 3: 1.2.3.6
-Query 4: 1.2.3.4 (cycles back)
+```java
+// one session per connected client — same fd and memory constraints as SSE (~174 KB kernel buffers)
+// additionally: connections are pinned to one server → sticky sessions or Redis pub/sub for horizontal scaling
+@Component
+public class ChatHandler extends TextWebSocketHandler {
+    private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
-Poor man's load balancing:
+    @Override
+    public void afterConnectionEstablished(WebSocketSession s) {
+        String userId = (String) s.getAttributes().get("userId"); // populated at handshake
+        sessions.put(userId, s);
+    }
 
-+ Simple, no extra infrastructure
-- No health checks
-- Client caching interferes
-- Not smart about server load
-```
+    @Override
+    public void afterConnectionClosed(WebSocketSession s, CloseStatus status) {
+        sessions.remove((String) s.getAttributes().get("userId"));
+    }
 
----
+    @Override
+    protected void handleTextMessage(WebSocketSession session, TextMessage msg) throws Exception {
+        // parse msg to find target, then:
+        sendTo(targetUserId, new TextMessage("hello"));
+    }
 
-### Topic 5: TLS/SSL (Transport Layer Security)
-
-**Concept:** Cryptographic protocol for secure communication over networks.
-
-**TLS Handshake (TLS 1.3 - Simplified):**
-
-```mermaid
-sequenceDiagram
-    participant C as Client
-    participant S as Server
-    C->>S: 1. ClientHello (cipher suites, nonce, key share)
-    S->>C: 2. ServerHello (chosen cipher, key share, certificate)
-    Note over C: 3. Derive shared secret
-    C->>S: 4. Finished (encrypted)
-    S->>C: 5. Finished (encrypted)
-    Note over C,S: Encrypted application data (1-RTT total)
+    public void sendTo(String userId, TextMessage msg) throws IOException {
+        WebSocketSession s = sessions.get(userId);
+        if (s != null && s.isOpen()) s.sendMessage(msg);
+    }
+}
 ```
 
-**Certificate Chain Validation:**
+#### Which to use
 
-```mermaid
-graph TD
-    RootCA["Root CA\n(trusted by browser)"]
-    IntCA["Intermediate CA\n(signed by Root CA)"]
-    DomainCert["example.com certificate\n(signed by Intermediate CA)"]
+Three questions, in order:
 
-    RootCA -->|"signs"| IntCA
-    IntCA -->|"signs"| DomainCert
+**1. Can the client tolerate N seconds of latency and are updates infrequent?**
+Use short polling. It's stateless, trivially scalable, and operationally boring. Don't over-engineer a cron-job dashboard into a WebSocket server.
 
-    DomainCert -->|"1. Signed by Intermediate CA?"| Check1["✓"]
-    IntCA -->|"2. Signed by Root CA?"| Check2["✓"]
-    RootCA -->|"3. In browser trust store?"| Check3["✓"]
-```
+**2. Is data flow server→client only?**
+Use SSE. Notifications, live feeds, order tracking, dashboards — almost all "real-time" UIs only need server push. SSE gives you ~RTT latency, automatic reconnect, and stateless horizontal scaling for free. No pub/sub layer, no sticky sessions.
 
-**Performance Impact:**
+**3. Does the client also stream data continuously to the server?**
+Use WebSockets. Chat (users send messages), collaborative editing (cursor positions, operations), multiplayer games (player input every tick). The bidirectional requirement is the signal — not "it feels real-time."
 
-```
-HTTPS (TLS) overhead:
-
-- Initial handshake: +1 RTT (~50-100ms)
-- Encryption/decryption CPU: ~5% server CPU
-- Certificate chain: +2-4 KB per connection
-
-Mitigation strategies:
-
-- Session resumption (reuse session keys)
-- TLS 1.3 0-RTT (resume with 0 round trips)
-- OCSP stapling (reduce cert validation RTT)
-- Connection pooling (amortize handshake cost)
-```
-
-!!! note "TCP and HTTP as load balancing layers"
-    TCP (Layer 4) and HTTP (Layer 7) are also the two layers at which load balancers operate. A Layer 4 load balancer routes based on IP address and port without reading the payload; a Layer 7 load balancer reads HTTP headers and URLs and can make content-aware routing decisions. The choice between them and when each is appropriate is covered in [09. Load Balancing](09-load-balancing.md).
+!!! danger "Reaching for WebSockets by default"
+    The most common mistake is treating WebSockets as the default for anything "real-time." A live notification badge, a stock ticker, a progress bar — none of these need bidirectional streaming. Using WebSockets for server-push-only features adds sticky session complexity or a Redis pub/sub layer for no benefit. SSE is the right tool and is routinely overlooked.
 
 ---
 
