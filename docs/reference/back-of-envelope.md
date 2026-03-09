@@ -63,7 +63,7 @@ graph TB
 | Cross-continent round trip (US↔EU) | ~150 ms | Speed of light + routing |
 | SSD sequential throughput | ~500 MB/s | Sequential >> random |
 
-!!! tip "The boundary rule"
+!!! note "The boundary rule"
     Every time you cross a storage or network boundary, expect at least one order of magnitude in latency. RAM→SSD is 1,000×. SSD→network is 5×. Same-DC→cross-country is 140×. If someone quotes a number that requires crossing two boundaries in the time it takes to cross one, it is physically implausible.
 
 ---
@@ -309,7 +309,7 @@ Each derivation leads with the result. Expand to see the arithmetic.
 !!! note "Why 10k–20k doesn't feel big"
     Systems design content tends to jump from "add a cache" straight to Google-scale. The 1k–100k range is where most senior engineers actually work and where real architectural decisions get made. 10k–20k QPS is ~1 billion requests per day — that is a real product with real users. It does not feel big because the framing in most content is wrong.
 
-!!! tip "Surprisingly lean systems"
+!!! note "Surprisingly lean systems"
     Some of the most-referenced engineering organisations run on far less infrastructure than their reputation implies:
 
     - **Stack Overflow** serves ~1.5B page views/month on ~9 web servers and one SQL Server primary. Their team writes about raw query performance because they actually hit database limits.
