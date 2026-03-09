@@ -115,6 +115,8 @@ In an append-only system, deletion is itself a write — a marker that records t
 
 **The pattern:** you can't mark something as gone in a system that only appends. The tombstone travels downstream until the system is sure every reader has seen it.
 
+**Pitfall:** Tombstone accumulation causes read amplification and storage bloat if compaction can't keep up — a well-known operational hazard in Cassandra when a key is updated or deleted at high frequency.
+
 ---
 
 ### 8. Indirection enables remapping
@@ -315,6 +317,8 @@ State is derived from a sequence of events. Replay the log and you reconstruct s
 - **ZooKeeper transaction log** — every state change is a log entry; the in-memory tree is derived from it
 
 **The pattern:** if the log is durable, nothing else needs to be. Every other representation (indexes, caches, read replicas, projections) is a performance optimization that can be rebuilt. The log is the only irreplaceable artifact. This is the architectural principle enabled by append-only writes (#6) and write-ahead before acknowledging (#12).
+
+**Pitfall:** Schema evolution in the event log is painful — you can't migrate historical events in place. Every consumer must handle multiple event versions simultaneously, which compounds over time.
 
 ---
 
