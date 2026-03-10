@@ -19,7 +19,6 @@ Fast answers during interview prep or an incident:
 - **[Symptom → Pattern](reference/symptom-pattern.md)** — observable failure symptom → root cause → which concept to investigate
 - **[Staff+ Interview Strategy](reference/staff-interview-strategy.md)** — system design structure, trade-off framing, handling ambiguity and disagreement
 - **[No New Problems in CS](reference/no-new-problems.md)** — cross-cutting problems that repeat at every layer of the stack
-
 - **[How the Machine Actually Works](reference/how-the-machine-works.md)** — memory hierarchy, virtual memory, syscalls, file descriptors, page cache, packet arrival, event loops
 
 ---
