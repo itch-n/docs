@@ -14,7 +14,9 @@ extra_css:
 
 plugins:
     - search
-    - mermaid2
+    - mermaid2:
+        version: 11.13.0
+    - drawio
 
 nav:
   - Home: index.md
@@ -63,7 +65,8 @@ nav:
       - "Back of the Envelope": reference/back-of-envelope.md
       - "Symptom → Pattern": reference/symptom-pattern.md
       - "Staff+ Interview Strategy": reference/staff-interview-strategy.md
-      - "Recurring Patterns": reference/recurring-patterns.md
+      - "No New Problems in CS": reference/no-new-problems.md
+      - "How the Machine Actually Works": reference/how-the-machine-works.md
 
 markdown_extensions:
   - admonition

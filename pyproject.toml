@@ -10,4 +10,5 @@ dependencies = [
     "mkdocs-roamlinks-plugin>=0.3.2",
     "pymdown-extensions>=10.20.1",
     "mkdocs-mermaid2-plugin>=1.1.1",
+    "mkdocs-drawio>=1.6.0",
 ]

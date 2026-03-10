@@ -12,15 +12,17 @@ Orange fill-in prompts mark what you complete. Everything else is reference mate
 
 ## Quick Reference
 
-Three pages for fast answers during interview prep or an incident:
+Fast answers during interview prep or an incident:
 
 - **[When It Breaks](reference/when-it-breaks.md)** — scale thresholds and failure conditions for all 35 topics
 - **[Back of the Envelope](reference/back-of-envelope.md)** — hardware primitives, worked derivations, QPS/storage/write scale context
 - **[Symptom → Pattern](reference/symptom-pattern.md)** — observable failure symptom → root cause → which concept to investigate
+- **[Staff+ Interview Strategy](reference/staff-interview-strategy.md)** — system design structure, trade-off framing, handling ambiguity and disagreement
+- **[No New Problems in CS](reference/no-new-problems.md)** — cross-cutting problems that repeat at every layer of the stack
+
+- **[How the Machine Actually Works](reference/how-the-machine-works.md)** — memory hierarchy, virtual memory, syscalls, file descriptors, page cache, packet arrival, event loops
 
 ---
-
-## Two Paths
 
 ### [Systems Design](systems/01-storage-engines.md) (20 Topics)
 

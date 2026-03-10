@@ -130,7 +130,4 @@ __pycache__/
 site/
 
 .claude
-
-# Continue — config contains API key, rules are committed
-.continue/config.json
-CONTINUITY.md
+*.drawio.bkp

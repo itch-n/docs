@@ -1,6 +1,6 @@
-# Recurring Patterns Across Abstractions
+# No New Problems in CS
 
-<p class="lead">Twenty-three problems that keep reappearing at every layer of the stack — from CPU microarchitecture to distributed systems to algorithms. Recognising the pattern lets you reason about an unfamiliar system by analogy.</p>
+<p class="lead">Problems that keep reappearing at every layer of the stack — from CPU microarchitecture to distributed systems to algorithms. Recognising the pattern lets you reason about an unfamiliar system by analogy.</p>
 
 Each entry names the core tension, lists where the pattern appears across the stack, and states the invariant that makes it self-similar.
 
@@ -66,6 +66,20 @@ Separate "reserve/prepare" from "commit/execute." This gives you a checkpoint to
 - **Git staging area** — `git add` is prepare; `git commit` is commit. Lets you inspect exactly what will be committed
 - **Database WAL** — write to log (prepare); apply to data pages (commit). The log is the durable record; the pages are the materialized view
 - **Optimistic concurrency validation** — read phase (no locks); commit phase (validate + write)
+
+```mermaid
+---
+title: Two-Phase Pattern
+---
+graph TB
+    A["Phase 1 — Prepare\nreserve · validate · vote"]
+    B{"all ready?"}
+    C["Phase 2 — Commit\napply · execute · confirm"]
+    D["Abort\nrollback · release"]
+    A --> B
+    B -->|"yes"| C
+    B -->|"no"| D
+```
 
 **The pattern:** doing work in two phases lets you fail cheap (during prepare) before doing anything irreversible (during commit). The cost is latency — you pay at least two round trips.
 
@@ -203,6 +217,23 @@ When data must reach many consumers, you can push at write time (compute the fan
 - **Kafka consumer groups** — the broker retains one log; each consumer group reads independently (fan-out on read). No write amplification
 - **CDN push vs pull** — push: origin pushes content to all edge nodes at publish time. Pull: edge fetches from origin on first miss, then caches
 
+```mermaid
+---
+title: Fan-out on Write vs Fan-out on Read
+---
+graph TB
+    subgraph fow ["Fan-out on Write (eager)"]
+        W1[write] --> FA[copy: user A]
+        W1 --> FB[copy: user B]
+        W1 --> FC[copy: user C]
+    end
+    subgraph ror ["Fan-out on Read (lazy)"]
+        W2[write] --> LOG[one copy]
+        RA[read: user A] --> LOG
+        RB[read: user B] --> LOG
+    end
+```
+
 **The pattern:** fan-out on write is fast to read but expensive to write and hard to keep consistent. Fan-out on read is cheap to write but adds latency to reads. The right choice depends on read/write ratio and how many consumers exist.
 
 ---
@@ -260,6 +291,17 @@ A fast producer will eventually overwhelm a slow consumer. Back-pressure is the 
 - **OS pipe buffer** — `write()` blocks when the pipe buffer is full; the writing process is suspended until the reader drains it
 - **Rate limiting** — back-pressure expressed as policy: "you may not produce faster than N/s"
 
+```mermaid
+---
+title: Backpressure — the Feedback Loop
+---
+graph LR
+    P[Producer] -->|data| B[Buffer]
+    B -->|data| C[Consumer]
+    C -->|"slow down"| P
+    B -->|"full → drop / block"| X[loss / stall]
+```
+
 **The pattern:** without back-pressure, the system buffers until memory is exhausted, then drops. Back-pressure moves the slow-down signal upstream to the source — the only place it can be acted on.
 
 ---
@@ -288,6 +330,40 @@ Exactly-once delivery is either impossible or very expensive. The practical alte
 - **Database upserts** — `INSERT ... ON CONFLICT DO UPDATE` is idempotent; running it twice leaves the same row
 
 **The pattern:** design every state mutation to be safe to retry. Then at-least-once delivery is sufficient. This is almost always cheaper than building a true exactly-once protocol.
+
+---
+
+### 24. Translation caching
+
+You work with a logical name — a virtual address, a hostname, an IP. The authoritative mapping to the physical resource lives somewhere slow: a page table in RAM, a DNS resolver across the network, an ARP broadcast on the local segment. Cache recent translations so the fast path never pays the authoritative lookup cost.
+
+- **TLB (Translation Lookaside Buffer)** — caches virtual address → physical address translations from the page table; a TLB hit costs ~1 ns; a miss requires a page table walk in RAM at ~100 ns
+- **DNS resolver cache** — caches hostname → IP; without it every TCP connection requires a recursive DNS query across the network (~10–100 ms)
+- **ARP cache** — caches IP → MAC address; without it every packet to a new host on the local segment requires an ARP broadcast
+- **Linux dentry / inode cache** — caches filesystem path → inode; `open("a/b/c")` requires multiple disk reads per path component without it
+- **CPU L1/L2/L3 cache** — caches memory address → data; the same pattern applied one layer lower, with RAM as the authoritative source
+
+```mermaid
+---
+title: Translation Cache — Hit vs Miss
+---
+graph TB
+    A[request virtual address]
+    B{"in cache?"}
+    C["return physical address\n~1 ns"]
+    D["look up authoritative source\n~100 ns – 100 ms"]
+    E[store result in cache]
+    F[return physical address]
+    A --> B
+    B -->|hit| C
+    B -->|miss| D
+    D --> E
+    E --> F
+```
+
+**The pattern:** #8 (Indirection enables remapping) explains *why* the indirection exists — decoupling name from physical resource. This pattern explains *how* to make it fast — cache recent translations because the authoritative lookup is orders of magnitude slower than a cached hit. The cache is only valid while the mapping is stable; invalidation, not the hit path, is where the complexity lives.
+
+**Pitfall:** Stale translations after a mapping changes. TLB shootdown — invalidating TLB entries across all CPU cores when a page table entry changes — is a measurable source of overhead in multi-core systems with shared memory. DNS TTL set too long delays propagation after an IP address change. ARP cache poisoning exploits the lack of authentication in ARP responses to redirect traffic.
 
 ---
 
