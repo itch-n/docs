@@ -2,6 +2,34 @@
 
 <p class="lead">Seven mental models for the layer below your application code. You do not need to write C to benefit — but every Java performance problem, every "why is this slow" incident, and every systems design question about throughput or latency traces back to one of these.</p>
 
+Your diagram is officially excellent. By moving the **Interrupt** line from the **TCP Stack** to **epoll (§7)**, you’ve captured the "Push" notification that makes modern servers so fast.
+
+Here are the step-by-step "traces" for your cheat sheet, following the exact lines you've drawn.
+
+---
+
+### Life of a Network Packet (Inbound)
+
+Tracing how a "Hello" message gets from the wire to your Java string.
+
+* **Step 1: Physical Entry.** Electrical signals hit the **NIC**.
+* **Step 2: The Silent Write (DMA).** The **NIC** writes the raw bytes directly into **RAM** via **DMA**. The CPU doesn't even know this is happening yet.
+* **Step 3: The Wake-up Call (Interrupt).** The **NIC** pulls the **Interrupt** line to the **CPU**.
+* **Step 4: The Logic (TCP Stack).** The **CPU** jumps into the **TCP Stack (§6)**. It reads from **RAM**, verifies the packet, and places it in a **Socket Buffer**.
+* **Step 5: The Notification.** The **TCP Stack** sends an **Interrupt/Signal** to **epoll (§7)** saying, *"Data is ready for the FD associated with this socket!"*
+* **Step 6: The Return.** Your Java code, which was stuck at the **System Call Interface** on an `epoll_wait()`, finally receives a response and resumes execution in **User Space**.
+
+### Life of a File Write (Outbound)
+
+Tracing how `file.write("data")` actually becomes permanent.
+
+* **Step 1: The Request.** **Java code** calls `write()`, moving through the **JVM** and **libc**.
+* **Step 2: The Gate.** The request hits the **System Call Interface**. The **CPU** switches to **Ring 0**.
+* **Step 3: The Desk Work.** The Kernel checks the **fd table (§4)** to find the physical destination.
+* **Step 4: The Staging Area.** Data is copied into the **Page Cache (§5)** in **RAM**. To the Java app, the write is now "done" (this is why writes feel so fast).
+* **Step 5: The Physical Write.** Later, the Kernel tells the **SSD / HDD** to grab the data from **RAM** via **DMA**.
+* **Step 6: The Completion.** The **SSD** sends an **Interrupt** to the **CPU** once the electrons are safely trapped in the drive, marking the page in cache as "clean."
+
 ![](../../img/machine-diagram.drawio)
 
 **How to read this diagram:**
@@ -10,7 +38,8 @@
 - **Arrows within user space** = normal function calls, no kernel crossing, no cost
 - **Syscall fan** = all syscalls originate from libc, pass through a single junction point, then branch to their kernel target — the label on each branch is the syscall name; `fsync()` is the important one to notice: it goes directly to Page Cache and forces a synchronous flush to disk, which is why database commits are slow
 - **Page Cache is not a direct syscall target** — file fds in the fd table point into the page cache; the dashed arcs below the kernel boxes show this mapping
-- **Vertical arrows crossing the lower boundary** = kernel abstractions backed by physical hardware (Virtual Memory ↔ RAM, Page Cache ↔ disk)
+- **Vertical arrows crossing the lower boundary** = kernel abstractions backed by physical hardware (Virtual Memory page table ↔ MMU/TLB, Page Cache ↔ disk)
+- **MMU/TLB** (hardware band) = the hardware unit that translates virtual → physical addresses on every memory access; the kernel's "Virtual Memory / page table" box above it is the OS-managed data structure the MMU reads on a TLB miss — the OS writes the table, the MMU executes it
 - **NIC arrows** = packet arrival: NIC writes directly to RAM (DMA, no CPU), then fires an interrupt so the kernel TCP stack can process the payload
 - **epoll** (dashed box) = a watcher, not a data store — sits alongside the fd table and delivers readiness events; dashed border signals this distinction
 
